@@ -1,0 +1,26 @@
+.video_infos {
+  display: flex;
+  justify-content: space-between;
+}
+
+.video_infos span {
+  font-size: var(--c--globals--font--sizes--lg);
+}
+
+.video_infos p {
+  font-size: (--c--globals--font--sizes--md);
+  font-weight: var(--c--globals--font--weights--bold);
+  padding-bottom: var(--c--globals--spacings--xs);
+}
+
+.video_duration {
+  font-size: var(--c--globals--font--sizes--s);
+  font-weight: var(--c--globals--font--weights--bold);
+  display: flex;
+  align-items: center;
+}
+
+.video_duration span {
+  font-size: var(--c--globals--font--sizes--md);
+  padding-right: var(--c--globals--spacings--xxs);
+}

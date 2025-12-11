@@ -1,0 +1,47 @@
+.footer {
+  background: rgb(
+    from var(--c--contextuals--background--semantic--brand--primary) r g b / 40%
+  );
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+  font-size: var(--c--globals--font--sizes--xs);
+  padding: var(--c--globals--spacings--md);
+  padding-left: var(--c--globals--spacings--xl);
+  margin-left: 60px;
+}
+
+.footer_content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: var(--c--globals--spacings--s);
+}
+
+.footer_contact_univ address {
+  font-style: normal;
+}
+.footer_contact_univ_logo {
+  height: 42px;
+}
+
+.footer_link a {
+  padding: var(--c--globals--spacings--md);
+  font-weight: var(--c--globals--font--weights--bold);
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+  text-transform: uppercase;
+}
+
+.footer_extra_link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer_extra_link_icons img {
+  padding-right: var(--c--globals--spacings--xxs);
+  height: 25px;
+}
+
+.credits_infos {
+  text-align: center;
+  font-size: var(--c--globals--font--sizes--t);
+}

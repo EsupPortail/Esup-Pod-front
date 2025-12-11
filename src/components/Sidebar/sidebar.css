@@ -1,0 +1,19 @@
+.sidebar {
+  height: 100%;
+  width: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  background-color: var(--c--globals--colors--white-000);
+  padding-top: 40px;
+  color: black;
+  margin-top: 96.5px;
+  border-right: 1px solid
+    var(--c--contextuals--background--semantic--brand--primary);
+  transition: width 200ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+}
+
+.sidebar.open {
+  width: 260px;
+}

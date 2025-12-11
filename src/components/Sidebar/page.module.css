@@ -1,0 +1,56 @@
+.sidebar {
+  height: 100%;
+  width: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  background-color: var(--c--globals--colors--white-000);
+  padding-top: 40px;
+  color: black;
+  margin-top: 96.5px;
+  border-right: 1px solid
+    var(--c--contextuals--background--semantic--brand--primary);
+  transition: width 200ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+}
+
+.sidebar.open {
+  width: 300px;
+}
+
+.main_menu {
+  padding-bottom: var(--c--globals--spacings--xl);
+}
+
+.sidebar_menu_title {
+  padding-left: var(--c--globals--spacings--base);
+  padding-bottom: var(--c--globals--spacings--s);
+  font-weight: var(--c--globals--font--weights--regular);
+  white-space: nowrap;
+  transition-property: color;
+  transition-duration: 0.35s;
+}
+
+.menu_item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  padding-left: var(--c--globals--spacings--base);
+  padding-right: 30px;
+}
+
+.menu_item span {
+  font-size: var(--c--globals--font--sizes--h2);
+  padding-right: var(--c--globals--spacings--base);
+}
+
+.menu_item:hover {
+  background: rgb(
+    from var(--c--contextuals--background--semantic--brand--primary-hover) r g b /
+      40%
+  );
+}

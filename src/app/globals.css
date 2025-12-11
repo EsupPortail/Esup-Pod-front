@@ -1,0 +1,41 @@
+@import "../cunningham-tokens.css";
+@import "@openfun/cunningham-react/style";
+@import "@openfun/cunningham-react/fonts";
+@import "@openfun/cunningham-react/icons";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--c--globals--colors--white-000);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.main {
+  padding-top: var(--c--globals--spacings--6xl);
+  margin-left: 60px;
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+}
+
+.content {
+  min-height: 700px;
+  padding: var(--c--globals--spacings--md);
+}

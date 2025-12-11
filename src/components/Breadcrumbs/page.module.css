@@ -1,0 +1,5 @@
+.breadcrumb {
+  background-color: var(--c--globals--colors--gray-100);
+  padding-left: var(--c--globals--spacings--md);
+  font-size: var(--c--globals--font--sizes--s);
+}
