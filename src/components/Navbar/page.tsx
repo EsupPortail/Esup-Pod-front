@@ -6,14 +6,15 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import styles from "./page.module.css";
-import SideBar from "../Sidebar/page";
+import Link from "next/link";
+import { SidebarContext } from "../../context/SidebarProvider";
+import { useContext } from "react";
+
+const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
+const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
 
 export default function Navbar() {
-  //Comportement sidebar:
-  const [sidebarOpen, setSideBarOpen] = useState(false);
-  const handleViewSidebar = () => {
-    setSideBarOpen(!sidebarOpen);
-  };
+  const { handleFixSidebar } = useContext(SidebarContext);
 
   //Comportement menu profil:
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,20 +33,21 @@ export default function Navbar() {
           <button
             type="button"
             aria-label="Menu principal"
-            onClick={handleViewSidebar}
+            onClick={handleFixSidebar}
             className={styles.navbar_button}
           >
             <span className="material-icons">menu</span>
           </button>
         </div>
         <div className="">
-          <a className={styles.navbar_logo}>
+          <Link className={styles.navbar_logo} key="accueil-link" href="/">
             <img className="pr-sm pl-sm" src="logoEsup.svg" alt="Accueil"></img>
-            <strong>Esup.POD</strong>
-          </a>
+            <strong>{appTitle}</strong>
+          </Link>
         </div>
         <div className={styles.navbar_search}>
           <Input
+            className={styles.navbar_search_input}
             icon={<span className="material-icons">search</span>}
             fullWidth
             label="Rechercher ..."
@@ -57,6 +59,7 @@ export default function Navbar() {
             iconPosition="right"
             variant="primary"
             size="medium"
+            style={{ height: "43px" }}
           >
             Ajouter une vidéo
           </Button>
@@ -125,7 +128,6 @@ export default function Navbar() {
           </div>
         </Menu>
       </nav>
-      <SideBar isOpen={sidebarOpen} />
     </div>
   );
 }

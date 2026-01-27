@@ -1,6 +1,4 @@
 "use client";
-
-import Breadcrumb from "../components/Breadcrumbs/page";
 import VideosList from "../components/VideosList/page";
 import { Button } from "@openfun/cunningham-react";
 import styles from "./page.module.css";
@@ -39,33 +37,30 @@ const videos: Video[] = [
 
 export default function Accueil() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Breadcrumb />
-        <div className={styles.content}>
-          <h1>
-            POD Univ
-            <br />
-            Bienvenue sur votre plateforme POD !
-          </h1>
-          <p>
-            La vidéo est un média de choix quand il s'agit de communiquer,
-            d'enseigner et d'apprendre. Voici quelques usages qui pourraient
-            vous intéresser.
-          </p>
-          <div>
-            <VideosList videosList={videos} />
-            <Button
-              icon={<span className="material-icons">play_circle</span>}
-              iconPosition="right"
-              variant="primary"
-              size="medium"
-            >
-              Afficher toutes les vidéos
-            </Button>
-          </div>
+    <div>
+      <h2>
+        POD Univ
+        <br />
+        Bienvenue sur votre plateforme POD !
+      </h2>
+      <p>
+        La vidéo est un média de choix quand il s'agit de communiquer,
+        d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous
+        intéresser.
+      </p>
+      <div>
+        <VideosList videosList={videos} />
+        <div className={styles.content_footer}>
+          <Button
+            icon={<span className="material-icons">play_circle</span>}
+            iconPosition="right"
+            variant="primary"
+            size="medium"
+          >
+            Afficher toutes les vidéos
+          </Button>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

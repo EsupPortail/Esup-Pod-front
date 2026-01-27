@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 
 export default function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer className={`${styles.footer} ${styles.sidebarFixed}`} id="footer">
       <div className={styles.footer_content}>
         <div className={styles.footer_contact_univ}>
           <div className={styles.footer_contact_univ_logo}>

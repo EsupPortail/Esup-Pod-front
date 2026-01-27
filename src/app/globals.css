@@ -31,11 +31,20 @@ body {
 
 .main {
   padding-top: var(--c--globals--spacings--6xl);
-  margin-left: 60px;
+  margin-left: 70px;
   color: var(--c--contextuals--content--semantic--neutral--primary);
+  transition: all 0.4s ease;
+  min-height: 800px;
+}
+
+.sidebarFixed {
+  margin-left: 270px !important;
 }
 
 .content {
-  min-height: 700px;
-  padding: var(--c--globals--spacings--md);
+  padding: var(--c--globals--spacings--lg);
+}
+
+.content h1 {
+  color: black;
 }

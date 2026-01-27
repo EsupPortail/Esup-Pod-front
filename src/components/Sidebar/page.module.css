@@ -1,21 +1,31 @@
+/*Subheading menu*/
+.menu_title {
+  font-weight: var(--c--globals--font--weights--bold);
+  font-size: var(--c--globals--font--sizes--m);
+  color: var(--c--contextuals--background--semantic--brand--primary);
+  transition-property: color;
+  transition-duration: 0.2s;
+  padding: var(--c--globals--spacings--m) 0 var(--c--globals--spacings--m) 16px;
+}
+
+.menu {
+  padding-bottom: var(--c--globals--spacings--md);
+}
+
 .sidebar {
-  height: 100%;
-  width: 60px;
   position: fixed;
-  top: 0;
   left: 0;
   overflow-x: hidden;
   background-color: var(--c--globals--colors--white-000);
-  padding-top: 40px;
+  padding-top: 20px;
   color: black;
-  margin-top: 96.5px;
+  margin-top: 92px;
   border-right: 1px solid
     var(--c--contextuals--background--semantic--brand--primary);
-  transition: width 200ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
-}
-
-.sidebar.open {
-  width: 300px;
+  transition: all 0.3s ease;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
 }
 
 .main_menu {
@@ -25,32 +35,48 @@
 .sidebar_menu_title {
   padding-left: var(--c--globals--spacings--base);
   padding-bottom: var(--c--globals--spacings--s);
-  font-weight: var(--c--globals--font--weights--regular);
+  font-weight: var(--c--globals--font--weights--bold);
   white-space: nowrap;
   transition-property: color;
   transition-duration: 0.35s;
+  font-size: var(--c--globals--font--sizes--m);
 }
 
-.menu_item {
+.menu_item,
+.menu_dropdown_item {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding: 6px 0px 6px 21px;
+  width: 100%;
   box-sizing: border-box;
   white-space: nowrap;
-  padding-left: var(--c--globals--spacings--base);
-  padding-right: 30px;
+  font-size: var(--c--globals--font--sizes--sm);
+  /*border-radius: var(--c--components--button--border-radius);*/
+  cursor: pointer;
 }
 
 .menu_item span {
-  font-size: var(--c--globals--font--sizes--h2);
+  font-size: var(--c--globals--font--sizes--h3);
   padding-right: var(--c--globals--spacings--base);
+}
+.menu_item a {
+  padding-right: var(--c--globals--spacings--s);
+}
+
+.active {
+  background-color: red;
 }
 
 .menu_item:hover {
   background: rgb(
-    from var(--c--contextuals--background--semantic--brand--primary-hover) r g b /
-      40%
+    from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%
+  );
+}
+
+.main_menu_dropdown {
+  padding-left: var(--c--globals--spacings--l);
+  background: rgb(
+    from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%
   );
 }

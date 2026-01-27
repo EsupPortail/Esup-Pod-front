@@ -15,10 +15,18 @@
 .navbar_search {
   margin-left: auto;
   margin-right: auto;
+  width: 40rem;
+}
+
+.navbar_search_input {
+  padding: 0 var(--c--globals--spacings--lg);
+  height: 40px;
 }
 
 .navbar_logo {
   display: flex;
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+  text-decoration: none;
 }
 
 .navbar_button {
@@ -29,8 +37,12 @@
   cursor: pointer;
 }
 
+.navbar_logo img {
+  height: 35px;
+}
+
 .navbar_logo strong {
-  font-size: var(--c--globals--font--sizes--h1);
+  font-size: var(--c--globals--font--sizes--h2);
 }
 
 .navbar_add_video {

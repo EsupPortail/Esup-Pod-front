@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "../components/Navbar/page";
+import Sidebar from "../components/Sidebar/page";
 import Footer from "../components/Footer/page";
+import Breadcrumb from "../components/Breadcrumbs/page";
+import SidebarProvider from "../context/SidebarProvider";
 
 export const metadata: Metadata = {
   title: "Esup POD V5",
@@ -15,11 +18,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
+      <SidebarProvider>
+        <body>
+          <Navbar />
+          <Sidebar />
+          <main id="main" className="main sidebarFixed">
+            <Breadcrumb />
+            <div className="content">{children}</div>
+          </main>
+          <Footer />
+        </body>
+      </SidebarProvider>
     </html>
   );
 }

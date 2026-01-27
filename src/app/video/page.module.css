@@ -1,10 +1,1 @@
-.main {
-  padding-top: var(--c--globals--spacings--6xl);
-  margin-left: 60px;
-  color: var(--c--contextuals--content--semantic--neutral--primary);
-}
 
-.content {
-  min-height: 700px;
-  padding: var(--c--globals--spacings--md);
-}
