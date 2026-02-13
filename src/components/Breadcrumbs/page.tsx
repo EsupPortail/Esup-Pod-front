@@ -3,7 +3,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import styles from "./page.module.css";
 import { usePathname } from "next/navigation";
-import React, { ReactNode } from "react";
+import { capitalize } from "@/src/utils/helper";
 
 export default function Breadcrumb() {
   const paths = usePathname();
@@ -18,6 +18,7 @@ export default function Breadcrumb() {
         {pathNames.length > 0}
         {pathNames.map((link, index) => {
           let href = `/${pathNames.slice(0, index + 1).join("/")}`;
+          href = capitalize(href);
 
           return (
             <Link

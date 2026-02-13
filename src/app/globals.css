@@ -30,7 +30,7 @@ body {
 }
 
 .main {
-  padding-top: var(--c--globals--spacings--6xl);
+  padding-top: var(--c--globals--spacings--5xl);
   margin-left: 70px;
   color: var(--c--contextuals--content--semantic--neutral--primary);
   transition: all 0.4s ease;

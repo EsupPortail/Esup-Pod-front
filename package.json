@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "esup-pod-v5",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,10 +17,10 @@
     "@mui/system": "^7.3.7",
     "@openfun/cunningham-react": "^4.0.0",
     "@openfun/cunningham-tokens": "^3.0.0",
-    "next": "16.0.6",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "react-mui-sidebar": "^1.6.10"
+    "next": "^16.1.6",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hook-form": "^7.71.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -29,7 +29,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.6",
-    "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

@@ -5,6 +5,8 @@ import Sidebar from "../components/Sidebar/page";
 import Footer from "../components/Footer/page";
 import Breadcrumb from "../components/Breadcrumbs/page";
 import SidebarProvider from "../context/SidebarProvider";
+import AuthProvider from "../context/AuthProvider";
+import CunninghamStyleProvider from "../context/CunninghamProvider";
 
 export const metadata: Metadata = {
   title: "Esup POD V5",
@@ -18,17 +20,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SidebarProvider>
-        <body>
-          <Navbar />
-          <Sidebar />
-          <main id="main" className="main sidebarFixed">
-            <Breadcrumb />
-            <div className="content">{children}</div>
-          </main>
-          <Footer />
-        </body>
-      </SidebarProvider>
+      <CunninghamStyleProvider>
+        <AuthProvider>
+          <SidebarProvider>
+            <body>
+              <Navbar />
+              <Sidebar />
+              <main id="main" className="main sidebarFixed">
+                <Breadcrumb />
+                <div className="content">{children}</div>
+              </main>
+              <Footer />
+            </body>
+          </SidebarProvider>
+        </AuthProvider>
+      </CunninghamStyleProvider>
     </html>
   );
 }

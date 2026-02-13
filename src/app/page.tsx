@@ -1,8 +1,9 @@
 "use client";
 import VideosList from "../components/VideosList/page";
-import { Button } from "@openfun/cunningham-react";
+import { Button, Alert } from "@openfun/cunningham-react";
 import styles from "./page.module.css";
 import { Video } from "../types/interface";
+import { useSearchParams } from "next/navigation";
 
 const videos: Video[] = [
   {
@@ -36,8 +37,22 @@ const videos: Video[] = [
 ];
 
 export default function Accueil() {
+  const params = useSearchParams();
+  const messageAlert =
+    params.get("login") === "success"
+      ? "Vous êtes désormais connecté."
+      : params.get("logout") === "success"
+        ? "Vous êtes désormais déconnecté."
+        : null;
+
   return (
     <div>
+      {messageAlert && (
+        <Alert canClose type="success">
+          {messageAlert}
+        </Alert>
+      )}
+
       <h2>
         POD Univ
         <br />

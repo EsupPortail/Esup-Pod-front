@@ -1,0 +1,19 @@
+.login_content {
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.login_content h3 {
+  padding: var(--c--globals--spacings--base) 0;
+  text-align: center;
+}
+
+.login_form {
+  width: 300px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--c--globals--spacings--base);
+}

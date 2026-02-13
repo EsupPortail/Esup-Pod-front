@@ -1,7 +1,16 @@
 "use client";
-import { createContext, useState, useEffect } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 
-export const SidebarContext = createContext([]);
+type SidebarContextValue = {
+  sidebarOpen: boolean;
+  sidebarFixed: boolean;
+  handleFixSidebar: () => void;
+  handleViewSidebar: () => void;
+};
+
+export const SidebarContext = createContext<SidebarContextValue | undefined>(
+  undefined,
+);
 
 export default function SidebarProvider(props: any) {
   //Comportement sidebar:
@@ -41,3 +50,10 @@ export default function SidebarProvider(props: any) {
     </SidebarContext.Provider>
   );
 }
+export const useSidebar = () => {
+  const ctx = useContext(SidebarContext);
+  if (!ctx) {
+    throw new Error("useSidebar doit etre utilise dans SidebarProvider.");
+  }
+  return ctx;
+};

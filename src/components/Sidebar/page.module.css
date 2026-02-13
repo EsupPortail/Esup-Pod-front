@@ -19,7 +19,7 @@
   background-color: var(--c--globals--colors--white-000);
   padding-top: 20px;
   color: black;
-  margin-top: 92px;
+  margin-top: 70px;
   border-right: 1px solid
     var(--c--contextuals--background--semantic--brand--primary);
   transition: all 0.3s ease;

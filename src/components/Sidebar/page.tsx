@@ -1,9 +1,7 @@
 "use client";
-import { useContext, useState } from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import { SidebarContext } from "../../context/SidebarProvider";
+import { useSidebar } from "../../context/SidebarProvider";
+import { useAuth } from "@/src/context/AuthProvider";
 import styles from "./page.module.css";
-import MuiDrawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import MenuItem from "./menuItem";
 import { List } from "@mui/material";
@@ -15,7 +13,8 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { DashboardRounded } from "@mui/icons-material";
 
 const SideBar = () => {
-  const { handleViewSidebar, sidebarOpen } = useContext(SidebarContext);
+  const { handleViewSidebar, sidebarOpen } = useSidebar();
+  const { accessToken } = useAuth();
 
   const menuPrincipalItems = [
     {
@@ -137,20 +136,22 @@ const SideBar = () => {
           ))}
         </List>
       </div>
-      <Divider />
-      <div>
-        <h3
-          className={styles.menu_title}
-          style={{ color: sidebarOpen ? "#1167D4" : "white" }}
-        >
-          Mon menu POD
-        </h3>
-        <List component="nav" className="" disablePadding>
-          {menuPodItems.map((item, index) => (
-            <MenuItem {...item} key={index} />
-          ))}
-        </List>
-      </div>
+      {accessToken && (
+        <div>
+          <Divider />
+          <h3
+            className={styles.menu_title}
+            style={{ color: sidebarOpen ? "#1167D4" : "white" }}
+          >
+            Mon menu POD
+          </h3>
+          <List component="nav" className="" disablePadding>
+            {menuPodItems.map((item, index) => (
+              <MenuItem {...item} key={index} />
+            ))}
+          </List>
+        </div>
+      )}
     </div>
   );
 };
