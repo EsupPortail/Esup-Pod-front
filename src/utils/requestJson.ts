@@ -3,10 +3,11 @@
 //Init : options du fetch
 export const requestJson = async <T>(
   input: RequestInfo | Response,
-  init: RequestInit,
+  init?: RequestInit | null,
 ): Promise<T> => {
   //Si input est déjà un Response, on l’utilise directement.
-  const res = input instanceof Response ? input : await fetch(input, init);
+  const res =
+    input instanceof Response ? input : await fetch(input, init ?? undefined);
   if (!res.ok) {
     let message = "Erreur API.";
     try {
