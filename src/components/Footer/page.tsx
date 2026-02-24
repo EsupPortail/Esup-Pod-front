@@ -29,13 +29,9 @@ export default function Footer() {
             <img src="x_icon.png" alt="X" />
             <img src="linkedin_icon.png" alt="Linkedin" />
           </div>
-          <div className={styles.footer_link}>
-            <p>
-              <a href="">Projet Esup-Pod</a>
-            </p>
-            <p>
-              <a href="">Esup portail</a>
-            </p>
+          <div className={styles.footer_link_esup}>
+            <a href="">Projet Esup-Pod</a>
+            <a href="">Esup portail</a>
           </div>
         </div>
       </div>

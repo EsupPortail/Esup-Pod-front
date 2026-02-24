@@ -1,6 +1,7 @@
 "use client";
 import { useContext, createContext, useEffect, useMemo, useState } from "react";
 import { requestJson } from "../utils/requestJson";
+import { authFetch } from "../api/authFetch";
 
 type AuthContextValue = {
   accessToken: string | null;
@@ -11,6 +12,13 @@ type AuthContextValue = {
   logOut: () => void;
   refresh: () => Promise<string | null>;
   verify: () => Promise<boolean>;
+};
+
+type LogoutInfo = {
+  local: string | null;
+  cas: string | null;
+  shibboleth: string | null;
+  oidc: string | null;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -24,6 +32,7 @@ const API_URL =
 export default function AuthProvider(props: any) {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [logOutUrl, setlogOutUrl] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
 
   // Réhydrate les tokens depuis localStorage
@@ -36,9 +45,10 @@ export default function AuthProvider(props: any) {
       const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
       setAccessToken(storedAccess);
       setRefreshToken(storedRefresh);
+      getLogOutUrl();
       if (storedAccess) {
         //Verification du access tocken
-        const accessTokenIsValid = verify(storedAccess);
+        const accessTokenIsValid = await verify(storedAccess);
         //Si la verification échoue, tentative de refresh si on a un refresh token
         if (!accessTokenIsValid && storedRefresh) {
           const accessTokenIsRefresh = await refresh(storedRefresh);
@@ -72,6 +82,20 @@ export default function AuthProvider(props: any) {
     persistTokens(null, null);
   };
 
+  const getLogOutUrl = async () => {
+    try {
+      const res = await authFetch(API_URL + "auth/logout-info/", {
+        accessToken: accessToken,
+        onRefresh: refresh,
+      });
+      const data = await requestJson<LogoutInfo>(res);
+      setlogOutUrl("/");
+    } catch (err) {
+      console.log(err);
+      setlogOutUrl("/");
+    }
+  };
+
   //Verification des access token
   const verify = async (token?: string | null) => {
     const tokenToVerify = token ?? accessToken;
@@ -83,7 +107,7 @@ export default function AuthProvider(props: any) {
         body: JSON.stringify({ token: tokenToVerify }),
       });
       return true;
-    } catch {
+    } catch (e) {
       return false;
     }
   };

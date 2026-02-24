@@ -1,5 +1,6 @@
 "use client";
 import { useContext, createContext, useState, useEffect } from "react";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 type SidebarContextValue = {
   sidebarOpen: boolean;
@@ -14,8 +15,9 @@ export const SidebarContext = createContext<SidebarContextValue | undefined>(
 
 export default function SidebarProvider(props: any) {
   //Comportement sidebar:
-  const [sidebarOpen, setSideBarOpen] = useState(true);
-  const [sidebarFixed, setSideBarFixed] = useState(true);
+  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const [sidebarOpen, setSideBarOpen] = useState(false);
+  const [sidebarFixed, setSideBarFixed] = useState(false);
 
   useEffect(() => {
     const main = document.getElementById("main");
@@ -31,9 +33,17 @@ export default function SidebarProvider(props: any) {
     }
   }, [sidebarFixed]);
 
+  // si la taille d'écran change après le mount
+  useEffect(() => {
+    setSideBarOpen(!isMobile);
+    setSideBarFixed(!isMobile);
+  }, [isMobile]);
+
   const handleFixSidebar = () => {
     setSideBarOpen(!sidebarOpen);
-    setSideBarFixed(!sidebarFixed);
+    if (!isMobile) {
+      setSideBarFixed(!sidebarFixed);
+    }
   };
 
   const handleViewSidebar = () => {

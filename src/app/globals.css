@@ -3,17 +3,29 @@
 @import "@openfun/cunningham-react/fonts";
 @import "@openfun/cunningham-react/icons";
 
+/*
+Small Screens: max-width: 600px (smartphones)
+Medium Screens: 601px — 1024px (tablets)
+Large Screens: 1025px — 1440px (desktops)
+Extra Large Screens: min-width: 1441px
+*/
+/* globals.css */
+:root {
+  --navbar-height: 70px;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --navbar-height: 70px;
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+/* }* */
 
 body {
   background: var(--c--globals--colors--white-000);
@@ -30,11 +42,11 @@ body {
 }
 
 .main {
-  padding-top: var(--c--globals--spacings--5xl);
-  margin-left: 70px;
+  padding-top: var(--navbar-height);
   color: var(--c--contextuals--content--semantic--neutral--primary);
   transition: all 0.4s ease;
   min-height: 800px;
+  margin-left: 70px;
 }
 
 .sidebarFixed {
@@ -47,4 +59,23 @@ body {
 
 .content h1 {
   color: black;
+}
+
+/* Styles for small screens */
+@media (max-width: 1024px) {
+  .main {
+    margin-left: 0;
+  }
+}
+
+@media ((min-width: 600px) and (max-width: 800px)) /*and (max-width: 1024px) */ {
+  :root {
+    --navbar-height: 80px;
+  }
+}
+
+@media (max-width: 600px) /*and (max-width: 1024px) */ {
+  :root {
+    --navbar-height: 127px;
+  }
 }

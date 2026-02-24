@@ -11,10 +11,13 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import GroupsIcon from "@mui/icons-material/Groups";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { DashboardRounded } from "@mui/icons-material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Button from "@mui/material/Button";
 
 const SideBar = () => {
-  const { handleViewSidebar, sidebarOpen } = useSidebar();
+  const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
   const { accessToken } = useAuth();
+  const isMobile = useMediaQuery("(max-width: 1024px)");
 
   const menuPrincipalItems = [
     {
@@ -118,11 +121,15 @@ const SideBar = () => {
 
   return (
     <div
-      className={styles.sidebar}
-      style={{ width: sidebarOpen ? "275px" : "70px" }}
-      onMouseEnter={handleViewSidebar}
-      onMouseLeave={handleViewSidebar}
+      className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed}`}
+      onMouseEnter={isMobile ? undefined : handleViewSidebar}
+      onMouseLeave={isMobile ? undefined : handleViewSidebar}
     >
+      {isMobile && (
+        <Button className={styles.button_close} onClick={handleFixSidebar}>
+          <span className="material-icons">close</span>
+        </Button>
+      )}
       <div className={styles.menu}>
         <h3
           className={styles.menu_title}
@@ -130,14 +137,14 @@ const SideBar = () => {
         >
           Menu principal
         </h3>
-        <List component="nav" className="" disablePadding>
+        <List component="nav" disablePadding>
           {menuPrincipalItems.map((item, index) => (
             <MenuItem {...item} key={index} />
           ))}
         </List>
       </div>
       {accessToken && (
-        <div>
+        <div className={styles.menu}>
           <Divider />
           <h3
             className={styles.menu_title}
@@ -145,7 +152,7 @@ const SideBar = () => {
           >
             Mon menu POD
           </h3>
-          <List component="nav" className="" disablePadding>
+          <List component="nav" disablePadding>
             {menuPodItems.map((item, index) => (
               <MenuItem {...item} key={index} />
             ))}

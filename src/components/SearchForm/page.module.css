@@ -1,0 +1,4 @@
+.search_input {
+  padding: 0 var(--c--globals--spacings--lg);
+  height: 40px;
+}

@@ -26,3 +26,12 @@ export function formatTime(time: {
 export function capitalize(value: string) {
   return value.length ? value[0].toUpperCase() + value.slice(1) : value;
 }
+
+export function setInitial(username: string) {
+  return username
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
