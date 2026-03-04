@@ -2,6 +2,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
+const SIDEBAR_FIXED_STORAGE_KEY = "sidebar-fixed";
+
 type SidebarContextValue = {
   sidebarOpen: boolean;
   sidebarFixed: boolean;
@@ -14,7 +16,7 @@ export const SidebarContext = createContext<SidebarContextValue | undefined>(
 );
 
 export default function SidebarProvider(props: any) {
-  //Comportement sidebar:
+  // Comportement sidebar
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [sidebarOpen, setSideBarOpen] = useState(false);
   const [sidebarFixed, setSideBarFixed] = useState(false);
@@ -22,6 +24,7 @@ export default function SidebarProvider(props: any) {
   useEffect(() => {
     const main = document.getElementById("main");
     const footer = document.getElementById("footer");
+
     if (main && footer) {
       if (!sidebarFixed) {
         main.classList.remove("sidebarFixed");
@@ -33,22 +36,40 @@ export default function SidebarProvider(props: any) {
     }
   }, [sidebarFixed]);
 
-  // si la taille d'écran change après le mount
   useEffect(() => {
-    setSideBarOpen(!isMobile);
-    setSideBarFixed(!isMobile);
+    if (isMobile) {
+      setSideBarOpen(false);
+      setSideBarFixed(false);
+      return;
+    }
+
+    const savedValue = localStorage.getItem(SIDEBAR_FIXED_STORAGE_KEY);
+    const nextSidebarFixed = savedValue === null ? true : savedValue === "true";
+
+    setSideBarFixed(nextSidebarFixed);
+    setSideBarOpen(nextSidebarFixed);
   }, [isMobile]);
 
-  const handleFixSidebar = () => {
-    setSideBarOpen(!sidebarOpen);
+  // Desktop only: persist fixed state
+  useEffect(() => {
     if (!isMobile) {
-      setSideBarFixed(!sidebarFixed);
+      localStorage.setItem(SIDEBAR_FIXED_STORAGE_KEY, String(sidebarFixed));
     }
+  }, [isMobile, sidebarFixed]);
+
+  const handleFixSidebar = () => {
+    if (!isMobile) {
+      setSideBarOpen((prev) => !prev);
+      setSideBarFixed((prev) => !prev);
+      return;
+    }
+
+    setSideBarOpen((prev) => !prev);
   };
 
   const handleViewSidebar = () => {
     if (!sidebarFixed) {
-      sidebarOpen ? setSideBarOpen(false) : setSideBarOpen(true);
+      setSideBarOpen((prev) => !prev);
     }
   };
 
@@ -60,6 +81,7 @@ export default function SidebarProvider(props: any) {
     </SidebarContext.Provider>
   );
 }
+
 export const useSidebar = () => {
   const ctx = useContext(SidebarContext);
   if (!ctx) {

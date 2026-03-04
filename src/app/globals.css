@@ -10,14 +10,11 @@ Large Screens: 1025px — 1440px (desktops)
 Extra Large Screens: min-width: 1441px
 */
 /* globals.css */
-:root {
-  --navbar-height: 70px;
-}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --navbar-height: 70px;
+  --navbar-height: 78px;
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -68,14 +65,20 @@ body {
   }
 }
 
-@media ((min-width: 600px) and (max-width: 800px)) /*and (max-width: 1024px) */ {
+@media (max-width: 600px) /*and (max-width: 1024px) */ {
   :root {
     --navbar-height: 80px;
   }
 }
 
-@media (max-width: 600px) /*and (max-width: 1024px) */ {
+@media (max-width: 535px) /*and (max-width: 1024px) */ {
   :root {
-    --navbar-height: 127px;
+    --navbar-height: 125px;
+  }
+}
+
+@media (max-width: 295px) /*and (max-width: 1024px) */ {
+  :root {
+    --navbar-height: 160px;
   }
 }

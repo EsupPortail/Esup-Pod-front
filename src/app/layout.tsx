@@ -32,7 +32,7 @@ export default function RootLayout({
             <body>
               <Navbar />
               <Sidebar />
-              <main id="main" className="main sidebarFixed">
+              <main id="main" className="main">
                 <Breadcrumb />
                 <div className="content">{children}</div>
               </main>

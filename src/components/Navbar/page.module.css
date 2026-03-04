@@ -87,7 +87,6 @@
 @media (max-width: 1024px) {
   .navbar {
     flex-wrap: wrap;
-    height: auto;
   }
   .navbar_button_display {
     display: none;
@@ -104,5 +103,8 @@
   }
   .navbar_profil_menu {
     padding-top: 20px;
+  }
+  .navbar_profil {
+    margin-left: 0px;
   }
 }
