@@ -1,5 +1,9 @@
 .breadcrumb {
-  background-color: var(--c--globals--colors--gray-100);
+  background-color: var(--c--contextuals--background--surface--tertiary);
   padding-left: var(--c--globals--spacings--md);
-  font-size: var(--c--globals--font--sizes--s);
+}
+
+.breadcrumbLink {
+  font-size: var(--c--globals--font--sizes--xs) !important;
+  color: var(--c--contextuals--content--semantic--neutral--primary) !important;
 }

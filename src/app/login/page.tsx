@@ -6,6 +6,8 @@ import { Input, InputPassword, Button, Alert } from "@openfun/cunningham-react";
 import styles from "./page.module.css";
 import { useAuth } from "../../context/AuthProvider";
 
+export const breadcrumbLabel = "Connexion à mon profil POD";
+
 export default function Login() {
   const { logIn } = useAuth();
   const router = useRouter();

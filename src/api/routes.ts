@@ -9,10 +9,12 @@ export const getRoutes = () => {
         verify: url + "auth/token/verify/",
         refresh: url + "auth/token/refresh/",
       },
-      users: {
-        get: url + "auth/users/",
+      user: {
+        config: url + "auth/config/",
+        logout: url + "auth/logout-info/",
+        data: url + "auth/users/me/",
+        update: (id: number) => url + `auth/users/${id}/`,
       },
-      sites: {},
     },
   };
 };

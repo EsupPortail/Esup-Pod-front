@@ -2,7 +2,7 @@
   position: fixed;
   left: 0;
   overflow-x: hidden;
-  background-color: var(--c--globals--colors--white-000);
+  background-color: var(--background);
   padding-top: 20px;
   color: var(--c--contextuals--content--semantic--neutral--primary);
   margin-top: var(--navbar-height);
@@ -17,7 +17,7 @@
 }
 
 .open {
-  width: 275px;
+  width: var(--sidebar-open);
 }
 
 .closed {
@@ -27,7 +27,6 @@
 .menu_title {
   font-weight: var(--c--globals--font--weights--bold);
   font-size: var(--c--globals--font--sizes--m);
-  color: var(--c--contextuals--background--semantic--brand--primary);
   transition-property: color;
   transition-duration: 0.2s;
   padding: var(--c--globals--spacings--m) 0 var(--c--globals--spacings--m) 16px;
@@ -44,16 +43,6 @@
 
 .button_close {
   align-self: flex-end;
-}
-
-.sidebar_menu_title {
-  padding-left: var(--c--globals--spacings--base);
-  padding-bottom: var(--c--globals--spacings--s);
-  font-weight: var(--c--globals--font--weights--bold);
-  white-space: nowrap;
-  transition-property: color;
-  transition-duration: 0.35s;
-  font-size: var(--c--globals--font--sizes--m);
 }
 
 .menu_item,
@@ -76,10 +65,6 @@
 }
 .menu_item a {
   padding-right: var(--c--globals--spacings--s);
-}
-
-.active {
-  background-color: red;
 }
 
 .menu_item:hover {

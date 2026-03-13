@@ -6,7 +6,7 @@ export default function Footer() {
       <div className={styles.footer_content}>
         <div className={styles.footer_contact_univ}>
           <div className={styles.footer_contact_univ_logo}>
-            <img src="logoEsup.svg" alt="Logo établissement"></img>
+            <img src="/logoEsup.svg" alt="Logo établissement"></img>
           </div>
           <address>
             <p>
@@ -25,9 +25,9 @@ export default function Footer() {
         </div>
         <div className={styles.footer_extra_link}>
           <div className={styles.footer_extra_link_icons}>
-            <img src="facebook_icon.png" alt="Facebook" />
-            <img src="x_icon.png" alt="X" />
-            <img src="linkedin_icon.png" alt="Linkedin" />
+            <img src="/facebook_icon.png" alt="Facebook" />
+            <img src="/x_icon.png" alt="X" />
+            <img src="/linkedin_icon.png" alt="Linkedin" />
           </div>
           <div className={styles.footer_link_esup}>
             <a href="">Projet Esup-Pod</a>
@@ -42,3 +42,4 @@ export default function Footer() {
     </footer>
   );
 }
+

@@ -35,29 +35,50 @@ const MenuItem = (props: MenuItemProps) => {
       selected={isExpandable && open ? true : false}
       sx={{
         "&.Mui-selected": {
-          backgroundColor: "rgb(from #1167d4  r g b / 30%)",
+          backgroundColor:
+            "rgb(from var(--c--contextuals--background--semantic--brand--primary)  r g b / 30%)",
         },
       }}
     >
       {/* Display an icon if any */}
       {!!Icon && (
         <ListItemIcon sx={{ paddingLeft: "6px" }}>
-          <Icon />
+          <Icon
+            sx={{
+              color:
+                "var(--c--contextuals--content--semantic--neutral--secondary)",
+            }}
+          />
         </ListItemIcon>
       )}
       <ListItemText
         sx={{
           ".MuiTypography-root": {
             fontSize: "0.825rem",
-            color: "black",
+            color:
+              "var(  --c--contextuals--content--semantic--neutral--primary)",
           },
         }}
         primary={name}
         inset={!Icon}
       />
       {/* Display the expand menu if the item has children */}
-      {isExpandable && !open && <IconExpandMore style={{ color: "black" }} />}
-      {isExpandable && open && <IconExpandLess style={{ color: "black" }} />}
+      {isExpandable && !open && (
+        <IconExpandMore
+          style={{
+            color:
+              "var(  --c--contextuals--content--semantic--neutral--primary)",
+          }}
+        />
+      )}
+      {isExpandable && open && (
+        <IconExpandLess
+          style={{
+            color:
+              "var(  --c--contextuals--content--semantic--neutral--primary)",
+          }}
+        />
+      )}
     </ListItemButton>
   );
 

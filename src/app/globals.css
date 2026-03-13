@@ -12,9 +12,9 @@ Extra Large Screens: min-width: 1441px
 /* globals.css */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
   --navbar-height: 78px;
+  --sidebar-open: 285px;
+  --background: var(--c--contextuals--background--surface--primary);
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -25,8 +25,8 @@ Extra Large Screens: min-width: 1441px
 /* }* */
 
 body {
-  background: var(--c--globals--colors--white-000);
-  color: var(--foreground);
+  background-color: var(--background);
+  color: var(--c--contextuals--background--semantic--contextual--primary);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -46,8 +46,12 @@ body {
   margin-left: 70px;
 }
 
+.c__alert--success {
+  margin-bottom: var(--c--globals--spacings--lg);
+}
+
 .sidebarFixed {
-  margin-left: 270px !important;
+  margin-left: var(--sidebar-open) !important;
 }
 
 .content {

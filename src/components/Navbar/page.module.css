@@ -1,5 +1,5 @@
 .navbar {
-  background-color: var(--c--globals--colors--white-000);
+  background-color: var(--background);
   color: var(--c--contextuals--content--semantic--neutral--primary);
   display: flex;
   align-items: center;
@@ -34,13 +34,14 @@
 
 .navbar_logo {
   display: flex;
-  color: var(--c--contextuals--content--semantic--neutral--primary);
   text-decoration: none;
+  color: var(--c--contextuals--content--semantic--neutral--primary);
 }
 
 .navbar_button_menu {
   font-size: var(--c--globals--font--sizes--h1);
   border: 0;
+  color: var(--c--contextuals--content--semantic--neutral--primary);
   background: none;
   padding: 0 var(--c--globals--spacings--sm) 0 var(--c--globals--spacings--sm);
   cursor: pointer;
@@ -55,7 +56,6 @@
 }
 
 .navbar_profil {
-  margin-left: 16px;
   margin-right: var(--c--globals--spacings--xxl);
 }
 

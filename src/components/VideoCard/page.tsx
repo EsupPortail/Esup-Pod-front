@@ -16,7 +16,14 @@ export default function VideoCard(props: VideosCardProps) {
 
   return (
     <Link key="video-link" href="/video" style={{ textDecoration: "none" }}>
-      <Card sx={{ width: 260 }}>
+      <Card
+        sx={{
+          width: 260,
+          backgroundColor:
+            "var(--c--contextuals--background--surface--secondary)",
+          color: "var(--c--contextuals--content--semantic--neutral--primary)",
+        }}
+      >
         <CardMedia
           sx={{ height: 160 }}
           image={video.thumbnail}

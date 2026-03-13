@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Input } from "@openfun/cunningham-react";
+import SettingsIcon from "@mui/icons-material/Settings";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
@@ -39,7 +40,7 @@ export function LoginButton() {
 export function AuthMenu({ isMobile }: { isMobile: boolean }) {
   //Comportement menu profil:
   const router = useRouter();
-  const { logOut } = useAuth();
+  const { logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -48,13 +49,10 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-  const logout = () => {
-    logOut();
-    router.push("/?logout=success");
-  };
   const handleLogout = () => {
     handleCloseMenu();
     logout();
+    router.push("/?logout=success");
   };
   const initial = setInitial("Alice Langlois");
   return (
@@ -63,7 +61,6 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
         <IconButton
           onClick={handleClickMenu}
           size="small"
-          sx={{ ml: 2 }}
           aria-controls={openMenu ? "account-menu" : undefined}
           aria-expanded={openMenu ? "true" : undefined}
         >
@@ -89,6 +86,9 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
             paper: {
               elevation: 0,
               sx: {
+                backgroundColor: "var(--background)",
+                color:
+                  "var(--c--contextuals--content--semantic--neutral--primary);",
                 padding: "10px",
                 overflow: "visible",
                 filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
@@ -101,7 +101,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
                   right: 14,
                   width: 10,
                   height: 10,
-                  bgcolor: "background.paper",
+                  bgcolor: "var(--background)",
                   transform: "translateY(-50%) rotate(45deg)",
                   zIndex: 0,
                 },
@@ -143,7 +143,11 @@ export default function Navbar() {
         </div>
         <div className="">
           <Link className={styles.navbar_logo} key="accueil-link" href="/">
-            <img className="pr-sm pl-sm" src="logoEsup.svg" alt="Accueil"></img>
+            <img
+              className="pr-sm pl-sm"
+              src="/logoEsup.svg"
+              alt="Accueil"
+            ></img>
             <strong>{appTitle}</strong>
           </Link>
         </div>
@@ -187,6 +191,20 @@ export default function Navbar() {
             </Button>
           </div>
         )}
+        <IconButton
+          sx={{ ml: "var(--c--globals--spacings--s)" }}
+          aria-label="Affichage et accessibilité"
+          component={Link}
+          href="/user-settings"
+        >
+          <SettingsIcon
+            sx={{
+              fontSize: "var(--c--globals--font--sizes--h1)",
+              color:
+                "var(--c--contextuals--content--semantic--neutral--primary);",
+            }}
+          />
+        </IconButton>
         {accessToken ? <AuthMenu isMobile={isMobile} /> : <LoginButton />}
       </nav>
     </div>

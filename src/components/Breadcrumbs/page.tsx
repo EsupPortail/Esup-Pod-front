@@ -3,7 +3,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import styles from "./page.module.css";
 import { usePathname } from "next/navigation";
-import { capitalize } from "@/src/utils/helper";
+import { breadcrumbLabels } from "./labelsPages";
 
 export default function Breadcrumb() {
   const paths = usePathname();
@@ -12,18 +12,18 @@ export default function Breadcrumb() {
   return (
     <div>
       <Breadcrumbs className={styles.breadcrumb} aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
+        <Link underline="hover" className={styles.breadcrumbLink} href="/">
           Accueil
         </Link>
         {pathNames.length > 0}
         {pathNames.map((link, index) => {
           let href = `/${pathNames.slice(0, index + 1).join("/")}`;
-          href = capitalize(href);
+          link = breadcrumbLabels[href] ?? link;
 
           return (
             <Link
               underline="hover"
-              color="text.primary"
+              className={styles.breadcrumbLink}
               href={href}
               aria-current="page"
             >
