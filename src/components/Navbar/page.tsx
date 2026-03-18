@@ -14,10 +14,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import Dialog from "@mui/material/Dialog";
 import { setInitial } from "@/src/utils/helper";
 import { ProfileMenuContent } from "./ProfileMenuContent";
-import { SearchForm } from "../SearchForm/page";
+import dynamic from "next/dynamic";
 
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
+const SearchForm = dynamic(
+  () => import("../SearchForm/page").then((mod) => mod.SearchForm),
+  { ssr: false }
+);
 
 //Bouton Connexion
 export function LoginButton() {
@@ -125,7 +129,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
 export default function Navbar() {
   const { handleFixSidebar } = useSidebar();
   const { accessToken } = useAuth();
-  const isMobile = useMediaQuery("(max-width: 1024px)");
+  const isMobile = useMediaQuery("(max-width: 1024px)", { noSsr: true });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (

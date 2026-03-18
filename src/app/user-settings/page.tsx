@@ -15,7 +15,7 @@ export default function userSettings() {
         label="Passer en mode sombre"
         labelSide="right"
         checked={theme === "dark"}
-        onClick={handleTheme}
+        onChange={handleTheme}
       />
     </div>
   );

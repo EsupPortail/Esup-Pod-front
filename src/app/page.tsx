@@ -1,7 +1,6 @@
 "use client";
 import VideosList from "../components/VideosList/page";
 import { Button, Alert } from "@openfun/cunningham-react";
-import styles from "./page.module.css";
 import { Video } from "../types/interface";
 import { useSearchParams } from "next/navigation";
 
@@ -65,7 +64,7 @@ export default function Accueil() {
       </p>
       <div>
         <VideosList videosList={videos} />
-        <div className={styles.content_footer}>
+        <div>
           <Button
             icon={<span className="material-icons">play_circle</span>}
             iconPosition="right"

@@ -26,10 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <CunninghamStyleProvider>
-        <AuthProvider>
-          <SidebarProvider>
-            <body>
+      <body>
+        <CunninghamStyleProvider>
+          <AuthProvider>
+            <SidebarProvider>
               <Navbar />
               <Sidebar />
               <main id="main" className="main">
@@ -37,10 +37,10 @@ export default function RootLayout({
                 <div className="content">{children}</div>
               </main>
               <Footer />
-            </body>
-          </SidebarProvider>
-        </AuthProvider>
-      </CunninghamStyleProvider>
+            </SidebarProvider>
+          </AuthProvider>
+        </CunninghamStyleProvider>
+      </body>
     </html>
   );
 }

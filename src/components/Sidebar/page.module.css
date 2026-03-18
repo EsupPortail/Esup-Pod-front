@@ -4,7 +4,7 @@
   overflow-x: hidden;
   background-color: var(--background);
   padding-top: 20px;
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
   margin-top: var(--navbar-height);
   border-right: 1px solid
     var(--c--contextuals--background--semantic--brand--primary);
@@ -14,6 +14,7 @@
   bottom: 0;
   display: flex;
   flex-direction: column;
+  z-index: 900;
 }
 
 .open {
@@ -55,7 +56,6 @@
   box-sizing: border-box;
   white-space: nowrap;
   font-size: var(--c--globals--font--sizes--sm);
-  /*border-radius: var(--c--components--button--border-radius);*/
   cursor: pointer;
 }
 
@@ -71,6 +71,7 @@
   background: rgb(
     from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%
   );
+  
 }
 
 .main_menu_dropdown {

@@ -1,5 +1,5 @@
-@import "../cunningham-tokens.css";
 @import "@openfun/cunningham-react/style";
+@import "../cunningham-tokens.css";
 @import "@openfun/cunningham-react/fonts";
 @import "@openfun/cunningham-react/icons";
 
@@ -15,18 +15,13 @@ Extra Large Screens: min-width: 1441px
   --navbar-height: 78px;
   --sidebar-open: 285px;
   --background: var(--c--contextuals--background--surface--primary);
+  --text-color: var(--c--contextuals--content--semantic--neutral--primary);
 }
 
-/*@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-/* }* */
 
 body {
   background-color: var(--background);
-  color: var(--c--contextuals--background--semantic--contextual--primary);
+  color: var(--text-color);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,7 +35,6 @@ body {
 
 .main {
   padding-top: var(--navbar-height);
-  color: var(--c--contextuals--content--semantic--neutral--primary);
   transition: all 0.4s ease;
   min-height: 800px;
   margin-left: 70px;
@@ -58,9 +52,6 @@ body {
   padding: var(--c--globals--spacings--lg);
 }
 
-.content h1 {
-  color: black;
-}
 
 /* Styles for small screens */
 @media (max-width: 1024px) {

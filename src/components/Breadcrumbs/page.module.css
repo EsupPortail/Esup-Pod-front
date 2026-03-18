@@ -5,5 +5,5 @@
 
 .breadcrumbLink {
   font-size: var(--c--globals--font--sizes--xs) !important;
-  color: var(--c--contextuals--content--semantic--neutral--primary) !important;
+  color: var(--text-color) !important;
 }

@@ -1,6 +1,6 @@
 .navbar {
   background-color: var(--background);
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   padding: var(--c--globals--spacings--sm);
@@ -10,6 +10,7 @@
   right: 0;
   left: 0;
   height: var(--navbar-height);
+  z-index: 1000;
 }
 
 .navbar_search {
@@ -35,13 +36,13 @@
 .navbar_logo {
   display: flex;
   text-decoration: none;
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
 }
 
 .navbar_button_menu {
   font-size: var(--c--globals--font--sizes--h1);
   border: 0;
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
   background: none;
   padding: 0 var(--c--globals--spacings--sm) 0 var(--c--globals--spacings--sm);
   cursor: pointer;

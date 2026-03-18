@@ -152,7 +152,7 @@ const SideBar = () => {
           <Divider />
           <h3
             className={styles.menu_title}
-            style={{ color: sidebarOpen ? "#1167D4" : "var(--background)" }}
+            style={{ color: sidebarOpen ? "var(--c--contextuals--background--semantic--brand--primary)" : "var(--background)" }}
           >
             Mon menu POD
           </h3>

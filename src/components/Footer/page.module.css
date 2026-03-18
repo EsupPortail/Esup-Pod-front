@@ -2,7 +2,7 @@
   background: rgb(
     from var(--c--contextuals--background--semantic--brand--primary) r g b / 50%
   );
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
   font-size: var(--c--globals--font--sizes--xs);
   padding: var(--c--globals--spacings--md);
   padding-left: var(--c--globals--spacings--xl);
@@ -28,7 +28,7 @@
 .footer_link_esup a {
   padding: var(--c--globals--spacings--xs) var(--c--globals--spacings--s) 0 0;
   font-weight: var(--c--globals--font--weights--bold);
-  color: var(--c--contextuals--content--semantic--neutral--primary);
+  color: var(--text-color);
   text-transform: uppercase;
 }
 
