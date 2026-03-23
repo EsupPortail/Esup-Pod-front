@@ -10,7 +10,7 @@
   right: 0;
   left: 0;
   height: var(--navbar-height);
-  z-index: 1000;
+  z-index: 900;
 }
 
 .navbar_search {

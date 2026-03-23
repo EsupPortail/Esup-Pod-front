@@ -4,15 +4,17 @@ import Button from "@mui/material/Button";
 import Link from "next/link";
 import styles from "./page.module.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { User } from "@/src/types/interface";
+import { getRoutes } from "@/src/api/routes";
 
 type ProfileMenuContentProps = {
-  userName: string;
+  user: User;
   onClose: () => void;
   onLogout: () => void;
 };
 
 export function ProfileMenuContent({
-  userName,
+  user,
   onClose,
   onLogout,
 }: ProfileMenuContentProps) {
@@ -24,17 +26,30 @@ export function ProfileMenuContent({
           <span className="material-icons">close</span>
         </Button>
       )}
-      <span className={styles.navbar_profil_menu_name_user}>{userName}</span>
+      <span className={styles.navbar_profil_menu_name_user}>
+        {user.last_name + " " + user.first_name || user.username}
+      </span>
       <div className={styles.navbar_profil_menu_content}>
         <MenuItem
           className={styles.navbar_profil_menu_item}
           component={Link}
           href="/profile-picture"
-          onClick={onClose}
         >
           <span className="material-icons">panorama</span>
           Changer mon image de profil
         </MenuItem>
+        {user.is_staff && (
+          <MenuItem
+            className={styles.navbar_profil_menu_item}
+            component={Link}
+            href={getRoutes().administration}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span className="material-icons">admin_panel_settings</span>
+            Administration
+          </MenuItem>
+        )}
         <MenuItem className={styles.navbar_profil_menu_item} onClick={onLogout}>
           <span className="material-icons">logout</span>
           Déconnexion

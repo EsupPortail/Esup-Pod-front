@@ -15,14 +15,14 @@ import Dialog from "@mui/material/Dialog";
 import { setInitial } from "@/src/utils/helper";
 import { ProfileMenuContent } from "./ProfileMenuContent";
 import dynamic from "next/dynamic";
+import { User } from "@/src/types/interface";
 
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
 const SearchForm = dynamic(
   () => import("../SearchForm/page").then((mod) => mod.SearchForm),
-  { ssr: false }
+  { ssr: false },
 );
-
 //Bouton Connexion
 export function LoginButton() {
   return (
@@ -41,7 +41,13 @@ export function LoginButton() {
   );
 }
 //Menu utilisateur Authentifié
-export function AuthMenu({ isMobile }: { isMobile: boolean }) {
+export function AuthMenu({
+  isMobile,
+  user,
+}: {
+  isMobile: boolean;
+  user: User;
+}) {
   //Comportement menu profil:
   const router = useRouter();
   const { logout } = useAuth();
@@ -58,7 +64,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
     logout();
     router.push("/?logout=success");
   };
-  const initial = setInitial("Alice Langlois");
+  const initial = setInitial(user.last_name, user.first_name);
   return (
     <div>
       <div className={styles.navbar_profil}>
@@ -74,7 +80,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
       {isMobile ? (
         <Dialog fullScreen open={openMenu} onClose={handleCloseMenu}>
           <ProfileMenuContent
-            userName={"Langlois Alice"}
+            user={user}
             onClose={handleCloseMenu}
             onLogout={handleLogout}
           />
@@ -116,7 +122,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           <ProfileMenuContent
-            userName={"Langlois Alice"}
+            user={user}
             onClose={handleCloseMenu}
             onLogout={handleLogout}
           />
@@ -128,7 +134,7 @@ export function AuthMenu({ isMobile }: { isMobile: boolean }) {
 
 export default function Navbar() {
   const { handleFixSidebar } = useSidebar();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)", { noSsr: true });
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -147,11 +153,7 @@ export default function Navbar() {
         </div>
         <div className="">
           <Link className={styles.navbar_logo} key="accueil-link" href="/">
-            <img
-              className="pr-sm pl-sm"
-              src="/logoEsup.svg"
-              alt="Accueil"
-            ></img>
+            <img className="pr-sm pl-sm" src={appLogo} alt="Accueil"></img>
             <strong>{appTitle}</strong>
           </Link>
         </div>
@@ -209,7 +211,11 @@ export default function Navbar() {
             }}
           />
         </IconButton>
-        {accessToken ? <AuthMenu isMobile={isMobile} /> : <LoginButton />}
+        {accessToken && user ? (
+          <AuthMenu isMobile={isMobile} user={user} />
+        ) : (
+          <LoginButton />
+        )}
       </nav>
     </div>
   );

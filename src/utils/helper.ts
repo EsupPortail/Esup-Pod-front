@@ -27,8 +27,9 @@ export function capitalize(value: string) {
   return value.length ? value[0].toUpperCase() + value.slice(1) : value;
 }
 
-export function setInitial(username: string) {
-  return username
+export function setInitial(lastname: string, firstname: string) {
+  return lastname
+    .concat(" ", firstname)
     .split(" ")
     .filter(Boolean)
     .slice(0, 2)
