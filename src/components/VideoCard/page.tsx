@@ -13,9 +13,10 @@ interface VideosCardProps {
 export default function VideoCard(props: VideosCardProps) {
   const { video } = props;
   const time = secondToMinute(video.time);
+  const href = `/video/${video.id}`;
 
   return (
-    <Link key="video-link" href="/video" style={{ textDecoration: "none" }}>
+    <Link key="video-link" href={href} style={{ textDecoration: "none" }}>
       <Card
         sx={{
           width: 260,

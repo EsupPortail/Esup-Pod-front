@@ -583,6 +583,8 @@
 	--c--contextuals--border--palette--gray--primary: var(--c--globals--colors--gray-500);
 	--c--contextuals--border--palette--gray--secondary: var(--c--globals--colors--gray-350);
 	--c--contextuals--border--palette--gray--tertiary: var(--c--globals--colors--gray-150);
+	--c--components--forms-input--placeholder-color: #6A788A;
+	--c--components--forms-labelledbox--label-color--small: #6A788A;
 }
 .cunningham-theme--dark{
 	--c--globals--colors--logo-1: #377FDB;
@@ -599,7 +601,7 @@
 	--c--globals--colors--brand-400: #5693E0;
 	--c--globals--colors--brand-450: #4085DC;
 	--c--globals--colors--brand-500: #2976D8;
-	--c--globals--colors--brand-550: #ef5bfd;
+	--c--globals--colors--brand-550: #1167D4;
 	--c--globals--colors--brand-600: #0659C5;
 	--c--globals--colors--brand-650: #1A509F;
 	--c--globals--colors--brand-700: #20467F;
@@ -979,7 +981,7 @@
 	--c--contextuals--background--surface--primary: var(--c--globals--colors--gray-800);
 	--c--contextuals--background--surface--secondary: var(--c--globals--colors--gray-850);
 	--c--contextuals--background--surface--tertiary: var(--c--globals--colors--gray-900);
-	--c--contextuals--background--semantic--brand--primary: var(--c--globals--colors--brand-550);
+	--c--contextuals--background--semantic--brand--primary: #BA01DA;
 	--c--contextuals--background--semantic--brand--primary-hover: var(--c--globals--colors--brand-650);
 	--c--contextuals--background--semantic--brand--secondary: var(--c--globals--colors--brand-700);
 	--c--contextuals--background--semantic--brand--secondary-hover: var(--c--globals--colors--brand-750);
@@ -1168,4 +1170,6 @@
 	--c--contextuals--border--palette--gray--primary: var(--c--globals--colors--gray-350);
 	--c--contextuals--border--palette--gray--secondary: var(--c--globals--colors--gray-450);
 	--c--contextuals--border--palette--gray--tertiary: var(--c--globals--colors--gray-550);
+	--c--components--forms-input--placeholder-color: #B5B9BE;
+	--c--components--forms-labelledbox--label-color--small: #B5B9BE;
 }

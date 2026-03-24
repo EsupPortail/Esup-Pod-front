@@ -135,7 +135,7 @@ const SideBar = () => {
           className={styles.menu_title}
           style={{
             color: sidebarOpen
-              ? "var(--c--contextuals--background--semantic--brand--primary)"
+              ? "var(--c--contextuals--content--semantic--brand--primary)"
               : "var(--background)",
           }}
         >

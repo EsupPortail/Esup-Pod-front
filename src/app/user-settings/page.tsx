@@ -10,7 +10,7 @@ export default function userSettings() {
 
   return (
     <div>
-      <h3>Affichage et accessibilité</h3>
+      <h1>Affichage et accessibilité</h1>
       <Switch
         label="Passer en mode sombre"
         labelSide="right"

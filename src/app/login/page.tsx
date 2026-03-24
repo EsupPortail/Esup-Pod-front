@@ -42,7 +42,7 @@ export default function Login() {
           {error}
         </Alert>
       )}
-      <h3>Connexion</h3>
+      <h1>Connexion</h1>
       <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
         <Input
           label="Nom d'utilisateur"
