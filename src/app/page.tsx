@@ -52,11 +52,11 @@ export default function Accueil() {
         </Alert>
       )}
 
-      <h2>
+      <h1>
         POD Univ
         <br />
         Bienvenue sur votre plateforme POD !
-      </h2>
+      </h1>
       <p>
         La vidéo est un média de choix quand il s'agit de communiquer,
         d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous

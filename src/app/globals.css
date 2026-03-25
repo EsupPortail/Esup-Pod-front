@@ -52,6 +52,9 @@ body {
   padding: var(--c--globals--spacings--lg);
 }
 
+.cunningham-theme--dark .MuiBreadcrumbs-separator{
+  color: var(--text-color);
+}
 
 /* Styles for small screens */
 @media (max-width: 1024px) {
