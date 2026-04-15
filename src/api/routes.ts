@@ -16,7 +16,15 @@ export const getRoutes = () => {
         update: (id: number) => url + `api/auth/users/${id}/`,
       },
     },
+    video: {
+      list: url + "api/videos/",
+      get: (slug: string) => url + `api/videos/${slug}/`,
+      add: url + "api/videos/",
+    },
     conf: {
+      get: url + "api/info/conf",
+    },
+    info: {
       get: url + "api/info",
     },
     administration: url + "admin",

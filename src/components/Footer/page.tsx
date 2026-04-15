@@ -1,17 +1,23 @@
+"use client";
 import styles from "./page.module.css";
+import { useAppInfo } from "@/src/hooks/useAppInfo";
 
 export default function Footer() {
+  const { info } = useAppInfo();
+  const projectName = info?.project ?? "Esup.Pod";
+  const version = info?.version ?? "N/A";
+
   return (
     <footer className={`${styles.footer} ${styles.sidebarFixed}`} id="footer">
       <div className={styles.footer_content}>
         <div className={styles.footer_contact_univ}>
           <div className={styles.footer_contact_univ_logo}>
-            <img src="/logoEsup.svg" alt="Logo établissement"></img>
+            <img src="/logoEsup.svg" alt="Logo etablissement"></img>
           </div>
           <address>
             <p>
               Consortium Esup
-              <br /> La Maison des Universités
+              <br /> La Maison des Universites
               <br /> 103 Bvd St Michel
               <br />
               75005 PARIS - France
@@ -19,8 +25,8 @@ export default function Footer() {
           </address>
         </div>
         <div className={styles.footer_link}>
-          <a href="">Mentions légales</a>
-          <a href="">Accessibilité : Partiellement conforme</a>
+          <a href="">Mentions legales</a>
+          <a href="">Accessibilite : Partiellement conforme</a>
           <a href="">Plan du site</a>
         </div>
         <div className={styles.footer_extra_link}>
@@ -36,10 +42,9 @@ export default function Footer() {
         </div>
       </div>
       <p className={styles.credits_infos}>
-        Esup.Pod | Plateforme vidéo - Consortium Esup • Version 5.0.0 • 1 vidéos
-        disponibles (0:03:43)
+        {projectName} | Plateforme video - Consortium Esup • Version {version} •
+        1 videos disponibles (0:03:43)
       </p>
     </footer>
   );
 }
-
