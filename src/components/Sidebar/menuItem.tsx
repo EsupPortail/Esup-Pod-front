@@ -1,7 +1,8 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSidebar } from "../../context/SidebarProvider";
 import styles from "./page.module.css";
 import { MenuItemProps } from "@/src/types/interface";
+import Link from "next/link";
 import {
   List,
   ListItemIcon,
@@ -18,9 +19,12 @@ const MenuItem = (props: MenuItemProps) => {
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
   const [open, setOpen] = useState(false);
+  const isNavigable = !isExpandable && Boolean(link);
 
   function handleClick() {
-    sidebarOpen && setOpen(!open);
+    if (isExpandable && sidebarOpen) {
+      setOpen(!open);
+    }
   }
 
   useEffect(() => {
@@ -32,6 +36,8 @@ const MenuItem = (props: MenuItemProps) => {
       key={name}
       className={styles.menu_item}
       onClick={handleClick}
+      component={isNavigable ? Link : "div"}
+      href={isNavigable ? link : undefined}
       selected={isExpandable && open ? true : false}
       sx={{
         "&.Mui-selected": {

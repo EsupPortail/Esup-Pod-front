@@ -190,6 +190,7 @@ export default function Navbar() {
               iconPosition="right"
               variant="primary"
               size="medium"
+              href="/video/add"
             >
               <span className={styles.navbar_button_display}>
                 Ajouter une vidéo

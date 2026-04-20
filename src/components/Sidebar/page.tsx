@@ -111,7 +111,7 @@ const SideBar = () => {
     {
       name: "Mon tableau de bord",
       Icon: DashboardRounded,
-      link: "",
+      link: "/",
     },
     {
       name: "Mes réunions",

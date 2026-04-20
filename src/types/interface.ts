@@ -88,9 +88,9 @@ export interface VideoRequest {
 
 export interface MenuItemProps {
   name: string;
-  link: string;
-  Icon: ElementType;
-  items: Array<string>;
+  link?: string;
+  Icon?: ElementType;
+  items?: MenuItemProps[];
 }
 
 export interface User {
