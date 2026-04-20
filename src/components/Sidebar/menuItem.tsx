@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { SidebarContext } from "../../context/SidebarProvider";
+import { useSidebar } from "../../context/SidebarProvider";
 import styles from "./page.module.css";
 import { MenuItemProps } from "@/src/types/interface";
 import {
@@ -14,7 +14,7 @@ import IconExpandLess from "@mui/icons-material/ExpandLess";
 import IconExpandMore from "@mui/icons-material/ExpandMore";
 
 const MenuItem = (props: MenuItemProps) => {
-  const { sidebarOpen } = useContext(SidebarContext);
+  const { sidebarOpen } = useSidebar();
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
   const [open, setOpen] = useState(false);

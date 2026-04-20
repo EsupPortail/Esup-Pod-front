@@ -6,6 +6,7 @@ import styles from "./page.module.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { User } from "@/src/types/interface";
 import { getRoutes } from "@/src/api/routes";
+import { getUserDisplayName } from "@/src/utils/helper";
 
 type ProfileMenuContentProps = {
   user: User;
@@ -27,7 +28,7 @@ export function ProfileMenuContent({
         </Button>
       )}
       <span className={styles.navbar_profil_menu_name_user}>
-        {user.last_name + " " + user.first_name || user.username}
+        {getUserDisplayName(user)}
       </span>
       <div className={styles.navbar_profil_menu_content}>
         <MenuItem

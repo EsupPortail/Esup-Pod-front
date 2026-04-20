@@ -62,7 +62,6 @@ export default function AuthProvider(props: any) {
   const [isAuthDataLoading, setIsAuthDataLoading] = useState(false);
 
   console.log(user);
-  console.log(authConfig);
 
   // Réhydrate les tokens depuis localStorage
   // Vérifie/rafraîchit automatiquement au démarrage pour garder la session active

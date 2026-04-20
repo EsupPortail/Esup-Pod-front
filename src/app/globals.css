@@ -15,9 +15,15 @@ Extra Large Screens: min-width: 1441px
   --navbar-height: 78px;
   --sidebar-open: 285px;
   --background: var(--c--contextuals--background--surface--primary);
+  --background-brand: var(
+    --c--contextuals--background--semantic--brand--primary
+  );
+  --background-brand-secondary: var(
+    --c--contextuals--background--semantic--brand--secondary
+  );
   --text-color: var(--c--contextuals--content--semantic--neutral--primary);
+  --text-color-brand: var(--c--contextuals--content--semantic--brand--primary);
 }
-
 
 body {
   background-color: var(--background);
@@ -52,7 +58,7 @@ body {
   padding: var(--c--globals--spacings--lg);
 }
 
-.cunningham-theme--dark .MuiBreadcrumbs-separator{
+.cunningham-theme--dark .MuiBreadcrumbs-separator {
   color: var(--text-color);
 }
 

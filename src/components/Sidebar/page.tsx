@@ -13,10 +13,11 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { DashboardRounded } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 
 const SideBar = () => {
   const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
-  const { accessToken } = useAuth();
+  const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
   const menuPrincipalItems = [
@@ -76,7 +77,7 @@ const SideBar = () => {
       items: [
         {
           name: "Ajouter une vidéo",
-          link: "/",
+          link: "/video/add",
         },
         {
           name: "Enregistrer une vidéo",
@@ -135,7 +136,7 @@ const SideBar = () => {
           className={styles.menu_title}
           style={{
             color: sidebarOpen
-              ? "var(--c--contextuals--content--semantic--brand--primary)"
+              ? "var(--text-color-brand)"
               : "var(--background)",
           }}
         >
@@ -150,12 +151,27 @@ const SideBar = () => {
       {accessToken && (
         <div className={styles.menu}>
           <Divider />
+
           <h3
             className={styles.menu_title}
-            style={{ color: sidebarOpen ? "var(--c--contextuals--background--semantic--brand--primary)" : "var(--background)" }}
+            style={{
+              color: sidebarOpen
+                ? "var(--text-color-brand)"
+                : "var(--background)",
+            }}
           >
-            Mon menu POD
+            Mon menu
           </h3>
+          <Chip
+            label={`Bienvenue ${user?.username} ! 😄`}
+            sx={{
+              backgroundColor: sidebarOpen
+                ? "var(--c--contextuals--background--semantic--success--primary)"
+                : "var(--background)",
+              color: "var(--background)",
+              marginLeft: "14px",
+            }}
+          />
           <List component="nav" disablePadding>
             {menuPodItems.map((item, index) => (
               <MenuItem {...item} key={index} />
