@@ -19,6 +19,7 @@ export const getRoutes = () => {
     video: {
       list: url + "api/videos/",
       get: (slug: string) => url + `api/videos/${slug}/`,
+      update: (slug: string) => url + `api/videos/${slug}/`,
       add: url + "api/videos/",
     },
     conf: {

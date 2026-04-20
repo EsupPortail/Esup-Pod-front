@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Input, InputPassword, Button, Alert } from "@openfun/cunningham-react";
 import styles from "./page.module.css";
@@ -13,6 +13,9 @@ export default function Login() {
   const router = useRouter();
 
   const [error, setError] = useState<string | null>(null);
+  const params = useSearchParams();
+  const authRequired = params.get("reason") === "auth";
+  const redirect = params.get("redirect");
 
   type LoginFormValues = {
     username: string;
@@ -25,11 +28,16 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>();
 
+  const safeRedirect =
+    redirect && redirect.startsWith("/") && redirect !== "/login"
+      ? redirect
+      : "/?login=success";
+
   const onSubmit = async (data: LoginFormValues) => {
     setError(null);
     try {
       await logIn(data.username.trim(), data.password.trim());
-      router.push("/?login=success");
+      router.push(safeRedirect);
     } catch (err: any) {
       setError(err?.message ?? "Une erreur est survenue.");
     }
@@ -37,6 +45,11 @@ export default function Login() {
 
   return (
     <div className={styles.login_content}>
+      {authRequired && (
+        <Alert canClose type="warning">
+          Vous devez être connecté pour accéder à cette page.
+        </Alert>
+      )}
       {error && (
         <Alert canClose type="error">
           {error}
