@@ -4,14 +4,13 @@ import { requestJson } from "../utils/requestJson";
 import { authFetch } from "../api/authFetch";
 import type { User } from "../types/interface";
 import { getRoutes } from "../api/routes";
+import { useAppConfig } from "../hooks/useAppConfig";
 
 type AuthConfig = {
   use_local: boolean;
   use_cas: boolean;
   use_shibboleth: boolean;
   use_oidc: boolean;
-  shibboleth_name: string;
-  oidc_name: string;
 };
 
 type LogoutInfo = {
@@ -36,15 +35,43 @@ type AuthContextValue = {
   verify: () => Promise<boolean>;
   reloadAuthData: () => Promise<void>;
 };
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-// Tokens
 const ACCESS_TOKEN_KEY = "auth_access_token";
 const REFRESH_TOKEN_KEY = "auth_refresh_token";
 
-//(si plusieurs authConfig sont à true priorité au local, puis cas, puis shibboleth, puis oidc).
-const resolveLogoutUrl = (config: AuthConfig, logoutInfo: LogoutInfo) => {
+const getConfigFlag = (config: Record<string, unknown> | null, key: string) => {
+  if (!config) return false;
+  const lowerValue = config[key];
+  if (typeof lowerValue === "boolean") return lowerValue;
+  const upperValue = config[key.toUpperCase()];
+  if (typeof upperValue === "boolean") return upperValue;
+  return false;
+};
+
+const normalizeAuthConfig = (
+  config: Record<string, unknown> | null,
+): AuthConfig | null => {
+  if (!config) return null;
+
+  return {
+    use_local: getConfigFlag(config, "use_local"),
+    use_cas: getConfigFlag(config, "use_cas"),
+    use_shibboleth: getConfigFlag(config, "use_shibboleth"),
+    use_oidc: getConfigFlag(config, "use_oidc"),
+  };
+};
+
+// Priorite: local > cas > shibboleth > oidc.
+const resolveLogoutUrl = (
+  config: AuthConfig | null,
+  logoutInfo: LogoutInfo | null,
+) => {
+  if (!config || !logoutInfo) return "/";
   if (config.use_local) return logoutInfo.local || "/";
   if (config.use_cas) return logoutInfo.cas || "/";
   if (config.use_shibboleth) return logoutInfo.shibboleth || "/";
@@ -52,20 +79,28 @@ const resolveLogoutUrl = (config: AuthConfig, logoutInfo: LogoutInfo) => {
   return "/";
 };
 
-export default function AuthProvider(props: any) {
+export default function AuthProvider(props: AuthProviderProps) {
+  const { config } = useAppConfig();
+
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [logoutUrl, setLogoutUrl] = useState<string>("/");
   const [isInitializing, setIsInitializing] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [authConfig, setAuthConfig] = useState<AuthConfig | null>(null);
+  const [logoutInfo, setLogoutInfo] = useState<LogoutInfo | null>(null);
   const [isAuthDataLoading, setIsAuthDataLoading] = useState(false);
 
-  console.log(user);
+  useEffect(() => {
+    setAuthConfig(
+      normalizeAuthConfig((config as Record<string, unknown>) ?? null),
+    );
+  }, [config]);
 
-  // Réhydrate les tokens depuis localStorage
-  // Vérifie/rafraîchit automatiquement au démarrage pour garder la session active
-  // S'éxecute une fois au chargement du Provider
+  useEffect(() => {
+    setLogoutUrl(resolveLogoutUrl(authConfig, logoutInfo));
+  }, [authConfig, logoutInfo]);
+
   useEffect(() => {
     const init = async () => {
       const storedAccess = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -76,9 +111,7 @@ export default function AuthProvider(props: any) {
       let validAccess: string | null = storedAccess;
 
       if (storedAccess) {
-        //Verification du access tocken
         const accessTokenIsValid = await verify(storedAccess);
-        //Si la verification échoue, tentative de refresh si on a un refresh token
         if (!accessTokenIsValid && storedRefresh) {
           validAccess = await refresh(storedRefresh);
           if (!validAccess) {
@@ -94,7 +127,7 @@ export default function AuthProvider(props: any) {
         await loadAuthDataWithToken(validAccess, () => refresh(storedRefresh));
       } else {
         setUser(null);
-        setAuthConfig(null);
+        setLogoutInfo(null);
         setLogoutUrl("/");
       }
 
@@ -104,26 +137,24 @@ export default function AuthProvider(props: any) {
     init();
   }, []);
 
-  //stocke ou supprime auth_access_token et auth_refresh_token en fonction de l'etat react
-  const persistTokens = (token: string | null, refresh: string | null) => {
+  const persistTokens = (token: string | null, refreshValue: string | null) => {
     setAccessToken(token);
-    setRefreshToken(refresh);
+    setRefreshToken(refreshValue);
     token
       ? localStorage.setItem(ACCESS_TOKEN_KEY, token)
       : localStorage.removeItem(ACCESS_TOKEN_KEY);
-    refresh
-      ? localStorage.setItem(REFRESH_TOKEN_KEY, refresh)
+    refreshValue
+      ? localStorage.setItem(REFRESH_TOKEN_KEY, refreshValue)
       : localStorage.removeItem(REFRESH_TOKEN_KEY);
   };
 
   const logout = () => {
     persistTokens(null, null);
     setUser(null);
-    setAuthConfig(null);
+    setLogoutInfo(null);
     setLogoutUrl("/");
   };
 
-  //Verification des access token
   const verify = async (token?: string | null) => {
     const tokenToVerify = token ?? accessToken;
     if (!tokenToVerify) return false;
@@ -139,8 +170,6 @@ export default function AuthProvider(props: any) {
     }
   };
 
-  //Refresh du access token avec le refresh token
-  //Enregistre le nouveau access dans le local storage
   const refresh = async (token?: string | null) => {
     const tokenToRefresh = token ?? refreshToken;
     if (!tokenToRefresh) return null;
@@ -162,19 +191,14 @@ export default function AuthProvider(props: any) {
     }
   };
 
-  //Récupère les données du user
   const loadAuthDataWithToken = async (
     token: string,
     onRefresh?: () => Promise<string | null>,
   ) => {
     setIsAuthDataLoading(true);
     try {
-      const [userRes, configRes, logoutInfoRes] = await Promise.all([
+      const [userRes, logoutInfoRes] = await Promise.all([
         authFetch(getRoutes().auth.user.data, {
-          accessToken: token,
-          onRefresh,
-        }),
-        authFetch(getRoutes().auth.user.config, {
           accessToken: token,
           onRefresh,
         }),
@@ -184,30 +208,27 @@ export default function AuthProvider(props: any) {
         }),
       ]);
 
-      const [userData, configData, logoutInfoData] = await Promise.all([
+      const [userData, logoutInfoData] = await Promise.all([
         requestJson<User>(userRes),
-        requestJson<AuthConfig>(configRes),
         requestJson<LogoutInfo>(logoutInfoRes),
       ]);
 
       setUser(userData);
-      setAuthConfig(configData);
-      setLogoutUrl(resolveLogoutUrl(configData, logoutInfoData));
+      setLogoutInfo(logoutInfoData);
+      setLogoutUrl(resolveLogoutUrl(authConfig, logoutInfoData));
     } catch {
       setUser(null);
-      setAuthConfig(null);
+      setLogoutInfo(null);
       setLogoutUrl("/");
     } finally {
       setIsAuthDataLoading(false);
     }
   };
 
-  // Si !accessToken : reset état auth data.
-  // Sinon recharge via avec loadAuthDataWithToken
   const reloadAuthData = async () => {
     if (!accessToken) {
       setUser(null);
-      setAuthConfig(null);
+      setLogoutInfo(null);
       setLogoutUrl("/");
       return;
     }
@@ -228,8 +249,6 @@ export default function AuthProvider(props: any) {
     await loadAuthDataWithToken(data.access, () => refresh(data.refresh));
   };
 
-  //Créer l’objet value envoyé au Provider
-  //Si access, refresh et isInitializing etc.. ne changent pas, value garde la même valeur.
   const value = useMemo<AuthContextValue>(
     () => ({
       accessToken,
