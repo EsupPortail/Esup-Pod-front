@@ -19,6 +19,7 @@ import { User } from "@/src/types/interface";
 
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
+const backUrl = process.env.NEXT_PUBLIC_BACK_URL ?? "";
 const SearchForm = dynamic(
   () => import("../SearchForm/page").then((mod) => mod.SearchForm),
   { ssr: false },
@@ -65,6 +66,11 @@ export function AuthMenu({
     router.push("/?logout=success");
   };
   const initial = setInitial(user.last_name, user.first_name);
+  const profilePictureUrl = user.userpicture
+    ? user.userpicture.startsWith("http")
+      ? user.userpicture
+      : `${backUrl.replace(/\/$/, "")}/${user.userpicture.replace(/^\//, "")}`
+    : undefined;
   return (
     <div>
       <div className={styles.navbar_profil}>
@@ -74,7 +80,9 @@ export function AuthMenu({
           aria-controls={openMenu ? "account-menu" : undefined}
           aria-expanded={openMenu ? "true" : undefined}
         >
-          <Avatar sx={{ width: 45, height: 45 }}>{initial}</Avatar>
+          <Avatar src={profilePictureUrl} sx={{ width: 45, height: 45 }}>
+            {initial}
+          </Avatar>
         </IconButton>
       </div>
       {isMobile ? (
@@ -133,9 +141,9 @@ export function AuthMenu({
 }
 
 export default function Navbar() {
-  const { handleFixSidebar } = useSidebar();
+  const { handleFixSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user } = useAuth();
-  const isMobile = useMediaQuery("(max-width: 1024px)", { noSsr: true });
+  const isMobile = useMediaQuery("(max-width: 1024px)");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
@@ -148,7 +156,11 @@ export default function Navbar() {
             onClick={handleFixSidebar}
             className={styles.navbar_button_menu}
           >
-            <span className="material-icons">menu</span>
+            {sidebarOpen ? (
+              <span className="material-icons">close</span>
+            ) : (
+              <span className="material-icons">menu</span>
+            )}
           </button>
         </div>
         <div className="">

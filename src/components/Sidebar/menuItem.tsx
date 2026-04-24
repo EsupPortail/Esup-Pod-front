@@ -11,19 +11,26 @@ import {
   Divider,
   ListItemButton,
 } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import IconExpandLess from "@mui/icons-material/ExpandLess";
 import IconExpandMore from "@mui/icons-material/ExpandMore";
 
 const MenuItem = (props: MenuItemProps) => {
-  const { sidebarOpen } = useSidebar();
+  const { sidebarOpen, handleFixSidebar } = useSidebar();
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
   const [open, setOpen] = useState(false);
   const isNavigable = !isExpandable && Boolean(link);
+  const isMobile = useMediaQuery("(max-width: 1024px)");
 
   function handleClick() {
     if (isExpandable && sidebarOpen) {
       setOpen(!open);
+      return;
+    }
+
+    if (isNavigable && isMobile && sidebarOpen) {
+      handleFixSidebar();
     }
   }
 

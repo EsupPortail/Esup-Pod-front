@@ -28,7 +28,7 @@ const SideBar = () => {
       items: [
         {
           name: "Vidéos",
-          link: "/",
+          link: "/video",
         },
         {
           name: "Chaines",
@@ -71,6 +71,11 @@ const SideBar = () => {
 
   const menuPodItems = [
     {
+      name: "Mon tableau de bord",
+      Icon: DashboardRounded,
+      link: "/dashboard",
+    },
+    {
       name: "Déposer une vidéo",
       Icon: AddCircleOutlineIcon,
       link: "",
@@ -108,11 +113,7 @@ const SideBar = () => {
         },
       ],
     },
-    {
-      name: "Mon tableau de bord",
-      Icon: DashboardRounded,
-      link: "/",
-    },
+
     {
       name: "Mes réunions",
       Icon: GroupsIcon,
