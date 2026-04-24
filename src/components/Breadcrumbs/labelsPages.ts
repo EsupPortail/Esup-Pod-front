@@ -4,7 +4,7 @@ import { breadcrumbLabel as labelProfilPicturePage } from "@/src/app/profile-pic
 import { breadcrumbLabel as labelVideosPage } from "@/src/app/video/page";
 import { breadcrumbLabel as labelAddVideosPage } from "@/src/app/video/add/page";
 import { breadcrumbLabel as labelEditVideosPage } from "@/src/app/video/edit/[id]/page";
-
+import { breadcrumbLabel as labelDashboard } from "@/src/app/dashboard/page";
 /*Labels qui apparaitront dans le breadcrumb selon l'url*/
 export const breadcrumbLabels: Record<string, string> = {
   "/user-settings": labelSettingsPage,
@@ -13,4 +13,5 @@ export const breadcrumbLabels: Record<string, string> = {
   "/video": labelVideosPage,
   "/video/add": labelAddVideosPage,
   "/video/edit": labelEditVideosPage,
+  "/dashboard": labelDashboard,
 };
