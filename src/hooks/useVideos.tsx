@@ -6,17 +6,22 @@ import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
 import type { Video } from "@/src/types/interface";
 
+type FetchVideoUserParams = {
+  ordering?: string;
+  search?: string;
+};
+
 export function useVideos() {
   const { accessToken, refresh } = useAuth();
   const [video, setVideo] = useState<Video | null>(null);
   const [videos, setVideos] = useState<Video[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [useVideoLoading, useVideoSetLoading] = useState(false);
+  const [useVideoError, useVideoSetError] = useState<string | null>(null);
 
   const fetchOne = useCallback(
     async (slug: string) => {
-      setLoading(true);
-      setError(null);
+      useVideoSetLoading(true);
+      useVideoSetError(null);
       try {
         const res = await authFetch(getRoutes().video.get(slug), {
           accessToken,
@@ -25,19 +30,21 @@ export function useVideos() {
         const data = await requestJson<Video>(res);
         setVideo(data);
         return data;
-      } catch (e: any) {
-        setError(e?.message ?? "Erreur de chargement.");
+      } catch (e: unknown) {
+        useVideoSetError(
+          e instanceof Error ? e.message : "Erreur de chargement.",
+        );
         return null;
       } finally {
-        setLoading(false);
+        useVideoSetLoading(false);
       }
     },
     [accessToken, refresh],
   );
 
   const fetchAll = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    useVideoSetLoading(true);
+    useVideoSetError(null);
     try {
       const res = await authFetch(getRoutes().video.list, {
         accessToken,
@@ -46,13 +53,55 @@ export function useVideos() {
       const data = await requestJson<Video[]>(res);
       setVideos(data);
       return data;
-    } catch (e: any) {
-      setError(e?.message ?? "Erreur de chargement.");
+    } catch (e: unknown) {
+      useVideoSetError(
+        e instanceof Error ? e.message : "Erreur de chargement.",
+      );
       return [];
     } finally {
-      setLoading(false);
+      useVideoSetLoading(false);
     }
   }, [accessToken, refresh]);
 
-  return { video, videos, loading, error, fetchOne, fetchAll };
+  const fetchVideoUser = useCallback(
+    async (params?: FetchVideoUserParams) => {
+      useVideoSetLoading(true);
+      useVideoSetError(null);
+      try {
+        const url = new URL(getRoutes().video.me);
+        if (params?.ordering) {
+          url.searchParams.set("ordering", params.ordering);
+        }
+        if (params?.search) {
+          url.searchParams.set("search", params.search);
+        }
+
+        const res = await authFetch(url.toString(), {
+          accessToken,
+          onRefresh: refresh,
+        });
+        const data = await requestJson<Video[]>(res);
+        setVideos(data);
+        return data;
+      } catch (e: unknown) {
+        useVideoSetError(
+          e instanceof Error ? e.message : "Erreur de chargement.",
+        );
+        return [];
+      } finally {
+        useVideoSetLoading(false);
+      }
+    },
+    [accessToken, refresh],
+  );
+
+  return {
+    video,
+    videos,
+    useVideoLoading,
+    useVideoError,
+    fetchOne,
+    fetchAll,
+    fetchVideoUser,
+  };
 }
