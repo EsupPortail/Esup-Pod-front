@@ -5,6 +5,7 @@ import Grid from "@mui/material/Grid";
 
 interface VideosListProps {
   videosList: Video[];
+  currentUserId?: number;
 }
 
 export default function VideosList(props: VideosListProps) {
@@ -13,7 +14,13 @@ export default function VideosList(props: VideosListProps) {
       <Grid container spacing={2}>
         {props.videosList.map((video: Video) => (
           <Grid key={video.id} size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 2 }}>
-            <VideoCard video={video} />
+            <VideoCard
+              video={video}
+              isOwner={
+                props.currentUserId != null &&
+                video.owner_id === props.currentUserId
+              }
+            />
           </Grid>
         ))}
       </Grid>

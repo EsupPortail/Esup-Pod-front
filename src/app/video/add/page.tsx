@@ -9,13 +9,14 @@ import {
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import LinearProgress from "@mui/material/LinearProgress";
 import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 
-export const breadcrumbLabel = "Ajouter une vidéo";
+export const breadcrumbLabel = "Ajouter une video";
 
 type AddVideoFormValues = {
   acceptTerm: boolean;
@@ -32,6 +33,7 @@ export default function AddVideo() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    setError: setFieldError,
     clearErrors,
   } = useForm<AddVideoFormValues>({
     defaultValues: {
@@ -41,6 +43,7 @@ export default function AddVideo() {
   });
 
   const [error, setError] = useState<string | null>(null);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   if (!mounted || isInitializing || !isAuthenticated) {
     return (
@@ -58,52 +61,71 @@ export default function AddVideo() {
 
   const onSubmit = async (data: AddVideoFormValues) => {
     setError(null);
+    setIsRedirecting(false);
+
     try {
       if (!data.videoFile) {
-        setError("Veuillez sélectionner un fichier vidéo.");
+        setFieldError("videoFile", {
+          type: "required",
+          message: "Veuillez selectionner un fichier.",
+        });
+        setError("Veuillez selectionner un fichier video.");
         return;
       }
+
       const formData = new FormData();
       formData.append("title", data.videoFile.name);
       formData.append("video_file", data.videoFile);
+
       const res = await authFetch(getRoutes().video.add, {
         method: "POST",
         body: formData,
         accessToken,
         onRefresh: refresh,
       });
+
       const newVid = await requestJson<{ slug: string }>(res);
+      setIsRedirecting(true);
+
+      // Laisse le temps a React d'afficher la barre avant la navigation.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          setTimeout(resolve, 200);
+        });
+      });
+
       router.push(`/video/edit/${newVid.slug}`);
-    } catch (err: any) {
-      setError(err?.message ?? "Une erreur est survenue.");
+    } catch (err: unknown) {
+      setIsRedirecting(false);
+      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
     }
   };
-  const videoFileRegister = register("videoFile", {
-    validate: (value) => value != null || "Veuillez sélectionner un fichier",
-  });
+
   return (
     <div>
-      <h1>Ajouter une vidéo</h1>
+      <h1>Ajouter une video</h1>
       {error && (
         <Alert canClose type="error">
           {error}
         </Alert>
       )}
+
       <Alert
         additional={
           <>
-            La taille du fichier doit être{" "}
+            La taille du fichier doit etre{" "}
             <u>
-              <b>inférieure à 2 Go</b>
+              <b>inferieure a 2 Go</b>
             </u>
             .
             <br />
-            Le temps d’envoi dépend de la taille de votre fichier et de votre
-            vitesse de téléchargement.
+            Le temps d&apos;envoi depend de la taille de votre fichier et de
+            votre vitesse de telechargement.
             <br />
             <b>
-              Pendant l’envoi de votre fichier, ne fermez pas votre navigateur
-              avant d’avoir reçu un message de succès ou d’échec.
+              Pendant l&apos;envoi de votre fichier, ne fermez pas votre
+              navigateur avant d&apos;avoir recu un message de succes ou
+              d&apos;echec.
             </b>
           </>
         }
@@ -111,75 +133,86 @@ export default function AddVideo() {
         Informations
       </Alert>
 
-      <form
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <FileUploader
-          bigText="Vas y Frère balance ton fichier"
-          fullWidth={true}
-          state={errors.videoFile ? "error" : "default"}
-          name={videoFileRegister.name}
-          onBlur={videoFileRegister.onBlur}
-          ref={videoFileRegister.ref}
-          onFilesChange={(event) => {
-            const file = event.target.value?.[0] ?? null;
-            setValue("videoFile", file, { shouldValidate: Boolean(file) });
-            if (!file) {
-              clearErrors("videoFile");
-            }
+      {isRedirecting ? (
+        <div>
+          <LinearProgress aria-label="Loading..." />
+          <p>
+            Votre video est en train d&apos;etre televersee sur POD. Veuillez ne
+            pas fermer la page.
+          </p>
+        </div>
+      ) : (
+        <form
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
           }}
-          accept=".3gp, .avi, .divx, .flv, .m2p, .m4v, .mkv,
-                .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3, .ogg, .wav, .wma,
-                .webm, .ts"
-          text={
-            errors.videoFile ? (
-              errors.videoFile.message
-            ) : (
-              <>
-                <p>
-                  Vous pouvez envoyer un fichier audio ou vidéo. <br />
-                  Les formats suivants sont supportés : 3gp, avi, divx, flv,
-                  m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav,
-                  wma, webm, ts
-                </p>
-              </>
-            )
-          }
-        />
-        <p>
-          Attention : assurez-vous de respecter le code de la propriété
-          intellectuelle avant de publier une vidéo:
-        </p>
-        <p>
-          Je confirme que je dispose des autorisations nécessaires signées par
-          les parties concernées par la publication de ce média, en ce compris
-          le consentement relatif au droit à l’image et au traitement des
-          données personnelles. Je certifie que l’ensemble des personnes
-          concernées ont bénéficié d’une information complète relative au
-          traitement de leurs données personnelles, conformément aux
-          dispositions des articles 13 et 14 du RGPD.
-        </p>
-        <Checkbox
-          label="J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo."
-          fullWidth
-          state={errors.acceptTerm ? "error" : "default"}
-          text={errors.acceptTerm?.message}
-          {...register("acceptTerm", {
-            required: "Veuillez accepter les conditions d'utilisation.",
-            validate: (value) =>
-              Boolean(value) ||
-              "Veuillez accepter les conditions d'utilisation.",
-          })}
-        />
-        <Button fullWidth={true} type="submit" disabled={isSubmitting}>
-          Ajouter une vidéo
-        </Button>
-      </form>
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <FileUploader
+            bigText="Choisissez un fichier audio ou video"
+            fullWidth={true}
+            state={errors.videoFile ? "error" : "default"}
+            onFilesChange={(event) => {
+              const file = event.target.value?.[0] ?? null;
+              setValue("videoFile", file, { shouldValidate: true });
+              if (file) {
+                clearErrors("videoFile");
+              }
+            }}
+            accept=".3gp, .avi, .divx, .flv, .m2p, .m4v, .mkv,
+                  .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3, .ogg, .wav, .wma,
+                  .webm, .ts"
+            text={
+              errors.videoFile ? (
+                errors.videoFile.message
+              ) : (
+                <>
+                  <p>
+                    Vous pouvez envoyer un fichier audio ou video. <br />
+                    Les formats suivants sont supportes : 3gp, avi, divx, flv,
+                    m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav,
+                    wma, webm, ts
+                  </p>
+                </>
+              )
+            }
+          />
+          <p>
+            Attention : assurez-vous de respecter le code de la propriete
+            intellectuelle avant de publier une video:
+          </p>
+          <p>
+            Je confirme que je dispose des autorisations necessaires signees par
+            les parties concernees par la publication de ce media, en ce compris
+            le consentement relatif au droit a l&apos;image et au traitement des
+            donnees personnelles. Je certifie que l&apos;ensemble des personnes
+            concernees ont beneficie d&apos;une information complete relative au
+            traitement de leurs donnees personnelles, conformement aux
+            dispositions des articles 13 et 14 du RGPD.
+          </p>
+          <Checkbox
+            label="J'atteste de respecter le code de la propriete intellectuelle en publiant ma video."
+            fullWidth
+            state={errors.acceptTerm ? "error" : "default"}
+            text={errors.acceptTerm?.message}
+            {...register("acceptTerm", {
+              required: "Veuillez accepter les conditions d'utilisation.",
+              validate: (value) =>
+                Boolean(value) ||
+                "Veuillez accepter les conditions d'utilisation.",
+            })}
+          />
+          <Button
+            fullWidth
+            type="submit"
+            disabled={isSubmitting || isRedirecting}
+          >
+            Ajouter une video
+          </Button>
+        </form>
+      )}
     </div>
   );
 }

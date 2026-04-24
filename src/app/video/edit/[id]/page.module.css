@@ -1,0 +1,38 @@
+.restreint_fields {
+  background-color: #eaf1fb;
+  padding: var(--c--globals--spacings--sm);
+}
+
+.restreint_fields p {
+  font-weight: var(--c--globals--font--weights--bold);
+}
+.thumbnail_field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.thumbnail_preview {
+  margin-left: var(--c--globals--spacings--md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #eaf1fb;
+  padding: var(--c--globals--spacings--sm);
+}
+.thumbnail_preview img {
+  padding: var(--c--globals--spacings--xxs);
+}
+
+.stepper_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.stepper_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--c--globals--spacings--sm);
+}
