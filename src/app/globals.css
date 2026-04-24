@@ -62,6 +62,15 @@ body {
   color: var(--text-color);
 }
 
+/* Cunningham Form field */
+.c__checkbox__label {
+  font-size: var(--c--globals--font--sizes--md);
+  font-weight: var(--c--components--forms-checkbox--font-weight);
+}
+.c__alert--success {
+  margin-bottom: var(--c--globals--spacings--s);
+}
+
 /* Styles for small screens */
 @media (max-width: 1024px) {
   .main {

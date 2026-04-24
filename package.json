@@ -17,6 +17,7 @@
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@mui/system": "^7.3.7",
+    "@next/swc-win32-x64-msvc": "^16.2.4",
     "@openfun/cunningham-react": "^4.0.0",
     "@openfun/cunningham-tokens": "^3.0.0",
     "next": "^16.1.6",

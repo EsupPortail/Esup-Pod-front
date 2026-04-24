@@ -1,39 +1,10 @@
 "use client";
 import VideosList from "../components/VideosList/page";
-import { Button, Alert } from "@openfun/cunningham-react";
-import { Video } from "../types/interface";
+import { Button, Alert, Loader } from "@openfun/cunningham-react";
 import { useSearchParams } from "next/navigation";
-
-const videos: Video[] = [
-  {
-    id: 1,
-    title: "Exemple vidéo 1",
-    time: 85,
-    thumbnail: "thumbnail1.png",
-    isPrivate: false,
-  },
-  {
-    id: 2,
-    title: "Exemple vidéo 2",
-    time: 241,
-    thumbnail: "thumbnail2.png",
-    isPrivate: true,
-  },
-  {
-    id: 3,
-    title: "Exemple vidéo 3",
-    time: 6000,
-    thumbnail: "thumbnail3.png",
-    isPrivate: false,
-  },
-  {
-    id: 4,
-    title: "Exemple vidéo 4",
-    time: 3000,
-    thumbnail: "thumbnail4.png",
-    isPrivate: false,
-  },
-];
+import { useVideos } from "../hooks/useVideos";
+import { useEffect, useMemo } from "react";
+import Link from "next/link";
 
 export default function Accueil() {
   const params = useSearchParams();
@@ -43,6 +14,21 @@ export default function Accueil() {
       : params.get("logout") === "success"
         ? "Vous êtes désormais déconnecté."
         : null;
+  const { fetchAll, videos, useVideoError, useVideoLoading } = useVideos();
+
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
+
+  const latestPublicVideos = useMemo(() => {
+    return [...videos]
+      .filter((video) => !video.is_auth_required && !video.has_password)
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+      .slice(0, 10);
+  }, [videos]);
 
   return (
     <div>
@@ -51,7 +37,22 @@ export default function Accueil() {
           {messageAlert}
         </Alert>
       )}
-
+      {useVideoError && (
+        <Alert canClose type="error">
+          {useVideoError}
+        </Alert>
+      )}
+      {useVideoLoading && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Loader />
+        </div>
+      )}
       <h1>
         POD Univ
         <br />
@@ -62,19 +63,24 @@ export default function Accueil() {
         d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous
         intéresser.
       </p>
-      <div>
-        <VideosList videosList={videos} />
+      {latestPublicVideos.length > 0 ? (
         <div>
-          <Button
-            icon={<span className="material-icons">play_circle</span>}
-            iconPosition="right"
-            variant="primary"
-            size="medium"
-          >
-            Afficher toutes les vidéos
-          </Button>
+          <VideosList videosList={latestPublicVideos} />
+          <Link href="/video">
+            <Button
+              icon={<span className="material-icons">play_circle</span>}
+              iconPosition="right"
+              variant="primary"
+              size="medium"
+            >
+              Afficher toutes les videos
+            </Button>
+          </Link>
         </div>
-      </div>
+      ) : (
+        !useVideoLoading && <Alert>Aucune vidéo publique récente 🥺 </Alert>
+      )}
+      <div></div>
     </div>
   );
 }
