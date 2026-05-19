@@ -25,8 +25,8 @@ export default function Footer() {
           </address>
         </div>
         <div className={styles.footer_link}>
-          <a href="">Mentions legales</a>
-          <a href="">Accessibilite : Partiellement conforme</a>
+          <a href="">Mentions légales</a>
+          <a href="">Accessibilité : Partiellement conforme</a>
           <a href="">Plan du site</a>
         </div>
         <div className={styles.footer_extra_link}>
@@ -42,8 +42,8 @@ export default function Footer() {
         </div>
       </div>
       <p className={styles.credits_infos}>
-        {projectName} | Plateforme video - Consortium Esup • Version {version} •
-        1 videos disponibles (0:03:43)
+        {projectName} | Plateforme vidéo - Consortium Esup • Version {version} •
+        1 vidéo.s disponible.s (0:03:43)
       </p>
     </footer>
   );

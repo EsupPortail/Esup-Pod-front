@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { User } from "@/src/types/interface";
 import { getRoutes } from "@/src/api/routes";
-import { getUserDisplayName } from "@/src/utils/helper";
+import { getUserDisplayName } from "@/src/constants/user";
 
 type ProfileMenuContentProps = {
   user: User;

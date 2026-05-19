@@ -27,7 +27,7 @@ const SideBar = () => {
       link: "",
       items: [
         {
-          name: "Vidéos",
+          name: "Toutes les vidéos",
           link: "/video",
         },
         {
@@ -164,13 +164,18 @@ const SideBar = () => {
             Mon menu
           </h3>
           <Chip
-            label={`Bienvenue ${user?.username} ! 😄`}
+            label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
             sx={{
               backgroundColor: sidebarOpen
-                ? "var(--c--contextuals--background--semantic--success--primary)"
+                ? "var( --background-brand-secondary)"
                 : "var(--background)",
-              color: "var(--background)",
+              color: sidebarOpen
+                ? "var(--background-brand)"
+                : "var(--background)",
               marginLeft: "14px",
+              fontSize: "var(--c--globals--font--sizes--md)",
+              fontWeight: "var(--c--globals--font--weights--bold)",
+              marginBottom: "var(--c--globals--spacings--xs)",
             }}
           />
           <List component="nav" disablePadding>

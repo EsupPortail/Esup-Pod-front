@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input } from "@openfun/cunningham-react";
+import { Button } from "@openfun/cunningham-react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -12,7 +12,7 @@ import { useSidebar } from "../../context/SidebarProvider";
 import { useRouter } from "next/navigation";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Dialog from "@mui/material/Dialog";
-import { setInitial } from "@/src/utils/helper";
+import { setInitial } from "@/src/constants/user";
 import { ProfileMenuContent } from "./ProfileMenuContent";
 import dynamic from "next/dynamic";
 import { User } from "@/src/types/interface";
