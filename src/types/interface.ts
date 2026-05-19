@@ -1,29 +1,7 @@
 import { ElementType } from "react";
-
-export interface VideoSubtitle {
-  id: number;
-  video: number;
-  language: string;
-  file: string;
-  is_default: boolean;
-}
-/*
-DR - Draft (Private)
-PU - Published (Public)
-RE - Restricted (Access Controlled)
-EN - Encoding in progress
-ER - Encoding Error
-*/
-export type VideoStatus = "DR" | "PU" | "RE" | "EN" | "ER";
-
-export type VideoLicense =
-  | "CC-BY"
-  | "CC-BY-SA"
-  | "CC-BY-NC"
-  | "CC-BY-ND"
-  | "COPYRIGHT"
-  | ""
-  | null;
+import type { CursusCode } from "@/src/constants/cursus";
+import type { LanguageSubtitle } from "@/src/constants/language";
+import type { VideoLicense, VideoStatus } from "@/src/constants/video";
 
 export interface AppConfig {
   USE_CAS?: boolean;
@@ -49,28 +27,35 @@ export interface Video {
   is_video: boolean;
   owner: string;
   owner_id: number;
+  channel: number;
   co_owners: number[] | null;
   status: VideoStatus;
   status_label: string | null;
   is_auth_required: boolean;
   thumbnail_url: string | null;
   has_password: boolean;
-  subtitles: VideoSubtitle[] | null;
+  subtitles: Subtitle[] | null;
   allow_downloading: boolean;
   disable_comment: boolean;
   date_of_event: string | null;
   license: VideoLicense;
-  cursus: string | null;
+  cursus: CursusCode | null;
   language: string | null;
   created_at: string;
   updated_at: string;
   date_to_delete: string | null;
+  tags: string[] | null;
+  discipline: number[] | null;
+  discipline_details: Discipline[] | null;
+  type_id?: number | null;
+  type_name: string | null;
 }
-// Objet Video pour le formulaire de création
+
+// Objet Video pour le formulaire de création et d'édition
 export interface VideoRequest {
   title: string;
   description?: string;
-  video_file: File;
+  video_file?: File;
   thumbnail?: File;
   is_360?: boolean;
   co_owners?: number[];
@@ -80,10 +65,15 @@ export interface VideoRequest {
   allow_downloading?: boolean;
   disable_comment?: boolean;
   date_of_event?: string;
+  date_to_delete?: string;
   license?: string;
   cursus?: string;
   language?: string;
-  date_to_delete?: string;
+  type_id: number;
+  channel?: number;
+  disciplines?: number[];
+  tags?: string[];
+  restricted_groups?: number[];
 }
 
 export interface MenuItemProps {
@@ -103,4 +93,35 @@ export interface User {
   affiliation: string;
   establishment: string;
   userpicture: string;
+}
+
+export interface Discipline {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  sites: Array<number> | null;
+}
+
+export interface Tags {
+  id: number;
+  name: string;
+  slug: string;
+  count: number | null;
+}
+
+export interface Type {
+  id: number;
+  slug: string;
+  title: string;
+  sites: Array<number> | null;
+}
+
+export interface Subtitle {
+  id: number;
+  video: number;
+  language: LanguageSubtitle;
+  file: string;
+  is_default: boolean;
 }

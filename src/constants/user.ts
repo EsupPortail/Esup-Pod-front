@@ -1,0 +1,22 @@
+import { User } from "@/src/types/interface";
+
+export function setInitial(lastname: string, firstname: string) {
+  return lastname
+    .concat(" ", firstname)
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+export function getUserDisplayName(user: User): string {
+  const lastName = user.last_name?.trim() ?? "";
+  const firstName = user.first_name?.trim() ?? "";
+
+  if (lastName || firstName) {
+    return `${lastName} ${firstName}`.trim();
+  }
+
+  return user.username;
+}

@@ -8,6 +8,7 @@ import { requestJson } from "../utils/requestJson";
 export function useUsers() {
   const { accessToken, refresh } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
+  const [user, setUser] = useState<User>();
   const [useUserLoading, setUseUserLoading] = useState(false);
   const [useUserError, setUseUserError] = useState<string | null>(null);
 
@@ -32,5 +33,29 @@ export function useUsers() {
     }
   }, [accessToken, refresh]);
 
-  return { users, fetchAll, useUserLoading, useUserError };
+  const fetchUser = useCallback(
+    async (id: number) => {
+      setUseUserLoading(true);
+      setUseUserError(null);
+      try {
+        const res = await authFetch(getRoutes().user.get(id), {
+          accessToken,
+          onRefresh: refresh,
+        });
+        const data = await requestJson<User>(res);
+        setUser(data);
+        return data;
+      } catch (e: unknown) {
+        setUseUserError(
+          e instanceof Error ? e.message : "Erreur de chargement.",
+        );
+        return null;
+      } finally {
+        setUseUserLoading(false);
+      }
+    },
+    [accessToken, refresh],
+  );
+
+  return { users, user, fetchAll, fetchUser, useUserLoading, useUserError };
 }

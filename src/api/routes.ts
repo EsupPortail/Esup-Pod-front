@@ -22,15 +22,31 @@ export const getRoutes = () => {
       get: (slug: string) => url + `api/videos/${slug}/`,
       update: (slug: string) => url + `api/videos/${slug}/`,
       add: url + "api/videos/",
+      delete: (slug: string) => url + `api/videos/${slug}/`,
+      stream: (slug: string) => url + `api/videos/${slug}/stream/`,
     },
     user: {
       list: url + "api/auth/users/",
+      get: (id: number) => url + `api/auth/users/${id}/`,
     },
     conf: {
       get: url + "api/info/conf",
     },
     info: {
       get: url + "api/info",
+    },
+    discipline: {
+      list: url + "api/disciplines/",
+    },
+    types: {
+      list: url + "api/types/",
+    },
+    tags: {
+      list: url + "api/tags/",
+    },
+    subtitles: {
+      delete: (id: number) => url + `api/subtitles/${id}/`,
+      add: url + "api/subtitles/",
     },
     administration: url + "admin",
   };
