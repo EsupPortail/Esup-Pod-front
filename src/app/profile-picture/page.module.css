@@ -1,0 +1,11 @@
+.form {
+  padding: var(--c--globals--spacings--xxl);
+}
+
+.picture_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
