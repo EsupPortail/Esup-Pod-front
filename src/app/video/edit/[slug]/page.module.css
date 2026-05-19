@@ -1,11 +1,15 @@
 .restreint_fields {
   background-color: #eaf1fb;
   padding: var(--c--globals--spacings--sm);
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
 }
 
 .restreint_fields p {
   font-weight: var(--c--globals--font--weights--bold);
 }
+
 .thumbnail_field {
   display: flex;
   justify-content: flex-start;
@@ -35,4 +39,38 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--c--globals--spacings--sm);
+}
+
+.form_actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.form_actions_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--md);
+  padding: 0 var(--c--globals--spacings--lg);
+}
+
+@media (max-width: 1024px) {
+  .form_actions,
+  .form_actions_buttons {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: var(--c--globals--spacings--md);
+  }
+
+  .form_actions_buttons a {
+    width: 100%;
+  }
 }

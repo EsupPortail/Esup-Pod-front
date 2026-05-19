@@ -1,0 +1,20 @@
+.delete_container {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--c--globals--spacings--md);
+}
+
+.delete_error_alert {
+  margin-top: 0 !important;
+}
+
+.delete_container p {
+  font-size: var(--c--globals--font--sizes--md);
+  margin: var(--c--globals--spacings--md) 0;
+  gap: 7rem;
+}
+
+.buttons_action {
+  display: flex;
+  gap: var(--c--globals--spacings--xs);
+}

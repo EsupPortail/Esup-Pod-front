@@ -15,8 +15,9 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
+import styles from "./page.module.css";
 
-export const breadcrumbLabel = "Ajouter une video";
+export const breadcrumbLabel = "Ajouter une vidéo";
 
 type AddVideoFormValues = {
   acceptTerm: boolean;
@@ -67,9 +68,9 @@ export default function AddVideo() {
       if (!data.videoFile) {
         setFieldError("videoFile", {
           type: "required",
-          message: "Veuillez selectionner un fichier.",
+          message: "Veuillez sélectionner un fichier.",
         });
-        setError("Veuillez selectionner un fichier video.");
+        setError("Veuillez sélectionner un fichier vidéo.");
         return;
       }
 
@@ -103,7 +104,7 @@ export default function AddVideo() {
 
   return (
     <div>
-      <h1>Ajouter une video</h1>
+      <h1>Ajouter une vidéo</h1>
       {error && (
         <Alert canClose type="error">
           {error}
@@ -113,19 +114,18 @@ export default function AddVideo() {
       <Alert
         additional={
           <>
-            La taille du fichier doit etre{" "}
+            La taille du fichier doit être{" "}
             <u>
-              <b>inferieure a 2 Go</b>
+              <b>inférieure a 2 Go</b>
             </u>
             .
             <br />
-            Le temps d&apos;envoi depend de la taille de votre fichier et de
-            votre vitesse de telechargement.
+            Le temps d'envoi dépend de la taille de votre fichier et de votre
+            vitesse de téléchargement.
             <br />
             <b>
-              Pendant l&apos;envoi de votre fichier, ne fermez pas votre
-              navigateur avant d&apos;avoir recu un message de succes ou
-              d&apos;echec.
+              Pendant l'envoi de votre fichier, ne fermez pas votre navigateur
+              avant d'avoir reçu un message de succès ou d'échec.
             </b>
           </>
         }
@@ -137,12 +137,13 @@ export default function AddVideo() {
         <div>
           <LinearProgress aria-label="Loading..." />
           <p>
-            Votre video est en train d&apos;etre televersee sur POD. Veuillez ne
-            pas fermer la page.
+            Votre vidéo est en train d'être téléchargée sur POD. Veuillez ne pas
+            fermer la page.
           </p>
         </div>
       ) : (
         <form
+          className={styles.form}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -170,8 +171,8 @@ export default function AddVideo() {
               ) : (
                 <>
                   <p>
-                    Vous pouvez envoyer un fichier audio ou video. <br />
-                    Les formats suivants sont supportes : 3gp, avi, divx, flv,
+                    Vous pouvez envoyer un fichier audio ou vidéo. <br />
+                    Les formats suivants sont supportés : 3gp, avi, divx, flv,
                     m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav,
                     wma, webm, ts
                   </p>
@@ -179,37 +180,42 @@ export default function AddVideo() {
               )
             }
           />
-          <p>
-            Attention : assurez-vous de respecter le code de la propriete
-            intellectuelle avant de publier une video:
-          </p>
-          <p>
-            Je confirme que je dispose des autorisations necessaires signees par
-            les parties concernees par la publication de ce media, en ce compris
-            le consentement relatif au droit a l&apos;image et au traitement des
-            donnees personnelles. Je certifie que l&apos;ensemble des personnes
-            concernees ont beneficie d&apos;une information complete relative au
-            traitement de leurs donnees personnelles, conformement aux
-            dispositions des articles 13 et 14 du RGPD.
-          </p>
-          <Checkbox
-            label="J'atteste de respecter le code de la propriete intellectuelle en publiant ma video."
-            fullWidth
-            state={errors.acceptTerm ? "error" : "default"}
-            text={errors.acceptTerm?.message}
-            {...register("acceptTerm", {
-              required: "Veuillez accepter les conditions d'utilisation.",
-              validate: (value) =>
-                Boolean(value) ||
-                "Veuillez accepter les conditions d'utilisation.",
-            })}
-          />
+          <div className={styles.bloc_terms}>
+            <p>
+              <b>
+                Attention ! Assurez-vous de respecter le code de la proprieté
+                intellectuelle avant de publier une vidéo:
+              </b>
+            </p>
+            <p>
+              Je confirme que je dispose des autorisations nécessaires signées
+              par les parties concernées par la publication de ce media, en ce
+              compris le consentement relatif au droit a l'image et au
+              traitement des données personnelles. Je certifie que l'ensemble
+              des personnes concernées ont bénéficié d'une information complète
+              relative au traitement de leurs données personnelles, conformément
+              aux dispositions des articles 13 et 14 du RGPD.
+            </p>
+            <Checkbox
+              className={styles.bloc_terms_checkbox}
+              label="J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo."
+              fullWidth
+              state={errors.acceptTerm ? "error" : "default"}
+              text={errors.acceptTerm?.message}
+              {...register("acceptTerm", {
+                required: "Veuillez accepter les conditions d'utilisation.",
+                validate: (value) =>
+                  Boolean(value) ||
+                  "Veuillez accepter les conditions d'utilisation.",
+              })}
+            />
+          </div>
           <Button
             fullWidth
             type="submit"
             disabled={isSubmitting || isRedirecting}
           >
-            Ajouter une video
+            Ajouter une vidéo
           </Button>
         </form>
       )}

@@ -1,0 +1,14 @@
+.bloc_terms {
+  margin: var(--c--globals--spacings--md) 0;
+}
+
+.bloc_terms_checkbox {
+  margin-top: var(--c--globals--spacings--lg);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--md);
+  padding: 0 var(--c--globals--spacings--lg);
+}
