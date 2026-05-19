@@ -22,7 +22,12 @@ export default function Accueil() {
 
   const latestPublicVideos = useMemo(() => {
     return [...videos]
-      .filter((video) => !video.is_auth_required && !video.has_password)
+      .filter(
+        (video) =>
+          !video.is_auth_required &&
+          !video.has_password &&
+          video.status !== "DR",
+      )
       .sort(
         (a, b) =>
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
@@ -37,11 +42,12 @@ export default function Accueil() {
           {messageAlert}
         </Alert>
       )}
-      {useVideoError && (
-        <Alert canClose type="error">
-          {useVideoError}
-        </Alert>
-      )}
+      <h1>Bienvenue sur votre plateforme POD !</h1>
+      <p>
+        La vidéo est un média de choix quand il s'agit de communiquer,
+        d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous
+        intéresser.
+      </p>
       {useVideoLoading && (
         <div
           style={{
@@ -53,16 +59,6 @@ export default function Accueil() {
           <Loader />
         </div>
       )}
-      <h1>
-        POD Univ
-        <br />
-        Bienvenue sur votre plateforme POD !
-      </h1>
-      <p>
-        La vidéo est un média de choix quand il s'agit de communiquer,
-        d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous
-        intéresser.
-      </p>
       {latestPublicVideos.length > 0 ? (
         <div>
           <VideosList videosList={latestPublicVideos} />
@@ -80,7 +76,12 @@ export default function Accueil() {
       ) : (
         !useVideoLoading && <Alert>Aucune vidéo publique récente 🥺 </Alert>
       )}
-      <div></div>
+
+      {useVideoError && (
+        <Alert canClose type="error">
+          {useVideoError}
+        </Alert>
+      )}
     </div>
   );
 }

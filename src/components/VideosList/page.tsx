@@ -13,7 +13,7 @@ export default function VideosList(props: VideosListProps) {
     <div className={styles.videos_list}>
       <Grid container spacing={2}>
         {props.videosList.map((video: Video) => (
-          <Grid key={video.id} size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 2 }}>
+          <Grid key={video.slug} size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 2 }}>
             <VideoCard
               video={video}
               isOwner={

@@ -5,10 +5,10 @@ import { useVideos } from "@/src/hooks/useVideos";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useEffect, useMemo } from "react";
 
-export const breadcrumbLabel = "Vidéos";
+export const breadcrumbLabel = "Toutes les vidéos";
 
 export default function Videos() {
-  const { fetchAll, videos, error, loading } = useVideos();
+  const { fetchAll, videos, useVideoError, useVideoLoading } = useVideos();
   const { user } = useAuth();
 
   useEffect(() => {
@@ -17,20 +17,21 @@ export default function Videos() {
 
   const publicVideos = useMemo(() => {
     return videos.filter(
-      (video) => !video.is_auth_required && !video.has_password,
+      (video) =>
+        !video.is_auth_required && !video.has_password && video.status !== "DR",
     );
   }, [videos]);
 
   return (
     <div>
-      <h1>Vidéos</h1>
-      {error && (
+      <h1>Toutes les vidéos</h1>
+      {useVideoError && (
         <Alert canClose type="error">
-          {error}
+          {useVideoError}
         </Alert>
       )}
 
-      {loading ? (
+      {useVideoLoading ? (
         <div
           style={{
             display: "flex",
@@ -40,7 +41,7 @@ export default function Videos() {
         >
           <Loader />
         </div>
-      ) : publicVideos.length === 0 ? (
+      ) : publicVideos.length === 0 && !useVideoLoading ? (
         <Alert>Aucune vidéo trouvée 🥺 </Alert>
       ) : (
         <div>

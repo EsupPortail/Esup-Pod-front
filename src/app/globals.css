@@ -12,7 +12,7 @@ Extra Large Screens: min-width: 1441px
 /* globals.css */
 
 :root {
-  --navbar-height: 78px;
+  --navbar-height: 80px;
   --sidebar-open: 285px;
   --background: var(--c--contextuals--background--surface--primary);
   --background-brand: var(
@@ -69,6 +69,16 @@ body {
 }
 .c__alert--success {
   margin-bottom: var(--c--globals--spacings--s);
+}
+.c__alert {
+  margin: var(--c--globals--spacings--s) 0 !important;
+}
+
+.c__input {
+  margin-bottom: var(--c--globals--spacings--md);
+}
+.c__select {
+  margin-top: var(--c--globals--spacings--md);
 }
 
 /* Styles for small screens */
