@@ -48,6 +48,22 @@ export const getRoutes = () => {
       delete: (id: number) => url + `api/subtitles/${id}/`,
       add: url + "api/subtitles/",
     },
+    comment: {
+      list: (videoSlug: string) => url + `api/comment/${videoSlug}/`,
+      parents: (videoSlug: string) =>
+        url + `api/comment/${videoSlug}/?only=parents`,
+      get: (commentId: string | number, videoSlug: string) =>
+        url + `api/comment/${commentId}/${videoSlug}/`,
+      add: (videoSlug: string, commentId?: string | number) =>
+        commentId != null
+          ? url + `api/comment/add/${videoSlug}/${commentId}/`
+          : url + `api/comment/add/${videoSlug}/`,
+      delete: (videoSlug: string, commentId: string | number) =>
+        url + `api/comment/del/${videoSlug}/${commentId}/`,
+      votes: (videoSlug: string) => url + `api/comment/vote/${videoSlug}/`,
+      vote: (videoSlug: string, commentId: string | number) =>
+        url + `api/comment/vote/${videoSlug}/${commentId}/`,
+    },
     administration: url + "admin",
   };
 };

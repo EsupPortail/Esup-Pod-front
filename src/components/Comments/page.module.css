@@ -1,0 +1,205 @@
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xs);
+  margin-top: var(--c--globals--spacings--md);
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+  color: var(--text-color-brand);
+  font-size: var(--c--globals--font--sizes--h3);
+  font-weight: var(--c--globals--font--weights--bold);
+}
+
+.form {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--xs);
+  padding: var(--c--globals--spacings--sm);
+}
+
+.formContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--md);
+}
+
+.count {
+  margin: 0;
+  color: var(--c--globals--colors--gray-700);
+  font-size: var(--c--globals--font--sizes--sm);
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  padding: var(--c--globals--spacings--md) 0;
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xxxs);
+  padding-bottom: var(--c--globals--spacings--sm);
+  border-bottom: 1px solid var(--c--globals--colors--gray-200);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--c--globals--spacings--xs);
+}
+
+.meta strong {
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+  font-size: var(--c--globals--font--sizes--sm);
+}
+
+.meta span {
+  color: var(--c--globals--colors--gray-600);
+  font-size: var(--c--globals--font--sizes--xs);
+}
+
+.content {
+  margin: 0;
+  color: var(--c--contextuals--content--semantic--neutral--primary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--c--globals--spacings--sm);
+  margin-top: var(--c--globals--spacings--xxxs);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.05rem;
+  border: none;
+  background: transparent;
+  color: var(--c--globals--colors--gray-700);
+  font-size: var(--c--globals--font--sizes--sm);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: var(--c--globals--spacings--xxs) var(--c--globals--spacings--xs);
+  border-radius: 8px;
+}
+
+.actionButton:hover {
+  background-color: var(
+    --c--contextuals--background--semantic--brand--tertiary
+  );
+}
+
+.actionButtonStatic {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--c--globals--colors--gray-700);
+  font-size: var(--c--globals--font--sizes--sm);
+}
+
+.actionButton span {
+  line-height: 1;
+}
+
+.voted {
+  color: var(--text-color-brand);
+  font-size: var(--c--globals--font--sizes--xs);
+  font-weight: var(--c--globals--font--weights--medium);
+}
+
+.replyForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--sm);
+  margin-top: var(--c--globals--spacings--xs);
+}
+
+.replyActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.repliesToggle {
+  width: fit-content;
+  padding: 0;
+  margin-top: var(--c--globals--spacings--xxxs);
+  border: none;
+  background: transparent;
+  color: var(--text-color-brand);
+  font-size: var(--c--globals--font--sizes--sm);
+  font-weight: var(--c--globals--font--weights--medium);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: var(--c--globals--spacings--xxs) var(--c--globals--spacings--xs);
+  border-radius: 8px;
+}
+
+.repliesToggle:hover {
+  background-color: var(
+    --c--contextuals--background--semantic--neutral--tertiary
+  );
+}
+
+.replies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--md);
+  margin-top: var(--c--globals--spacings--sm);
+  margin-left: var(--c--globals--spacings--lg);
+  padding-left: var(--c--globals--spacings--md);
+  border-left: 2px solid var(--c--globals--colors--gray-200);
+}
+
+@media (max-width: 768px) {
+  .form {
+    flex-direction: column;
+  }
+
+  .formContent {
+    width: 100%;
+  }
+
+  .replies {
+    margin-left: var(--c--globals--spacings--sm);
+    padding-left: var(--c--globals--spacings--sm);
+  }
+
+  .replyActions button {
+    width: 100%;
+  }
+}

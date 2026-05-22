@@ -1,15 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { Alert, Button, Loader } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import VideoPlayer from "@/src/components/VideoPlayer/page";
+import Comments from "@/src/components/Comments/page";
 import { useVideos } from "@/src/hooks/useVideos";
 import { useAuth } from "@/src/context/AuthProvider";
 import Divider from "@mui/material/Divider";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import SchoolIcon from "@mui/icons-material/School";
+import MonitorIcon from "@mui/icons-material/Monitor";
+import PieChartIcon from "@mui/icons-material/PieChart";
 import {
   formatTime,
   formatDateWithTime,
@@ -45,6 +50,7 @@ const getDownloadFilename = (
 };
 
 export default function Video() {
+  const router = useRouter();
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const { fetchOne, video, useVideoLoading, useVideoError } = useVideos();
@@ -79,7 +85,7 @@ export default function Video() {
       });
 
       if (!response.ok) {
-        throw new Error("Impossible de telecharger cette video.");
+        throw new Error("Impossible de télécharger cette vidéo.");
       }
 
       const blob = await response.blob();
@@ -136,11 +142,15 @@ export default function Video() {
         <Alert canClose type="error">
           {useVideoError ?? "Impossible de charger cette video."}
         </Alert>
-        <Link href="/dashboard">
-          <Button color="brand" variant="secondary" type="button">
-            Retour au tableau de bord
-          </Button>
-        </Link>
+
+        <Button
+          onClick={() => router.back()}
+          color="brand"
+          variant="secondary"
+          type="button"
+        >
+          Retour
+        </Button>
       </div>
     );
   }
@@ -194,16 +204,17 @@ export default function Video() {
             )}
 
             {isOwner && (
-              <Link href={`/video/edit/${video.slug}`}>
-                <Button
-                  size="small"
-                  color="brand"
-                  variant="primary"
-                  type="button"
-                >
-                  Editer la video
-                </Button>
-              </Link>
+              <Button
+                onClick={() => {
+                  router.push(`/video/edit/${video.slug}`);
+                }}
+                size="small"
+                color="brand"
+                variant="primary"
+                type="button"
+              >
+                Éditer la video
+              </Button>
             )}
           </div>
         </div>
@@ -226,35 +237,47 @@ export default function Video() {
           <p>
             Langue principale : <span>{getLanguageLabel(video.language)}</span>
           </p>
-
           <div className={styles.video_infos_details_tags}>
             <p>Mots clés : </p>
             {video.tags?.map((label) => (
               <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
             ))}
           </div>
-          <p>
+          <p className={styles.video_infos_details_update}>
             <UpdateIcon />
             Mis à jour le :{formatDateWithTime(video.updated_at)}
           </p>
+          <Comments videoSlug={video.slug} />{" "}
         </div>
       </div>
       <div className={styles.video_infos_block_right}>
         <div>
           <div>
-            <p className={styles.video_infos_block_right_title}>A propos</p>
+            <h2 className={styles.video_infos_block_right_title}>A propos</h2>
             <Divider />
-            <h4>Type</h4>
+
+            <h4>
+              <LibraryBooksIcon fontSize="small" /> Type
+            </h4>
             <span>{video.type_name}</span>
-            <h4>Discipline.s : </h4>
+            <h4>
+              <SchoolIcon fontSize="small" />
+              Discipline.s{" "}
+            </h4>
             <ul>
               {video.discipline_details?.map((discipline) => (
                 <li key={discipline.id}>{discipline.title}</li>
               ))}
             </ul>
-            <h4>Licence :</h4>
+            <h4>
+              <MonitorIcon fontSize="small" />
+              Licence
+            </h4>
             <span>{video.license ? video.license : "Aucune"}</span>
-            <h4>Cursus:</h4>
+            <h4>
+              <PieChartIcon fontSize="small" />
+              Cursus
+            </h4>
             <span>{getCursusLabel(video.cursus)}</span>
           </div>
         </div>
