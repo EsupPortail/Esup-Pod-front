@@ -213,6 +213,7 @@ export default function AddVideo() {
           <Button
             fullWidth
             type="submit"
+            color="success"
             disabled={isSubmitting || isRedirecting}
           >
             Ajouter une vidéo

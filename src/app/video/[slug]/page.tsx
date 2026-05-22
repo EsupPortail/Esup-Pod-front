@@ -26,6 +26,8 @@ import { getCursusLabel } from "@/src/constants/cursus";
 import { useUsers } from "@/src/hooks/useUsers";
 import { getUserDisplayName } from "@/src/constants/user";
 import { getLanguageLabel } from "@/src/constants/language";
+import { requestJson } from "@/src/utils/requestJson";
+import { User } from "@/src/types/interface";
 import DownloadIcon from "@mui/icons-material/Download";
 import UpdateIcon from "@mui/icons-material/Update";
 import styles from "./page.module.css";
@@ -54,12 +56,13 @@ export default function Video() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const { fetchOne, video, useVideoLoading, useVideoError } = useVideos();
-  const { fetchUser, user: videoUser } = useUsers();
   const time = secondToMinute(video?.duration || 0);
   const { user, accessToken, refresh } = useAuth();
   const isOwner = user?.id != null && video?.owner_id === user?.id;
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { fetchUser, user: videoUser } = useUsers();
+  const [coOwnersUsers, setCoOwnersUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (!slug) return;
@@ -71,6 +74,37 @@ export default function Video() {
       fetchUser(video.owner_id);
     }
   }, [video, fetchUser]);
+
+  useEffect(() => {
+    const loadCoOwners = async () => {
+      if (!video?.co_owners || video.co_owners.length === 0) {
+        setCoOwnersUsers([]);
+        return;
+      }
+
+      try {
+        const responses = await Promise.all(
+          video.co_owners.map((id) =>
+            authFetch(getRoutes().user.get(id), {
+              accessToken,
+              onRefresh: refresh,
+            }),
+          ),
+        );
+
+        const coOwners = await Promise.all(
+          responses.map((response) => requestJson<User>(response)),
+        );
+
+        setCoOwnersUsers(coOwners);
+      } catch (error) {
+        console.error("Erreur lors du chargement des co-propriétaires", error);
+        setCoOwnersUsers([]);
+      }
+    };
+
+    loadCoOwners();
+  }, [video?.co_owners, accessToken, refresh]);
 
   const handleDownload = async () => {
     if (!video || isDownloading) return;
@@ -218,11 +252,12 @@ export default function Video() {
             )}
           </div>
         </div>
-        <Divider />
-        <div className={styles.video_infos_description}>
-          <p>{video.description}</p>
-        </div>
 
+        {video.description != "" && (
+          <div className={styles.video_infos_description}>
+            <p>{video.description}</p>
+          </div>
+        )}
         <Divider />
         <div className={styles.video_infos_details}>
           <p>
@@ -234,21 +269,39 @@ export default function Video() {
               {videoUser ? getUserDisplayName(videoUser) : video.owner}
             </span>
           </p>
+          {coOwnersUsers.length > 0 && (
+            <p>
+              Co-propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :{" "}
+              <span>
+                {coOwnersUsers
+                  .map((user) => getUserDisplayName(user))
+                  .join(", ")}
+              </span>
+            </p>
+          )}
+
           <p>
             Langue principale : <span>{getLanguageLabel(video.language)}</span>
           </p>
-          <div className={styles.video_infos_details_tags}>
-            <p>Mots clés : </p>
-            {video.tags?.map((label) => (
-              <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
-            ))}
-          </div>
+          {video.tags != null && video.tags.length > 0 && (
+            <div className={styles.video_infos_details_tags}>
+              <p>Mots clés : </p>
+              {video.tags.map((label) => (
+                <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
+              ))}
+            </div>
+          )}
+
           <p className={styles.video_infos_details_update}>
             <UpdateIcon />
-            Mis à jour le :{formatDateWithTime(video.updated_at)}
+            Mis à jour le {formatDateWithTime(video.updated_at)}
           </p>
-          <Comments videoSlug={video.slug} />{" "}
         </div>
+        {video.disable_comment ? (
+          <Alert type="info">Les commentaires sont désactivés</Alert>
+        ) : (
+          <Comments videoSlug={video.slug} />
+        )}
       </div>
       <div className={styles.video_infos_block_right}>
         <div>
