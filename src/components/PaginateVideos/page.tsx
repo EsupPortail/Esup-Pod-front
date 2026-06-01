@@ -2,7 +2,7 @@
 import { useEffect, useMemo } from "react";
 import { Pagination, usePagination } from "@openfun/cunningham-react";
 import { Video } from "@/src/types/interface";
-import VideosList from "@/src/components/VideosList/page";
+import VideosList from "@/src/components/video/VideosList";
 import styles from "./page.module.css";
 
 interface PaginateVideosProps {

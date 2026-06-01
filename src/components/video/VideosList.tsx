@@ -1,6 +1,6 @@
 import { Video } from "@/src/types/interface";
-import VideoCard from "..//VideoCard/page";
-import styles from "./page.module.css";
+import VideoCard from "@/src/components/video/VideoCard";
+import styles from "./VideoList.module.css";
 import Grid from "@mui/material/Grid";
 
 interface VideosListProps {

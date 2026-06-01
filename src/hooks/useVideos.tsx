@@ -11,7 +11,12 @@ type VideoListParams = {
   channel?: number;
   ordering?: string;
   search?: string;
+  typeSlugs?: string[];
+  disciplineIds?: number[];
+  tagSlugs?: string[];
+  tagNames?: string[];
   themes?: number[];
+  cursus?: string[];
 };
 
 const buildVideoListUrl = (
@@ -32,26 +37,95 @@ const buildVideoListUrl = (
     url.searchParams.set("search", params.search);
   }
 
+  if (params?.typeSlugs?.length) {
+    params.typeSlugs.forEach((typeSlug) => {
+      url.searchParams.append("type__slug", typeSlug);
+    });
+  }
+
+  if (params?.disciplineIds?.length) {
+    params.disciplineIds.forEach((disciplineId) => {
+      url.searchParams.append("discipline", String(disciplineId));
+    });
+  }
+
+  if (params?.tagSlugs?.length) {
+    params.tagSlugs.forEach((tagSlug) => {
+      url.searchParams.append("tags__slug", tagSlug);
+    });
+  }
+
+  if (params?.tagNames?.length) {
+    params.tagNames.forEach((tagName) => {
+      url.searchParams.append("tags__name", tagName);
+    });
+  }
+
   if (params?.themes?.length) {
     params.themes.forEach((themeId) => {
       url.searchParams.append("themes", String(themeId));
     });
   }
 
+  if (params?.cursus?.length) {
+    params.cursus.forEach((cursus) => {
+      url.searchParams.append("cursus_slug", cursus);
+    });
+  }
+
   return url.toString();
+};
+
+const dedupeVideos = (videoLists: Video[][]): Video[] => {
+  const videosById = new Map<number, Video>();
+
+  videoLists.flat().forEach((video) => {
+    videosById.set(video.id, video);
+  });
+
+  return Array.from(videosById.values());
+};
+
+const sortVideos = (videos: Video[], ordering?: string): Video[] => {
+  const sortedVideos = [...videos];
+
+  switch (ordering) {
+    case "-created_at":
+      return sortedVideos.sort(
+        (firstVideo, secondVideo) =>
+          new Date(secondVideo.created_at).getTime() -
+          new Date(firstVideo.created_at).getTime(),
+      );
+    case "created_at":
+      return sortedVideos.sort(
+        (firstVideo, secondVideo) =>
+          new Date(firstVideo.created_at).getTime() -
+          new Date(secondVideo.created_at).getTime(),
+      );
+    case "-title":
+      return sortedVideos.sort((firstVideo, secondVideo) =>
+        secondVideo.title.localeCompare(firstVideo.title),
+      );
+    case "title":
+      return sortedVideos.sort((firstVideo, secondVideo) =>
+        firstVideo.title.localeCompare(secondVideo.title),
+      );
+    default:
+      return videos;
+  }
 };
 
 export function useVideos() {
   const { accessToken, refresh } = useAuth();
   const [video, setVideo] = useState<Video | null>(null);
   const [videos, setVideos] = useState<Video[]>([]);
-  const [useVideoLoading, useVideoSetLoading] = useState(false);
-  const [useVideoError, useVideoSetError] = useState<string | null>(null);
+  const [useVideoLoading, setUseVideoLoading] = useState(false);
+  const [useVideoError, setUseVideoError] = useState<string | null>(null);
 
   const fetchOne = useCallback(
     async (slug: string) => {
-      useVideoSetLoading(true);
-      useVideoSetError(null);
+      setUseVideoLoading(true);
+      setUseVideoError(null);
 
       try {
         const res = await authFetch(getRoutes().video.get(slug), {
@@ -63,12 +137,12 @@ export function useVideos() {
         setVideo(data);
         return data;
       } catch (e: unknown) {
-        useVideoSetError(
+        setUseVideoError(
           e instanceof Error ? e.message : "Erreur de chargement.",
         );
         return null;
       } finally {
-        useVideoSetLoading(false);
+        setUseVideoLoading(false);
       }
     },
     [accessToken, refresh],
@@ -76,25 +150,42 @@ export function useVideos() {
 
   const fetchVideoList = useCallback(
     async (baseUrl: string, params?: VideoListParams) => {
-      useVideoSetLoading(true);
-      useVideoSetError(null);
+      setUseVideoLoading(true);
+      setUseVideoError(null);
 
       try {
-        const res = await authFetch(buildVideoListUrl(baseUrl, params), {
-          accessToken,
-          onRefresh: refresh,
-        });
+        const typeSlugs = params?.typeSlugs ?? [];
+        const urls =
+          typeSlugs.length > 1
+            ? typeSlugs.map((typeSlug) =>
+                buildVideoListUrl(baseUrl, {
+                  ...params,
+                  typeSlugs: [typeSlug],
+                }),
+              )
+            : [buildVideoListUrl(baseUrl, params)];
 
-        const data = await requestJson<Video[]>(res);
+        const responses = await Promise.all(
+          urls.map((url) =>
+            authFetch(url, {
+              accessToken,
+              onRefresh: refresh,
+            }),
+          ),
+        );
+        const videoLists = await Promise.all(
+          responses.map((response) => requestJson<Video[]>(response)),
+        );
+        const data = sortVideos(dedupeVideos(videoLists), params?.ordering);
         setVideos(data);
         return data;
       } catch (e: unknown) {
-        useVideoSetError(
+        setUseVideoError(
           e instanceof Error ? e.message : "Erreur de chargement.",
         );
         return [];
       } finally {
-        useVideoSetLoading(false);
+        setUseVideoLoading(false);
       }
     },
     [accessToken, refresh],
@@ -116,8 +207,8 @@ export function useVideos() {
 
   const deleteVideo = useCallback(
     async (slug: string) => {
-      useVideoSetLoading(true);
-      useVideoSetError(null);
+      setUseVideoLoading(true);
+      setUseVideoError(null);
 
       try {
         const res = await authFetch(getRoutes().video.delete(slug), {
@@ -135,14 +226,14 @@ export function useVideos() {
         );
         return true;
       } catch (e: unknown) {
-        useVideoSetError(
+        setUseVideoError(
           e instanceof Error
             ? e.message
             : "Erreur lors de la suppression de la vidéo.",
         );
         return false;
       } finally {
-        useVideoSetLoading(false);
+        setUseVideoLoading(false);
       }
     },
     [accessToken, refresh],

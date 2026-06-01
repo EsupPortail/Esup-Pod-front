@@ -1,0 +1,52 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.row,
+.row :global(.c__select__wrapper) {
+  --c--components--forms-field--width: 150px;
+}
+
+.orderingField:global(.c__field) {
+  width: 150px !important;
+  --c--components--forms-field--width: 150px;
+}
+
+.row :global(.labelled-box label.placeholder),
+.searchRow :global(.labelled-box label.placeholder) {
+  font-size: 0.8rem;
+}
+
+.row .field {
+  flex: 0 1 auto;
+}
+
+.searchRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wrapper {
+  --c--components--forms-select--height: 2.85rem;
+}
+.searchRow :global(.c__input__wrapper) {
+  height: 2.85rem;
+}

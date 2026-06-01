@@ -1,7 +1,11 @@
 import { ElementType } from "react";
 import type { CursusCode } from "@/src/constants/cursus";
 import type { LanguageSubtitle } from "@/src/constants/language";
-import type { VideoLicense, VideoStatus } from "@/src/constants/video";
+import type {
+  VideoLicense,
+  VideoStatus,
+  VideoEncodingStatus,
+} from "@/src/constants/video";
 
 export interface AppConfig {
   USE_CAS?: boolean;
@@ -27,10 +31,14 @@ export interface Video {
   is_video: boolean;
   owner: string;
   owner_id: number;
+  owner_first_name: string;
+  owner_last_name: string;
   channel: number;
   co_owners: number[] | null;
   status: VideoStatus;
   status_label: string | null;
+  encoding_status: VideoEncodingStatus | null;
+  encoding_status_label: string | null;
   is_auth_required: boolean;
   thumbnail_url: string | null;
   has_password: boolean;

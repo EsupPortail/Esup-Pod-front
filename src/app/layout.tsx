@@ -7,6 +7,7 @@ import Breadcrumb from "../components/Breadcrumbs/page";
 import SidebarProvider from "../context/SidebarProvider";
 import AuthProvider from "../context/AuthProvider";
 import CunninghamStyleProvider from "../context/CunninghamProvider";
+import DatePickerProvider from "../context/DatePickerProvider";
 
 export const metadata: Metadata = {
   title: "Esup POD V5",
@@ -28,17 +29,19 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <CunninghamStyleProvider>
-          <AuthProvider>
-            <SidebarProvider>
-              <Navbar />
-              <Sidebar />
-              <main id="main" className="main">
-                <Breadcrumb />
-                <div className="content">{children}</div>
-              </main>
-              <Footer />
-            </SidebarProvider>
-          </AuthProvider>
+          <DatePickerProvider>
+            <AuthProvider>
+              <SidebarProvider>
+                <Navbar />
+                <Sidebar />
+                <main id="main" className="main">
+                  <Breadcrumb />
+                  <div className="content">{children}</div>
+                </main>
+                <Footer />
+              </SidebarProvider>
+            </AuthProvider>
+          </DatePickerProvider>
         </CunninghamStyleProvider>
       </body>
     </html>

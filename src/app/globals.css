@@ -74,11 +74,8 @@ body {
   margin: var(--c--globals--spacings--s) 0 !important;
 }
 
-.c__input {
-  margin-bottom: var(--c--globals--spacings--md);
-}
-.c__select {
-  margin-top: var(--c--globals--spacings--md);
+.css-1ljffdk-MuiFormLabel-asterisk {
+  color: red;
 }
 
 /* Styles for small screens */

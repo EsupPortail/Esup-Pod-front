@@ -8,7 +8,6 @@ import Edit from "@mui/icons-material/Edit";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import MenuButton from "@mui/joy/MenuButton";
 import Dropdown from "@mui/joy/Dropdown";
-import { RemoveRedEye } from "@mui/icons-material";
 import Link from "next/link";
 import { Video } from "@/src/types/interface";
 
@@ -38,14 +37,8 @@ export default function VideoCardActionMenu({
         <MenuItem component={Link} href={`/video/edit/${video.slug}`}>
           <ListItemDecorator>
             <Edit />
-          </ListItemDecorator>{" "}
-          Éditer la vidéo
-        </MenuItem>
-        <MenuItem component={Link} href={`/video/${video.id}`}>
-          <ListItemDecorator>
-            <RemoveRedEye />
-          </ListItemDecorator>{" "}
-          Voir la vidéo
+          </ListItemDecorator>
+          Éditer la video
         </MenuItem>
         <ListDivider />
         <MenuItem
@@ -57,7 +50,7 @@ export default function VideoCardActionMenu({
           <ListItemDecorator sx={{ color: "inherit" }}>
             <DeleteForever />
           </ListItemDecorator>
-          Supprimer la vidéo
+          Supprimer la video
         </MenuItem>
       </Menu>
     </Dropdown>

@@ -1,5 +1,5 @@
 "use client";
-import VideosList from "../components/VideosList/page";
+import VideosList from "@/src/components/video/VideosList";
 import { Button, Alert, Loader } from "@openfun/cunningham-react";
 import { useSearchParams } from "next/navigation";
 import { useVideos } from "../hooks/useVideos";
@@ -22,12 +22,7 @@ export default function Accueil() {
 
   const latestPublicVideos = useMemo(() => {
     return [...videos]
-      .filter(
-        (video) =>
-          !video.is_auth_required &&
-          !video.has_password &&
-          video.status !== "DR",
-      )
+      .filter((video) => video.status === "PU")
       .sort(
         (a, b) =>
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
@@ -69,7 +64,7 @@ export default function Accueil() {
               variant="primary"
               size="medium"
             >
-              Afficher toutes les videos
+              Afficher toutes les vidéos
             </Button>
           </Link>
         </div>
