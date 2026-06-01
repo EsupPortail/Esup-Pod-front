@@ -53,18 +53,18 @@ export function timeAgo(dateString: string): string {
   const years = Math.floor(days / 365);
 
   if (seconds < 60) {
-    return "Ajouté à l'instant";
+    return "Ajoutée à l'instant";
   } else if (minutes < 60) {
-    return `Ajouté il y a ${minutes} minute${minutes > 1 ? "s" : ""}`;
+    return `Ajoutée il y a ${minutes} minute${minutes > 1 ? "s" : ""}`;
   } else if (hours < 24) {
-    return `Ajouté il y a ${hours} heure${hours > 1 ? "s" : ""}`;
+    return `Ajoutée il y a ${hours} heure${hours > 1 ? "s" : ""}`;
   } else if (days < 7) {
-    return `Ajouté il y a ${days} jour${days > 1 ? "s" : ""}`;
+    return `Ajoutée il y a ${days} jour${days > 1 ? "s" : ""}`;
   } else if (weeks < 4) {
-    return `Ajouté il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
+    return `Ajoutée il y a ${weeks} semaine${weeks > 1 ? "s" : ""}`;
   } else if (months < 12) {
-    return `Ajouté il y a ${months} mois`;
+    return `Ajoutée il y a ${months} mois`;
   }
 
-  return `Ajouté il y a ${years} an${years > 1 ? "s" : ""}`;
+  return `Ajoutée il y a ${years} an${years > 1 ? "s" : ""}`;
 }

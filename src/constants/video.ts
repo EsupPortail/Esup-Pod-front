@@ -1,4 +1,5 @@
 export type VideoStatus = "DR" | "PU" | "RE" | "EN" | "ER";
+export type VideoEncodingStatus = "PE" | "PR" | "DO" | "ER";
 
 export type VideoLicense =
   | "CC-BY"
@@ -18,13 +19,20 @@ export const DEFAULT_VIDEO_LICENSE_OPTIONS = [
 ] as const;
 
 export const VIDEO_STATUS_OPTIONS = [
-  { label: "Privée", value: "DR", disabled: false },
-  { label: "Publique", value: "PU", disabled: false },
-  { label: "Accès restreint", value: "RE", disabled: false },
-  { label: "Encodage en cours", value: "EN", disabled: true },
-  { label: "Erreur d'encodage", value: "ER", disabled: true },
+  { label: "Privée", value: "DR" },
+  { label: "Publique", value: "PU" },
+  { label: "Accès restreint", value: "RE" },
 ] satisfies Array<{
   label: string;
   value: VideoStatus;
-  disabled: boolean;
+}>;
+
+export const VIDEO_ENCODING_STATUS_OPTIONS = [
+  { label: "En attente", value: "PE" },
+  { label: "En cours", value: "PR" },
+  { label: "Terminé", value: "DO" },
+  { label: "Erreur", value: "ER" },
+] satisfies Array<{
+  label: string;
+  value: VideoEncodingStatus;
 }>;

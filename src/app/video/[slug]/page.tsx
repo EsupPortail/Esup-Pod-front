@@ -31,6 +31,7 @@ import { User } from "@/src/types/interface";
 import DownloadIcon from "@mui/icons-material/Download";
 import UpdateIcon from "@mui/icons-material/Update";
 import styles from "./page.module.css";
+import BackButton from "@/src/components/BackButton/BackButton";
 
 export const breadcrumbLabel = "Video";
 
@@ -177,161 +178,163 @@ export default function Video() {
           {useVideoError ?? "Impossible de charger cette video."}
         </Alert>
 
-        <Button
-          onClick={() => router.back()}
-          color="brand"
-          variant="secondary"
-          type="button"
-        >
-          Retour
-        </Button>
+        <BackButton label="Retour" />
       </div>
     );
   }
 
   return (
-    <div className={styles.main_video_content}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.5rem",
-          padding: "10px",
-          minWidth: "80%",
-        }}
-      >
-        <VideoPlayer
-          video={video}
-          streamUrl={getRoutes().video.stream(video.slug)}
-        />
+    <div>
+      <BackButton label="Retour" />
+      <div className={styles.main_video_content}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+            padding: "10px",
+            minWidth: "80%",
+          }}
+        >
+          <VideoPlayer
+            video={video}
+            streamUrl={getRoutes().video.stream(video.slug)}
+          />
 
-        <h1>{video.title}</h1>
-        {downloadError && (
-          <Alert canClose type="error">
-            {downloadError}
-          </Alert>
-        )}
-        <div className={styles.video_infos}>
-          <div className={styles.video_infos_header}>
-            <p>{timeAgo(video.created_at)}</p>
-            <p className={styles.video_infos_header_time}>
-              {" "}
-              <span className="material-icons">access_time</span>
-              {formatTime(time)}
-            </p>
-          </div>
-
-          <div className={styles.video_infos_header_buttons}>
-            {video.allow_downloading && (
-              <Button
-                color="brand"
-                size="small"
-                variant="bordered"
-                icon={<DownloadIcon />}
-                iconPosition="right"
-                type="button"
-                onClick={handleDownload}
-                disabled={isDownloading}
-              >
-                {isDownloading ? "Téléchargement..." : "Télécharger la vidéo"}
-              </Button>
-            )}
-
-            {isOwner && (
-              <Button
-                onClick={() => {
-                  router.push(`/video/edit/${video.slug}`);
-                }}
-                size="small"
-                color="brand"
-                variant="primary"
-                type="button"
-              >
-                Éditer la video
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {video.description != "" && (
-          <div className={styles.video_infos_description}>
-            <p>{video.description}</p>
-          </div>
-        )}
-        <Divider />
-        <div className={styles.video_infos_details}>
-          <p>
-            Chaine : <span> {video.channel ? video.channel : "Aucune"} </span>
-          </p>
-          <p>
-            Ajouté par :{" "}
-            <span>
-              {videoUser ? getUserDisplayName(videoUser) : video.owner}
-            </span>
-          </p>
-          {coOwnersUsers.length > 0 && (
-            <p>
-              Co-propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :{" "}
-              <span>
-                {coOwnersUsers
-                  .map((user) => getUserDisplayName(user))
-                  .join(", ")}
-              </span>
-            </p>
+          <h1>{video.title}</h1>
+          {downloadError && (
+            <Alert canClose type="error">
+              {downloadError}
+            </Alert>
           )}
+          <div className={styles.video_infos}>
+            <div className={styles.video_infos_header}>
+              <p>{timeAgo(video.created_at)}</p>
+              <p className={styles.video_infos_header_time}>
+                {" "}
+                <span className="material-icons">access_time</span>
+                {formatTime(time)}
+              </p>
+            </div>
 
-          <p>
-            Langue principale : <span>{getLanguageLabel(video.language)}</span>
-          </p>
-          {video.tags != null && video.tags.length > 0 && (
-            <div className={styles.video_infos_details_tags}>
-              <p>Mots clés : </p>
-              {video.tags.map((label) => (
-                <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
-              ))}
+            <div className={styles.video_infos_header_buttons}>
+              {video.allow_downloading && (
+                <Button
+                  color="brand"
+                  size="small"
+                  variant="bordered"
+                  icon={<DownloadIcon />}
+                  iconPosition="right"
+                  type="button"
+                  onClick={handleDownload}
+                  disabled={isDownloading}
+                >
+                  {isDownloading ? "Téléchargement..." : "Télécharger la vidéo"}
+                </Button>
+              )}
+
+              {isOwner && (
+                <Button
+                  onClick={() => {
+                    router.push(`/video/edit/${video.slug}`);
+                  }}
+                  size="small"
+                  color="brand"
+                  variant="primary"
+                  type="button"
+                >
+                  Éditer la video
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {video.description != "" && (
+            <div className={styles.video_infos_description}>
+              <p>{video.description}</p>
             </div>
           )}
+          <Divider />
+          <div className={styles.video_infos_details}>
+            <p>
+              Chaine : <span> {video.channel ? video.channel : "Aucune"} </span>
+            </p>
+            <p>
+              Ajouté par :{" "}
+              <span>
+                {videoUser ? getUserDisplayName(videoUser) : video.owner}
+              </span>
+            </p>
+            {coOwnersUsers.length > 0 && (
+              <p>
+                Co-propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :{" "}
+                <span>
+                  {coOwnersUsers
+                    .map((user) => getUserDisplayName(user))
+                    .join(", ")}
+                </span>
+              </p>
+            )}
 
-          <p className={styles.video_infos_details_update}>
-            <UpdateIcon />
-            Mis à jour le {formatDateWithTime(video.updated_at)}
-          </p>
+            <p>
+              Langue principale :{" "}
+              <span>{getLanguageLabel(video.language)}</span>
+            </p>
+            {video.tags != null && video.tags.length > 0 && (
+              <div className={styles.video_infos_details_tags}>
+                <p>Mots clés : </p>
+                {video.tags.map((label) => (
+                  <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
+                ))}
+              </div>
+            )}
+
+            <p className={styles.video_infos_details_update}>
+              <UpdateIcon />
+              Mis à jour le {formatDateWithTime(video.updated_at)}
+            </p>
+          </div>
+          {video.disable_comment ? (
+            <Alert type="info">Les commentaires sont désactivés</Alert>
+          ) : (
+            <Comments videoSlug={video.slug} />
+          )}
         </div>
-        {video.disable_comment ? (
-          <Alert type="info">Les commentaires sont désactivés</Alert>
-        ) : (
-          <Comments videoSlug={video.slug} />
-        )}
-      </div>
-      <div className={styles.video_infos_block_right}>
-        <div>
+        <div className={styles.video_infos_block_right}>
           <div>
-            <h2 className={styles.video_infos_block_right_title}>A propos</h2>
-            <Divider />
+            <div>
+              <h2 className={styles.video_infos_block_right_title}>A propos</h2>
+              <Divider />
 
-            <h4>
-              <LibraryBooksIcon fontSize="small" /> Type
-            </h4>
-            <span>{video.type_name}</span>
-            <h4>
-              <SchoolIcon fontSize="small" />
-              Discipline.s{" "}
-            </h4>
-            <ul>
-              {video.discipline_details?.map((discipline) => (
-                <li key={discipline.id}>{discipline.title}</li>
-              ))}
-            </ul>
-            <h4>
-              <MonitorIcon fontSize="small" />
-              Licence
-            </h4>
-            <span>{video.license ? video.license : "Aucune"}</span>
-            <h4>
-              <PieChartIcon fontSize="small" />
-              Cursus
-            </h4>
-            <span>{getCursusLabel(video.cursus)}</span>
+              <h4>
+                <LibraryBooksIcon fontSize="small" /> Type
+              </h4>
+              <span>{video.type_name}</span>
+              <h4>
+                <SchoolIcon fontSize="small" />
+                Discipline.s{" "}
+              </h4>
+              <ul>
+                {video.discipline_details &&
+                video.discipline_details.length > 0 ? (
+                  video.discipline_details.map((discipline) => (
+                    <li key={discipline.id}>{discipline.title}</li>
+                  ))
+                ) : (
+                  <li>Aucune</li>
+                )}
+              </ul>
+              <h4>
+                <MonitorIcon fontSize="small" />
+                Licence
+              </h4>
+              <span>{video.license ? video.license : "Aucune"}</span>
+              <h4>
+                <PieChartIcon fontSize="small" />
+                Cursus
+              </h4>
+              <span>{getCursusLabel(video.cursus)}</span>
+            </div>
           </div>
         </div>
       </div>

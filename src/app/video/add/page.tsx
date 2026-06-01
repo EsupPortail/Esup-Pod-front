@@ -15,6 +15,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
+import BackButton from "@/src/components/BackButton/BackButton";
 import styles from "./page.module.css";
 
 export const breadcrumbLabel = "Ajouter une vidéo";
@@ -104,6 +105,7 @@ export default function AddVideo() {
 
   return (
     <div>
+      <BackButton label="Retour" />
       <h1>Ajouter une vidéo</h1>
       {error && (
         <Alert canClose type="error">

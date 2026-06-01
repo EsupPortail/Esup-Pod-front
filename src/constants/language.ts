@@ -10,6 +10,7 @@ export const LANGUAGE_LABELS: Record<LanguageCode, string> = {
 export const VIDEO_LANGUAGE_OPTIONS = [
   { label: "Français", value: "fr-fr" },
   { label: "Anglais", value: "en-en" },
+  { label: "Espagnol", value: "es-es" },
 ] as const;
 
 export const getLanguageLabel = (code: string | null | undefined) => {
