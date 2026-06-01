@@ -8,9 +8,18 @@ export default {
           "placeholder-color": "#6A788A",
         },
         "forms-labelledbox": {
-          'label-color--small': "#6A788A",
-        }
-      }
+          "label-color--small": "#6A788A",
+        },
+      },
+      contextuals: {
+        background: {
+          semantic: {
+            brand: {
+              primary: "#154685",
+            },
+          },
+        },
+      },
     },
     dark: {
       components: {
@@ -18,17 +27,17 @@ export default {
           "placeholder-color": "#B5B9BE",
         },
         "forms-labelledbox": {
-          'label-color--small': "#B5B9BE",
-        }
+          "label-color--small": "#B5B9BE",
+        },
       },
       contextuals: {
         background: {
           semantic: {
             brand: {
-              primary: "#BA01DA"
-            }
-          }
-        }
+              primary: "#BA01DA",
+            },
+          },
+        },
       },
     },
   },
