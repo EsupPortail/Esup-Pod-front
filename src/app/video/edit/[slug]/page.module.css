@@ -62,15 +62,32 @@
   padding: 0 var(--c--globals--spacings--lg);
 }
 
-@media (max-width: 1024px) {
-  .form_actions,
+.c__input {
+  margin-bottom: var(--c--globals--spacings--md);
+}
+.c__select {
+  margin-top: var(--c--globals--spacings--md);
+}
+
+@media (max-width: 932px) {
+  .form_actions {
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: var(--c--globals--spacings--md);
+  }
   .form_actions_buttons {
     flex-direction: column;
     align-items: stretch;
     padding-bottom: var(--c--globals--spacings--md);
   }
 
-  .form_actions_buttons a {
-    width: 100%;
+  .thumbnail_field {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--c--globals--spacings--xs);
+  }
+  .thumbnail_preview {
+    margin-left: 0;
   }
 }

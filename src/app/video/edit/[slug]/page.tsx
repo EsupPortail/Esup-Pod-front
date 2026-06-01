@@ -19,7 +19,14 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Alert, Button, FileUploader, Loader } from "@openfun/cunningham-react";
+import { useTags } from "@/src/hooks/useTags";
+import {
+  Alert,
+  Button,
+  FileUploader,
+  Loader,
+  Tooltip,
+} from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
@@ -34,6 +41,7 @@ import { useDiscipline } from "@/src/hooks/useDiscipline";
 import { useSubtitle } from "@/src/hooks/useSubtitle";
 import { useTypes } from "@/src/hooks/useTypes";
 import { User } from "@/src/types/interface";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { Chip } from "@mui/material";
@@ -48,6 +56,9 @@ import {
   VideoStatus,
   VIDEO_STATUS_OPTIONS,
 } from "@/src/constants/video";
+import BackButton from "@/src/components/BackButton/BackButton";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 
 export const breadcrumbLabel = "Éditer la vidéo";
 
@@ -72,6 +83,8 @@ type EditVideoFormValues = {
   disable_comment: boolean;
   is_360: boolean;
   cursus: string;
+  date_to_delete: string;
+  date_of_event: string;
 };
 
 export default function EditVideo() {
@@ -80,6 +93,7 @@ export default function EditVideo() {
   const getVideoSlug = Array.isArray(params.slug)
     ? params.slug[0]
     : params.slug;
+  const isMobile = useMediaQuery("(max-width: 932px)");
   const { accessToken, refresh } = useAuth();
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { config } = useAppConfig();
@@ -91,7 +105,7 @@ export default function EditVideo() {
   const { addSubtitle, deleteSubtitle, useSubtitleLoading, useSubtitleError } =
     useSubtitle();
   const { fetchAll: fetchTypes, types } = useTypes();
-
+  const { tags, fetchAll: fetchTags } = useTags();
   const [activeStep, setActiveStep] = useState(0);
   const [formError, setformError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -99,6 +113,7 @@ export default function EditVideo() {
     useState<LanguageSubtitle>("fr");
   const [subtitleFile, setSubtitleFile] = useState<File | null>(null);
   const [subtitleIsDefault, setSubtitleIsDefault] = useState(false);
+  const [tagInputValue, setTagInputValue] = useState("");
 
   const licenseOptionsSource =
     config?.VIDEO_LICENSE_CHOICES && config.VIDEO_LICENSE_CHOICES.length > 0
@@ -119,6 +134,7 @@ export default function EditVideo() {
     formState: { errors, isSubmitting },
     reset,
     setValue,
+    getValues,
     clearErrors,
   } = useForm<EditVideoFormValues>({
     defaultValues: {
@@ -140,6 +156,8 @@ export default function EditVideo() {
       disable_comment: false,
       is_360: false,
       cursus: "0",
+      date_to_delete: "",
+      date_of_event: "",
     },
   });
 
@@ -151,7 +169,7 @@ export default function EditVideo() {
   const watchOwner = useWatch({ control, name: "owner" });
 
   useEffect(() => {
-    if (!getVideoSlug) return;
+    if (!getVideoSlug || !isAuthenticated) return;
     fetchOne(getVideoSlug);
   }, [getVideoSlug, fetchOne]);
 
@@ -160,6 +178,7 @@ export default function EditVideo() {
     fetchUsers();
     fetchDisciplines();
     fetchTypes();
+    fetchTags();
   }, [
     mounted,
     isInitializing,
@@ -193,6 +212,11 @@ export default function EditVideo() {
     return matchedType?.id ?? "";
   }, [types, video]);
 
+  const tagOptions = useMemo(
+    () => tags.map((tag) => tag.name).filter(Boolean),
+    [tags],
+  );
+
   useEffect(() => {
     if (!video) return;
 
@@ -217,6 +241,12 @@ export default function EditVideo() {
       allow_downloading: video.allow_downloading ?? false,
       is_360: video.is_360 ?? false,
       cursus: video.cursus ?? "0",
+      date_to_delete: video.date_to_delete
+        ? dayjs(video.date_to_delete).format("YYYY-MM-DD")
+        : "",
+      date_of_event: video.date_of_event
+        ? dayjs(video.date_of_event).format("YYYY-MM-DD")
+        : "",
     });
   }, [video, reset, initialDisciplineIds, initialTypeId]);
 
@@ -339,6 +369,16 @@ export default function EditVideo() {
       setformError("Vous devez être connecté pour modifier cette vidéo.");
       return;
     }
+    if (
+      data.status === "RE" &&
+      !data.is_auth_required &&
+      !data.is_password_required
+    ) {
+      setformError(
+        "Pour un statut restreint, sélectionnez au moins une option de restriction.",
+      );
+      return;
+    }
 
     try {
       const normalizedLicense = data.license === "_NONE_" ? "" : data.license;
@@ -353,6 +393,8 @@ export default function EditVideo() {
       formData.append("is_360", data.is_360 ?? false);
       formData.append("disable_comment", data.disable_comment ?? false);
       formData.append("cursus", data.cursus ?? "0");
+      formData.append("date_to_delete", data.date_to_delete ?? "");
+      formData.append("date_of_event", data.date_of_event ?? "");
 
       data.co_owners.forEach((id) => {
         formData.append("co_owners", String(id));
@@ -363,9 +405,9 @@ export default function EditVideo() {
           "is_auth_required",
           String(Boolean(data.is_auth_required)),
         );
-        console.log(video?.has_password);
+      } else {
+        formData.append("is_auth_required", String(Boolean(false)));
 
-        console.log(data.password);
         if (data.is_password_required && data.password.trim().length > 0) {
           formData.append("password", data.password.trim());
         } else if (video?.has_password) {
@@ -384,13 +426,14 @@ export default function EditVideo() {
       if (data.type_id !== "") {
         formData.append("type_id", String(data.type_id));
       }
-      /*data.tags
+
+      data.tags
         .split(",")
         .map((tag) => tag.trim())
         .filter(Boolean)
         .forEach((tag) => {
           formData.append("tags", tag);
-        });*/
+        });
 
       const res = await authFetch(getRoutes().video.update(getVideoSlug), {
         method: "PATCH",
@@ -415,6 +458,7 @@ export default function EditVideo() {
 
   return (
     <div>
+      <BackButton label="Retour" />
       <h1>
         Éditer la vidéo &quot;
         {video?.title}
@@ -442,11 +486,12 @@ export default function EditVideo() {
         style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
         <div className={styles.form_actions}>
-          <Alert>Statut de la vidéo : {video?.status_label}</Alert>
+          <Alert>Statut de l'encodage : {video?.encoding_status_label}</Alert>
           <div className={styles.form_actions_buttons}>
             <Link key="video-link" href={`/video/${getVideoSlug}`}>
               <Button
-                fullWidth
+                fullWidth={isMobile}
+                size="small"
                 color="brand"
                 variant="bordered"
                 type="reset"
@@ -457,17 +502,30 @@ export default function EditVideo() {
               </Button>
             </Link>
             <Link key="dashboard-link" href="/dashboard">
-              <Button fullWidth color="brand" variant="secondary" type="reset">
+              <Button
+                fullWidth={isMobile}
+                size="small"
+                color="brand"
+                variant="secondary"
+                type="reset"
+              >
                 Retour au tableau de bord
               </Button>
             </Link>
             <Link key="delete-link" href={`/video/delete/${getVideoSlug}`}>
-              <Button fullWidth color="error" variant="primary" type="button">
+              <Button
+                fullWidth={isMobile}
+                size="small"
+                color="error"
+                variant="primary"
+                type="button"
+              >
                 Supprimer la vidéo
               </Button>
             </Link>
             <Button
-              fullWidth
+              fullWidth={isMobile}
+              size="small"
               type="submit"
               color="success"
               variant="primary"
@@ -574,6 +632,53 @@ export default function EditVideo() {
                     </MenuItem>
                   ))}
                 </TextField>
+              )}
+            />
+            <Controller
+              name="date_to_delete"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  disabled={!isStaff}
+                  label="Date de suppression"
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(value: Dayjs | null) => {
+                    const formatted = value
+                      ? dayjs(value).format("YYYY-MM-DD")
+                      : "";
+                    field.onChange(formatted);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      helperText:
+                        "Date planifiée de suppression de la vidéo. Seul un super utilisateur modifier cette date.",
+                    },
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="date_of_event"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  disabled={!isStaff}
+                  label="Date de l'événement"
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(value: Dayjs | null) => {
+                    const formatted = value
+                      ? dayjs(value).format("YYYY-MM-DD")
+                      : "";
+                    field.onChange(formatted);
+                  }}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      helperText: "Date de l'évenement lié à cette vidéo.",
+                    },
+                  }}
+                />
               )}
             />
 
@@ -939,16 +1044,71 @@ export default function EditVideo() {
               name="tags"
               control={control}
               render={({ field }) => (
-                <TextField
-                  label="Tags"
-                  fullWidth
-                  value={field.value ?? ""}
-                  onChange={(event) => field.onChange(event.target.value)}
-                  onBlur={field.onBlur}
-                  helperText='Saisissez les tags au format "tag,tag".'
+                <Autocomplete
+                  multiple
+                  freeSolo
+                  options={tagOptions}
+                  value={
+                    field.value
+                      ? field.value
+                          .split(",")
+                          .map((tag) => tag.trim())
+                          .filter(Boolean)
+                      : []
+                  }
+                  inputValue={tagInputValue}
+                  onInputChange={(_, newInputValue) => {
+                    if (newInputValue.includes(" ")) {
+                      const normalized = newInputValue
+                        .split(/\s+/)
+                        .map((tag) => tag.trim())
+                        .filter(Boolean);
+
+                      if (normalized.length === 0) {
+                        setTagInputValue("");
+                        return;
+                      }
+
+                      const currentTags = field.value
+                        ? field.value
+                            .split(",")
+                            .map((tag) => tag.trim())
+                            .filter(Boolean)
+                        : [];
+
+                      const merged = Array.from(
+                        new Set([...currentTags, ...normalized]),
+                      );
+                      field.onChange(merged.join(","));
+                      setTagInputValue("");
+                      return;
+                    }
+
+                    setTagInputValue(newInputValue);
+                  }}
+                  onChange={(_, newValue) => {
+                    const normalized = newValue
+                      .map((tag) => tag.trim())
+                      .filter(Boolean);
+                    field.onChange(normalized.join(","));
+                  }}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => {
+                      const { key, ...tagProps } = getTagProps({ index });
+                      return <Chip key={key} label={option} {...tagProps} />;
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Tags"
+                      helperText="Saisissez ou sélectionnez des tags (séparés par un espace)."
+                    />
+                  )}
                 />
               )}
             />
+
             <div />
           </>
         )}
@@ -973,24 +1133,45 @@ export default function EditVideo() {
                   helperText="Choisissez le niveau de visibilité de la vidéo."
                 >
                   {VIDEO_STATUS_OPTIONS.map((option) => (
-                    <MenuItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={option.disabled}
-                    >
+                    <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
                 </TextField>
               )}
             />
+            {selectedStatus === "PU" && (
+              <div className={styles.restreint_fields}>
+                <p>Votre vidéo sera visible par tous les utilisateurs.</p>
+              </div>
+            )}
 
+            {selectedStatus === "DR" && (
+              <div className={styles.restreint_fields}>
+                <p>Votre vidéo sera visible uniquement par vous.</p>
+              </div>
+            )}
             {selectedStatus === "RE" && (
               <div className={styles.restreint_fields}>
-                <p>Accès restreint :</p>
+                <p>
+                  Pour restreindre l'accès à la vidéo, vous devez choisir au
+                  moins une des options suivantes :
+                </p>
                 <div>
                   <Controller
                     name="is_auth_required"
+                    rules={{
+                      validate: (value) => {
+                        if (getValues("status") !== "RE") return true;
+                        const auth = Boolean(value);
+                        const pwd = Boolean(getValues("is_password_required"));
+                        return (
+                          auth ||
+                          pwd ||
+                          "Choisissez au moins une option de restriction."
+                        );
+                      },
+                    }}
                     control={control}
                     render={({ field, fieldState }) => (
                       <FormControl error={Boolean(fieldState.error)}>
