@@ -1,7 +1,7 @@
 "use client";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 import { usePathname } from "next/navigation";
 import { breadcrumbLabels } from "./labelsPages";
 

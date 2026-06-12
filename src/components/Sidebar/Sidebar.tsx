@@ -1,7 +1,8 @@
 "use client";
+
 import { useSidebar } from "../../context/SidebarProvider";
 import { useAuth } from "@/src/context/AuthProvider";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 import Divider from "@mui/material/Divider";
 import MenuItem from "./menuItem";
 import { List } from "@mui/material";
@@ -14,34 +15,26 @@ import { DashboardRounded } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
+import CloseIcon from "@mui/icons-material/Close";
 
 const SideBar = () => {
   const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
 
+  /* ----------------------------- *
+   *  Menus – données statiques
+   * -------------------------------- */
   const menuPrincipalItems = [
     {
       name: "Consulter les vidéos",
       Icon: SlideshowIcon,
       link: "",
       items: [
-        {
-          name: "Toutes les vidéos",
-          link: "/video",
-        },
-        {
-          name: "Chaines",
-          link: "/",
-        },
-        {
-          name: "Listes de lecture",
-          link: "/",
-        },
-        {
-          name: "Listes de lecture promues",
-          link: "/",
-        },
+        { name: "Toutes les vidéos", link: "/video" },
+        { name: "Chaines", link: "/" },
+        { name: "Listes de lecture", link: "/" },
+        { name: "Listes de lecture promues", link: "/" },
       ],
     },
     {
@@ -49,49 +42,24 @@ const SideBar = () => {
       Icon: LiveTvIcon,
       link: "",
       items: [
-        {
-          name: "Voir les directs",
-          link: "/",
-        },
-        {
-          name: "Programmer un direct BBB",
-          link: "/",
-        },
-        {
-          name: "Mes sessions BBB",
-          link: "/",
-        },
-        {
-          name: "Revendiquer un enregistrement",
-          link: "/",
-        },
+        { name: "Voir les directs", link: "/" },
+        { name: "Programmer un direct BBB", link: "/" },
+        { name: "Mes sessions BBB", link: "/" },
+        { name: "Revendiquer un enregistrement", link: "/" },
       ],
     },
   ];
 
   const menuPodItems = [
-    {
-      name: "Mon tableau de bord",
-      Icon: DashboardRounded,
-      link: "/dashboard",
-    },
+    { name: "Mon tableau de bord", Icon: DashboardRounded, link: "/dashboard" },
     {
       name: "Déposer une vidéo",
       Icon: AddCircleOutlineIcon,
       link: "",
       items: [
-        {
-          name: "Ajouter une vidéo",
-          link: "/video/add",
-        },
-        {
-          name: "Enregistrer une vidéo",
-          link: "/",
-        },
-        {
-          name: "Importer une vidéo externe",
-          link: "/",
-        },
+        { name: "Ajouter une vidéo", link: "/video/add" },
+        { name: "Enregistrer une vidéo", link: "/" },
+        { name: "Importer une vidéo externe", link: "/" },
       ],
     },
     {
@@ -99,41 +67,39 @@ const SideBar = () => {
       Icon: AccountBoxIcon,
       link: "",
       items: [
-        {
-          name: "Mes vidéos favorites",
-          link: "/",
-        },
-        {
-          name: "Mes listes de lecture",
-          link: "/",
-        },
-        {
-          name: "Mes habillages",
-          link: "/",
-        },
+        { name: "Mes vidéos favorites", link: "/" },
+        { name: "Mes listes de lecture", link: "/" },
+        { name: "Mes habillages", link: "/" },
       ],
     },
-
-    {
-      name: "Mes réunions",
-      Icon: GroupsIcon,
-      link: "",
-    },
+    { name: "Mes réunions", Icon: GroupsIcon, link: "" },
   ];
 
   return (
-    <div
-      className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed}`}
+    <nav
+      id="sidebar-nav"
+      aria-label="Menu principal"
+      aria-labelledby="sidebar-title"
+      className={`${styles.sidebar} ${
+        sidebarOpen ? styles.open : styles.closed
+      }`}
       onMouseEnter={isMobile ? undefined : handleViewSidebar}
       onMouseLeave={isMobile ? undefined : handleViewSidebar}
     >
+      {/* ----- Bouton de fermeture (mobile) ----- */}
       {isMobile && (
-        <Button className={styles.button_close} onClick={handleFixSidebar}>
-          <span className="material-icons">close</span>
+        <Button
+          className={styles.button_close}
+          onClick={handleFixSidebar}
+          aria-label="Fermer le menu"
+        >
+          <CloseIcon aria-hidden="true" />
         </Button>
       )}
+
       <div className={styles.menu}>
         <h3
+          id="sidebar-title"
           className={styles.menu_title}
           style={{
             color: sidebarOpen
@@ -143,17 +109,26 @@ const SideBar = () => {
         >
           Menu principal
         </h3>
+
+        {/* ------------------------------------------------------ *
+         *  3️⃣ Liste principale – chaque item géré par MenuItem *
+         * ------------------------------------------------------ */}
         <List component="nav" disablePadding>
           {menuPrincipalItems.map((item, index) => (
             <MenuItem {...item} key={index} />
           ))}
         </List>
       </div>
+
+      {/* ====================================================== *
+       *  Partie « Mon menu » (visible quand l’utilisateur est *
+       *  authentifié)                                           *
+       * ====================================================== */}
       {accessToken && (
         <div className={styles.menu}>
           <Divider />
-
           <h3
+            id="sidebar-title-user"
             className={styles.menu_title}
             style={{
               color: sidebarOpen
@@ -163,11 +138,12 @@ const SideBar = () => {
           >
             Mon menu
           </h3>
+
           <Chip
             label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
             sx={{
               backgroundColor: sidebarOpen
-                ? "var( --background-brand-secondary)"
+                ? "var(--background-brand-secondary)"
                 : "var(--background)",
               color: sidebarOpen
                 ? "var(--background-brand)"
@@ -178,6 +154,7 @@ const SideBar = () => {
               marginBottom: "var(--c--globals--spacings--xs)",
             }}
           />
+
           <List component="nav" disablePadding>
             {menuPodItems.map((item, index) => (
               <MenuItem {...item} key={index} />
@@ -185,7 +162,7 @@ const SideBar = () => {
           </List>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

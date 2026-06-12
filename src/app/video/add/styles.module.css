@@ -1,0 +1,25 @@
+.bloc_terms {
+  margin: var(--c--globals--spacings--md) 0;
+  padding: var(--c--globals--spacings--md);
+  border: 1px solid var(--background-brand);
+  border-radius: 8px;
+}
+.bloc_terms legend {
+  color: var(--text-color-brand);
+  padding: 0 var(--c--globals--spacings--sm);
+}
+
+.bloc_terms_checkbox {
+  margin-top: var(--c--globals--spacings--lg);
+}
+
+.form {
+  gap: var(--c--globals--spacings--md);
+  padding: 0 var(--c--globals--spacings--md);
+  margin: var(--c--globals--spacings--xxl);
+  align-items: center;
+}
+
+.linearProgress {
+  margin: var(--c--globals--spacings--xl) 0;
+}

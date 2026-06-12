@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
-import type { AppConfig } from "@/src/types/interface";
+import type { AppConfig } from "@/src/types";
 
 export function useAppConfig() {
   const [config, setConfig] = useState<AppConfig | null>(null);

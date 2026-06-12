@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Type } from "../types/interface";
+import type { Type } from "@/src/types";
 import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";

@@ -8,6 +8,7 @@
   padding-left: var(--c--globals--spacings--xl);
   margin-left: 60px;
   transition: all 0.4s ease;
+  margin-top: auto;
 }
 
 .footer_content {

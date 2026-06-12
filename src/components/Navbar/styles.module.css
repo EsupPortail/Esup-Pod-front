@@ -80,7 +80,7 @@
   width: fit-content;
 }
 
-.navbar_profil_menu_item span {
+.menu_item_icon {
   margin-right: var(--c--globals--spacings--s);
 }
 
@@ -95,7 +95,7 @@
   .navbar_button {
     padding: var(--c--globals--spacings--s);
   }
-  .navbar_profil_menu_item span {
+  .menu_item_icon {
     padding-left: var(--c--globals--spacings--md);
   }
   .navbar_profil_menu_name_user {

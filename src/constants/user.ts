@@ -1,4 +1,4 @@
-import { User } from "@/src/types/interface";
+import type { User } from "@/src/types";
 
 export function setInitial(lastname: string, firstname: string) {
   return lastname

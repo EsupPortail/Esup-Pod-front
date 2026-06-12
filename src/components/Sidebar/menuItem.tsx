@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSidebar } from "../../context/SidebarProvider";
-import styles from "./page.module.css";
-import { MenuItemProps } from "@/src/types/interface";
+import styles from "./styles.module.css";
+import type { MenuItemProps } from "@/src/types";
 import Link from "next/link";
 import {
   List,

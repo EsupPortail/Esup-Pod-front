@@ -5,7 +5,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
-import type { Comment, CommentRequest } from "@/src/types/interface";
+import type { Comment, CommentRequest } from "@/src/types";
 
 type CreateCommentPayload = Pick<CommentRequest, "content"> & {
   parent?: number | null;

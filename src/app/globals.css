@@ -25,6 +25,13 @@ Extra Large Screens: min-width: 1441px
   --text-color-brand: var(--c--contextuals--content--semantic--brand--primary);
 }
 
+html,
+body,
+#__next,
+#root {
+  height: 100%;
+}
+
 body {
   background-color: var(--background);
   color: var(--text-color);
@@ -39,11 +46,17 @@ body {
   margin: 0;
 }
 
+.c__app {
+  display: flex;
+  flex-direction: column;
+}
+
 .main {
   padding-top: var(--navbar-height);
   transition: all 0.4s ease;
-  min-height: 800px;
   margin-left: 70px;
+  min-height: 100vh;
+  flex: 1 1 auto;
 }
 
 .c__alert--success {

@@ -7,7 +7,7 @@ import { useVideos } from "@/src/hooks/useVideos";
 import { useParams } from "next/navigation";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { Loader, Alert, Button } from "@openfun/cunningham-react";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Supprimer la vidéo";
 

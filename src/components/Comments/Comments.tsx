@@ -7,7 +7,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { setInitial } from "@/src/constants/user";
 import { useComments } from "@/src/hooks/useComments";
 import CommentItem from "./commentItem";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 
 type CommentsProps = {
   videoSlug: string;

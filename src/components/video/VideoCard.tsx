@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import styles from "./VideoCard.module.css";
 import Link from "next/link";
-import { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 import { formatTime, timeAgo, secondToMinute } from "@/src/constants/date";
 import { truncateVideoTitle } from "@/src/constants/string";
 import VideoActionMenu from "@/src/components/video/VideoActionMenu";

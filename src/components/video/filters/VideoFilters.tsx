@@ -6,7 +6,7 @@ import Chip from "@mui/material/Chip";
 import { Input, Select } from "@openfun/cunningham-react";
 import { CURSUS_OPTIONS } from "@/src/constants/cursus";
 import { getUserDisplayName } from "@/src/constants/user";
-import type { Discipline, Tags, Type, User } from "@/src/types/interface";
+import type { Discipline, Tags, Type, User } from "@/src/types";
 import styles from "./styles.module.css";
 
 export type VideoFiltersValue = {
@@ -443,6 +443,7 @@ export default function VideoFilters({
         />
 
         <Input
+          id="video-filters-search"
           label="Recherche"
           icon={<span className="material-icons">search</span>}
           value={value.search}

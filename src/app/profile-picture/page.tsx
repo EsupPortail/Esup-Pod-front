@@ -5,7 +5,7 @@ import { Alert, Button, FileUploader } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Changer ma photo de profil";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACK_URL ?? "";

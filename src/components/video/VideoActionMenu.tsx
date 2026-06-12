@@ -9,7 +9,7 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import MenuButton from "@mui/joy/MenuButton";
 import Dropdown from "@mui/joy/Dropdown";
 import Link from "next/link";
-import { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 
 interface VideoCardActionMenuProps {
   video: Video;

@@ -6,10 +6,10 @@ import Avatar from "@mui/material/Avatar";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuth } from "@/src/context/AuthProvider";
-import type { Comment } from "@/src/types/interface";
+import type { Comment } from "@/src/types";
 import { timeAgo } from "@/src/constants/date";
 import { setInitial } from "@/src/constants/user";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 

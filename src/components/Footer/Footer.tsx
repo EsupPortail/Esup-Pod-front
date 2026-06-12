@@ -1,5 +1,5 @@
 "use client";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 import { useAppInfo } from "@/src/hooks/useAppInfo";
 
 export default function Footer() {

@@ -11,10 +11,10 @@
 }
 
 .login_form {
-  width: 300px;
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
   gap: var(--c--globals--spacings--base);
   margin: auto;
+  align-items: center;
 }

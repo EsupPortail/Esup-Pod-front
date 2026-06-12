@@ -1,24 +1,12 @@
-import { ElementType } from "react";
 import type { CursusCode } from "@/src/constants/cursus";
 import type { LanguageSubtitle } from "@/src/constants/language";
 import type {
+  VideoEncodingStatus,
   VideoLicense,
   VideoStatus,
-  VideoEncodingStatus,
 } from "@/src/constants/video";
 
-export interface AppConfig {
-  USE_CAS?: boolean;
-  VIDEO_LICENSE_CHOICES?: string[];
-  [key: string]: unknown;
-}
-
-export interface AppInfo {
-  project: string;
-  version: string;
-}
-
-//Objet Video renvoyé par l'API
+// Objet Video renvoye par l'API
 export interface Video {
   id: number;
   title: string;
@@ -59,7 +47,7 @@ export interface Video {
   type_name: string | null;
 }
 
-// Objet Video pour le formulaire de création et d'édition
+// Objet Video pour le formulaire de creation et d'edition
 export interface VideoRequest {
   title: string;
   description?: string;
@@ -84,23 +72,12 @@ export interface VideoRequest {
   restricted_groups?: number[];
 }
 
-export interface MenuItemProps {
-  name: string;
-  link?: string;
-  Icon?: ElementType;
-  items?: MenuItemProps[];
-}
-
-export interface User {
+export interface Subtitle {
   id: number;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  is_staff: boolean;
-  affiliation: string;
-  establishment: string;
-  userpicture: string;
+  video: number;
+  language: LanguageSubtitle;
+  file: string;
+  is_default: boolean;
 }
 
 export interface Discipline {
@@ -124,34 +101,4 @@ export interface Type {
   slug: string;
   title: string;
   sites: Array<number> | null;
-}
-
-export interface Subtitle {
-  id: number;
-  video: number;
-  language: LanguageSubtitle;
-  file: string;
-  is_default: boolean;
-}
-
-export interface Comment {
-  id: string;
-  parent: number | null;
-  direct_parent: number | null;
-  author: number;
-  author_name: string;
-  content: string;
-  video: number;
-  added: string;
-  nbr_vote: number;
-  is_owner: boolean;
-  children: Comment[];
-}
-
-export interface CommentRequest {
-  id: string;
-  parent: number | null;
-  direct_parent: number | null;
-  content: string;
-  video: number;
 }

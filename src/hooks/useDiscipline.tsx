@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Discipline } from "../types/interface";
+import type { Discipline } from "@/src/types";
 import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";

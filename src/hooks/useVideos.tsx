@@ -5,7 +5,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
-import type { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 
 type VideoListParams = {
   channel?: number;

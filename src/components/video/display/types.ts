@@ -1,4 +1,4 @@
-import type { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 
 /*Typage des props pour le composant DisplayVideo*/
 

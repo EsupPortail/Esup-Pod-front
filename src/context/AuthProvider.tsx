@@ -2,7 +2,7 @@
 import { useContext, createContext, useEffect, useMemo, useState } from "react";
 import { requestJson } from "../utils/requestJson";
 import { authFetch } from "../api/authFetch";
-import type { User } from "../types/interface";
+import type { User } from "@/src/types";
 import { getRoutes } from "../api/routes";
 import { useAppConfig } from "../hooks/useAppConfig";
 
@@ -212,7 +212,6 @@ export default function AuthProvider(props: AuthProviderProps) {
         requestJson<User>(userRes),
         requestJson<LogoutInfo>(logoutInfoRes),
       ]);
-
       setUser(userData);
       setLogoutInfo(logoutInfoData);
       setLogoutUrl(resolveLogoutUrl(authConfig, logoutInfoData));

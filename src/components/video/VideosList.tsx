@@ -1,4 +1,4 @@
-import { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 import VideoCard from "@/src/components/video/VideoCard";
 import styles from "./VideoList.module.css";
 import Grid from "@mui/material/Grid";

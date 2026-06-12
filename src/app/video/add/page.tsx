@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Alert,
   Checkbox,
@@ -16,7 +17,7 @@ import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import BackButton from "@/src/components/BackButton/BackButton";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Ajouter une vidéo";
 
@@ -89,7 +90,7 @@ export default function AddVideo() {
       const newVid = await requestJson<{ slug: string }>(res);
       setIsRedirecting(true);
 
-      // Laisse le temps a React d'afficher la barre avant la navigation.
+      // Laisse le temps à React d'afficher la barre avant la navigation.
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
           setTimeout(resolve, 200);
@@ -106,42 +107,28 @@ export default function AddVideo() {
   return (
     <div>
       <BackButton label="Retour" />
+
       <h1>Ajouter une vidéo</h1>
+
+      {/* ---------- Alertes d’erreur ---------- */}
       {error && (
-        <Alert canClose type="error">
+        <Alert canClose type="error" role="alert" aria-live="assertive">
           {error}
         </Alert>
       )}
 
-      <Alert
-        additional={
-          <>
-            La taille du fichier doit être{" "}
-            <u>
-              <b>inférieure a 2 Go</b>
-            </u>
-            .
-            <br />
-            Le temps d'envoi dépend de la taille de votre fichier et de votre
-            vitesse de téléchargement.
-            <br />
-            <b>
-              Pendant l'envoi de votre fichier, ne fermez pas votre navigateur
-              avant d'avoir reçu un message de succès ou d'échec.
-            </b>
-          </>
-        }
-      >
-        Informations
-      </Alert>
-
+      {/* ---------- Étape de redirection  ---------- */}
       {isRedirecting ? (
         <div>
-          <LinearProgress aria-label="Loading..." />
-          <p>
+          <Alert canClose type="success" role="alert" aria-live="polite">
             Votre vidéo est en train d'être téléchargée sur POD. Veuillez ne pas
             fermer la page.
-          </p>
+          </Alert>
+          <LinearProgress
+            sx={{ padding: "5px" }}
+            className={styles.linearProgress}
+            aria-label="Loading..."
+          />
         </div>
       ) : (
         <form
@@ -153,8 +140,30 @@ export default function AddVideo() {
           }}
           onSubmit={handleSubmit(onSubmit)}
         >
+          {/* ---------- Informations générales ---------- */}
+          <Alert
+            additional={
+              <>
+                La taille du fichier doit être <b>inférieure à 2 Go</b>.
+                <br />
+                Le temps d’envoi dépend de la taille de votre fichier et de
+                votre vitesse de téléchargement.
+                <br />
+                <b>
+                  Pendant l’envoi de votre fichier, ne fermez pas votre
+                  navigateur avant d'avoir reçu un message de succès ou d’échec.
+                </b>
+              </>
+            }
+            role="alert"
+            aria-live="polite"
+          >
+            Informations
+          </Alert>
+
+          {/* ---------- FileUpload ----------*/}
           <FileUploader
-            bigText="Choisissez un fichier audio ou video"
+            bigText="Choisissez un fichier audio ou vidéo"
             fullWidth={true}
             state={errors.videoFile ? "error" : "default"}
             onFilesChange={(event) => {
@@ -165,8 +174,11 @@ export default function AddVideo() {
               }
             }}
             accept=".3gp, .avi, .divx, .flv, .m2p, .m4v, .mkv,
-                  .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3, .ogg, .wav, .wma,
-                  .webm, .ts"
+                    .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3,
+                    .ogg, .wav, .wma, .webm, .ts"
+            aria-label="Sélectionner un fichier audio ou vidéo"
+            aria-describedby="videoFile-error"
+            aria-required="true"
             text={
               errors.videoFile ? (
                 errors.videoFile.message
@@ -176,34 +188,50 @@ export default function AddVideo() {
                     Vous pouvez envoyer un fichier audio ou vidéo. <br />
                     Les formats suivants sont supportés : 3gp, avi, divx, flv,
                     m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav,
-                    wma, webm, ts
+                    wma, webm, ts.
                   </p>
                 </>
               )
             }
           />
-          <div className={styles.bloc_terms}>
+          {/* Message d’erreur lié au FileUploader */}
+          {errors.videoFile && (
+            <p
+              id="videoFile-error"
+              style={{ color: "red", marginTop: "0.25rem" }}
+            >
+              {errors.videoFile.message}
+            </p>
+          )}
+
+          {/* ---------- Conditions d’utilisation ---------- */}
+          <fieldset className={styles.bloc_terms}>
+            <legend>Conditions d’utilisation</legend>
+
             <p>
               <b>
-                Attention ! Assurez-vous de respecter le code de la proprieté
-                intellectuelle avant de publier une vidéo:
+                Attention ! Assurez‑vous de respecter le code de la propriété
+                intellectuelle avant de publier une vidéo :
               </b>
             </p>
+
             <p>
               Je confirme que je dispose des autorisations nécessaires signées
-              par les parties concernées par la publication de ce media, en ce
-              compris le consentement relatif au droit a l'image et au
-              traitement des données personnelles. Je certifie que l'ensemble
-              des personnes concernées ont bénéficié d'une information complète
+              par les parties concernées par la publication de ce média, en ce
+              compris le consentement relatif au droit à l’image et au
+              traitement des données personnelles. Je certifie que l’ensemble
+              des personnes concernées ont bénéficié d’une information complète
               relative au traitement de leurs données personnelles, conformément
               aux dispositions des articles 13 et 14 du RGPD.
             </p>
+
             <Checkbox
               className={styles.bloc_terms_checkbox}
               label="J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo."
               fullWidth
               state={errors.acceptTerm ? "error" : "default"}
-              text={errors.acceptTerm?.message}
+              aria-describedby="acceptTerm-error"
+              aria-required="true"
               {...register("acceptTerm", {
                 required: "Veuillez accepter les conditions d'utilisation.",
                 validate: (value) =>
@@ -211,9 +239,19 @@ export default function AddVideo() {
                   "Veuillez accepter les conditions d'utilisation.",
               })}
             />
-          </div>
+            {/* Message d’erreur lié à la Checkbox */}
+            {errors.acceptTerm && (
+              <p
+                id="acceptTerm-error"
+                style={{ color: "red", marginTop: "0.25rem" }}
+              >
+                {errors.acceptTerm.message}
+              </p>
+            )}
+          </fieldset>
+
+          {/* ---------- Bouton de soumission ---------- */}
           <Button
-            fullWidth
             type="submit"
             color="success"
             disabled={isSubmitting || isRedirecting}

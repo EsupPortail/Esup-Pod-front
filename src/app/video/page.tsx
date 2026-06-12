@@ -96,7 +96,6 @@ export default function Videos() {
     return videos.filter(
       (video) =>
         !video.is_auth_required &&
-        !video.has_password &&
         video.status !== "DR" &&
         video.encoding_status == "DO",
     );

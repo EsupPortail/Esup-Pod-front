@@ -1,5 +1,5 @@
 import { formatTime, secondToMinute, timeAgo } from "@/src/constants/date";
-import type { Video } from "@/src/types/interface";
+import type { Video } from "@/src/types";
 import type { VideoDisplayRow } from "./types";
 
 /**

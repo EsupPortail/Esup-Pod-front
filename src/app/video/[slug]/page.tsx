@@ -6,8 +6,8 @@ import { useParams } from "next/navigation";
 import { Alert, Button, Loader } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
-import VideoPlayer from "@/src/components/VideoPlayer/page";
-import Comments from "@/src/components/Comments/page";
+import VideoPlayer from "@/src/components/VideoPlayer/VideoPlayer";
+import Comments from "@/src/components/Comments/Comments";
 import { useVideos } from "@/src/hooks/useVideos";
 import { useAuth } from "@/src/context/AuthProvider";
 import Divider from "@mui/material/Divider";
@@ -27,10 +27,10 @@ import { useUsers } from "@/src/hooks/useUsers";
 import { getUserDisplayName } from "@/src/constants/user";
 import { getLanguageLabel } from "@/src/constants/language";
 import { requestJson } from "@/src/utils/requestJson";
-import { User } from "@/src/types/interface";
+import type { User } from "@/src/types";
 import DownloadIcon from "@mui/icons-material/Download";
 import UpdateIcon from "@mui/icons-material/Update";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 import BackButton from "@/src/components/BackButton/BackButton";
 
 export const breadcrumbLabel = "Video";
@@ -43,12 +43,10 @@ const getDownloadFilename = (
   if (utf8Match?.[1]) {
     return decodeURIComponent(utf8Match[1]);
   }
-
   const asciiMatch = contentDisposition?.match(/filename="?([^"]+)"?/i);
   if (asciiMatch?.[1]) {
     return asciiMatch[1];
   }
-
   return `${videoSlug}.mp4`;
 };
 
@@ -56,73 +54,76 @@ export default function Video() {
   const router = useRouter();
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+
   const { fetchOne, video, useVideoLoading, useVideoError } = useVideos();
   const time = secondToMinute(video?.duration || 0);
   const { user, accessToken, refresh } = useAuth();
   const isOwner = user?.id != null && video?.owner_id === user?.id;
+
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const { fetchUser, user: videoUser } = useUsers();
   const [coOwnersUsers, setCoOwnersUsers] = useState<User[]>([]);
 
+  /* ------------------------------------------------------------------
+   *  Récuperation de la vidéo et des co owners
+   * ------------------------------------------------------------------ */
   useEffect(() => {
     if (!slug) return;
     fetchOne(slug);
   }, [slug, fetchOne]);
 
   useEffect(() => {
-    if (video) {
-      fetchUser(video.owner_id);
-    }
+    if (video && user) fetchUser(video.owner_id);
   }, [video, fetchUser]);
 
   useEffect(() => {
-    const loadCoOwners = async () => {
-      if (!video?.co_owners || video.co_owners.length === 0) {
-        setCoOwnersUsers([]);
-        return;
-      }
-
-      try {
-        const responses = await Promise.all(
-          video.co_owners.map((id) =>
-            authFetch(getRoutes().user.get(id), {
-              accessToken,
-              onRefresh: refresh,
-            }),
-          ),
-        );
-
-        const coOwners = await Promise.all(
-          responses.map((response) => requestJson<User>(response)),
-        );
-
-        setCoOwnersUsers(coOwners);
-      } catch (error) {
-        console.error("Erreur lors du chargement des co-propriétaires", error);
-        setCoOwnersUsers([]);
-      }
-    };
-
-    loadCoOwners();
+    if (user) {
+      const loadCoOwners = async () => {
+        if (!video?.co_owners?.length) {
+          setCoOwnersUsers([]);
+          return;
+        }
+        try {
+          const responses = await Promise.all(
+            video.co_owners.map((id) =>
+              authFetch(getRoutes().user.get(id), {
+                accessToken,
+                onRefresh: refresh,
+              }),
+            ),
+          );
+          const coOwners = await Promise.all(
+            responses.map((response) => requestJson<User>(response)),
+          );
+          setCoOwnersUsers(coOwners);
+        } catch (error) {
+          console.error(
+            "Erreur lors du chargement des co‑propriétaires",
+            error,
+          );
+          setCoOwnersUsers([]);
+        }
+      };
+      loadCoOwners();
+    }
   }, [video?.co_owners, accessToken, refresh]);
 
+  /* ------------------------------------------------------------------
+   * Gestion du téléchargement de la vidéo
+   * ------------------------------------------------------------------ */
   const handleDownload = async () => {
     if (!video || isDownloading) return;
-
     setDownloadError(null);
     setIsDownloading(true);
-
     try {
       const response = await authFetch(getRoutes().video.stream(video.slug), {
         accessToken,
         onRefresh: refresh,
       });
-
       if (!response.ok) {
         throw new Error("Impossible de télécharger cette vidéo.");
       }
-
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -130,7 +131,6 @@ export default function Video() {
         response.headers.get("content-disposition"),
         video.slug,
       );
-
       link.href = downloadUrl;
       link.download = filename;
       document.body.appendChild(link);
@@ -148,9 +148,12 @@ export default function Video() {
     }
   };
 
+  /* ------------------------------------------------------------------
+   * Retour d’erreur / état de chargement
+   * ------------------------------------------------------------------ */
   if (!slug) {
     return (
-      <Alert canClose type="error">
+      <Alert canClose type="error" role="alert">
         Vidéo introuvable.
       </Alert>
     );
@@ -174,20 +177,25 @@ export default function Video() {
   if (useVideoError || !video) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <Alert canClose type="error">
-          {useVideoError ?? "Impossible de charger cette video."}
+        <Alert canClose type="error" role="alert">
+          {useVideoError ?? "Impossible de charger cette vidéo."}
         </Alert>
-
         <BackButton label="Retour" />
       </div>
     );
   }
 
+  /* ------------------------------------------------------------------
+   * Rendu principal
+   * ------------------------------------------------------------------ */
   return (
     <div>
       <BackButton label="Retour" />
       <div className={styles.main_video_content}>
-        <div
+        {/* --------------------------------------------------------------
+         *  Colonne principale
+         * ------------------------------------------------------------ */}
+        <section
           style={{
             display: "flex",
             flexDirection: "column",
@@ -200,19 +208,22 @@ export default function Video() {
             video={video}
             streamUrl={getRoutes().video.stream(video.slug)}
           />
-
           <h1>{video.title}</h1>
+
           {downloadError && (
-            <Alert canClose type="error">
+            <Alert canClose type="error" role="alert">
               {downloadError}
             </Alert>
           )}
+
+          {/* -------------------- Infos vidéo -------------------- */}
           <div className={styles.video_infos}>
             <div className={styles.video_infos_header}>
               <p>{timeAgo(video.created_at)}</p>
               <p className={styles.video_infos_header_time}>
-                {" "}
-                <span className="material-icons">access_time</span>
+                <span className="material-icons" aria-hidden="true">
+                  access_time
+                </span>
                 {formatTime(time)}
               </p>
             </div>
@@ -223,120 +234,135 @@ export default function Video() {
                   color="brand"
                   size="small"
                   variant="bordered"
-                  icon={<DownloadIcon />}
+                  icon={<DownloadIcon aria-hidden="true" />}
                   iconPosition="right"
                   type="button"
                   onClick={handleDownload}
                   disabled={isDownloading}
                 >
-                  {isDownloading ? "Téléchargement..." : "Télécharger la vidéo"}
+                  {isDownloading ? "Téléchargement…" : "Télécharger la vidéo"}
                 </Button>
               )}
-
               {isOwner && (
                 <Button
-                  onClick={() => {
-                    router.push(`/video/edit/${video.slug}`);
-                  }}
+                  onClick={() => router.push(`/video/edit/${video.slug}`)}
                   size="small"
                   color="brand"
                   variant="primary"
                   type="button"
                 >
-                  Éditer la video
+                  Éditer la vidéo
                 </Button>
               )}
             </div>
           </div>
 
-          {video.description != "" && (
+          {/* Description */}
+          {video.description && (
             <div className={styles.video_infos_description}>
               <p>{video.description}</p>
             </div>
           )}
-          <Divider />
-          <div className={styles.video_infos_details}>
-            <p>
-              Chaine : <span> {video.channel ? video.channel : "Aucune"} </span>
-            </p>
-            <p>
-              Ajouté par :{" "}
-              <span>
-                {videoUser ? getUserDisplayName(videoUser) : video.owner}
-              </span>
-            </p>
-            {coOwnersUsers.length > 0 && (
-              <p>
-                Co-propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :{" "}
-                <span>
-                  {coOwnersUsers
-                    .map((user) => getUserDisplayName(user))
-                    .join(", ")}
-                </span>
-              </p>
-            )}
 
-            <p>
-              Langue principale :{" "}
-              <span>{getLanguageLabel(video.language)}</span>
-            </p>
-            {video.tags != null && video.tags.length > 0 && (
-              <div className={styles.video_infos_details_tags}>
-                <p>Mots clés : </p>
-                {video.tags.map((label) => (
-                  <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
-                ))}
+          <Divider />
+
+          <dl className={styles.video_infos_details}>
+            <div>
+              <dt>Chaîne :</dt>
+              <dd>{video.channel ? video.channel : "Aucune"}</dd>
+            </div>
+
+            <div>
+              <dt>Ajouté par :</dt>
+              <dd>
+                {video.owner_last_name + " " + video.owner_first_name ||
+                  video.owner}
+              </dd>
+            </div>
+
+            {coOwnersUsers.length > 0 && (
+              <div>
+                <dt>Co‑propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :</dt>
+                <dd>
+                  {coOwnersUsers.map((u) => getUserDisplayName(u)).join(", ")}
+                </dd>
               </div>
             )}
 
-            <p className={styles.video_infos_details_update}>
-              <UpdateIcon />
-              Mis à jour le {formatDateWithTime(video.updated_at)}
-            </p>
-          </div>
+            <div>
+              <dt>Langue principale :</dt>
+              <dd>{getLanguageLabel(video.language)}</dd>
+            </div>
+
+            {video.tags != null && video.tags?.length > 0 && (
+              <div className={styles.video_infos_details_tags}>
+                <dt>Mots‑clés :</dt>
+                <dd>
+                  {video.tags.map((label) => (
+                    <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
+                  ))}
+                </dd>
+              </div>
+            )}
+
+            <div className={styles.video_infos_details_update}>
+              <dt>
+                <UpdateIcon aria-hidden="true" /> Mis à jour le
+              </dt>
+              <dd>{formatDateWithTime(video.updated_at)}</dd>
+            </div>
+          </dl>
+
+          {/* Commentaires */}
           {video.disable_comment ? (
-            <Alert type="info">Les commentaires sont désactivés</Alert>
+            <Alert type="info" role="alert">
+              Les commentaires sont désactivés
+            </Alert>
           ) : (
             <Comments videoSlug={video.slug} />
           )}
-        </div>
-        <div className={styles.video_infos_block_right}>
-          <div>
-            <div>
-              <h2 className={styles.video_infos_block_right_title}>A propos</h2>
-              <Divider />
+        </section>
 
-              <h4>
-                <LibraryBooksIcon fontSize="small" /> Type
-              </h4>
-              <span>{video.type_name}</span>
-              <h4>
-                <SchoolIcon fontSize="small" />
-                Discipline.s{" "}
-              </h4>
-              <ul>
-                {video.discipline_details &&
-                video.discipline_details.length > 0 ? (
-                  video.discipline_details.map((discipline) => (
-                    <li key={discipline.id}>{discipline.title}</li>
-                  ))
-                ) : (
-                  <li>Aucune</li>
-                )}
-              </ul>
-              <h4>
-                <MonitorIcon fontSize="small" />
-                Licence
-              </h4>
-              <span>{video.license ? video.license : "Aucune"}</span>
-              <h4>
-                <PieChartIcon fontSize="small" />
-                Cursus
-              </h4>
-              <span>{getCursusLabel(video.cursus)}</span>
-            </div>
-          </div>
-        </div>
+        {/* --------------------------------------------------------------
+         *  Colonne latérale
+         * ------------------------------------------------------------ */}
+        <aside
+          className={styles.video_infos_block_right}
+          aria-label="Informations complémentaires"
+        >
+          <section>
+            <h2 className={styles.video_infos_block_right_title}>À propos</h2>
+            <Divider />
+
+            <h4>
+              <LibraryBooksIcon fontSize="small" aria-hidden="true" /> Type
+            </h4>
+            <p>{video.type_name}</p>
+
+            <h4>
+              <SchoolIcon fontSize="small" aria-hidden="true" /> Discipline
+            </h4>
+            <ul>
+              {video.discipline_details?.length ? (
+                video.discipline_details.map((d) => (
+                  <li key={d.id}>{d.title}</li>
+                ))
+              ) : (
+                <li>Aucune</li>
+              )}
+            </ul>
+
+            <h4>
+              <MonitorIcon fontSize="small" aria-hidden="true" /> Licence
+            </h4>
+            <p>{video.license ?? "Aucune"}</p>
+
+            <h4>
+              <PieChartIcon fontSize="small" aria-hidden="true" /> Cursus
+            </h4>
+            <p>{getCursusLabel(video.cursus)}</p>
+          </section>
+        </aside>
       </div>
     </div>
   );

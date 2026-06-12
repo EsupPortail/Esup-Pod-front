@@ -1,6 +1,6 @@
 import Form from "next/form";
 import { Input } from "@openfun/cunningham-react";
-import styles from "./page.module.css";
+import styles from "./styles.module.css";
 
 const handleSearch = (data: string) => {
   console.log(data);
