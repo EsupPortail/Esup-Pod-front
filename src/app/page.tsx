@@ -1,19 +1,11 @@
 "use client";
 import VideosList from "@/src/components/video/VideosList";
 import { Button, Alert, Loader } from "@openfun/cunningham-react";
-import { useSearchParams } from "next/navigation";
 import { useVideos } from "../hooks/useVideos";
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
 
 export default function Accueil() {
-  const params = useSearchParams();
-  const messageAlert =
-    params.get("login") === "success"
-      ? "Vous êtes désormais connecté."
-      : params.get("logout") === "success"
-        ? "Vous êtes désormais déconnecté."
-        : null;
   const { fetchAll, videos, useVideoError, useVideoLoading } = useVideos();
 
   useEffect(() => {
@@ -32,11 +24,6 @@ export default function Accueil() {
 
   return (
     <div>
-      {messageAlert && (
-        <Alert canClose type="success">
-          {messageAlert}
-        </Alert>
-      )}
       <h1>Bienvenue sur votre plateforme POD !</h1>
       <p>
         La vidéo est un média de choix quand il s'agit de communiquer,

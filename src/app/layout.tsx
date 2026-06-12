@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Navbar from "../components/Navbar/page";
-import Sidebar from "../components/Sidebar/page";
-import Footer from "../components/Footer/page";
-import Breadcrumb from "../components/Breadcrumbs/page";
+import Navbar from "../components/Navbar/Navbar";
+import Sidebar from "../components/Sidebar/Sidebar";
+import Footer from "../components/Footer/Footer";
+import Breadcrumb from "../components/Breadcrumbs/Breadcrumbs";
 import SidebarProvider from "../context/SidebarProvider";
 import AuthProvider from "../context/AuthProvider";
 import CunninghamStyleProvider from "../context/CunninghamProvider";
 import DatePickerProvider from "../context/DatePickerProvider";
+import AuthStatusAlert from "../components/Notifications/AuthStatusAlert";
 
 export const metadata: Metadata = {
   title: "Esup POD V5",
@@ -26,23 +27,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body>
-        <CunninghamStyleProvider>
-          <DatePickerProvider>
-            <AuthProvider>
-              <SidebarProvider>
-                <Navbar />
-                <Sidebar />
-                <main id="main" className="main">
-                  <Breadcrumb />
-                  <div className="content">{children}</div>
-                </main>
-                <Footer />
-              </SidebarProvider>
-            </AuthProvider>
-          </DatePickerProvider>
-        </CunninghamStyleProvider>
+        <div className="layout">
+          <CunninghamStyleProvider>
+            <DatePickerProvider>
+              <AuthProvider>
+                <SidebarProvider>
+                  <Navbar />
+                  <Sidebar />
+                  <main id="main" className="main">
+                    <Breadcrumb />
+                    <div className="content">
+                      <AuthStatusAlert autoDismissMs={5000} />
+                      {children}
+                    </div>
+                  </main>
+                  <Footer />
+                </SidebarProvider>
+              </AuthProvider>
+            </DatePickerProvider>
+          </CunninghamStyleProvider>
+        </div>
       </body>
     </html>
   );
