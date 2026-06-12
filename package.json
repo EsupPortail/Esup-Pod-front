@@ -25,7 +25,8 @@
     "dayjs": "^1.11.21",
     "hls.js": "^1.6.16",
     "next": "^16.1.6",
-    "plyr": "^3.8.4",
+    "video.js": "^8.7.0",
+    "videojs-hotkeys": "^0.2.27",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.71.1"

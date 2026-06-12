@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Alert, Button, Loader } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
-import VideoPlayer from "@/src/components/VideoPlayer/VideoPlayer";
+import VideoPlayer from "@/src/components/video/player/VideoPlayer";
 import Comments from "@/src/components/Comments/Comments";
 import { useVideos } from "@/src/hooks/useVideos";
 import { useAuth } from "@/src/context/AuthProvider";
