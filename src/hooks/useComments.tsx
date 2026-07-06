@@ -70,7 +70,7 @@ const prependReplyToTree = (
     if (String(comment.id) === String(parentId)) {
       return {
         ...comment,
-        children: [normalizedReply, ...normalizeComments(comment.children)],
+        children: [...normalizeComments(comment.children), normalizedReply],
       };
     }
 
@@ -159,7 +159,7 @@ export function useComments(videoSlug: string) {
             prependReplyToTree(prev, direct_parent, createdComment),
           );
         } else {
-          setComments((prev) => [createdComment, ...normalizeComments(prev)]);
+          setComments((prev) => [...normalizeComments(prev), createdComment]);
         }
 
         return createdComment;
@@ -223,6 +223,7 @@ export function useComments(videoSlug: string) {
   const deleteComment = useCallback(
     async (commentId: string | number) => {
       setUseCommentsError(null);
+      setUseCommentsLoading(true);
 
       try {
         const res = await authFetch(
@@ -242,7 +243,7 @@ export function useComments(videoSlug: string) {
         setVotedCommentIds((prev) =>
           prev.filter((id) => id !== String(commentId)),
         );
-
+        setUseCommentsLoading(false);
         return true;
       } catch (e: unknown) {
         setUseCommentsError(

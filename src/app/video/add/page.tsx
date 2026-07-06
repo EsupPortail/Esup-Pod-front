@@ -5,7 +5,7 @@ import {
   Checkbox,
   Button,
   FileUploader,
-  Loader,
+  VariantType,
 } from "@openfun/cunningham-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { requestJson } from "@/src/utils/requestJson";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import BackButton from "@/src/components/BackButton/BackButton";
 import styles from "./styles.module.css";
+import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 
 export const breadcrumbLabel = "Ajouter une vidéo";
 
@@ -49,17 +50,7 @@ export default function AddVideo() {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   if (!mounted || isInitializing || !isAuthenticated) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Loader />
-      </div>
-    );
+    return <CenteredLoader />;
   }
 
   const onSubmit = async (data: AddVideoFormValues) => {
@@ -86,16 +77,16 @@ export default function AddVideo() {
         accessToken,
         onRefresh: refresh,
       });
-
-      const newVid = await requestJson<{ slug: string }>(res);
       setIsRedirecting(true);
 
-      // Laisse le temps à React d'afficher la barre avant la navigation.
+      // Barre de chargement
       await new Promise<void>((resolve) => {
         requestAnimationFrame(() => {
           setTimeout(resolve, 200);
         });
       });
+
+      const newVid = await requestJson<{ slug: string }>(res);
 
       router.push(`/video/edit/${newVid.slug}`);
     } catch (err: unknown) {
@@ -112,7 +103,7 @@ export default function AddVideo() {
 
       {/* ---------- Alertes d’erreur ---------- */}
       {error && (
-        <Alert canClose type="error" role="alert" aria-live="assertive">
+        <Alert canClose type={VariantType.ERROR} aria-live="assertive">
           {error}
         </Alert>
       )}
@@ -120,7 +111,7 @@ export default function AddVideo() {
       {/* ---------- Étape de redirection  ---------- */}
       {isRedirecting ? (
         <div>
-          <Alert canClose type="success" role="alert" aria-live="polite">
+          <Alert canClose type={VariantType.SUCCESS} aria-live="polite">
             Votre vidéo est en train d'être téléchargée sur POD. Veuillez ne pas
             fermer la page.
           </Alert>
@@ -155,7 +146,6 @@ export default function AddVideo() {
                 </b>
               </>
             }
-            role="alert"
             aria-live="polite"
           >
             Informations
@@ -174,24 +164,14 @@ export default function AddVideo() {
               }
             }}
             accept=".3gp, .avi, .divx, .flv, .m2p, .m4v, .mkv,
-                    .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3,
-                    .ogg, .wav, .wma, .webm, .ts"
+          .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3,
+          .ogg, .wav, .wma, .webm, .ts"
             aria-label="Sélectionner un fichier audio ou vidéo"
             aria-describedby="videoFile-error"
             aria-required="true"
             text={
-              errors.videoFile ? (
-                errors.videoFile.message
-              ) : (
-                <>
-                  <p>
-                    Vous pouvez envoyer un fichier audio ou vidéo. <br />
-                    Les formats suivants sont supportés : 3gp, avi, divx, flv,
-                    m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav,
-                    wma, webm, ts.
-                  </p>
-                </>
-              )
+              errors.videoFile?.message ??
+              "Les formats suivants sont supportés : 3gp, avi, divx, flv, m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav, wma, webm, ts."
             }
           />
           {/* Message d’erreur lié au FileUploader */}

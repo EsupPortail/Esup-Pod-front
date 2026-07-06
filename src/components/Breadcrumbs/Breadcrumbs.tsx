@@ -13,6 +13,11 @@ export default function Breadcrumb() {
     pathNames[0] === "video" &&
     pathNames[1] === "edit";
   const videoId = isVideoEditRoute ? pathNames[2] : "";
+  const isPlaylistEditRoute =
+    pathNames.length >= 3 &&
+    pathNames[0] === "playlist" &&
+    pathNames[1] === "edit";
+  const playlistSlug = isPlaylistEditRoute ? pathNames[2] : "";
 
   return (
     <div>
@@ -22,7 +27,7 @@ export default function Breadcrumb() {
         </Link>
         {pathNames.length > 0}
         {pathNames.map((link, index) => {
-          if (isVideoEditRoute && index === 2) {
+          if ((isVideoEditRoute || isPlaylistEditRoute) && index === 2) {
             return null;
           }
           let href = `/${pathNames.slice(0, index + 1).join("/")}`;
@@ -30,6 +35,10 @@ export default function Breadcrumb() {
           if (isVideoEditRoute && index === 1) {
             href = `/video/edit/${videoId}`;
             link = `${link} ${videoId}`;
+          }
+          if (isPlaylistEditRoute && index === 1) {
+            href = `/playlist/edit/${playlistSlug}`;
+            link = `${link} ${playlistSlug}`;
           }
 
           return (

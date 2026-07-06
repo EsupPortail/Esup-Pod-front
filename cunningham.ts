@@ -1,5 +1,4 @@
 // cunningham.ts
-
 export default {
   themes: {
     default: {
@@ -13,14 +12,27 @@ export default {
       },
       contextuals: {
         background: {
-          semantic: {
-            brand: {
-              primary: "#154685",
+          palette: {
+            purple: {
+              primary: "#7B06E5",
+            },
+            pink: {
+              primary: "#B00358",
+            },
+            blue: {
+              primary: "#38569F",
+            },
+            orange: {
+              primary: "#9C3902",
+            },
+            red: {
+              primary: "#B50801",
             },
           },
         },
       },
     },
+
     dark: {
       components: {
         "forms-input": {

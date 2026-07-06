@@ -50,7 +50,9 @@ body {
   display: flex;
   flex-direction: column;
 }
-
+.back-button {
+  margin-bottom: var(--c--globals--spacings--md);
+}
 .main {
   padding-top: var(--navbar-height);
   transition: all 0.4s ease;

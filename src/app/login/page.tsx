@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Input, InputPassword, Button, Alert } from "@openfun/cunningham-react";
+import {
+  Input,
+  InputPassword,
+  Button,
+  Alert,
+  VariantType,
+} from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
 import { useAuth } from "../../context/AuthProvider";
 
@@ -38,7 +44,12 @@ export default function Login() {
     setError(null);
     try {
       await logIn(data.username.trim(), data.password.trim());
-      router.push(safeRedirect);
+      // Ne pas laisser cette page de login forcée dans l'historique du BackButton
+      if (authRequired) {
+        router.replace(safeRedirect);
+      } else {
+        router.push(safeRedirect);
+      }
     } catch (err: any) {
       setError(err?.message ?? "Une erreur est survenue.");
     }
@@ -49,16 +60,20 @@ export default function Login() {
     <div className={styles.login_content}>
       {/* ==== Avertissement ==== */}
       {authRequired && (
-        <Alert canClose type="warning" role="alert" aria-live="polite">
-          Vous devez être connecté pour accéder à cette page.
-        </Alert>
+        <div role="alert" aria-live="polite">
+          <Alert canClose type={VariantType.WARNING}>
+            Vous devez être connecté pour accéder à cette page.
+          </Alert>
+        </div>
       )}
 
       {/* ==== Erreur serveur ==== */}
       {error && (
-        <Alert canClose type="error" role="alert" aria-live="assertive">
-          {error}
-        </Alert>
+        <div role="alert" aria-live="assertive">
+          <Alert canClose type={VariantType.ERROR}>
+            {error}
+          </Alert>
+        </div>
       )}
 
       <h1>Connexion</h1>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, TextArea } from "@openfun/cunningham-react";
 import Avatar from "@mui/material/Avatar";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
@@ -8,7 +8,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useAuth } from "@/src/context/AuthProvider";
 import type { Comment } from "@/src/types";
 import { timeAgo } from "@/src/constants/date";
-import { setInitial } from "@/src/constants/user";
+import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
 import styles from "./styles.module.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -25,10 +25,13 @@ type CommentItemProps = {
   onReply: (payload: ReplyPayload) => Promise<Comment | null>;
   onVote: (commentId: string | number) => Promise<boolean>;
   onDelete: (commentId: string | number) => Promise<boolean>;
+  onCreatedReply: (id: string | number) => void;
+  pendingScrollToId: string | number | null;
+  onScrollHandled: () => void;
 };
 
 const getAuthorDisplayName = (authorName: string) => {
-  return authorName.trim() || "Utilisateur";
+  return authorName.trim();
 };
 
 const getInitialsFromAuthorName = (authorName: string) => {
@@ -45,12 +48,17 @@ export default function CommentItem({
   onReply,
   onVote,
   onDelete,
+  onCreatedReply,
+  pendingScrollToId,
+  onScrollHandled,
 }: CommentItemProps) {
   const { user, isAuthenticated } = useAuth();
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
   const [isReplyFormOpen, setIsReplyFormOpen] = useState(false);
   const [replyContent, setReplyContent] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+  const commentRef = useRef<HTMLElement | null>(null);
+  const [isHighlighted, setIsHighlighted] = useState(false);
 
   const children = comment.children ?? [];
   const hasReplies = children.length > 0;
@@ -62,6 +70,8 @@ export default function CommentItem({
   const initials = useMemo(() => {
     return getInitialsFromAuthorName(comment.author_name);
   }, [comment.author_name]);
+
+  const profilePictureUrl = getProfilePictureUrl(comment.author_picture);
 
   const handleReply = async () => {
     if (!replyContent.trim() || isSubmittingReply) {
@@ -80,19 +90,58 @@ export default function CommentItem({
       setReplyContent("");
       setIsReplyFormOpen(false);
       setIsRepliesOpen(true);
+      onCreatedReply(created.id);
     }
 
     setIsSubmittingReply(false);
   };
 
+  useEffect(() => {
+    if (pendingScrollToId == null) {
+      return;
+    }
+
+    if (String(pendingScrollToId) !== String(comment.id)) {
+      return;
+    }
+
+    if (!commentRef.current) {
+      return;
+    }
+
+    commentRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    onScrollHandled();
+    setIsHighlighted(true);
+  }, [comment.id, onScrollHandled, pendingScrollToId]);
+
+  useEffect(() => {
+    if (!isHighlighted) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setIsHighlighted(false);
+    }, 2000);
+
+    return () => window.clearTimeout(timeout);
+  }, [isHighlighted]);
+
   return (
-    <article className={styles.comment}>
+    <article
+      ref={commentRef}
+      className={`${styles.comment} ${isHighlighted ? styles.commentHighlight : ""}`}
+      id={`comment-${comment.id}`}
+    >
       <div className={styles.header}>
-        <Avatar>{initials}</Avatar>
+        <Avatar src={profilePictureUrl}>{initials}</Avatar>
 
         <div className={styles.body}>
           <div className={styles.meta}>
-            <strong>{getAuthorDisplayName(comment.author_name)}</strong>
+            <strong>
+              {comment.author_name
+                ? getAuthorDisplayName(comment.author_name)
+                : comment.author_username}
+            </strong>
             <span>{timeAgo(comment.added)}</span>
           </div>
 
@@ -197,6 +246,9 @@ export default function CommentItem({
                   onReply={onReply}
                   onVote={onVote}
                   onDelete={onDelete}
+                  onCreatedReply={onCreatedReply}
+                  pendingScrollToId={pendingScrollToId}
+                  onScrollHandled={onScrollHandled}
                 />
               ))}
             </div>

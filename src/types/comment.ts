@@ -3,6 +3,8 @@ export interface Comment {
   parent: number | null;
   direct_parent: number | null;
   author: number;
+  author_picture: string | null;
+  author_username: string | null;
   author_name: string;
   content: string;
   video: number;

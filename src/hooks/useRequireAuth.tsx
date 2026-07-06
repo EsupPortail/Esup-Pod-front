@@ -1,10 +1,10 @@
-// src/hooks/useAuthGuard.ts
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/context/AuthProvider";
 
-export function useRequireAuth(redirectTo = "/login") {
+/* Verifie que le user est connecté et redirige vers la page login dans le cas contraire*/
+export function useRequireAuth(redirectTo = "/login", enabled = true) {
   const { isAuthenticated, isInitializing } = useAuth();
   const router = useRouter();
   const hasRedirectedRef = useRef(false);
@@ -15,7 +15,9 @@ export function useRequireAuth(redirectTo = "/login") {
   }, []);
 
   useEffect(() => {
-    if (!mounted || isInitializing || hasRedirectedRef.current) return;
+    if (!enabled || !mounted || isInitializing || hasRedirectedRef.current) {
+      return;
+    }
     hasRedirectedRef.current = true;
     if (!isAuthenticated) {
       const currentPath = window.location.pathname + window.location.search;
@@ -23,7 +25,7 @@ export function useRequireAuth(redirectTo = "/login") {
         `${redirectTo}?reason=auth&redirect=${encodeURIComponent(currentPath)}`,
       );
     }
-  }, [isAuthenticated, isInitializing, router, redirectTo]);
+  }, [enabled, isAuthenticated, isInitializing, router, redirectTo]);
 
   return { isAuthenticated, isInitializing, mounted };
 }

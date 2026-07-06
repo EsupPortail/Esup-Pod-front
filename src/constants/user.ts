@@ -20,3 +20,21 @@ export function getUserDisplayName(user: User): string {
 
   return user.username;
 }
+
+export function getProfilePictureUrl(
+  picture?: string | null,
+): string | undefined {
+  if (!picture) {
+    return undefined;
+  }
+
+  if (picture.startsWith("http")) {
+    return picture;
+  }
+
+  const backUrl = process.env.NEXT_PUBLIC_BACK_URL ?? "";
+  const sanitizedBackUrl = backUrl.replace(/\/$/, "");
+  const sanitizedPicture = picture.replace(/^\//, "");
+
+  return `${sanitizedBackUrl}/${sanitizedPicture}`;
+}

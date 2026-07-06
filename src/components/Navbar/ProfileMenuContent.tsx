@@ -58,8 +58,8 @@ export function ProfileMenuContent({
           Modifier mon image de profil
         </MenuItem>
 
-        {/* ----- Accès à l’administration (staff uniquement) ----- */}
-        {user.is_staff && (
+        {/* ----- Accès à l’administration (superUser uniquement) ----- */}
+        {user.is_superuser && (
           <MenuItem
             className={styles.navbar_profil_menu_item}
             component={Link}

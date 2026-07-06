@@ -16,5 +16,6 @@
   justify-content: center;
   gap: var(--c--globals--spacings--base);
   margin: auto;
+  padding-top: var(--c--globals--spacings--md);
   align-items: center;
 }

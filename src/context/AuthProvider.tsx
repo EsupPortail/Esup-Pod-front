@@ -1,11 +1,20 @@
 "use client";
-import { useContext, createContext, useEffect, useMemo, useState } from "react";
+
+import {
+  useContext,
+  createContext,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import { requestJson } from "../utils/requestJson";
 import { authFetch } from "../api/authFetch";
 import type { User } from "@/src/types";
 import { getRoutes } from "../api/routes";
 import { useAppConfig } from "../hooks/useAppConfig";
 
+import { useRouter } from "next/navigation";
 type AuthConfig = {
   use_local: boolean;
   use_cas: boolean;
@@ -82,6 +91,14 @@ const resolveLogoutUrl = (
 export default function AuthProvider(props: AuthProviderProps) {
   const { config } = useAppConfig();
 
+  // Router Next.js pour pouvoir rediriger en cas d'expiration de session
+  const router = useRouter();
+
+  // Permet d'éviter de déclencher plusieurs fois de suite
+  // la logique de "session expirée" lorsque plusieurs requêtes
+  // concurrentes échouent en même temps.
+  const hasForcedLogoutRef = useRef(false);
+
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [logoutUrl, setLogoutUrl] = useState<string>("/");
@@ -140,6 +157,13 @@ export default function AuthProvider(props: AuthProviderProps) {
   const persistTokens = (token: string | null, refreshValue: string | null) => {
     setAccessToken(token);
     setRefreshToken(refreshValue);
+
+    // Si on enregistre de nouveaux tokens (login ou refresh réussi),
+    // on réinitialise le flag pour permettre une future détection
+    // d'expiration de session.
+    if (token && refreshValue) {
+      hasForcedLogoutRef.current = false;
+    }
     token
       ? localStorage.setItem(ACCESS_TOKEN_KEY, token)
       : localStorage.removeItem(ACCESS_TOKEN_KEY);
@@ -153,6 +177,36 @@ export default function AuthProvider(props: AuthProviderProps) {
     setUser(null);
     setLogoutInfo(null);
     setLogoutUrl("/");
+  };
+
+  /**
+   * Déconnexion forcée + redirection vers la page de login
+   * lorsqu'on détecte une expiration de session (échec du refresh).
+   *
+   * On protège cette logique avec un ref pour ne pas la déclencher
+   * plusieurs fois en cas de multiples requêtes concurrentes qui
+   * échouent en même temps.
+   */
+  const forceLogoutAndRedirectToLogin = () => {
+    if (hasForcedLogoutRef.current) {
+      return;
+    }
+
+    hasForcedLogoutRef.current = true;
+
+    // Nettoyage local de l'état d'authentification
+    logout();
+
+    // Redirection vers la page de login en conservant la page courante
+    // pour pouvoir y revenir après reconnexion.
+    const currentPath =
+      typeof window !== "undefined"
+        ? window.location.pathname + window.location.search
+        : "/";
+
+    router.replace(
+      `/login?reason=auth&redirect=${encodeURIComponent(currentPath)}`,
+    );
   };
 
   const verify = async (token?: string | null) => {
@@ -186,7 +240,10 @@ export default function AuthProvider(props: AuthProviderProps) {
       persistTokens(newAccess, tokenToRefresh);
       return newAccess;
     } catch {
-      logout();
+      // Si le refresh échoue (401 typiquement), on considère que la
+      // session est expirée : on force la déconnexion et on redirige
+      // l'utilisateur vers la page de login.
+      forceLogoutAndRedirectToLogin();
       return null;
     }
   };

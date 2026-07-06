@@ -19,12 +19,10 @@ import styles from "./styles.module.css";
 import dynamic from "next/dynamic";
 import type { User } from "@/src/types";
 import { ProfileMenuContent } from "./ProfileMenuContent";
-import { setInitial } from "@/src/utils/helper";
+import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
 
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
-const backUrl = process.env.NEXT_PUBLIC_BACK_URL ?? "";
-
 /* ------------------------------------------------------------------ */
 /*  Recherche (chargement dynamique)                                  */
 /* ------------------------------------------------------------------ */
@@ -83,11 +81,7 @@ export function AuthMenu({
   };
 
   const initial = setInitial(user.last_name, user.first_name);
-  const profilePictureUrl = user.userpicture
-    ? user.userpicture.startsWith("http")
-      ? user.userpicture
-      : `${backUrl.replace(/\/$/, "")}/${user.userpicture.replace(/^\//, "")}`
-    : undefined;
+  const profilePictureUrl = getProfilePictureUrl(user.userpicture);
 
   return (
     <div>
@@ -167,7 +161,7 @@ export function AuthMenu({
 /* ------------------------------------------------------------------ */
 export default function Navbar() {
   const { handleFixSidebar, sidebarOpen } = useSidebar();
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, isInitializing } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const router = useRouter();
@@ -231,7 +225,7 @@ export default function Navbar() {
         )}
 
         {/* ------------------- Bouton “Ajouter une vidéo” ------------------- */}
-        {accessToken && (
+        {accessToken && user && !isInitializing && (
           <div className={styles.navbar_add_video}>
             <Button
               className={styles.navbar_button}
@@ -268,9 +262,9 @@ export default function Navbar() {
         {/* ------------------- Auth / connexion ------------------- */}
         {accessToken && user ? (
           <AuthMenu isMobile={isMobile} user={user} />
-        ) : (
+        ) : !isInitializing ? (
           <LoginButton />
-        )}
+        ) : null}
       </nav>
     </div>
   );

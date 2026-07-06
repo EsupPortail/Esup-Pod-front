@@ -6,8 +6,10 @@ import Paper from "@mui/material/Paper";
 import { useVideos } from "@/src/hooks/useVideos";
 import { useParams } from "next/navigation";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
-import { Loader, Alert, Button } from "@openfun/cunningham-react";
+import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
+import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
+import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 
 export const breadcrumbLabel = "Supprimer la vidéo";
 
@@ -20,6 +22,7 @@ export default function DeleteVideoPage() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { video, useVideoLoading, useVideoError, fetchOne, deleteVideo } =
     useVideos();
+  const { isOwnerOrCoOwner } = useVideoPermissions(video);
 
   useEffect(() => {
     if (!getVideoSlug) return;
@@ -41,17 +44,7 @@ export default function DeleteVideoPage() {
   };
 
   if (!mounted || isInitializing || !isAuthenticated) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Loader />
-      </div>
-    );
+    return <CenteredLoader />;
   }
 
   return (
@@ -59,31 +52,25 @@ export default function DeleteVideoPage() {
       <Paper sx={{ p: 4, maxWidth: 520, width: "100%" }}>
         <h2>Supprimer la vidéo</h2>
 
-        {useVideoLoading && !video && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Loader />
-          </div>
-        )}
+        {useVideoLoading && !video && <CenteredLoader />}
 
         {useVideoError ? (
           <div>
-            <Alert type="error" className={styles.delete_error_alert}>
+            <Alert type={VariantType.ERROR} className={styles.delete_alert}>
               {useVideoError ?? "Vidéo introuvable."}
             </Alert>
             <Button
-              variant="outlined"
+              variant="bordered"
               onClick={() => router.back()}
               disabled={useVideoLoading}
             >
               Annuler
             </Button>
           </div>
+        ) : !isOwnerOrCoOwner ? (
+          <Alert type={VariantType.ERROR} className={styles.delete_alert}>
+            Vous ne pouvez pas accéder à cette page
+          </Alert>
         ) : video ? (
           <>
             <p>

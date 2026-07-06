@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "next/navigation";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Controller, useForm, useWatch, FieldErrors } from "react-hook-form";
 import Box from "@mui/material/Box";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -21,7 +21,12 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import { useTags } from "@/src/hooks/useTags";
-import { Alert, Button, FileUploader, Loader } from "@openfun/cunningham-react";
+import {
+  Alert,
+  Button,
+  FileUploader,
+  VariantType,
+} from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
@@ -31,16 +36,19 @@ import { useVideos } from "@/src/hooks/useVideos";
 import { useAppConfig } from "@/src/hooks/useAppConfig";
 import { useUsers } from "@/src/hooks/useUsers";
 import { getUserDisplayName } from "@/src/constants/user";
-import { useIsStaff } from "@/src/hooks/useIsStaff";
-import { useIsEmployee } from "@/src/hooks/useIsEmployee";
+import { useUserPermissions } from "@/src/hooks/useUserPermissions";
 import { useDiscipline } from "@/src/hooks/useDiscipline";
 import { useSubtitle } from "@/src/hooks/useSubtitle";
 import { useTypes } from "@/src/hooks/useTypes";
-import type { User } from "@/src/types";
+import type { User, Theme } from "@/src/types";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Link from "next/link";
 import styles from "./styles.module.css";
 import { Chip } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 import { CURSUS_OPTIONS } from "@/src/constants/cursus";
 import {
   LanguageSubtitle,
@@ -53,13 +61,15 @@ import {
   VIDEO_STATUS_OPTIONS,
 } from "@/src/constants/video";
 import BackButton from "@/src/components/BackButton/BackButton";
+import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import dayjs, { Dayjs } from "dayjs";
-
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useChannel } from "@/src/hooks/useChannel";
+import { useChannelPermissions } from "@/src/hooks/useChannelPermissions";
+import { useTheme } from "@/src/hooks/useTheme";
 
 export const breadcrumbLabel = "Éditer la vidéo";
 
@@ -68,7 +78,32 @@ function getUserLabel(user: User) {
   return fullName || user.username;
 }
 
+type ThemeOption = Theme & {
+  depth: number;
+  path: string;
+};
+
+function buildThemeOptions(themes: Theme[]): ThemeOption[] {
+  const walk = (
+    themeList: Theme[],
+    depth = 0,
+    parentPath = "",
+  ): ThemeOption[] => {
+    return themeList.flatMap((theme) => {
+      const path = parentPath ? `${parentPath} / ${theme.title}` : theme.title;
+
+      return [
+        { ...theme, depth, path },
+        ...walk(theme.children ?? [], depth + 1, path),
+      ];
+    });
+  };
+
+  return walk(themes);
+}
+
 const formSteps = ["Détails", "Éléments vidéo", "Visibilité"];
+
 type EditVideoFormValues = {
   title: string;
   description: string;
@@ -91,9 +126,36 @@ type EditVideoFormValues = {
   date_to_delete: string;
   date_of_event: string;
   channel: number | "";
+  themes: number[];
+};
+
+const FORM_FIELD_LABELS: Partial<Record<keyof EditVideoFormValues, string>> = {
+  title: "Titre",
+  description: "Description",
+  status: "Statut de la vidéo",
+  language: "Langue",
+  thumbnail: "Vignette",
+  license: "Licence",
+  owner: "Propriétaire",
+  co_owners: "Co-propriétaires",
+  is_auth_required: "Authentification requise",
+  is_password_required: "Mot de passe requis",
+  password: "Mot de passe",
+  disciplines: "Disciplines",
+  type_id: "Type",
+  tags: "Tags",
+  allow_downloading: "Téléchargement",
+  disable_comment: "Commentaires",
+  is_360: "Vidéo 360",
+  cursus: "Cursus",
+  date_to_delete: "Date de suppression",
+  date_of_event: "Date de l'évènement",
+  channel: "Chaine",
+  themes: "Thèmes",
 };
 
 export default function EditVideo() {
+  const router = useRouter();
   const params = useParams();
   const getVideoSlug = Array.isArray(params.slug)
     ? params.slug[0]
@@ -102,8 +164,7 @@ export default function EditVideo() {
   const { accessToken, refresh } = useAuth();
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { config } = useAppConfig();
-  const { isStaff } = useIsStaff();
-  const { isEmployee } = useIsEmployee();
+  const { isEmployee, isStaff, isSuperUser } = useUserPermissions();
   const { fetchOne, video, useVideoLoading, useVideoError } = useVideos();
   const { fetchAll: fetchUsers, users } = useUsers();
   const { fetchAll: fetchDisciplines, discipline: disciplines } =
@@ -113,15 +174,30 @@ export default function EditVideo() {
   const { fetchAll: fetchTypes, types } = useTypes();
   const { tags, fetchAll: fetchTags } = useTags();
   const { channels, fetchAll: fetchChannels } = useChannel();
+  const { themes, fetchAll: fetchThemes, useThemeError } = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   const [formError, setformError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<
+    null | (() => void)
+  >(null);
   const [subtitleLanguage, setSubtitleLanguage] =
     useState<LanguageSubtitle>("fr");
   const [subtitleFile, setSubtitleFile] = useState<File | null>(null);
   const [subtitleIsDefault, setSubtitleIsDefault] = useState(false);
   const [tagInputValue, setTagInputValue] = useState("");
-  const { canEdit } = useVideoPermissions(video);
+  const { isOwnerOrCoOwner } = useVideoPermissions(video);
+  const { getPermissions } = useChannelPermissions();
+
+  const channelsOptions = useMemo(
+    () =>
+      channels.filter((channel) => {
+        const { isOwner, isCollaborator } = getPermissions(channel);
+        return isOwner || isCollaborator;
+      }),
+    [channels, getPermissions],
+  );
 
   const licenseOptionsSource =
     config?.VIDEO_LICENSE_CHOICES && config.VIDEO_LICENSE_CHOICES.length > 0
@@ -149,7 +225,7 @@ export default function EditVideo() {
       title: "",
       description: "",
       status: "PU",
-      language: "fr-fr",
+      language: "fr",
       thumbnail: null,
       license: "_NONE_",
       owner: "",
@@ -167,6 +243,7 @@ export default function EditVideo() {
       date_to_delete: "",
       date_of_event: "",
       channel: "",
+      themes: [],
     },
   });
 
@@ -176,6 +253,18 @@ export default function EditVideo() {
     name: "is_password_required",
   });
   const watchOwner = useWatch({ control, name: "owner" });
+  const watchedValues = useWatch({ control });
+  const selectedChannel = useWatch({ control, name: "channel" });
+
+  const themeOptions = useMemo(() => buildThemeOptions(themes), [themes]);
+  const initialValuesRef = useRef<EditVideoFormValues | null>(null);
+
+  const hasUnsavedChanges = useMemo(() => {
+    if (!initialValuesRef.current) return false;
+    return (
+      JSON.stringify(initialValuesRef.current) !== JSON.stringify(watchedValues)
+    );
+  }, [watchedValues]);
 
   /* -------------------------- Effets de chargement -------------------------- */
   useEffect(() => {
@@ -201,14 +290,21 @@ export default function EditVideo() {
     fetchChannels,
   ]);
 
+  useEffect(() => {
+    if (selectedChannel === "") {
+      setValue("themes", []);
+      return;
+    }
+
+    fetchThemes({ channel: Number(selectedChannel) });
+  }, [selectedChannel, fetchThemes, setValue]);
+
   const initialDisciplineIds = useMemo(() => {
     if (video?.discipline && video.discipline.length > 0) {
       return video.discipline;
     }
     return video?.discipline_details?.map((item) => item.id) ?? [];
   }, [video?.discipline, video?.discipline_details]);
-
-  /* fait la correspondance entre le nom reçu et l’ID attendu, en cherchant dans la liste des types chargés*/
 
   const initialTypeId = useMemo(() => {
     if (typeof video?.type_id === "number") return video.type_id;
@@ -226,11 +322,11 @@ export default function EditVideo() {
 
   useEffect(() => {
     if (!video) return;
-    reset({
+    const initialValues: EditVideoFormValues = {
       title: video.title ?? "",
       description: video.description ?? "",
       status: video.status ?? "PU",
-      language: video.language ?? "fr-fr",
+      language: video.language ?? "fr",
       thumbnail: null,
       license:
         video.license === "" || video.license == null
@@ -244,6 +340,7 @@ export default function EditVideo() {
       disciplines: initialDisciplineIds,
       type_id: initialTypeId,
       channel: video.channel ?? "",
+      themes: video.themes ?? [],
       tags: Array.isArray(video.tags) ? video.tags.join(",") : "",
       allow_downloading: video.allow_downloading ?? false,
       disable_comment: video.disable_comment ?? false,
@@ -255,8 +352,41 @@ export default function EditVideo() {
       date_of_event: video.date_of_event
         ? dayjs(video.date_of_event).format("YYYY-MM-DD")
         : "",
-    });
+    };
+    initialValuesRef.current = initialValues;
+    reset(initialValues);
   }, [video, reset, initialDisciplineIds, initialTypeId]);
+
+  /* Alert si le user quitte la page sans enregistrer */
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hasUnsavedChanges) return;
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  const openConfirmLeave = (navigationAction: () => void) => {
+    if (!hasUnsavedChanges) {
+      navigationAction();
+      return;
+    }
+    setPendingNavigation(() => navigationAction);
+    setConfirmLeaveOpen(true);
+  };
+
+  const handleConfirmLeave = () => {
+    setConfirmLeaveOpen(false);
+    pendingNavigation?.();
+  };
+
+  const handleCancelLeave = () => {
+    setConfirmLeaveOpen(false);
+    setPendingNavigation(null);
+  };
 
   const selectedOwner = useMemo(() => {
     return (
@@ -272,23 +402,17 @@ export default function EditVideo() {
   }, [users, watchOwner]);
 
   if (!mounted || isInitializing || !isAuthenticated) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Loader />
-      </div>
-    );
+    return <CenteredLoader />;
+  }
+
+  if (useVideoLoading) {
+    return <CenteredLoader />;
   }
 
   if (useVideoError || !getVideoSlug) {
     return (
       <div>
-        <Alert canClose type="error" role="alert" aria-live="assertive">
+        <Alert type={VariantType.ERROR} aria-live="assertive">
           Vidéo introuvable.
         </Alert>
         <Link href="/dashboard">
@@ -303,7 +427,7 @@ export default function EditVideo() {
   if (useVideoError || !video) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <Alert canClose type="error" role="alert" aria-live="assertive">
+        <Alert type={VariantType.ERROR} aria-live="assertive">
           {useVideoError ?? "Impossible de charger cette vidéo."}
         </Alert>
         <BackButton label="Retour" />
@@ -311,10 +435,10 @@ export default function EditVideo() {
     );
   }
 
-  if (video && !canEdit) {
+  if (video && !isOwnerOrCoOwner) {
     return (
       <div>
-        <Alert type="error" role="alert" aria-live="assertive">
+        <Alert type={VariantType.ERROR} aria-live="assertive">
           Vous n’avez pas les droits pour modifier cette vidéo.
         </Alert>
         <BackButton label="Retour" />
@@ -409,10 +533,15 @@ export default function EditVideo() {
       formData.append("cursus", data.cursus);
       formData.append("date_to_delete", data.date_to_delete);
       formData.append("date_of_event", data.date_of_event);
-      formData.append(
-        "channel",
-        data.channel === "" ? "" : String(data.channel),
-      );
+      if (data.channel !== "") {
+        formData.append("channel", String(data.channel));
+
+        data.themes.forEach((id) => {
+          formData.append("theme", String(id));
+        });
+      } else {
+        formData.append("channel", "");
+      }
       data.co_owners.forEach((id) => formData.append("co_owners", String(id)));
 
       if (data.status === "RE") {
@@ -422,11 +551,12 @@ export default function EditVideo() {
         );
       } else {
         formData.append("is_auth_required", "false");
-        if (data.is_password_required && data.password.trim()) {
-          formData.append("password", data.password.trim());
-        } else if (video?.has_password) {
-          formData.append("password", "");
-        }
+      }
+
+      if (data.is_password_required && data.password.trim()) {
+        formData.append("password", data.password.trim());
+      } else if (video?.has_password) {
+        formData.append("password", "");
       }
 
       if (data.thumbnail) formData.append("thumbnail", data.thumbnail);
@@ -451,36 +581,60 @@ export default function EditVideo() {
       if (res.ok) {
         setSuccess("Vidéo mise à jour avec succès ! 🥳");
         window.scrollTo({ top: 0, behavior: "smooth" });
+        initialValuesRef.current = {
+          ...data,
+          thumbnail: null,
+          password: "",
+        };
+        reset(initialValuesRef.current);
       }
       await requestJson(res);
-      await fetchOne(getVideoSlug);
     } catch (err: unknown) {
       setformError(
         err instanceof Error ? err.message : "Une erreur est survenue.",
       );
     }
   };
+  const onInvalid = (formErrors: FieldErrors<EditVideoFormValues>) => {
+    const fieldNames = Object.keys(formErrors) as Array<
+      keyof EditVideoFormValues
+    >;
 
+    const labels = fieldNames.map((fieldName) => {
+      return FORM_FIELD_LABELS[fieldName] ?? fieldName;
+    });
+
+    setSuccess(null);
+    setformError(
+      labels.length > 1
+        ? `Veuillez corriger les ${labels.length} champs suivants : ${labels.join(", ")}.`
+        : `Veuillez corriger le champ suivant : ${labels[0]}.`,
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   /* -------------------------- RENDER -------------------------- */
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton
+        label="Retour"
+        onClick={() => openConfirmLeave(() => router.back())}
+      />
 
       <h1>Éditer la vidéo « {video?.title} »</h1>
 
       {/* ---------- Alertes globales ---------- */}
       {formError && (
-        <Alert canClose type="error" role="alert" aria-live="assertive">
+        <Alert canClose type={VariantType.ERROR} aria-live="assertive">
           {formError}
         </Alert>
       )}
       {useSubtitleError && (
-        <Alert canClose type="error" role="alert" aria-live="assertive">
+        <Alert canClose type={VariantType.ERROR} aria-live="assertive">
           {useSubtitleError}
         </Alert>
       )}
       {success && (
-        <Alert canClose type="success" role="alert" aria-live="polite">
+        <Alert canClose type={VariantType.SUCCESS} aria-live="polite">
           {success}
         </Alert>
       )}
@@ -488,50 +642,53 @@ export default function EditVideo() {
       <form
         className={styles.form}
         noValidate
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, onInvalid)}
         style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
         {/* ----------- Boutons actions ----------- */}
         <div className={styles.form_actions}>
           <Alert>Statut de l’encodage : {video?.encoding_status_label}</Alert>
           <div className={styles.form_actions_buttons}>
-            <Link href={`/video/${getVideoSlug}`}>
-              <Button
-                fullWidth={isMobile}
-                size="small"
-                color="brand"
-                variant="bordered"
-                type="reset"
-                icon={<RemoveRedEyeIcon aria-hidden="true" />}
-                iconPosition="right"
-              >
-                Voir la vidéo
-              </Button>
-            </Link>
+            <Button
+              fullWidth={isMobile}
+              size="small"
+              color="brand"
+              variant="bordered"
+              type="button"
+              icon={<RemoveRedEyeIcon aria-hidden="true" />}
+              iconPosition="right"
+              onClick={() =>
+                openConfirmLeave(() => router.push(`/video/${getVideoSlug}`))
+              }
+            >
+              Voir la vidéo
+            </Button>
 
-            <Link href="/dashboard">
-              <Button
-                fullWidth={isMobile}
-                size="small"
-                color="brand"
-                variant="secondary"
-                type="reset"
-              >
-                Retour au tableau de bord
-              </Button>
-            </Link>
+            <Button
+              fullWidth={isMobile}
+              size="small"
+              color="brand"
+              variant="secondary"
+              type="button"
+              onClick={() => openConfirmLeave(() => router.push("/dashboard"))}
+            >
+              Retour au tableau de bord
+            </Button>
 
-            <Link href={`/video/delete/${getVideoSlug}`}>
-              <Button
-                fullWidth={isMobile}
-                size="small"
-                color="error"
-                variant="primary"
-                type="button"
-              >
-                Supprimer la vidéo
-              </Button>
-            </Link>
+            <Button
+              fullWidth={isMobile}
+              size="small"
+              color="error"
+              variant="primary"
+              type="button"
+              onClick={() =>
+                openConfirmLeave(() =>
+                  router.push(`/video/delete/${getVideoSlug}`),
+                )
+              }
+            >
+              Supprimer la vidéo
+            </Button>
 
             <Button
               fullWidth={isMobile}
@@ -654,7 +811,7 @@ export default function EditVideo() {
               control={control}
               render={({ field }) => (
                 <DatePicker
-                  disabled={!isStaff || !isEmployee}
+                  disabled={!isStaff || !isEmployee || !isSuperUser}
                   label="Date de suppression"
                   value={field.value ? dayjs(field.value) : null}
                   onChange={(v) => {
@@ -712,14 +869,8 @@ export default function EditVideo() {
                 }}
                 accept=".jpg,.png"
                 text={
-                  errors.thumbnail?.message ? (
-                    errors.thumbnail.message
-                  ) : (
-                    <p id="thumbnail-help">
-                      Illustrez votre vidéo en ajoutant une vignette : formats
-                      supportés png, jpg.
-                    </p>
-                  )
+                  errors.thumbnail?.message ??
+                  "Illustrez votre vidéo en ajoutant une vignette : formats supportés png, jpg."
                 }
               />
               <div id="thumbnail-preview">
@@ -827,28 +978,126 @@ export default function EditVideo() {
                 </TextField>
               )}
             />
-            <Divider />
-            {/* ---------- Chaine et themes (staff only) ---------- */}
-            <Controller
-              name="channel"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  select
-                  fullWidth
-                  label="Chaine"
-                  helperText="Sélectionnez une chaine (optionnel)."
-                >
-                  <MenuItem value="">Sélectionnez une chaine</MenuItem>
-                  {channels.map((t) => (
-                    <MenuItem key={t.id} value={t.id}>
-                      {t.title}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            />
+            {channelsOptions.length != 0 && <Divider />}
+            {/* ---------- Chaine et themes (channel owner and collaborators only) ---------- */}
+            {channelsOptions.length != 0 && (
+              <Controller
+                name="channel"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    select
+                    fullWidth
+                    label="Chaine"
+                    value={field.value === "" ? "_NONE_" : field.value}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      field.onChange(value === "_NONE_" ? "" : Number(value));
+                    }}
+                    helperText="Vous avez les permissions pour associer cette vidéo à une chaine."
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                  >
+                    <MenuItem value="_NONE_">Aucune</MenuItem>
+
+                    {channelsOptions.map((channel) => (
+                      <MenuItem key={channel.id} value={channel.id}>
+                        {channel.title}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            )}
+
+            {selectedChannel !== "" && themeOptions.length > 0 && (
+              <Controller
+                name="themes"
+                control={control}
+                render={({ field }) => {
+                  const selectedIds = field.value ?? [];
+
+                  return (
+                    <TextField
+                      select
+                      fullWidth
+                      label="Thèmes"
+                      value={selectedIds}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        field.onChange(
+                          (typeof value === "string"
+                            ? value.split(",")
+                            : value
+                          ).map(Number),
+                        );
+                      }}
+                      helperText={
+                        useThemeError ??
+                        "Vous pouvez sélectionner un ou plusieurs thèmes liés à la chaine."
+                      }
+                      error={Boolean(useThemeError)}
+                      slotProps={{
+                        inputLabel: {
+                          shrink: true,
+                        },
+                        select: {
+                          multiple: true,
+                          displayEmpty: true,
+                          renderValue: (selected) => {
+                            const ids = selected as number[];
+
+                            if (ids.length === 0) {
+                              return (
+                                <Box
+                                  component="span"
+                                  sx={{ color: "text.disabled" }}
+                                >
+                                  Sélectionnez un ou plusieurs thèmes
+                                </Box>
+                              );
+                            }
+
+                            return themeOptions
+                              .filter((theme) => ids.includes(theme.id))
+                              .map((theme) => theme.path)
+                              .join(", ");
+                          },
+                        },
+                      }}
+                    >
+                      {themeOptions.map((option) => (
+                        <MenuItem
+                          key={option.id}
+                          value={option.id}
+                          sx={{
+                            pl: `${2 + option.depth * 3}rem`,
+                          }}
+                        >
+                          <Checkbox
+                            checked={selectedIds.includes(option.id)}
+                            sx={{ mr: 1 }}
+                          />
+
+                          <Box
+                            component="span"
+                            sx={{
+                              fontWeight: option.depth === 0 ? 700 : 400,
+                            }}
+                          >
+                            {/*{option.depth > 0 && <SubdirectoryArrowRightIcon/>}*/}
+                            {option.title}
+                          </Box>
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  );
+                }}
+              />
+            )}
           </>
         )}
 
@@ -950,11 +1199,9 @@ export default function EditVideo() {
                   }}
                   accept=".vtt,.srt"
                   text={
-                    subtitleFile ? (
-                      <p>Fichier sélectionné : {subtitleFile.name}</p>
-                    ) : (
-                      <p>Formats supportés : `.vtt`, `.srt`.</p>
-                    )
+                    subtitleFile
+                      ? `Fichier sélectionné : ${subtitleFile.name}`
+                      : "Formats supportés : .vtt, .srt."
                   }
                 />
 
@@ -1149,14 +1396,11 @@ export default function EditVideo() {
 
             {/* ---------- Messages selon le statut ---------- */}
             {selectedStatus === "PU" && (
-              <div className={styles.restreint_fields}>
-                <p>Votre vidéo sera visible par tous les utilisateurs.</p>
-              </div>
+              <Alert>Votre vidéo sera visible par tous les utilisateurs.</Alert>
             )}
+
             {selectedStatus === "DR" && (
-              <div className={styles.restreint_fields}>
-                <p>Votre vidéo sera visible uniquement par vous.</p>
-              </div>
+              <Alert>Votre vidéo sera visible uniquement par vous.</Alert>
             )}
             {selectedStatus === "RE" && (
               <fieldset className={styles.restreint_fields}>
@@ -1218,7 +1462,7 @@ export default function EditVideo() {
                       />
                       <FormHelperText>
                         {fieldState.error?.message ??
-                          "Protéger la vidéo par mot de passe."}
+                          "Protéger la vidéo par un mot de passe."}
                       </FormHelperText>
                     </FormControl>
                   )}
@@ -1323,6 +1567,32 @@ export default function EditVideo() {
           </>
         )}
       </form>
+
+      <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave}>
+        <DialogTitle>Modifications non enregistrées</DialogTitle>
+        <DialogContent>
+          Vous avez des modifications non enregistrées. Voulez-vous vraiment
+          quitter cette page ?
+        </DialogContent>
+        <DialogActions>
+          <Button
+            type="button"
+            variant="secondary"
+            color="neutral"
+            onClick={handleCancelLeave}
+          >
+            Rester sur la page
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            color="brand"
+            onClick={handleConfirmLeave}
+          >
+            Quitter sans enregistrer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

@@ -32,8 +32,8 @@ const SideBar = () => {
       link: "",
       items: [
         { name: "Toutes les vidéos", link: "/video" },
-        { name: "Chaines", link: "/" },
-        { name: "Listes de lecture", link: "/" },
+        { name: "Chaines", link: "/channel" },
+        { name: "Listes de lecture", link: "/playlist" },
         { name: "Listes de lecture promues", link: "/" },
       ],
     },
@@ -67,8 +67,8 @@ const SideBar = () => {
       Icon: AccountBoxIcon,
       link: "",
       items: [
-        { name: "Mes vidéos favorites", link: "/" },
-        { name: "Mes listes de lecture", link: "/" },
+        { name: "Mes vidéos favorites", link: "/favorites" },
+        { name: "Mes listes de lecture", link: "/playlist/me" },
         { name: "Mes habillages", link: "/" },
       ],
     },
@@ -138,22 +138,23 @@ const SideBar = () => {
           >
             Mon menu
           </h3>
-
-          <Chip
-            label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
-            sx={{
-              backgroundColor: sidebarOpen
-                ? "var(--background-brand-secondary)"
-                : "var(--background)",
-              color: sidebarOpen
-                ? "var(--background-brand)"
-                : "var(--background)",
-              marginLeft: "14px",
-              fontSize: "var(--c--globals--font--sizes--md)",
-              fontWeight: "var(--c--globals--font--weights--bold)",
-              marginBottom: "var(--c--globals--spacings--xs)",
-            }}
-          />
+          {user && (
+            <Chip
+              label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
+              sx={{
+                backgroundColor: sidebarOpen
+                  ? "var(--background-brand-secondary)"
+                  : "var(--background)",
+                color: sidebarOpen
+                  ? "var(--background-brand)"
+                  : "var(--background)",
+                marginLeft: "14px",
+                fontSize: "var(--c--globals--font--sizes--md)",
+                fontWeight: "var(--c--globals--font--weights--bold)",
+                marginBottom: "var(--c--globals--spacings--xs)",
+              }}
+            />
+          )}
 
           <List component="nav" disablePadding>
             {menuPodItems.map((item, index) => (

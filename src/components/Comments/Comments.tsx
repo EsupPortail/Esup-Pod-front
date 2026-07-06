@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Button, Loader, TextArea } from "@openfun/cunningham-react";
+import {
+  Alert,
+  Button,
+  Loader,
+  TextArea,
+  VariantType,
+} from "@openfun/cunningham-react";
 import Avatar from "@mui/material/Avatar";
 import { useAuth } from "@/src/context/AuthProvider";
-import { setInitial } from "@/src/constants/user";
+import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
 import { useComments } from "@/src/hooks/useComments";
 import CommentItem from "./commentItem";
 import styles from "./styles.module.css";
@@ -27,7 +33,11 @@ export default function Comments({ videoSlug }: CommentsProps) {
   } = useComments(videoSlug);
 
   const [content, setContent] = useState("");
+  const profilePictureUrl = getProfilePictureUrl(user?.userpicture);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [pendingScrollToId, setPendingScrollToId] = useState<
+    string | number | null
+  >(null);
 
   useEffect(() => {
     fetchComments();
@@ -54,6 +64,7 @@ export default function Comments({ videoSlug }: CommentsProps) {
 
     if (created) {
       setContent("");
+      setPendingScrollToId(created.id);
     }
 
     setIsSubmitting(false);
@@ -65,14 +76,14 @@ export default function Comments({ videoSlug }: CommentsProps) {
       <p className={styles.count}>{commentCountLabel}</p>
 
       {useCommentsError && (
-        <Alert canClose type="error">
+        <Alert canClose type={VariantType.ERROR}>
           {useCommentsError}
         </Alert>
       )}
 
       {accessToken && user ? (
         <div className={styles.form}>
-          <Avatar>{initials}</Avatar>
+          <Avatar src={profilePictureUrl}>{initials}</Avatar>
 
           <div className={styles.formContent}>
             <TextArea
@@ -98,7 +109,9 @@ export default function Comments({ videoSlug }: CommentsProps) {
           </div>
         </div>
       ) : (
-        <Alert type="info">Connectez-vous pour ajouter un commentaire.</Alert>
+        <Alert type={VariantType.INFO}>
+          Connectez-vous pour ajouter un commentaire.
+        </Alert>
       )}
 
       {useCommentsLoading ? (
@@ -115,6 +128,9 @@ export default function Comments({ videoSlug }: CommentsProps) {
               onReply={addComment}
               onVote={toggleVote}
               onDelete={deleteComment}
+              onCreatedReply={setPendingScrollToId}
+              pendingScrollToId={pendingScrollToId}
+              onScrollHandled={() => setPendingScrollToId(null)}
             />
           ))}
         </div>
