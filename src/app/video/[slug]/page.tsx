@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
-import { Alert, Button, Loader } from "@openfun/cunningham-react";
+import { useEffect, useState, useMemo } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
+import PlaylistSidebar from "@/src/components/collection/PlaylistSidebar/PlaylistSidebar";
+import FavoritesSidebar from "@/src/components/collection/FavoritesSidebar/FavoritesSidebar";
+import { Alert, Button, Input, VariantType } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import VideoPlayer from "@/src/components/video/player/VideoPlayer";
 import Comments from "@/src/components/Comments/Comments";
 import { useVideos } from "@/src/hooks/useVideos";
+import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { useAuth } from "@/src/context/AuthProvider";
 import Divider from "@mui/material/Divider";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
@@ -27,11 +29,17 @@ import { useUsers } from "@/src/hooks/useUsers";
 import { getUserDisplayName } from "@/src/constants/user";
 import { getLanguageLabel } from "@/src/constants/language";
 import { requestJson } from "@/src/utils/requestJson";
-import type { User } from "@/src/types";
+import type { User, Video } from "@/src/types";
 import DownloadIcon from "@mui/icons-material/Download";
 import UpdateIcon from "@mui/icons-material/Update";
 import styles from "./styles.module.css";
 import BackButton from "@/src/components/BackButton/BackButton";
+import { useChannel } from "@/src/hooks/useChannel";
+import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
+import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import PlaylistActionMenu from "./playlistActionMenu";
+import { usePlaylist } from "@/src/hooks/usePlaylist";
+import { useFavorites } from "@/src/hooks/useFavorites";
 
 export const breadcrumbLabel = "Video";
 
@@ -54,16 +62,107 @@ export default function Video() {
   const router = useRouter();
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  const searchParams = useSearchParams();
+  const playlistSlug = searchParams.get("playlist");
+  const favoritesParam = searchParams.get("favorites");
+  const showFavoritesSidebar = favoritesParam === "1";
 
-  const { fetchOne, video, useVideoLoading, useVideoError } = useVideos();
+  const { fetchOne, video, useVideoLoading, useVideoError, unlockVideo } =
+    useVideos();
   const time = secondToMinute(video?.duration || 0);
-  const { user, accessToken, refresh } = useAuth();
-  const isOwner = user?.id != null && video?.owner_id === user?.id;
+  const { accessToken, refresh, user } = useAuth();
+  const authRequired =
+    Boolean(video?.is_auth_required) || useVideoError === "AUTH_REQUIRED";
+  const { isAuthenticated } = useRequireAuth("/login", authRequired);
+  const { isOwnerOrCoOwner } = useVideoPermissions(video);
 
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const { fetchUser, user: videoUser } = useUsers();
+  const { fetchUser } = useUsers();
+  const { fetchOne: fetchChannel, channel: videoChannel } = useChannel();
+  const {
+    playlist,
+    playlists,
+    usePlaylistLoading,
+    usePlaylistError,
+    fetchOne: fetchPlaylist,
+    fetchAll: fetchAllPlaylist,
+  } = usePlaylist();
+
   const [coOwnersUsers, setCoOwnersUsers] = useState<User[]>([]);
+  const [password, setPassword] = useState("");
+  const [unlockError, setUnlockError] = useState<string | null>(null);
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  const myPlaylists = useMemo(
+    () =>
+      user ? playlists.filter((playlist) => playlist.owner === user.id) : [],
+    [playlists, user],
+  );
+
+  const { favorites, fetchAll: fetchAllFavorites } = useFavorites();
+
+  const favoriteVideos: Video[] = useMemo(() => {
+    if (!favorites || favorites.length === 0) {
+      return [];
+    }
+
+    const byId = new Map<number, Video>();
+
+    favorites.forEach((favorite) => {
+      if (favorite.video_details && !byId.has(favorite.video_details.id)) {
+        byId.set(favorite.video_details.id, favorite.video_details);
+      }
+    });
+
+    return Array.from(byId.values());
+  }, [favorites]);
+
+  const nextVideoSlug = useMemo(() => {
+    // Cas playlist : on se base sur playlist.items (déjà ordonnés par position)
+    if (playlistSlug && playlist?.items && playlist.items.length > 0) {
+      const items = [...playlist.items].filter((item) => item.video != null);
+
+      const currentIndex = items.findIndex(
+        (item) => item.video?.slug === video?.slug,
+      );
+
+      if (currentIndex !== -1 && currentIndex < items.length - 1) {
+        const nextItem = items[currentIndex + 1];
+        return nextItem.video?.slug ?? null;
+      }
+    }
+
+    if (showFavoritesSidebar && favoriteVideos.length > 0 && video) {
+      const currentIndex = favoriteVideos.findIndex(
+        (favVideo) => favVideo.slug === video.slug,
+      );
+
+      if (currentIndex !== -1 && currentIndex < favoriteVideos.length - 1) {
+        return favoriteVideos[currentIndex + 1].slug;
+      }
+    }
+
+    return null;
+  }, [playlistSlug, playlist, favoriteVideos, showFavoritesSidebar, video]);
+
+  const handleVideoEnded = () => {
+    if (!nextVideoSlug) {
+      return;
+    }
+
+    if (playlistSlug) {
+      // On reste dans le contexte de la même playlist
+      router.push(`/video/${nextVideoSlug}?playlist=${playlistSlug}`);
+      return;
+    }
+
+    if (showFavoritesSidebar) {
+      // On reste dans le contexte favoris
+      router.push(`/video/${nextVideoSlug}?favorites=1`);
+    }
+  };
 
   /* ------------------------------------------------------------------
    *  Récuperation de la vidéo et des co owners
@@ -74,11 +173,27 @@ export default function Video() {
   }, [slug, fetchOne]);
 
   useEffect(() => {
-    if (video && user) fetchUser(video.owner_id);
-  }, [video, fetchUser]);
+    if (!playlistSlug) return;
+    fetchPlaylist(playlistSlug);
+  }, [playlistSlug, fetchPlaylist]);
 
   useEffect(() => {
-    if (user) {
+    if (!video || video.status !== "RE") return;
+    if (video.is_auth_required) return;
+    if (video.has_password) return;
+    unlockVideo(video.slug);
+  }, [video, unlockVideo]);
+
+  useEffect(() => {
+    if (video && isAuthenticated) {
+      fetchUser(video.owner_id);
+      fetchAllPlaylist();
+      fetchAllFavorites();
+    }
+  }, [video, isAuthenticated, fetchUser, fetchAllPlaylist, fetchAllFavorites]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
       const loadCoOwners = async () => {
         if (!video?.co_owners?.length) {
           setCoOwnersUsers([]);
@@ -107,7 +222,35 @@ export default function Video() {
       };
       loadCoOwners();
     }
-  }, [video?.co_owners, accessToken, refresh]);
+  }, [video?.co_owners, isAuthenticated, accessToken, refresh]);
+
+  const handleUnlock = async () => {
+    if (!video || isUnlocking) return;
+    setUnlockError(null);
+    setIsUnlocking(true);
+
+    try {
+      const payload = password.trim()
+        ? { password: password.trim() }
+        : undefined;
+      const unlocked = await unlockVideo(video.slug, payload);
+      if (!unlocked) {
+        setUnlockError("Impossible de déverrouiller cette vidéo.");
+        setIsUnlocked(false);
+      } else {
+        setIsUnlocked(true);
+      }
+    } catch (error) {
+      setUnlockError(
+        error instanceof Error
+          ? error.message
+          : "Impossible de déverrouiller cette vidéo.",
+      );
+      setIsUnlocked(false);
+    } finally {
+      setIsUnlocking(false);
+    }
+  };
 
   /* ------------------------------------------------------------------
    * Gestion du téléchargement de la vidéo
@@ -153,34 +296,72 @@ export default function Video() {
    * ------------------------------------------------------------------ */
   if (!slug) {
     return (
-      <Alert canClose type="error" role="alert">
+      <Alert canClose type={VariantType.ERROR}>
         Vidéo introuvable.
       </Alert>
     );
   }
 
   if (useVideoLoading && !video) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "50vh",
-        }}
-      >
-        <Loader />
-      </div>
-    );
+    return <CenteredLoader />;
+  }
+
+  if (useVideoError === "AUTH_REQUIRED") {
+    return <CenteredLoader />;
+  }
+
+  if (!useVideoError && !video) {
+    return <CenteredLoader />;
   }
 
   if (useVideoError || !video) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <Alert canClose type="error" role="alert">
+        <Alert canClose type={VariantType.ERROR}>
           {useVideoError ?? "Impossible de charger cette vidéo."}
         </Alert>
-        <BackButton label="Retour" />
+      </div>
+    );
+  }
+
+  const needsPassword =
+    video.status === "RE" && video.has_password && !isUnlocked;
+
+  if (needsPassword) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          alignItems: "center",
+        }}
+      >
+        <Alert type={VariantType.WARNING}>
+          Cette vidéo est protégée par un mot de passe.
+        </Alert>
+        {unlockError && (
+          <Alert canClose type={VariantType.ERROR}>
+            {unlockError}
+          </Alert>
+        )}
+        <div className={styles.unlock_form}>
+          <Input
+            label="Mot de passe"
+            required={true}
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Button
+            color="brand"
+            type="button"
+            onClick={handleUnlock}
+            disabled={isUnlocking || password.trim().length === 0}
+          >
+            {isUnlocking ? "Déverrouillage..." : "Déverrouiller la vidéo"}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -201,17 +382,20 @@ export default function Video() {
             flexDirection: "column",
             gap: "1.5rem",
             padding: "10px",
-            minWidth: "80%",
+            minWidth: "70%",
           }}
         >
           <VideoPlayer
             video={video}
-            streamUrl={getRoutes().video.stream(video.slug)}
+            streamUrl={video.video_url ?? getRoutes().video.stream(video.slug)}
+            autoPlay={Boolean(playlistSlug || showFavoritesSidebar)}
+            onEnded={handleVideoEnded}
           />
+
           <h1>{video.title}</h1>
 
           {downloadError && (
-            <Alert canClose type="error" role="alert">
+            <Alert canClose type={VariantType.ERROR}>
               {downloadError}
             </Alert>
           )}
@@ -219,13 +403,13 @@ export default function Video() {
           {/* -------------------- Infos vidéo -------------------- */}
           <div className={styles.video_infos}>
             <div className={styles.video_infos_header}>
-              <p>{timeAgo(video.created_at)}</p>
               <p className={styles.video_infos_header_time}>
                 <span className="material-icons" aria-hidden="true">
                   access_time
                 </span>
                 {formatTime(time)}
               </p>
+              <p>{timeAgo(video.created_at)}</p>
             </div>
 
             <div className={styles.video_infos_header_buttons}>
@@ -243,7 +427,7 @@ export default function Video() {
                   {isDownloading ? "Téléchargement…" : "Télécharger la vidéo"}
                 </Button>
               )}
-              {isOwner && (
+              {isOwnerOrCoOwner && (
                 <Button
                   onClick={() => router.push(`/video/edit/${video.slug}`)}
                   size="small"
@@ -253,6 +437,12 @@ export default function Video() {
                 >
                   Éditer la vidéo
                 </Button>
+              )}
+              {myPlaylists && user && (
+                <PlaylistActionMenu
+                  playlists={myPlaylists}
+                  videoId={video.id}
+                />
               )}
             </div>
           </div>
@@ -275,8 +465,9 @@ export default function Video() {
             <div>
               <dt>Ajouté par :</dt>
               <dd>
-                {video.owner_last_name + " " + video.owner_first_name ||
-                  video.owner}
+                {video.owner_last_name && video.owner_first_name != ""
+                  ? video.owner_last_name + " " + video.owner_first_name
+                  : video.owner}
               </dd>
             </div>
 
@@ -305,17 +496,19 @@ export default function Video() {
               </div>
             )}
 
+            <div className={styles.video_infos_details_status}>
+              <dt>Statut de la vidéo:</dt>
+              <dd>{video.status_label}</dd>
+            </div>
             <div className={styles.video_infos_details_update}>
-              <dt>
-                <UpdateIcon aria-hidden="true" /> Mis à jour le
-              </dt>
+              <dt>Mis à jour le</dt>
               <dd>{formatDateWithTime(video.updated_at)}</dd>
             </div>
           </dl>
 
           {/* Commentaires */}
           {video.disable_comment ? (
-            <Alert type="info" role="alert">
+            <Alert type={VariantType.INFO}>
               Les commentaires sont désactivés
             </Alert>
           ) : (
@@ -327,10 +520,42 @@ export default function Video() {
          *  Colonne latérale
          * ------------------------------------------------------------ */}
         <aside
-          className={styles.video_infos_block_right}
+          className={styles.sidebar}
           aria-label="Informations complémentaires"
         >
-          <section>
+          {/* Bloc playlist  */}
+          {playlistSlug && (
+            <>
+              {usePlaylistLoading && !playlist && <CenteredLoader />}
+
+              {usePlaylistError && (
+                <Alert canClose type={VariantType.ERROR}>
+                  {usePlaylistError}
+                </Alert>
+              )}
+
+              {playlist && !usePlaylistError && (
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <PlaylistSidebar
+                    playlist={playlist}
+                    currentVideoSlug={video.slug}
+                  />
+                </div>
+              )}
+            </>
+          )}
+          {/* Bloc favoris  */}
+          {showFavoritesSidebar && favoriteVideos.length > 0 && (
+            <div style={{ marginBottom: "1.5rem" }}>
+              <FavoritesSidebar
+                videos={favoriteVideos}
+                currentVideoSlug={video.slug}
+              />
+            </div>
+          )}
+
+          {/* Section "À propos"*/}
+          <section className={styles.video_infos_block_right}>
             <h2 className={styles.video_infos_block_right_title}>À propos</h2>
             <Divider />
 

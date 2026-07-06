@@ -1,5 +1,5 @@
 export * from "./app";
-export * from "./channel";
+export * from "./collection";
 export * from "./comment";
 export * from "./navigation";
 export * from "./user";

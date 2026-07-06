@@ -1,0 +1,99 @@
+.favoritesSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xs);
+  border: 1px solid var(--c--contextuals--background--semantic--brand--tertiary);
+  border-radius: 8px;
+  padding: var(--c--globals--spacings--sm);
+}
+
+.favoritesSidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--xxs);
+}
+
+.favoritesSidebarLabel {
+  font-size: var(--c--globals--font--sizes--sm);
+  text-transform: uppercase;
+  color: var(--c--globals--colors--gray-700);
+}
+
+.favoritesSidebarTitle {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--md);
+  font-weight: var(--c--globals--font--weights--bold);
+}
+
+.favoritesSidebarCount {
+  font-size: var(--c--globals--font--sizes--xs);
+  color: var(--c--globals--colors--gray-700);
+}
+
+.favoritesSidebarList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xxs);
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.favoritesSidebarItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--xs);
+  padding: var(--c--globals--spacings--xxs);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.favoritesSidebarThumbnail {
+  width: 64px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.favoritesSidebarItem:hover {
+  background-color: var(--c--globals--colors--gray-100);
+}
+
+.favoritesSidebarItemActive {
+  background-color: var(
+    --c--contextuals--background--semantic--brand--secondary
+  );
+}
+
+.favoritesSidebarIndex {
+  font-size: var(--c--globals--font--sizes--sm);
+  color: var(--c--globals--colors--gray-700);
+  min-width: 1.5rem;
+}
+
+.favoritesSidebarText {
+  display: flex;
+  flex-direction: column;
+}
+
+.favoritesSidebarVideoTitle {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--sm);
+  font-weight: var(--c--globals--font--weights--medium);
+}
+
+.favoritesSidebarNowPlaying {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--xs);
+  color: var(--c--contextuals--content--palette--brand--primary);
+}
+
+@media (max-width: 1024px) {
+  .favoritesSidebar {
+    max-height: none;
+  }
+}

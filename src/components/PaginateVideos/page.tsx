@@ -8,13 +8,11 @@ import styles from "./page.module.css";
 interface PaginateVideosProps {
   videos: Video[];
   pageSize?: number;
-  currentUserId?: number;
 }
 
 export default function PaginateVideos({
   videos,
   pageSize = 20,
-  currentUserId,
 }: PaginateVideosProps) {
   const pagination = usePagination({
     defaultPagesCount: 1,
@@ -37,7 +35,7 @@ export default function PaginateVideos({
 
   return (
     <>
-      <VideosList videosList={paginatedVideos} currentUserId={currentUserId} />
+      <VideosList videosList={paginatedVideos} />
       {pagesCount && pagesCount > 1 && (
         <div className={styles.pagination}>
           <Pagination {...pagination} pageSize={pageSize} displayGoto={false} />

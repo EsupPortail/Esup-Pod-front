@@ -10,9 +10,20 @@ import "videojs-hotkeys";
 type Props = {
   video: Video;
   streamUrl: string;
+  //Si true, la vidéo se lance automatiquement (playlist/favoris)
+
+  autoPlay?: boolean;
+  //Callback appelé quand la vidéo se termine.
+
+  onEnded?: () => void;
 };
 
-export default function VideoPlayer({ video, streamUrl }: Props) {
+export default function VideoPlayer({
+  video,
+  streamUrl,
+  autoPlay,
+  onEnded,
+}: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -62,6 +73,8 @@ export default function VideoPlayer({ video, streamUrl }: Props) {
       fluid: false,
       controls: true,
       preload: "auto",
+
+      autoplay: !!autoPlay,
       playbackRates: [0.5, 1, 1.5, 2],
       controlBar: {
         volumePanel: { inline: false },
@@ -71,7 +84,6 @@ export default function VideoPlayer({ video, streamUrl }: Props) {
     };
 
     const vjsPlayer = videojs(mediaEl, options, () => {
-      // @ts-ignore - videojs-hotkeys ajoute la methode hotkeys()
       vjsPlayer.hotkeys({
         volumeStep: 0.1,
         seekStep: 5,
@@ -97,8 +109,18 @@ export default function VideoPlayer({ video, streamUrl }: Props) {
       setHasError(true);
     });
 
+    if (onEnded) {
+      vjsPlayer.on("ended", () => {
+        onEnded();
+      });
+    }
+
     return () => {
       vjsPlayer.dispose();
+
+      if (containerEl.contains(mediaEl)) {
+        containerEl.removeChild(mediaEl);
+      }
     };
   }, [
     streamUrl,

@@ -1,0 +1,99 @@
+.playlistSidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xs);
+  border: 1px solid var(--c--contextuals--background--semantic--brand--tertiary);
+  border-radius: 8px;
+  padding: var(--c--globals--spacings--sm);
+}
+
+.playlistSidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--xxs);
+}
+
+.playlistSidebarLabel {
+  font-size: var(--c--globals--font--sizes--sm);
+  text-transform: uppercase;
+  color: var(--c--globals--colors--gray-700);
+}
+
+.playlistSidebarTitle {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--md);
+  font-weight: var(--c--globals--font--weights--bold);
+}
+
+.playlistSidebarCount {
+  font-size: var(--c--globals--font--sizes--xs);
+  color: var(--c--globals--colors--gray-700);
+}
+
+.playlistSidebarList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xxs);
+  max-height: 480px; /* scroll vertical comme sur YouTube */
+  overflow-y: auto;
+}
+
+.playlistSidebarItem {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--c--globals--spacings--xs);
+  padding: var(--c--globals--spacings--xxs);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.playlistSidebarThumbnail {
+  width: 64px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.playlistSidebarItem:hover {
+  background-color: var(--c--globals--colors--gray-100);
+}
+
+.playlistSidebarItemActive {
+  background-color: var(
+    --c--contextuals--background--semantic--brand--secondary
+  );
+}
+
+.playlistSidebarIndex {
+  font-size: var(--c--globals--font--sizes--sm);
+  color: var(--c--globals--colors--gray-700);
+  min-width: 1.5rem;
+}
+
+.playlistSidebarText {
+  display: flex;
+  flex-direction: column;
+}
+
+.playlistSidebarVideoTitle {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--sm);
+  font-weight: var(--c--globals--font--weights--medium);
+}
+
+.playlistSidebarNowPlaying {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--xs);
+  color: var(--c--contextuals--content--palette--brand--primary);
+}
+
+@media (max-width: 1024px) {
+  .playlistSidebar {
+    max-height: none;
+  }
+}
