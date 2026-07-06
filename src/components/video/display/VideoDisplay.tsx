@@ -60,20 +60,21 @@ export default function VideosDisplay({
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
-        <p>{videos.length} vidéos trouvées</p>
+        <p>
+          {videos.length} vidéo{videos.length > 1 ? "s" : ""} trouvée
+          {videos.length > 1 ? "s" : ""}
+        </p>
+
         <VideoViewToggle view={view} onChange={handleChangeView} />
       </div>
 
       {view === "cards" ? (
-        <VideosList
-          videosList={paginatedVideos}
-          currentUserId={currentUserId}
-        />
+        <VideosList videosList={paginatedVideos} />
       ) : (
         <VideoGrid rows={gridRows} />
       )}
 
-      {pagesCount > 1 && (
+      {pagesCount && pagesCount > 1 && (
         <div className={styles.pagination}>
           <Pagination {...pagination} pageSize={pageSize} displayGoto={false} />
         </div>

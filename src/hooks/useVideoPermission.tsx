@@ -15,8 +15,31 @@ export function useVideoPermissions(video: Video | null) {
       isOwner,
       isCoOwner,
       isOwnerOrCoOwner: isOwner || isCoOwner,
-      canEdit: isOwner || isCoOwner,
-      canManage: isOwner || isCoOwner,
     };
+  }, [userId, video?.owner_id, video?.co_owners]);
+}
+
+export function useIsCoOwner(video: Video | null) {
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  return useMemo(
+    () => userId != null && Boolean(video?.co_owners?.includes(userId)),
+    [userId, video?.co_owners],
+  );
+}
+
+export function useIsOwnerOrCoOwner(video: Video | null) {
+  const { user } = useAuth();
+  const userId = user?.id;
+
+  return useMemo(() => {
+    if (userId == null) {
+      return false;
+    }
+
+    return (
+      video?.owner_id === userId || Boolean(video?.co_owners?.includes(userId))
+    );
   }, [userId, video?.owner_id, video?.co_owners]);
 }

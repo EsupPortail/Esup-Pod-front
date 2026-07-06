@@ -9,6 +9,7 @@ import AuthProvider from "../context/AuthProvider";
 import CunninghamStyleProvider from "../context/CunninghamProvider";
 import DatePickerProvider from "../context/DatePickerProvider";
 import AuthStatusAlert from "../components/Notifications/AuthStatusAlert";
+import { PlaylistCreationProvider } from "../context/PlaylistCreationContext";
 
 export const metadata: Metadata = {
   title: "Esup POD V5",
@@ -33,18 +34,20 @@ export default function RootLayout({
           <CunninghamStyleProvider>
             <DatePickerProvider>
               <AuthProvider>
-                <SidebarProvider>
-                  <Navbar />
-                  <Sidebar />
-                  <main id="main" className="main">
-                    <Breadcrumb />
-                    <div className="content">
-                      <AuthStatusAlert autoDismissMs={5000} />
-                      {children}
-                    </div>
-                  </main>
-                  <Footer />
-                </SidebarProvider>
+                <PlaylistCreationProvider>
+                  <SidebarProvider>
+                    <Navbar />
+                    <Sidebar />
+                    <main id="main" className="main">
+                      <Breadcrumb />
+                      <div className="content">
+                        <AuthStatusAlert autoDismissMs={5000} />
+                        {children}
+                      </div>
+                    </main>
+                    <Footer />
+                  </SidebarProvider>
+                </PlaylistCreationProvider>
               </AuthProvider>
             </DatePickerProvider>
           </CunninghamStyleProvider>

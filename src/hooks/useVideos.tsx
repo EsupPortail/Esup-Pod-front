@@ -7,16 +7,41 @@ import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
 import type { Video } from "@/src/types";
 
-type VideoListParams = {
+type UnlockPayload = {
+  password?: string;
+  hash?: string;
+};
+
+type UnlockResponse = {
+  video_url?: string;
+  source?: string;
+  error?: string;
+};
+
+export type VideoListParams = {
   channel?: number;
   ordering?: string;
   search?: string;
+  page?: number;
+  createdAtGte?: string;
+  createdAtLte?: string;
   typeSlugs?: string[];
   disciplineIds?: number[];
   tagSlugs?: string[];
   tagNames?: string[];
-  themes?: number[];
-  cursus?: string[];
+  cursusSlugs?: string[];
+  statuses?: string[];
+  ownerUsernames?: string[];
+};
+
+const appendValues = (
+  searchParams: URLSearchParams,
+  name: string,
+  values?: Array<string | number>,
+) => {
+  values
+    ?.filter((value) => String(value).trim() !== "")
+    .forEach((value) => searchParams.append(name, String(value)));
 };
 
 const buildVideoListUrl = (
@@ -37,41 +62,25 @@ const buildVideoListUrl = (
     url.searchParams.set("search", params.search);
   }
 
-  if (params?.typeSlugs?.length) {
-    params.typeSlugs.forEach((typeSlug) => {
-      url.searchParams.append("type__slug", typeSlug);
-    });
+  if (params?.page != null) {
+    url.searchParams.set("page", String(params.page));
   }
 
-  if (params?.disciplineIds?.length) {
-    params.disciplineIds.forEach((disciplineId) => {
-      url.searchParams.append("discipline", String(disciplineId));
-    });
+  if (params?.createdAtGte) {
+    url.searchParams.set("created_at__gte", params.createdAtGte);
   }
 
-  if (params?.tagSlugs?.length) {
-    params.tagSlugs.forEach((tagSlug) => {
-      url.searchParams.append("tags__slug", tagSlug);
-    });
+  if (params?.createdAtLte) {
+    url.searchParams.set("created_at__lte", params.createdAtLte);
   }
 
-  if (params?.tagNames?.length) {
-    params.tagNames.forEach((tagName) => {
-      url.searchParams.append("tags__name", tagName);
-    });
-  }
-
-  if (params?.themes?.length) {
-    params.themes.forEach((themeId) => {
-      url.searchParams.append("themes", String(themeId));
-    });
-  }
-
-  if (params?.cursus?.length) {
-    params.cursus.forEach((cursus) => {
-      url.searchParams.append("cursus_slug", cursus);
-    });
-  }
+  appendValues(url.searchParams, "type__slug", params?.typeSlugs);
+  appendValues(url.searchParams, "discipline", params?.disciplineIds);
+  appendValues(url.searchParams, "tags__slug", params?.tagSlugs);
+  appendValues(url.searchParams, "tags__name", params?.tagNames);
+  appendValues(url.searchParams, "cursus__slug", params?.cursusSlugs);
+  appendValues(url.searchParams, "status", params?.statuses);
+  appendValues(url.searchParams, "owner__username", params?.ownerUsernames);
 
   return url.toString();
 };
@@ -115,6 +124,20 @@ const sortVideos = (videos: Video[], ordering?: string): Video[] => {
   }
 };
 
+type VideoListResponse = Video[] | { results?: Video[] };
+
+const normalizeVideoList = (data: VideoListResponse): Video[] => {
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data.results)) {
+    return data.results;
+  }
+
+  return [];
+};
+
 export function useVideos() {
   const { accessToken, refresh } = useAuth();
   const [video, setVideo] = useState<Video | null>(null);
@@ -132,6 +155,10 @@ export function useVideos() {
           accessToken,
           onRefresh: refresh,
         });
+
+        if (res.status === 404 && !accessToken) {
+          throw new Error("AUTH_REQUIRED");
+        }
 
         const data = await requestJson<Video>(res);
         setVideo(data);
@@ -154,29 +181,17 @@ export function useVideos() {
       setUseVideoError(null);
 
       try {
-        const typeSlugs = params?.typeSlugs ?? [];
-        const urls =
-          typeSlugs.length > 1
-            ? typeSlugs.map((typeSlug) =>
-                buildVideoListUrl(baseUrl, {
-                  ...params,
-                  typeSlugs: [typeSlug],
-                }),
-              )
-            : [buildVideoListUrl(baseUrl, params)];
+        const response = await authFetch(buildVideoListUrl(baseUrl, params), {
+          accessToken,
+          onRefresh: refresh,
+        });
 
-        const responses = await Promise.all(
-          urls.map((url) =>
-            authFetch(url, {
-              accessToken,
-              onRefresh: refresh,
-            }),
-          ),
+        const videoList = await requestJson<VideoListResponse>(response);
+        const data = sortVideos(
+          normalizeVideoList(videoList),
+          params?.ordering,
         );
-        const videoLists = await Promise.all(
-          responses.map((response) => requestJson<Video[]>(response)),
-        );
-        const data = sortVideos(dedupeVideos(videoLists), params?.ordering);
+
         setVideos(data);
         return data;
       } catch (e: unknown) {
@@ -187,6 +202,20 @@ export function useVideos() {
       } finally {
         setUseVideoLoading(false);
       }
+    },
+    [accessToken, refresh],
+  );
+
+  const requestVideoList = useCallback(
+    async (baseUrl: string, params?: VideoListParams) => {
+      const response = await authFetch(buildVideoListUrl(baseUrl, params), {
+        accessToken,
+        onRefresh: refresh,
+      });
+
+      const videoList = await requestJson<VideoListResponse>(response);
+
+      return sortVideos(normalizeVideoList(videoList), params?.ordering);
     },
     [accessToken, refresh],
   );
@@ -203,6 +232,42 @@ export function useVideos() {
       return fetchVideoList(getRoutes().video.me, params);
     },
     [fetchVideoList],
+  );
+
+  const fetchVideoUserWithCoOwners = useCallback(
+    async (userId?: number | null, params?: VideoListParams) => {
+      setUseVideoLoading(true);
+      setUseVideoError(null);
+
+      try {
+        const [ownedVideos, allVideos] = await Promise.all([
+          requestVideoList(getRoutes().video.me, params),
+          requestVideoList(getRoutes().video.list, params),
+        ]);
+
+        const coOwnedVideos =
+          userId != null
+            ? allVideos.filter((video) =>
+                Boolean(video.co_owners?.includes(userId)),
+              )
+            : [];
+        const mergedVideos = sortVideos(
+          dedupeVideos([ownedVideos, coOwnedVideos]),
+          params?.ordering,
+        );
+
+        setVideos(mergedVideos);
+        return mergedVideos;
+      } catch (e: unknown) {
+        setUseVideoError(
+          e instanceof Error ? e.message : "Erreur de chargement.",
+        );
+        return [];
+      } finally {
+        setUseVideoLoading(false);
+      }
+    },
+    [requestVideoList],
   );
 
   const deleteVideo = useCallback(
@@ -239,6 +304,60 @@ export function useVideos() {
     [accessToken, refresh],
   );
 
+  const unlockVideo = useCallback(
+    async (slug: string, payload?: UnlockPayload) => {
+      setUseVideoLoading(true);
+      setUseVideoError(null);
+
+      try {
+        const hasPayload =
+          payload != null && Object.values(payload).some((value) => value);
+        const hasHash = Boolean(payload?.hash?.trim());
+        const baseUnlockUrl = getRoutes().video.unlock(slug);
+        const unlockUrl = hasHash
+          ? `${baseUnlockUrl}?hash=${encodeURIComponent(payload?.hash ?? "")}`
+          : baseUnlockUrl;
+        const res = await authFetch(unlockUrl, {
+          accessToken,
+          onRefresh: refresh,
+          method: hasPayload ? "POST" : "GET",
+          headers: hasPayload
+            ? {
+                "Content-Type": "application/x-www-form-urlencoded",
+              }
+            : undefined,
+          body: hasPayload
+            ? new URLSearchParams({
+                password: payload?.password?.trim() || "",
+                hash: payload?.hash?.trim() || "",
+              })
+            : undefined,
+        });
+
+        const data = await requestJson<UnlockResponse>(res);
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        if (data.video_url) {
+          setVideo((currentVideo) =>
+            currentVideo
+              ? {
+                  ...currentVideo,
+                  video_url: data.video_url ?? currentVideo.video_url,
+                }
+              : currentVideo,
+          );
+        }
+        return data;
+      } catch (e: unknown) {
+        throw e instanceof Error ? e : new Error("Erreur de déverrouillage.");
+      } finally {
+        setUseVideoLoading(false);
+      }
+    },
+    [accessToken, refresh],
+  );
+
   return {
     video,
     videos,
@@ -247,6 +366,8 @@ export function useVideos() {
     fetchOne,
     fetchAll,
     fetchVideoUser,
+    fetchVideoUserWithCoOwners,
     deleteVideo,
+    unlockVideo,
   };
 }

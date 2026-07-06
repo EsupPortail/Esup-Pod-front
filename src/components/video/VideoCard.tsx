@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import styles from "./VideoCard.module.css";
 import Link from "next/link";
+import { usePathname, useParams } from "next/navigation";
 import type { Video } from "@/src/types";
 import { formatTime, timeAgo, secondToMinute } from "@/src/constants/date";
 import { truncateVideoTitle } from "@/src/constants/string";
@@ -25,16 +26,44 @@ export default function VideoCard(props: VideosCardProps) {
   const { video, isOwner = false } = props;
   const time = secondToMinute(video.duration || 0);
 
+  // Détection du contexte : playlist ou favoris
+  const pathname = usePathname();
+  const params = useParams();
+
+  let href = `/video/${video.slug}`;
+
+  //  Si on est dans une page de type /playlist/[slug]
+  if (pathname?.startsWith("/playlist/") && "slug" in params) {
+    const rawSlug = (params as { slug?: string | string[] }).slug;
+    const playlistSlug = Array.isArray(rawSlug) ? rawSlug[0] : rawSlug;
+
+    if (playlistSlug) {
+      href = `/video/${video.slug}?playlist=${playlistSlug}`;
+    }
+  }
+
+  // Si on est sur la page des favoris (/playlist/favorites)
+  if (pathname === "/playlist/favorites") {
+    href = `/video/${video.slug}?favorites=1`;
+  }
+
   return (
     <Card
       sx={{
         maxWidth: 345,
         position: "relative",
+        overflow: "visible",
+        mb: 4,
+        borderRadius: "8px",
+        transition: "transform 0.3s ease",
+        "&:hover": {
+          transform: "translateY(-5px)",
+        },
       }}
     >
       <CardActionArea
         component={Link}
-        href={`/video/${video.slug}`}
+        href={href}
         sx={{
           textDecoration: "none",
         }}
@@ -45,7 +74,8 @@ export default function VideoCard(props: VideosCardProps) {
           image={video.thumbnail_url || "/default_thumbnail.svg"}
           alt={video.title}
           sx={{
-            maxHeight: 140,
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
           }}
         />
         <div className={styles.video_duration}>
@@ -58,7 +88,7 @@ export default function VideoCard(props: VideosCardProps) {
             variant="h5"
             component="div"
             sx={{
-              fontSize: "var(--c--globals--font--sizes--xl)",
+              fontSize: "var(--c--globals--font--sizes--lg)",
               fontWeight: "var(--c--globals--font--weights--bold)",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",

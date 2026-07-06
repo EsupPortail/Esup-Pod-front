@@ -53,8 +53,8 @@ export function getVideoGridColumns(): Column<VideoDisplayRow>[] {
       },
     },
     {
-      id: "actions",
-      field: "actions",
+      id: "infos",
+      field: "infos",
       headerName: "",
       enableSorting: false,
       renderCell: ({ row }) =>
@@ -80,6 +80,17 @@ export function getVideoGridColumns(): Column<VideoDisplayRow>[] {
                 <span className="material-icons">visibility_off</span>
               </Tooltip>
             )}
+          </>
+        ) : null,
+    },
+    {
+      id: "actions",
+      field: "actions",
+      headerName: "",
+      enableSorting: false,
+      renderCell: ({ row }) =>
+        row.isOwner ? (
+          <>
             <VideoActionMenu video={row.video} />
           </>
         ) : null,

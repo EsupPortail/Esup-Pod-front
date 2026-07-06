@@ -1,0 +1,38 @@
+.title_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--c--globals--spacings--sm);
+  padding-bottom: var(--c--globals--spacings--md);
+}
+
+.add_playlist_button {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.add_playlist_button:link,
+.add_playlist_button:visited,
+.add_playlist_button:hover,
+.add_playlist_button:active {
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .title_row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--c--globals--spacings--xs);
+  }
+
+  .add_playlist_button {
+    width: 100%;
+  }
+
+  /* Rendre le bouton full width en mobile */
+  .add_playlist_button :global(button),
+  .add_playlist_button :global(.c__button) {
+    width: 100%;
+    justify-content: center;
+  }
+}

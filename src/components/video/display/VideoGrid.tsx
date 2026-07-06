@@ -5,6 +5,7 @@ import { DataGrid } from "@openfun/cunningham-react";
 import type { SortModel } from "@openfun/cunningham-react";
 import type { VideoDisplayRow } from "./types";
 import { getVideoGridColumns } from "./VideoGridColumns";
+import styles from "./styles.module.css";
 
 interface VideoGridProps {
   rows: VideoDisplayRow[];
@@ -58,12 +59,13 @@ export default function VideoGrid({ rows }: VideoGridProps) {
 
   return (
     <DataGrid
+      className={styles.dataGrid}
       rows={sortedRows}
       columns={getVideoGridColumns()}
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting
-      emptyPlaceholderLabel="Aucune video trouvee."
+      emptyPlaceholderLabel="Aucune video trouvée."
     />
   );
 }

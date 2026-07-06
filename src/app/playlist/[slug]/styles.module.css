@@ -1,0 +1,76 @@
+.playlist_content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.playlist_header {
+  display: flex;
+
+  gap: 0.75rem;
+}
+
+.playlist_header_row {
+  gap: 1rem;
+}
+
+.playlist_meta {
+  gap: 0.5rem 1.5rem;
+  color: var(--c--theme--colors--text--secondary);
+  font-size: var(--c--globals--font--sizes--sm);
+}
+
+.playlist_metaInfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.playlist_infos_details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--xs);
+  padding: var(--c--globals--spacings--md);
+  border-radius: 8px;
+  border: 1px solid
+    var(--c--contextuals--background--semantic--brand--secondary);
+}
+
+.playlist_infos_details > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-block: var(--c--globals--spacings--xxs);
+  border-bottom: 1px solid
+    var(--c--contextuals--background--semantic--brand--secondary);
+}
+
+.playlist_actions {
+  display: flex;
+  align-items: center;
+  gap: var(--c--globals--spacings--sm);
+  padding-top: var(--c--globals--spacings--md);
+}
+
+.playlist_description {
+  padding: var(--c--globals--spacings--lg);
+}
+
+@media (max-width: 768px) {
+  .playlist_header_row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .playlist_meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .playlist_actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}

@@ -21,9 +21,16 @@ export function useDiscipline() {
         accessToken,
         onRefresh: refresh,
       });
-      const data = await requestJson<Discipline[]>(res);
-      setDiscipline(data);
-      return data;
+      const data = await requestJson<Discipline[] | { results?: Discipline[] }>(
+        res,
+      );
+      const normalizedDisciplines = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.results)
+          ? data.results
+          : [];
+      setDiscipline(normalizedDisciplines);
+      return normalizedDisciplines;
     } catch (e: unknown) {
       setUseDisciplineError(
         e instanceof Error ? e.message : "Erreur de chargement.",

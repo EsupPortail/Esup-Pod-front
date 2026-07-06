@@ -19,9 +19,14 @@ export function useTags() {
         accessToken,
         onRefresh: refresh,
       });
-      const data = await requestJson<Tags[]>(res);
-      setTags(data);
-      return data;
+      const data = await requestJson<Tags[] | { results?: Tags[] }>(res);
+      const normalizedTags = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.results)
+          ? data.results
+          : [];
+      setTags(normalizedTags);
+      return normalizedTags;
     } catch (e: unknown) {
       setUseTagsError(e instanceof Error ? e.message : "Erreur de chargement.");
       return [];

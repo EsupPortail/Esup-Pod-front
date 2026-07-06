@@ -21,7 +21,8 @@ export interface Video {
   owner_id: number;
   owner_first_name: string;
   owner_last_name: string;
-  channel: number;
+  channel: number | null;
+  themes: number[];
   co_owners: number[] | null;
   status: VideoStatus;
   status_label: string | null;
@@ -66,7 +67,8 @@ export interface VideoRequest {
   cursus?: string;
   language?: string;
   type_id: number;
-  channel?: number;
+  channel?: number | null;
+  themes?: number[];
   disciplines?: number[];
   tags?: string[];
   restricted_groups?: number[];

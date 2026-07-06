@@ -1,8 +1,36 @@
 .wrapper {
-  display: flex;
   flex-direction: column;
   gap: 1rem;
   margin: 1rem 0 1.5rem;
+  padding: 1rem;
+}
+
+.filtersContentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filtersButtonRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.open {
+  display: flex;
+}
+
+.closed {
+  display: none;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .row {
@@ -12,29 +40,59 @@
   align-items: flex-start;
 }
 
-.row,
-.row :global(.c__select__wrapper) {
-  --c--components--forms-field--width: 150px;
+.row {
+  --filters-field-width: 150px;
 }
 
-.orderingField:global(.c__field) {
-  width: 150px !important;
-  --c--components--forms-field--width: 150px;
+.filterItem {
+  flex: 0 1 auto;
+  min-width: var(--filters-field-width);
 }
 
-.row :global(.labelled-box label.placeholder),
-.searchRow :global(.labelled-box label.placeholder) {
-  font-size: 0.8rem;
+.filterButton {
+  min-height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.filterButton:hover {
+  border-color: rgba(0, 0, 0, 0.87);
+}
+
+.filterMenu {
+  padding: 0.75rem;
+}
+
+.filterOptions {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.filterOption {
+  margin-right: 0;
 }
 
 .row .field {
   flex: 0 1 auto;
+  min-width: var(--filters-field-width);
+}
+
+.row :global(.MuiAutocomplete-root),
+.row :global(.MuiTextField-root) {
+  min-width: var(--filters-field-width);
+}
+
+.orderingField {
+  min-width: var(--filters-field-width);
 }
 
 .searchRow {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.75rem;
+  padding-bottom: var(--c--globals--spacings--md);
   align-items: center;
 }
 
@@ -44,9 +102,53 @@
   gap: 0.5rem;
 }
 
-.wrapper {
-  --c--components--forms-select--height: 2.85rem;
+.searchField {
+  min-width: 220px;
 }
-.searchRow :global(.c__input__wrapper) {
-  height: 2.85rem;
+
+@media (max-width: 600px) {
+  .searchField {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .row {
+    gap: 1rem;
+  }
+  .filtersContentHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding-top: var(--c--globals--spacings--md);
+  }
+
+  .filtersButtonRow {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchRow,
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .filterItem,
+  .row .field,
+  .row :global(.MuiAutocomplete-root),
+  .row :global(.MuiTextField-root) {
+    width: 100%;
+    min-width: 0;
+  }
+  .filterButton {
+    width: 100%;
+  }
+
+  .searchRow .filterItem:first-child .filterButton {
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px;
+    background-color: #fff;
+  }
 }

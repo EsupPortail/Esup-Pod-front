@@ -24,6 +24,7 @@ export const getRoutes = () => {
       add: url + "api/videos/",
       delete: (slug: string) => url + `api/videos/${slug}/`,
       stream: (slug: string) => url + `api/videos/${slug}/stream/`,
+      unlock: (slug: string) => url + `api/videos/${slug}/unlock/`,
     },
     user: {
       list: url + "api/auth/users/",
@@ -64,6 +65,34 @@ export const getRoutes = () => {
       vote: (videoSlug: string, commentId: string | number) =>
         url + `api/comment/vote/${videoSlug}/${commentId}/`,
     },
+    channel: {
+      list: url + "api/collections/channels/",
+      get: (slug: string) => url + `api/collections/channels/${slug}/`,
+    },
+    theme: {
+      list: url + "api/collections/themes/",
+      get: (slug: string) => url + `api/collections/themes/${slug}/`,
+    },
+    playlist: {
+      list: url + "api/collections/playlists/",
+      get: (slug: string) => url + `api/collections/playlists/${slug}/`,
+      delete: (slug: string) => url + `api/collections/playlists/${slug}/`,
+      add: url + `api/collections/playlists/`,
+      update: (slug: string) => url + `api/collections/playlists/${slug}/`,
+      addVideo: (slug: string) =>
+        url + `api/collections/playlists/${slug}/add_video/`,
+      deleteVideo: (slug: string) =>
+        url + `api/collections/playlists/${slug}/remove_video/`,
+      reorder: (slug: string) =>
+        url + `api/collections/playlists/${slug}/reorder/`,
+    },
+    favorite: {
+      list: url + "api/collections/favorites/",
+      add: url + "api/collections/favorites/",
+      get: (id: number | string) => url + `api/collections/favorites/${id}/`,
+      delete: (id: number | string) => url + `api/collections/favorites/${id}/`,
+    },
+
     administration: url + "admin",
   };
 };

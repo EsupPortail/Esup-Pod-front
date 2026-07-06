@@ -1,0 +1,56 @@
+.restreint_fields {
+  padding: var(--c--globals--spacings--sm);
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+.restreint_fields p {
+  font-weight: var(--c--globals--font--weights--bold);
+}
+
+.thumbnail_field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.form_actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: var(--c--globals--spacings--xl);
+  gap: var(--c--globals--spacings--sm);
+}
+
+.form_actions_buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--c--globals--spacings--sm);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--c--globals--spacings--md);
+  padding: 0 var(--c--globals--spacings--lg);
+}
+
+.c__input {
+  margin-bottom: var(--c--globals--spacings--md);
+}
+
+@media (max-width: 932px) {
+  .form_actions {
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: var(--c--globals--spacings--md);
+  }
+  .form_actions_buttons {
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: var(--c--globals--spacings--md);
+  }
+}

@@ -5,6 +5,7 @@ export interface User {
   first_name: string;
   last_name: string;
   is_staff: boolean;
+  is_superuser: boolean;
   affiliation: string;
   establishment: string;
   userpicture: string;

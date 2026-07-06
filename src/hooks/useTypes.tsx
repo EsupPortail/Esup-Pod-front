@@ -19,9 +19,14 @@ export function useTypes() {
         accessToken,
         onRefresh: refresh,
       });
-      const data = await requestJson<Type[]>(res);
-      setTypes(data);
-      return data;
+      const data = await requestJson<Type[] | { results?: Type[] }>(res);
+      const normalizedTypes = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.results)
+          ? data.results
+          : [];
+      setTypes(normalizedTypes);
+      return normalizedTypes;
     } catch (e: unknown) {
       setUseTypesError(
         e instanceof Error ? e.message : "Erreur de chargement.",

@@ -20,11 +20,14 @@ export function useUsers() {
         accessToken,
         onRefresh: refresh,
       });
-      const data = await requestJson<User[]>(res);
-      console.log(data);
-      setUsers(data);
-      console.log(data);
-      return data;
+      const data = await requestJson<User[] | { results?: User[] }>(res);
+      const normalizedUsers = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.results)
+          ? data.results
+          : [];
+      setUsers(normalizedUsers);
+      return normalizedUsers;
     } catch (e: unknown) {
       setUseUserError(e instanceof Error ? e.message : "Erreur de chargement.");
       return [];

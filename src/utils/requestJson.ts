@@ -14,7 +14,8 @@ export const requestJson = async <T>(
       const data = await res.json();
       if (typeof data?.detail === "string") {
         message = data.detail;
-        console.log(message);
+      } else if (typeof data?.error === "string") {
+        message = data.error;
       }
     } catch {}
     throw new Error(message);
