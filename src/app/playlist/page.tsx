@@ -10,7 +10,7 @@ import { useMounted } from "@/src/hooks/useMounted";
 import { useAuth } from "@/src/context/AuthProvider";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 
-export const breadcrumbLabel = "Listes de lectures";
+export const breadcrumbLabel = "Listes de lecture";
 
 export default function PlaylistsPage() {
   const { filters, setFilters, playlists, users, error, loading } =

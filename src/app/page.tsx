@@ -33,7 +33,7 @@ export default function Accueil() {
       .slice(0, 10);
   }, [videos, user]);
 
-  if (!mounted || latestVisiblePublicVideos.length === 0 || useVideoLoading) {
+  if (!mounted || useVideoLoading) {
     return <CenteredLoader />;
   }
 
@@ -47,7 +47,6 @@ export default function Accueil() {
           </Alert>
         )}
 
-        {useVideoLoading && <CenteredLoader />}
         <div style={{ marginTop: "var(--c--globals--spacings--l)" }}>
           <h2
             style={{

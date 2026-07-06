@@ -32,7 +32,7 @@ export default function PlaylistCard({
   return (
     <Box
       sx={{
-        maxWidth: 345,
+        minWidth: 345,
         position: "relative",
 
         "& .playlist-stack": {

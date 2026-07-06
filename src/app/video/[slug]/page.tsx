@@ -31,10 +31,8 @@ import { getLanguageLabel } from "@/src/constants/language";
 import { requestJson } from "@/src/utils/requestJson";
 import type { User, Video } from "@/src/types";
 import DownloadIcon from "@mui/icons-material/Download";
-import UpdateIcon from "@mui/icons-material/Update";
 import styles from "./styles.module.css";
 import BackButton from "@/src/components/BackButton/BackButton";
-import { useChannel } from "@/src/hooks/useChannel";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import PlaylistActionMenu from "./playlistActionMenu";
@@ -79,7 +77,7 @@ export default function Video() {
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const { fetchUser } = useUsers();
-  const { fetchOne: fetchChannel, channel: videoChannel } = useChannel();
+
   const {
     playlist,
     playlists,
@@ -337,6 +335,7 @@ export default function Video() {
           alignItems: "center",
         }}
       >
+        <BackButton />
         <Alert type={VariantType.WARNING}>
           Cette vidéo est protégée par un mot de passe.
         </Alert>

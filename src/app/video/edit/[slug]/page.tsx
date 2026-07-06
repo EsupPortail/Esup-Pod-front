@@ -811,7 +811,7 @@ export default function EditVideo() {
               control={control}
               render={({ field }) => (
                 <DatePicker
-                  disabled={!isStaff || !isEmployee || !isSuperUser}
+                  disabled={!(isStaff || isEmployee || isSuperUser)}
                   label="Date de suppression"
                   value={field.value ? dayjs(field.value) : null}
                   onChange={(v) => {
@@ -822,7 +822,7 @@ export default function EditVideo() {
                     textField: {
                       fullWidth: true,
                       helperText:
-                        "Date planifiée de suppression de la vidéo. Seul un super‑utilisateur peut la modifier.",
+                        "Date planifiée de suppression de la vidéo. Seul un super‑utilisateur/staff peut la modifier.",
                     },
                   }}
                 />

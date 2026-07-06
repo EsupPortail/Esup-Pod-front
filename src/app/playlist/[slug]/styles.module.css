@@ -39,11 +39,23 @@
 .playlist_infos_details > div {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
+  column-gap: var(--c--globals--spacings--sm);
   padding-block: var(--c--globals--spacings--xxs);
-  border-bottom: 1px solid
-    var(--c--contextuals--background--semantic--brand--secondary);
+}
+
+.playlist_infos_details dt {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--sm);
+  font-weight: var(--c--globals--font--weights--medium);
+  color: var(--c--globals--colors--gray-700);
+}
+
+.playlist_infos_details dd {
+  margin: 0;
+  font-size: var(--c--globals--font--sizes--sm);
+  color: var(--text-color-brand);
 }
 
 .playlist_actions {

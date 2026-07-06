@@ -70,7 +70,7 @@
 }
 
 .playlistSidebarIndex {
-  font-size: var(--c--globals--font--sizes--sm);
+  font-size: var(--c--globals--font--sizes--md);
   color: var(--c--globals--colors--gray-700);
   min-width: 1.5rem;
 }
@@ -82,14 +82,15 @@
 
 .playlistSidebarVideoTitle {
   margin: 0;
-  font-size: var(--c--globals--font--sizes--sm);
+  font-size: var(--c--globals--font--sizes--md);
   font-weight: var(--c--globals--font--weights--medium);
 }
 
 .playlistSidebarNowPlaying {
   margin: 0;
-  font-size: var(--c--globals--font--sizes--xs);
-  color: var(--c--contextuals--content--palette--brand--primary);
+  font-size: var(--c--globals--font--sizes--md);
+  color: var(--c--contextuals--content--palette--brand--neutral);
+  font-weight: var(--c--globals--font--weights--bold);
 }
 
 @media (max-width: 1024px) {

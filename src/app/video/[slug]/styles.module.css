@@ -32,12 +32,10 @@
 .video_infos_details > div {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
-
+  column-gap: var(--c--globals--spacings--sm);
   padding-block: var(--c--globals--spacings--xxs);
-  border-bottom: 1px solid
-    var(--c--contextuals--background--semantic--brand--secondary);
 }
 
 .video_infos_details > div:last-child {
@@ -55,7 +53,7 @@
   margin: 0;
   font-size: var(--c--globals--font--sizes--sm);
   color: var(--text-color-brand);
-  text-align: right;
+  text-align: left;
 }
 
 .video_infos_details_tags {
@@ -161,7 +159,6 @@
     text-align: left;
   }
 
-  /* Sur mobile, les boutons restent alignés à droite sur toute la largeur */
   .video_infos_header_buttons {
     align-self: stretch;
   }

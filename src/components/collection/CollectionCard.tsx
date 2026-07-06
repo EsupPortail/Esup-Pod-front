@@ -72,7 +72,7 @@ export default function CollectionCard(props: CollectionCardProps) {
         >
           <Card
             sx={{
-              maxWidth: 345,
+              minWidth: 345,
               borderRadius: "12px",
               position: "relative",
               overflow: "visible",
@@ -163,7 +163,7 @@ export default function CollectionCard(props: CollectionCardProps) {
       >
         <Card
           sx={{
-            maxWidth: 345,
+            minWidth: 345,
             borderRadius: "12px",
             position: "relative",
             overflow: "visible",

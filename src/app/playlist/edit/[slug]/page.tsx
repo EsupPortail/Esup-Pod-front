@@ -88,9 +88,9 @@ export default function EditPlaylist() {
   const isPublic = watch("is_public");
   const watchedValues = useWatch({ control });
 
-  // Si la playlist redevient publique, on désactive et on nettoie la partie mot de passe
+  // Si playlist privée, on désactive le mdp
   useEffect(() => {
-    if (isPublic) {
+    if (!isPublic) {
       setValue("is_password_required", false);
       setValue("password", "");
       clearErrors("password");

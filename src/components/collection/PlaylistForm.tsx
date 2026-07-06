@@ -129,7 +129,7 @@ export function PlaylistForm({
           )}
         />
 
-        {!isPublic && (
+        {isPublic && (
           <div>
             <Controller
               name="is_password_required"
