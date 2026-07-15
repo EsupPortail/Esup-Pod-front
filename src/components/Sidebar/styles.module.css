@@ -2,12 +2,11 @@
   position: fixed;
   left: 0;
   overflow-x: hidden;
-  background-color: var(--background);
+  background-color: var(--c--globals--colors--gray-000); /* Solid white background */
   padding-top: 20px;
   color: var(--text-color);
   margin-top: var(--navbar-height);
-  border-right: 1px solid
-    var(--c--contextuals--background--semantic--brand--primary);
+  border-right: 1px solid var(--c--globals--colors--gray-200); /* Thin GitHub style border */
   transition: all 0.3s ease;
   overflow-y: auto;
   top: 0;
@@ -31,6 +30,8 @@
   transition-property: color;
   transition-duration: 0.2s;
   padding: var(--c--globals--spacings--m) 0 var(--c--globals--spacings--m) 16px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .menu {

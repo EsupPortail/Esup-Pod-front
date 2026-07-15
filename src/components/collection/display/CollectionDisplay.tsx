@@ -44,12 +44,15 @@ export default function CollectionDisplay({
   channelSlug,
   basePath,
   currentUserId,
+  collectionsCount,
+  page: externalPage,
+  onPageChange,
+  loading = false,
 }: CollectionDisplayProps) {
   const [view, setView] = useState<CollectionViewMode>(defaultView);
 
   useEffect(() => {
     if (!storageKey) return;
-
     const storedView = window.localStorage.getItem(storageKey);
     if (storedView === "cards" || storedView === "grid") {
       setView(storedView);
@@ -79,22 +82,36 @@ export default function CollectionDisplay({
 
   const pagination = usePagination({
     defaultPagesCount: 1,
-    defaultPage: 1,
+    defaultPage: externalPage ?? 1,
     pageSize,
   });
 
-  const { page, setPage, pagesCount, setPagesCount } = pagination;
+  const { page: internalPage, setPage, pagesCount, setPagesCount } = pagination;
+
+  const page = externalPage ?? internalPage;
+  const count = collectionsCount ?? rows.length;
 
   useEffect(() => {
-    const nextPagesCount = Math.max(1, Math.ceil(rows.length / pageSize));
+    if (externalPage !== undefined) {
+      setPage(externalPage);
+    }
+  }, [externalPage, setPage]);
+
+  useEffect(() => {
+    const nextPagesCount = Math.max(1, Math.ceil(count / pageSize));
     setPagesCount(nextPagesCount);
-    setPage((currentPage) => Math.min(currentPage, nextPagesCount));
-  }, [rows.length, pageSize, setPage, setPagesCount]);
+    if (externalPage === undefined) {
+      setPage((currentPage) => Math.min(currentPage, nextPagesCount));
+    }
+  }, [count, pageSize, setPage, setPagesCount, externalPage]);
 
   const paginatedRows = useMemo(() => {
+    if (collectionsCount !== undefined) {
+      return rows;
+    }
     const start = (page - 1) * pageSize;
     return rows.slice(start, start + pageSize);
-  }, [rows, page, pageSize]);
+  }, [rows, page, pageSize, collectionsCount]);
 
   const paginatedChannels = useMemo(
     () =>
@@ -131,8 +148,7 @@ export default function CollectionDisplay({
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
         <p>
-          {rows.length} {label} trouvée
-          {rows.length > 1 ? "s" : ""}
+          {count} {label} trouvée{count > 1 ? "s" : ""}
         </p>
         <CollectionViewToggle view={view} onChange={handleChangeView} />
       </div>
@@ -144,8 +160,9 @@ export default function CollectionDisplay({
             themes={paginatedThemes}
             channelSlug={channelSlug}
             basePath={basePath}
+            loading={loading}
           />
-          <PlaylistList playlists={paginatedPlaylists} />
+          <PlaylistList playlists={paginatedPlaylists} loading={loading} />
         </>
       ) : (
         <CollectionGrid rows={paginatedRows} />
@@ -153,7 +170,16 @@ export default function CollectionDisplay({
 
       {pagesCount && pagesCount > 1 && (
         <div className={styles.pagination}>
-          <Pagination {...pagination} pageSize={pageSize} displayGoto={false} />
+          <Pagination
+            {...pagination}
+            page={page}
+            onPageChange={(p) => {
+              setPage(p);
+              onPageChange?.(p);
+            }}
+            pageSize={pageSize}
+            displayGoto={false}
+          />
         </div>
       )}
     </div>

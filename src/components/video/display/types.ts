@@ -10,6 +10,10 @@ export interface VideosDisplayProps {
   defaultView?: VideoViewMode;
   storageKey?: string;
   pageSize?: number;
+  videosCount?: number;
+  page?: number;
+  onPageChange?: (page: number) => void;
+  loading?: boolean;
 }
 
 export interface VideoViewToggleProps {

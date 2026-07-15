@@ -2,6 +2,7 @@
 @import "../cunningham-tokens.css";
 @import "@openfun/cunningham-react/fonts";
 @import "@openfun/cunningham-react/icons";
+@import "./themes.css";
 
 /*
 Small Screens: max-width: 600px (smartphones)
@@ -14,7 +15,7 @@ Extra Large Screens: min-width: 1441px
 :root {
   --navbar-height: 80px;
   --sidebar-open: 285px;
-  --background: var(--c--contextuals--background--surface--primary);
+  --background: var(--c--globals--colors--gray-025); /* Light gray for Anthropic style */
   --background-brand: var(
     --c--contextuals--background--semantic--brand--primary
   );
@@ -29,7 +30,7 @@ html,
 body,
 #__next,
 #root {
-  height: 100%;
+  min-height: 100vh;
 }
 
 body {
@@ -71,6 +72,8 @@ body {
 
 .content {
   padding: var(--c--globals--spacings--lg);
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .cunningham-theme--dark .MuiBreadcrumbs-separator {
@@ -93,27 +96,54 @@ body {
   color: red;
 }
 
-/* Styles for small screens */
 @media (max-width: 1024px) {
   .main {
     margin-left: 0;
   }
 }
 
-@media (max-width: 600px) /*and (max-width: 1024px) */ {
+@media (max-width: 600px) {
   :root {
-    --navbar-height: 80px;
+    --navbar-height: 60px; /* Make it even more compact on mobile */
+  }
+  .content {
+    padding: var(--c--globals--spacings--xs);
   }
 }
+.c__app { overflow: visible !important; overflow-x: visible !important; }
 
-@media (max-width: 535px) /*and (max-width: 1024px) */ {
-  :root {
-    --navbar-height: 125px;
-  }
+/* Video.js Poster Fix */
+.video-js .vjs-poster img {
+  object-fit: cover !important;
+  object-position: left center !important;
 }
 
-@media (max-width: 295px) /*and (max-width: 1024px) */ {
-  :root {
-    --navbar-height: 160px;
-  }
+/* Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--background-brand, #000);
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 100000;
+  transition: top 0.2s;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Skeleton Loader — animation réutilisable sur toute l'app */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.skeleton-block {
+  background-color: #e0e0e0;
+  animation: pulse 1.5s infinite;
 }

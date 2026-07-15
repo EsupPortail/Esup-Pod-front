@@ -19,6 +19,7 @@ import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import BackButton from "@/src/components/BackButton/BackButton";
 import styles from "./styles.module.css";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 
 export const breadcrumbLabel = "Ajouter une vidéo";
 
@@ -31,6 +32,7 @@ export default function AddVideo() {
   const router = useRouter();
   const { accessToken, refresh } = useAuth();
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
+  const { config } = useAppConfig();
 
   const {
     register,
@@ -135,7 +137,7 @@ export default function AddVideo() {
           <Alert
             additional={
               <>
-                La taille du fichier doit être <b>inférieure à 2 Go</b>.
+                La taille du fichier doit être <b>inférieure à {config?.encoding?.max_upload_size_gb ?? 2} Go</b>.
                 <br />
                 Le temps d’envoi dépend de la taille de votre fichier et de
                 votre vitesse de téléchargement.
@@ -163,15 +165,13 @@ export default function AddVideo() {
                 clearErrors("videoFile");
               }
             }}
-            accept=".3gp, .avi, .divx, .flv, .m2p, .m4v, .mkv,
-          .mov, .mp4, .mpeg, .mpg, .mts, .wmv, .mp3,
-          .ogg, .wav, .wma, .webm, .ts"
+            accept={config?.encoding?.allowed_extensions?.map(ext => `.${ext}`).join(", ") || ".mp4, .avi, .mkv"}
             aria-label="Sélectionner un fichier audio ou vidéo"
             aria-describedby="videoFile-error"
             aria-required="true"
             text={
               errors.videoFile?.message ??
-              "Les formats suivants sont supportés : 3gp, avi, divx, flv, m2p, m4v, mkv, mov, mp4, mpeg, mpg, mts, wmv, mp3, ogg, wav, wma, webm, ts."
+              `Les formats suivants sont supportés : ${config?.encoding?.allowed_extensions?.join(", ") || "mp4, avi, mkv"}.`
             }
           />
           {/* Message d’erreur lié au FileUploader */}

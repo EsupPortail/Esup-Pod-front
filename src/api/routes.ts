@@ -25,6 +25,7 @@ export const getRoutes = () => {
       delete: (slug: string) => url + `api/videos/${slug}/`,
       stream: (slug: string) => url + `api/videos/${slug}/stream/`,
       unlock: (slug: string) => url + `api/videos/${slug}/unlock/`,
+      registerView: (slug: string) => url + `api/videos/${slug}/register_view/`,
     },
     user: {
       list: url + "api/auth/users/",

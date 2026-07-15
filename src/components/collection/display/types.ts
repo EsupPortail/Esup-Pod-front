@@ -14,6 +14,10 @@ export interface CollectionDisplayProps {
   channelSlug?: string;
   basePath?: string;
   currentUserId?: number;
+  collectionsCount?: number;
+  page?: number;
+  onPageChange?: (page: number) => void;
+  loading?: boolean;
 }
 
 export interface CollectionViewToggleProps {

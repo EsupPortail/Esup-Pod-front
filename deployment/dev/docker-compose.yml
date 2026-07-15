@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build:
+      context: ../../
+      dockerfile: deployment/dev/Dockerfile
+    container_name: pod-frontend
+    ports:
+      - "${PORT:-3000}:3000"
+    env_file:
+      - ../../.env
+    environment:
+      NEXT_PUBLIC_BACK_URL: ${NEXT_PUBLIC_BACK_URL:-http://localhost:8000/api/v1/}
+    restart: unless-stopped

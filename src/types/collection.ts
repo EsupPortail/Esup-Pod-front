@@ -15,6 +15,8 @@ export interface Channel {
   created_at: string;
   updated_at: string;
   default_order: CollectionOrder;
+  videos_count?: number;
+  themes_count?: number;
 }
 
 export interface ThemeItem {
@@ -35,6 +37,7 @@ export interface Theme {
   updated_at: string;
   children: Theme[] | null;
   items: ThemeItem[] | null;
+  videos_count?: number;
   default_order: CollectionOrder;
 }
 
@@ -57,6 +60,7 @@ export interface Playlist {
   created_at: string;
   updated_at: string;
   items: PlaylistItem[] | null;
+  videos_count?: number;
   default_order: CollectionOrder;
 }
 

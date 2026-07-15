@@ -14,8 +14,12 @@ export function useAppConfig() {
       try {
         const data = await requestJson<AppConfig>(getRoutes().conf.get);
         setConfig(data);
-      } catch (err: any) {
-        setError(err?.message ?? "Erreur de chargement de la configuration.");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Erreur de chargement de la configuration.");
+        }
       } finally {
         setLoading(false);
       }

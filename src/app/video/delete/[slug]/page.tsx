@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Paper from "@mui/material/Paper";
-import { useVideos } from "@/src/hooks/useVideos";
+import { useVideo, useDeleteVideo } from "@/src/hooks/useVideos";
 import { useParams } from "next/navigation";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { Alert, Button, VariantType } from "@openfun/cunningham-react";
@@ -20,26 +20,19 @@ export default function DeleteVideoPage() {
     ? params.slug[0]
     : params.slug;
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
-  const { video, useVideoLoading, useVideoError, fetchOne, deleteVideo } =
-    useVideos();
-  const { isOwnerOrCoOwner } = useVideoPermissions(video);
-
-  useEffect(() => {
-    if (!getVideoSlug) return;
-    fetchOne(getVideoSlug);
-  }, [getVideoSlug, fetchOne]);
-
-  useEffect(() => {
-    if (!video) return;
-  });
+  const { data: video, isLoading: useVideoLoading, error } = useVideo(getVideoSlug ?? "");
+  const useVideoError = error?.message ?? null;
+  const { mutateAsync: deleteVideo } = useDeleteVideo();
+  const { isOwnerOrCoOwner } = useVideoPermissions(video ?? null);
 
   const handleDelete = async () => {
     if (!getVideoSlug) return;
-    const success = await deleteVideo(getVideoSlug);
-
-    if (success) {
+    try {
+      await deleteVideo(getVideoSlug);
       router.push("/video");
       router.refresh();
+    } catch (err) {
+      console.error(err);
     }
   };
 

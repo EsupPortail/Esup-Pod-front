@@ -1,6 +1,11 @@
 .breadcrumb {
-  background-color: var(--c--contextuals--background--surface--tertiary);
-  padding-left: var(--c--globals--spacings--md);
+  background-color: var(--c--globals--colors--gray-000); /* Solid white to match nav */
+  padding: 6px var(--c--globals--spacings--md); /* Thinner padding */
+  border-bottom: 1px solid var(--c--globals--colors--gray-200); /* Thin border */
+  position: -webkit-sticky;
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: 898;
 }
 
 .breadcrumbLink {

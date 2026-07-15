@@ -10,7 +10,6 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import styles from "./styles.module.css";
-import { useVideos } from "@/src/hooks/useVideos";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 import VideoDisplay from "@/src/components/video/display/VideoDisplay";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
@@ -31,32 +30,6 @@ export default function Channel() {
   const mounted = useMounted();
   const didSetInitialTab = useRef(false);
 
-  // Thèmes filtrés pour la chaîne de la page
-  const { filters, setFilters, themes, users, channels, error, loading } =
-    useCollectionListFilters({ mode: "themes" });
-
-  // Thèmes bruts pour la chaîne de la page
-  const { fetchAll: fetchAllThemes } = useTheme();
-  const {
-    filters: videoFilters,
-    setFilters: videoSetFilters,
-    videos,
-    users: videoUsers,
-    types: videoTypes,
-    disciplines: videoDisciplines,
-    tags: videoTags,
-    channels: videoChannels,
-    useVideoError,
-    useVideoLoading,
-  } = useVideoListFilters({ mode: "all" });
-
-  const [baseChannelThemes, setBaseChannelThemes] = useState<typeof themes>([]);
-  const [hasLoadedBaseThemes, setHasLoadedBaseThemes] = useState(false);
-
-  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-
   const params = useParams();
   const channelSlug = Array.isArray(params.channelSlug)
     ? params.channelSlug[0]
@@ -69,7 +42,32 @@ export default function Channel() {
     useChannelLoading,
   } = useChannel();
 
-  const { fetchAll: fetchVideos } = useVideos();
+  // Thèmes filtrés pour la chaîne de la page
+  const { filters, setFilters, themes, themesCount, users, channels, error, loading } =
+    useCollectionListFilters({ mode: "themes", enabled: !!channel?.id });
+
+  // Thèmes bruts pour la chaîne de la page
+  const { fetchAll: fetchAllThemes } = useTheme();
+  const {
+    filters: videoFilters,
+    setFilters: videoSetFilters,
+    videos,
+    videosCount,
+    users: videoUsers,
+    types: videoTypes,
+    disciplines: videoDisciplines,
+    tags: videoTags,
+    channels: videoChannels,
+    useVideoError,
+    useVideoLoading,
+  } = useVideoListFilters({ mode: "all", enabled: !!channel?.id });
+
+  const [baseChannelThemes, setBaseChannelThemes] = useState<typeof themes>([]);
+  const [hasLoadedBaseThemes, setHasLoadedBaseThemes] = useState(false);
+
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   const { user } = useAuth();
 
@@ -80,7 +78,7 @@ export default function Channel() {
           video.channel === channel?.id &&
           (!video.is_auth_required || !!user) &&
           video.status !== "DR" &&
-          video.encoding_status === "DO",
+          (video.encoding_status === "DO" || !!video.has_video_file),
       ),
     [videos, channel?.id, user],
   );
@@ -136,22 +134,23 @@ export default function Channel() {
   };
 
   useEffect(() => {
-    if (!channel?.default_order) return;
+    if (!channel?.id) return;
     setFilters((prev) => {
-      if (prev.ordering) return prev;
-      return { ...prev, ordering: channel.default_order };
+      const newOrdering = prev.ordering || channel.default_order;
+      if (prev.channel === channel.id && prev.ordering === newOrdering) return prev;
+      return { ...prev, channel: channel.id, ordering: newOrdering };
     });
-  }, [channel?.default_order, setFilters]);
+    videoSetFilters((prev) => {
+      const newOrdering = prev.ordering || channel.default_order;
+      if (prev.channel === channel.id && prev.ordering === newOrdering) return prev;
+      return { ...prev, channel: channel.id, ordering: newOrdering };
+    });
+  }, [channel?.id, channel?.default_order, setFilters, videoSetFilters]);
 
   useEffect(() => {
     if (!channelSlug) return;
     fetchChannel(channelSlug);
   }, [fetchChannel, channelSlug]);
-
-  useEffect(() => {
-    if (!channel?.id) return;
-    fetchVideos({ channel: channel.id });
-  }, [channel?.id, fetchVideos]);
 
   useEffect(() => {
     if (didSetInitialTab.current) return;
@@ -179,7 +178,7 @@ export default function Channel() {
       ) : (
         <>
           <img
-            src={channel.banner || "/default_channel_banner.png"}
+            src={channel.banner || channel.logo || "/default_channel_banner.png"}
             alt={`${channel.title} banner`}
             style={{
               width: "100%",
@@ -217,7 +216,7 @@ export default function Channel() {
                 >
                   <Tab
                     disabled={visibleAndPublicVideos.length === 0}
-                    label={`Videos non classées (${visibleAndPublicVideos.length})`}
+                    label={`Videos non classées (${videosCount})`}
                     value="unclassified"
                   />
 
@@ -255,19 +254,37 @@ export default function Channel() {
                           tags={videoTags}
                           channels={videoChannels}
                           showUserFilter={!!user}
-                          onChange={videoSetFilters}
+                          onChange={(newFilters) => {
+                            if (
+                              newFilters.search !== videoFilters.search ||
+                              newFilters.channel !== videoFilters.channel ||
+                              newFilters.ordering !== videoFilters.ordering ||
+                              newFilters.ownerUsernames !== videoFilters.ownerUsernames ||
+                              newFilters.typeSlugs !== videoFilters.typeSlugs ||
+                              newFilters.disciplineIds !== videoFilters.disciplineIds ||
+                              newFilters.cursus !== videoFilters.cursus ||
+                              newFilters.tagSlugs !== videoFilters.tagSlugs
+                            ) {
+                              newFilters.page = 1;
+                            }
+                            videoSetFilters(newFilters);
+                          }}
                         />
 
-                        {useVideoLoading ? (
-                          <CenteredLoader />
-                        ) : visibleAndPublicVideos.length === 0 ? (
+                        {visibleAndPublicVideos.length === 0 && !useVideoLoading ? (
                           <Alert type={VariantType.INFO}>
                             {hasActiveVideoFilters
                               ? "Aucune vidéo ne correspond à vos filtres."
                               : "Aucune vidéo liée à cette chaîne."}
                           </Alert>
                         ) : (
-                          <VideoDisplay videos={visibleAndPublicVideos} />
+                          <VideoDisplay
+                            videos={visibleAndPublicVideos}
+                            videosCount={videosCount}
+                            page={videoFilters.page}
+                            onPageChange={(page) => videoSetFilters({ ...videoFilters, page })}
+                            loading={useVideoLoading}
+                          />
                         )}
                       </div>
                     )}
@@ -297,16 +314,26 @@ export default function Channel() {
                               : channels
                           }
                           showUserFilter={!!user}
-                          onChange={setFilters}
+                          onChange={(newFilters) => {
+                            if (
+                              newFilters.search !== filters.search ||
+                              newFilters.channel !== filters.channel ||
+                              newFilters.ordering !== filters.ordering ||
+                              newFilters.ownerUsernames !== filters.ownerUsernames ||
+                              newFilters.createdAtGte !== filters.createdAtGte ||
+                              newFilters.createdAtLte !== filters.createdAtLte
+                            ) {
+                              newFilters.page = 1;
+                            }
+                            setFilters(newFilters);
+                          }}
                         />
 
-                        {!hasLoadedBaseThemes || loading ? (
-                          <CenteredLoader />
-                        ) : channelAllThemes.length === 0 ? (
+                        {channelAllThemes.length === 0 && !loading && hasLoadedBaseThemes ? (
                           <Alert type={VariantType.INFO}>
                             Aucun thème lié à cette chaine.
                           </Alert>
-                        ) : channelThemes.length === 0 ? (
+                        ) : channelThemes.length === 0 && !loading && hasLoadedBaseThemes ? (
                           <Alert type={VariantType.INFO}>
                             Aucun thème ne correspond à vos critères de
                             recherche.
@@ -314,9 +341,13 @@ export default function Channel() {
                         ) : (
                           <CollectionDisplay
                             themes={channelThemes}
+                            collectionsCount={themesCount}
+                            page={filters.page}
+                            onPageChange={(page) => setFilters({ ...filters, page })}
                             defaultView="cards"
                             storageKey="channel-theme-view"
                             channelSlug={channelSlug}
+                            loading={loading || !hasLoadedBaseThemes}
                           />
                         )}
                       </div>

@@ -14,8 +14,12 @@ export function useAppInfo() {
       try {
         const data = await requestJson<AppInfo>(getRoutes().info.get);
         setInfo(data);
-      } catch (err: any) {
-        setError(err?.message ?? "Erreur de chargement des informations.");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Erreur de chargement des informations.");
+        }
       } finally {
         setLoading(false);
       }

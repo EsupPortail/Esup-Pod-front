@@ -1,0 +1,61 @@
+/* POD Custom Themes */
+/* 
+  To apply a theme, add the class to the body or a root wrapper (e.g., <body className="theme-forest">)
+  Or, administrators can override --pod-theme-primary and --pod-theme-hover in their own instance CSS.
+*/
+
+:root, .theme-default {
+  /* Default is Cunningham's blue */
+}
+
+.theme-forest {
+  --c--contextuals--background--semantic--brand--primary: #2e7d32;
+  --c--contextuals--background--semantic--brand--primary-hover: #1b5e20;
+  --c--contextuals--background--semantic--brand--secondary: #e8f5e9;
+  --c--contextuals--background--semantic--brand--tertiary: #c8e6c9;
+  --c--contextuals--content--semantic--brand--primary: #1b5e20;
+  
+  --c--components--button--primary--background: #2e7d32;
+  --c--components--button--primary--background-hover: #1b5e20;
+  --c--components--button--bordered--border: #2e7d32;
+  --c--components--button--bordered--content: #2e7d32;
+}
+
+.theme-sunset {
+  --c--contextuals--background--semantic--brand--primary: #e65100;
+  --c--contextuals--background--semantic--brand--primary-hover: #bf360c;
+  --c--contextuals--background--semantic--brand--secondary: #fff3e0;
+  --c--contextuals--background--semantic--brand--tertiary: #ffe0b2;
+  --c--contextuals--content--semantic--brand--primary: #bf360c;
+  
+  --c--components--button--primary--background: #e65100;
+  --c--components--button--primary--background-hover: #bf360c;
+  --c--components--button--bordered--border: #e65100;
+  --c--components--button--bordered--content: #e65100;
+}
+
+.theme-monochrome {
+  --c--contextuals--background--semantic--brand--primary: #212121;
+  --c--contextuals--background--semantic--brand--primary-hover: #000000;
+  --c--contextuals--background--semantic--brand--secondary: #f5f5f5;
+  --c--contextuals--background--semantic--brand--tertiary: #eeeeee;
+  --c--contextuals--content--semantic--brand--primary: #000000;
+  
+  --c--components--button--primary--background: #212121;
+  --c--components--button--primary--background-hover: #000000;
+  --c--components--button--bordered--border: #212121;
+  --c--components--button--bordered--content: #212121;
+}
+
+.theme-amethyst {
+  --c--contextuals--background--semantic--brand--primary: #6a1b9a;
+  --c--contextuals--background--semantic--brand--primary-hover: #4a148c;
+  --c--contextuals--background--semantic--brand--secondary: #f3e5f5;
+  --c--contextuals--background--semantic--brand--tertiary: #e1bee7;
+  --c--contextuals--content--semantic--brand--primary: #4a148c;
+  
+  --c--components--button--primary--background: #6a1b9a;
+  --c--components--button--primary--background-hover: #4a148c;
+  --c--components--button--bordered--border: #6a1b9a;
+  --c--components--button--bordered--content: #6a1b9a;
+}

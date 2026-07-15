@@ -17,7 +17,7 @@ export const breadcrumbLabel = "Mes listes de lecture";
 export default function MyPlaylistsPage() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { user } = useAuth();
-  const { filters, setFilters, playlists, users, error, loading } =
+  const { filters, setFilters, playlists, playlistsCount, users, error, loading } =
     useCollectionListFilters({ mode: "playlists" });
   const isInitialLoading = loading && playlists.length === 0;
 
@@ -72,7 +72,16 @@ export default function MyPlaylistsPage() {
           value={filters}
           users={user ? users : []}
           showUserFilter={false}
-          onChange={setFilters}
+          onChange={(newFilters) => {
+          if (
+            newFilters.search !== filters.search ||
+            newFilters.createdAtGte !== filters.createdAtGte ||
+            newFilters.createdAtLte !== filters.createdAtLte
+          ) {
+            newFilters.page = 1;
+          }
+          setFilters(newFilters);
+        }}
         />
 
         {loading && playlists.length > 0 && <CenteredLoader />}
@@ -90,6 +99,9 @@ export default function MyPlaylistsPage() {
         ) : (
           <CollectionDisplay
             playlists={myPlaylists}
+            collectionsCount={playlistsCount}
+            page={filters.page}
+            onPageChange={(page) => setFilters({ ...filters, page })}
             defaultView="cards"
             storageKey="my-playlist-view"
             basePath="/playlist"

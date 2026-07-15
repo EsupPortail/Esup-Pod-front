@@ -2,7 +2,7 @@
 
 import { useForm, useWatch, FieldErrors } from "react-hook-form";
 import { Alert, VariantType } from "@openfun/cunningham-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import BackButton from "@/src/components/BackButton/BackButton";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
@@ -45,6 +45,7 @@ export default function AddPlaylist() {
 
   const [error, setError] = useState<string | null>(null);
   const [formError, setformError] = useState<string | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
   const isMobile = useMediaQuery("(max-width: 932px)");
 
   const {
@@ -65,22 +66,24 @@ export default function AddPlaylist() {
 
   const initialValuesRef = useRef<AddPlaylistFormValues | null>(null);
   const watchedValues = useWatch({ control });
-  const isPublic = useWatch({ control, name: "is_public" });
   const isPasswordRequired = useWatch({
     control,
     name: "is_password_required",
   });
 
-  const hasUnsavedChanges = useMemo(() => {
+  // Initialise la ref APRÈS le premier rendu (interdit pendant le render)
+  useEffect(() => {
     if (!initialValuesRef.current) {
-      // première initialisation
       initialValuesRef.current = watchedValues as AddPlaylistFormValues;
-      return false;
+    } else {
+      const changed =
+        JSON.stringify(initialValuesRef.current) !== JSON.stringify(watchedValues);
+      setIsDirty(changed);
     }
-    return (
-      JSON.stringify(initialValuesRef.current) !== JSON.stringify(watchedValues)
-    );
   }, [watchedValues]);
+
+  // isDirty est disponible pour une future confirmation de navigation non sauvegardée
+  void isDirty;
 
   const onSubmit = async (data: AddPlaylistFormValues) => {
     setError(null);

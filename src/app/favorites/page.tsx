@@ -251,7 +251,21 @@ export default function FavoritesPlaylistPage() {
               tags={tags}
               channels={channels}
               showUserFilter={!!user}
-              onChange={setFilters}
+              onChange={(newFilters) => {
+                if (
+                  newFilters.search !== filters.search ||
+                  newFilters.channel !== filters.channel ||
+                  newFilters.ordering !== filters.ordering ||
+                  newFilters.ownerUsernames !== filters.ownerUsernames ||
+                  newFilters.typeSlugs !== filters.typeSlugs ||
+                  newFilters.disciplineIds !== filters.disciplineIds ||
+                  newFilters.cursus !== filters.cursus ||
+                  newFilters.tagSlugs !== filters.tagSlugs
+                ) {
+                  newFilters.page = 1;
+                }
+                setFilters(newFilters);
+              }}
             />
             {filteredFavoriteVideos.length === 0 ? (
               <Alert type={VariantType.INFO}>
@@ -262,6 +276,8 @@ export default function FavoritesPlaylistPage() {
             ) : (
               <VideosDisplay
                 videos={filteredFavoriteVideos}
+                page={filters.page}
+                onPageChange={(page) => setFilters({ ...filters, page })}
                 currentUserId={user?.id}
                 defaultView="cards"
                 storageKey="favorite-videos-view"

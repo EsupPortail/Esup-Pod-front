@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, FileUploader } from "@openfun/cunningham-react";
+import { Alert, Button, FileUploader, VariantType } from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
@@ -131,12 +131,12 @@ export default function UserProfilePicture() {
     <div>
       <h1>Changer mon image de profil</h1>
       {error && (
-        <Alert canClose type="error">
+        <Alert canClose type={VariantType.ERROR}>
           {error}
         </Alert>
       )}
       {success && (
-        <Alert canClose type="success">
+        <Alert canClose type={VariantType.SUCCESS}>
           {success}
         </Alert>
       )}
@@ -147,14 +147,14 @@ export default function UserProfilePicture() {
               <img src={previewUrl} alt="Apercu" width={160} height={160} />
             ) : user?.userpicture ? (
               <img
-                src={currentPictureUrl}
+                src={currentPictureUrl ?? undefined}
                 alt="Photo actuelle"
                 width={160}
                 height={160}
               />
             ) : (
               !isInitializing && (
-                <Alert type="info">
+                <Alert type={VariantType.INFO}>
                   Vous n'avez pas encore de photo de profil.
                 </Alert>
               )
@@ -171,7 +171,7 @@ export default function UserProfilePicture() {
             }}
             accept=".jpg, .jpeg, .png, .webp"
             text={
-              error ? error : <p>Formats supportés: jpg, jpeg, png, webp</p>
+              error ? error : "Formats supportés: jpg, jpeg, png, webp"
             }
           />
           <div></div>

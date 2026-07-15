@@ -101,58 +101,23 @@ export default function AuthProvider(props: AuthProviderProps) {
 
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
-  const [logoutUrl, setLogoutUrl] = useState<string>("/");
   const [isInitializing, setIsInitializing] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [authConfig, setAuthConfig] = useState<AuthConfig | null>(null);
   const [logoutInfo, setLogoutInfo] = useState<LogoutInfo | null>(null);
   const [isAuthDataLoading, setIsAuthDataLoading] = useState(false);
 
-  useEffect(() => {
-    setAuthConfig(
-      normalizeAuthConfig((config as Record<string, unknown>) ?? null),
-    );
-  }, [config]);
+  // Dérivation directe — pas besoin d'effect pour ça
+  const authConfig = useMemo(
+    () => normalizeAuthConfig((config as Record<string, unknown>) ?? null),
+    [config],
+  );
 
-  useEffect(() => {
-    setLogoutUrl(resolveLogoutUrl(authConfig, logoutInfo));
-  }, [authConfig, logoutInfo]);
+  const logoutUrl = useMemo(
+    () => resolveLogoutUrl(authConfig, logoutInfo),
+    [authConfig, logoutInfo],
+  );
 
-  useEffect(() => {
-    const init = async () => {
-      const storedAccess = localStorage.getItem(ACCESS_TOKEN_KEY);
-      const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-      setAccessToken(storedAccess);
-      setRefreshToken(storedRefresh);
 
-      let validAccess: string | null = storedAccess;
-
-      if (storedAccess) {
-        const accessTokenIsValid = await verify(storedAccess);
-        if (!accessTokenIsValid && storedRefresh) {
-          validAccess = await refresh(storedRefresh);
-          if (!validAccess) {
-            setIsInitializing(false);
-            return;
-          }
-        }
-      } else if (storedRefresh) {
-        validAccess = await refresh(storedRefresh);
-      }
-
-      if (validAccess) {
-        await loadAuthDataWithToken(validAccess, () => refresh(storedRefresh));
-      } else {
-        setUser(null);
-        setLogoutInfo(null);
-        setLogoutUrl("/");
-      }
-
-      setIsInitializing(false);
-    };
-
-    init();
-  }, []);
 
   const persistTokens = (token: string | null, refreshValue: string | null) => {
     setAccessToken(token);
@@ -176,7 +141,6 @@ export default function AuthProvider(props: AuthProviderProps) {
     persistTokens(null, null);
     setUser(null);
     setLogoutInfo(null);
-    setLogoutUrl("/");
   };
 
   /**
@@ -271,11 +235,9 @@ export default function AuthProvider(props: AuthProviderProps) {
       ]);
       setUser(userData);
       setLogoutInfo(logoutInfoData);
-      setLogoutUrl(resolveLogoutUrl(authConfig, logoutInfoData));
     } catch {
       setUser(null);
       setLogoutInfo(null);
-      setLogoutUrl("/");
     } finally {
       setIsAuthDataLoading(false);
     }
@@ -285,7 +247,6 @@ export default function AuthProvider(props: AuthProviderProps) {
     if (!accessToken) {
       setUser(null);
       setLogoutInfo(null);
-      setLogoutUrl("/");
       return;
     }
     await loadAuthDataWithToken(accessToken, refresh);
@@ -304,6 +265,42 @@ export default function AuthProvider(props: AuthProviderProps) {
     persistTokens(data.access, data.refresh);
     await loadAuthDataWithToken(data.access, () => refresh(data.refresh));
   };
+
+  useEffect(() => {
+    const init = async () => {
+      const storedAccess = localStorage.getItem(ACCESS_TOKEN_KEY);
+      const storedRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+      setAccessToken(storedAccess);
+      setRefreshToken(storedRefresh);
+
+      let validAccess: string | null = storedAccess;
+
+      if (storedAccess) {
+        const accessTokenIsValid = await verify(storedAccess);
+        if (!accessTokenIsValid && storedRefresh) {
+          validAccess = await refresh(storedRefresh);
+          if (!validAccess) {
+            setIsInitializing(false);
+            return;
+          }
+        }
+      } else if (storedRefresh) {
+        validAccess = await refresh(storedRefresh);
+      }
+
+      if (validAccess) {
+        await loadAuthDataWithToken(validAccess, () => refresh(storedRefresh));
+      } else {
+        setUser(null);
+        setLogoutInfo(null);
+      }
+
+      setIsInitializing(false);
+    };
+
+    init();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({

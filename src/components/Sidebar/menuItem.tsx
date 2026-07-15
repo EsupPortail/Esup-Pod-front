@@ -35,7 +35,9 @@ const MenuItem = (props: MenuItemProps) => {
   }
 
   useEffect(() => {
-    !sidebarOpen && setOpen(false);
+    if (!sidebarOpen) {
+      setOpen(false);
+    }
   }, [sidebarOpen]);
 
   const MenuItemRoot = (
