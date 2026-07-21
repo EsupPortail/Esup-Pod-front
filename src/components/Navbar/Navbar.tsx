@@ -169,6 +169,22 @@ export default function Navbar() {
   return (
     <div>
       <nav className={styles.navbar}>
+        {isMobile && isSearchOpen ? (
+          <div style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '8px' }}>
+            <IconButton
+              aria-label="Fermer la recherche"
+              onClick={() => setIsSearchOpen(false)}
+            >
+              <span className="material-icons" aria-hidden="true">
+                arrow_back
+              </span>
+            </IconButton>
+            <div style={{ flexGrow: 1 }}>
+              <SearchForm />
+            </div>
+          </div>
+        ) : (
+          <>
         {/* ------- Bouton d’ouverture/fermeture du menu principal ------- */}
         <div className={styles.navbar_item}>
           <button
@@ -185,10 +201,9 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* ------------------- Logo & titre ------------------- */}
         <div className="">
           <Link className={styles.navbar_logo} key="accueil-link" href="/">
-            <img className="pr-sm pl-sm" src={appLogo} alt="Accueil" />
+            <img className="pr-sm pl-sm" src={appLogo} alt="Logo Esup-Pod — Retour à l'accueil" />
             <strong>{appTitle}</strong>
           </Link>
         </div>
@@ -211,16 +226,6 @@ export default function Navbar() {
                 search
               </span>
             </IconButton>
-            <Dialog
-              fullWidth
-              maxWidth="sm"
-              open={isSearchOpen}
-              onClose={() => setIsSearchOpen(false)}
-            >
-              <div className={styles.navbar_search_dialog}>
-                <SearchForm />
-              </div>
-            </Dialog>
           </div>
         )}
 
@@ -265,6 +270,8 @@ export default function Navbar() {
         ) : !isInitializing ? (
           <LoginButton />
         ) : null}
+          </>
+        )}
       </nav>
     </div>
   );

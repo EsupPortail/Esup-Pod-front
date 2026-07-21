@@ -31,6 +31,7 @@ export interface Video {
   is_auth_required: boolean;
   thumbnail_url: string | null;
   has_password: boolean;
+  has_video_file?: boolean;
   subtitles: Subtitle[] | null;
   allow_downloading: boolean;
   disable_comment: boolean;
@@ -46,6 +47,8 @@ export interface Video {
   discipline_details: Discipline[] | null;
   type_id?: number | null;
   type_name: string | null;
+  views?: number | null;
+  documents?: VideoDocument[] | null;
 }
 
 // Objet Video pour le formulaire de creation et d'edition
@@ -103,4 +106,37 @@ export interface Type {
   slug: string;
   title: string;
   sites: Array<number> | null;
+}
+
+export interface VideoDocument {
+  id: number;
+  video: number;
+  title: string;
+  file: string;
+  is_private: boolean;
+  created_at: string;
+}
+
+export interface VideoStats {
+  video_slug: string;
+  total_views: number;
+  views_last_7_days: number;
+  views_last_30_days: number;
+  peak_day: string | null;
+  peak_count: number | null;
+  daily_breakdown: Array<{
+    date: string;
+    count: number;
+  }>;
+}
+
+export interface VideoAccessToken {
+  id: string;
+  video: number;
+  name: string;
+  description: string | null;
+  valid_until: string | null;
+  is_active: boolean;
+  created_at: string;
+  url: string;
 }

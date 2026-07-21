@@ -1,8 +1,8 @@
-.wrapper {
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1rem 0 1.5rem;
-  padding: 1rem;
+.filtersContent {
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12); /* Trait de séparation avec les vidéos */
+  margin-bottom: 1.5rem;
 }
 
 .filtersContentHeader {
@@ -50,27 +50,58 @@
 }
 
 .filterButton {
-  min-height: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  border-radius: 4px;
-  background-color: #fff;
+  min-height: 38px;
+  border: 1px solid rgba(0, 0, 0, 0.35) !important; /* Darker border for better visibility */
+  border-radius: 9999px !important;
+  background-color: #fff !important;
+  padding: 6px 16px !important;
+  transition: all 0.2s ease-in-out !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  text-transform: none !important;
+  cursor: pointer !important;
 }
 
 .filterButton:hover {
-  border-color: rgba(0, 0, 0, 0.87);
+  border-color: var(--c--globals--colors--brand--main) !important;
+  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 4%, transparent) !important;
+}
+
+.filterButton.active {
+  border-color: var(--c--globals--colors--brand--main) !important;
+  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 8%, transparent) !important;
 }
 
 .filterMenu {
   padding: 0.75rem;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.25) !important; /* Explicit darker border for menu */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .filterOptions {
-  max-height: 260px;
+  max-height: 280px;
   overflow-y: auto;
+  overflow-x: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 2px;
 }
 
 .filterOption {
-  margin-right: 0;
+  margin: 0 !important;
+  width: 100% !important;
+  padding: 8px 12px !important; /* Added more padding between elements */
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.filterOption:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
 .row .field {
@@ -107,48 +138,27 @@
 }
 
 @media (max-width: 600px) {
-  .searchField {
-    width: 100%;
-    min-width: 0;
-  }
-
   .row {
-    gap: 1rem;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
   }
-  .filtersContentHeader {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-    padding-top: var(--c--globals--spacings--md);
-  }
-
-  .filtersButtonRow {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
+  
+  .row::-webkit-scrollbar {
+    display: none;
   }
 
-  .searchRow,
-  .row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+  .filterItem {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
   }
 
-  .filterItem,
-  .row .field,
-  .row :global(.MuiAutocomplete-root),
-  .row :global(.MuiTextField-root) {
-    width: 100%;
-    min-width: 0;
-  }
   .filterButton {
-    width: 100%;
-  }
-
-  .searchRow .filterItem:first-child .filterButton {
-    border: 1px solid rgba(0, 0, 0, 0.23);
-    border-radius: 4px;
-    background-color: #fff;
+    width: auto !important;
   }
 }

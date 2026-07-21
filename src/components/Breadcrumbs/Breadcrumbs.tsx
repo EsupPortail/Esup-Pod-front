@@ -20,7 +20,7 @@ export default function Breadcrumb() {
   const playlistSlug = isPlaylistEditRoute ? pathNames[2] : "";
 
   return (
-    <div>
+    <>
       <Breadcrumbs className={styles.breadcrumb} aria-label="breadcrumb">
         <Link underline="hover" className={styles.breadcrumbLink} href="/">
           Accueil
@@ -54,6 +54,6 @@ export default function Breadcrumb() {
           );
         })}
       </Breadcrumbs>
-    </div>
+    </>
   );
 }

@@ -10,7 +10,6 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { useCollectionListFilters } from "@/src/hooks/useCollectionListFilters";
 import { useEffect, useMemo } from "react";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
-import { useVideos } from "@/src/hooks/useVideos";
 import { useMounted } from "@/src/hooks/useMounted";
 
 export const breadcrumbLabel = "Chaines";
@@ -18,22 +17,12 @@ export const breadcrumbLabel = "Chaines";
 export default function Channels() {
   const { user } = useAuth();
   const mounted = useMounted();
-  const { filters, setFilters, channels, themes, users, error, loading } =
+  const { filters, setFilters, channels, channelsCount, themes, users, error, loading } =
     useCollectionListFilters({ mode: "channels" });
-
-  const { videos, fetchAll: fetchVideos } = useVideos();
 
   const publicChannels = useMemo(() => {
     return channels.filter((channel) => channel.is_public);
   }, [channels]);
-
-  const publicChannelVideos = useMemo(
-    () =>
-      videos.filter(
-        (video) => video.status === "PU" && video.encoding_status === "DO",
-      ),
-    [videos],
-  );
 
   const hasActiveFilters = useMemo(() => {
     const base: CollectionFiltersValue = filters;
@@ -45,11 +34,6 @@ export default function Channels() {
       base.createdAtLte !== ""
     );
   }, [filters]);
-
-  useEffect(() => {
-    if (!mounted) return;
-    fetchVideos();
-  }, [fetchVideos, mounted]);
 
   if (!mounted) {
     return <CenteredLoader />;
@@ -71,12 +55,20 @@ export default function Channels() {
         value={filters}
         users={user ? users : []}
         showUserFilter={!!user}
-        onChange={setFilters}
+        onChange={(newFilters) => {
+          if (
+            newFilters.search !== filters.search ||
+            newFilters.ownerUsernames !== filters.ownerUsernames ||
+            newFilters.createdAtGte !== filters.createdAtGte ||
+            newFilters.createdAtLte !== filters.createdAtLte
+          ) {
+            newFilters.page = 1;
+          }
+          setFilters(newFilters);
+        }}
       />
 
-      {loading && channels.length === 0 ? (
-        <CenteredLoader />
-      ) : publicChannels.length === 0 ? (
+      {publicChannels.length === 0 && !loading ? (
         <Alert>
           {hasActiveFilters
             ? "Aucune chaîne ne correspond à vos filtres."
@@ -86,9 +78,12 @@ export default function Channels() {
         <CollectionDisplay
           channels={publicChannels}
           themes={themes}
-          videos={publicChannelVideos}
+          collectionsCount={channelsCount}
+          page={filters.page}
+          onPageChange={(page) => setFilters({ ...filters, page })}
           defaultView="cards"
           storageKey="all-channels-view"
+          loading={loading}
         />
       )}
     </div>

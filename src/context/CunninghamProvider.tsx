@@ -29,9 +29,8 @@ export default function CunninghamStyleProvider({
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("pod_theme");
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    // Initialise le thème depuis le localStorage en une seule opération
+    setTheme(savedTheme ?? "default");
     setIsThemeSelected(true);
   }, []);
 

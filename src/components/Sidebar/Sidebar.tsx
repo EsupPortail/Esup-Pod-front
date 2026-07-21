@@ -2,6 +2,7 @@
 
 import { useSidebar } from "../../context/SidebarProvider";
 import { useAuth } from "@/src/context/AuthProvider";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import styles from "./styles.module.css";
 import Divider from "@mui/material/Divider";
 import MenuItem from "./menuItem";
@@ -21,34 +22,37 @@ const SideBar = () => {
   const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const { config } = useAppConfig();
 
   /* ----------------------------- *
    *  Menus – données statiques
    * -------------------------------- */
+  const publicVideoItems = [
+    { name: "Toutes les vidéos", link: "/video" },
+  ];
+  if (config?.collection?.use_channels !== false) {
+    publicVideoItems.push({ name: "Chaines", link: "/channel" });
+  }
+  if (config?.collection?.use_playlists !== false) {
+    publicVideoItems.push({ name: "Listes de lecture", link: "/playlist" });
+  }
+
   const menuPrincipalItems = [
     {
       name: "Consulter les vidéos",
       Icon: SlideshowIcon,
       link: "",
-      items: [
-        { name: "Toutes les vidéos", link: "/video" },
-        { name: "Chaines", link: "/channel" },
-        { name: "Listes de lecture", link: "/playlist" },
-        { name: "Listes de lecture promues", link: "/" },
-      ],
-    },
-    {
-      name: "Diffusion en direct",
-      Icon: LiveTvIcon,
-      link: "",
-      items: [
-        { name: "Voir les directs", link: "/" },
-        { name: "Programmer un direct BBB", link: "/" },
-        { name: "Mes sessions BBB", link: "/" },
-        { name: "Revendiquer un enregistrement", link: "/" },
-      ],
+      items: publicVideoItems,
     },
   ];
+
+  const mySpaceItems = [];
+  if (config?.collection?.use_favorites !== false) {
+    mySpaceItems.push({ name: "Mes vidéos favorites", link: "/favorites" });
+  }
+  if (config?.collection?.use_playlists !== false) {
+    mySpaceItems.push({ name: "Mes listes de lecture", link: "/playlist/me" });
+  }
 
   const menuPodItems = [
     { name: "Mon tableau de bord", Icon: DashboardRounded, link: "/dashboard" },
@@ -58,22 +62,18 @@ const SideBar = () => {
       link: "",
       items: [
         { name: "Ajouter une vidéo", link: "/video/add" },
-        { name: "Enregistrer une vidéo", link: "/" },
-        { name: "Importer une vidéo externe", link: "/" },
       ],
     },
-    {
+  ];
+
+  if (mySpaceItems.length > 0) {
+    menuPodItems.push({
       name: "Mon espace",
       Icon: AccountBoxIcon,
       link: "",
-      items: [
-        { name: "Mes vidéos favorites", link: "/favorites" },
-        { name: "Mes listes de lecture", link: "/playlist/me" },
-        { name: "Mes habillages", link: "/" },
-      ],
-    },
-    { name: "Mes réunions", Icon: GroupsIcon, link: "" },
-  ];
+      items: mySpaceItems,
+    });
+  }
 
   return (
     <nav
@@ -83,8 +83,8 @@ const SideBar = () => {
       className={`${styles.sidebar} ${
         sidebarOpen ? styles.open : styles.closed
       }`}
-      onMouseEnter={isMobile ? undefined : handleViewSidebar}
-      onMouseLeave={isMobile ? undefined : handleViewSidebar}
+      onMouseEnter={isMobile ? undefined : () => handleViewSidebar(true)}
+      onMouseLeave={isMobile ? undefined : () => handleViewSidebar(false)}
     >
       {/* ----- Bouton de fermeture (mobile) ----- */}
       {isMobile && (
@@ -98,71 +98,54 @@ const SideBar = () => {
       )}
 
       <div className={styles.menu}>
-        <h3
-          id="sidebar-title"
-          className={styles.menu_title}
-          style={{
-            color: sidebarOpen
-              ? "var(--text-color-brand)"
-              : "var(--background)",
-          }}
-        >
-          Menu principal
-        </h3>
-
-        {/* ------------------------------------------------------ *
-         *  3️⃣ Liste principale – chaque item géré par MenuItem *
-         * ------------------------------------------------------ */}
-        <List component="nav" disablePadding>
-          {menuPrincipalItems.map((item, index) => (
-            <MenuItem {...item} key={index} />
-          ))}
-        </List>
-      </div>
-
-      {/* ====================================================== *
-       *  Partie « Mon menu » (visible quand l’utilisateur est *
-       *  authentifié)                                           *
-       * ====================================================== */}
-      {accessToken && (
-        <div className={styles.menu}>
-          <Divider />
-          <h3
-            id="sidebar-title-user"
-            className={styles.menu_title}
-            style={{
-              color: sidebarOpen
-                ? "var(--text-color-brand)"
-                : "var(--background)",
-            }}
-          >
-            Mon menu
-          </h3>
-          {user && (
+        {accessToken && user ? (
+          <>
             <Chip
               label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
               sx={{
                 backgroundColor: sidebarOpen
                   ? "var(--background-brand-secondary)"
-                  : "var(--background)",
+                  : "var(--c--globals--colors--gray-000)",
                 color: sidebarOpen
                   ? "var(--background-brand)"
-                  : "var(--background)",
+                  : "var(--c--globals--colors--gray-000)",
                 marginLeft: "14px",
+                marginTop: "16px",
                 fontSize: "var(--c--globals--font--sizes--md)",
                 fontWeight: "var(--c--globals--font--weights--bold)",
                 marginBottom: "var(--c--globals--spacings--xs)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             />
-          )}
-
-          <List component="nav" disablePadding>
-            {menuPodItems.map((item, index) => (
-              <MenuItem {...item} key={index} />
-            ))}
-          </List>
-        </div>
-      )}
+            <List component="nav" disablePadding sx={{ mt: 2 }}>
+              {[...menuPodItems, ...menuPrincipalItems].map((item, index) => (
+                <MenuItem {...item} key={index} />
+              ))}
+            </List>
+          </>
+        ) : (
+          <>
+            <h3
+              id="sidebar-title"
+              className={styles.menu_title}
+              style={{
+                color: sidebarOpen
+                  ? "var(--text-color-brand)"
+                  : "var(--c--globals--colors--gray-000)",
+              }}
+            >
+              Menu principal
+            </h3>
+            <List component="nav" disablePadding>
+              {menuPrincipalItems.map((item, index) => (
+                <MenuItem {...item} key={index} />
+              ))}
+            </List>
+          </>
+        )}
+      </div>
     </nav>
   );
 };

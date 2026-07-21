@@ -1,94 +1,64 @@
-# POD V5 - Web Interface
+# Esup-Pod V5 — Frontend
 
-Web interface for the POD V5 (ESUP) project.
+[![Licence LGPL 3.0](https://img.shields.io/github/license/EsupPortail/Esup-Pod-front)](https://github.com/EsupPortail/Esup-Pod-front/blob/dev/LICENSE)
+[![Testing Status](https://github.com/EsupPortail/Esup-Pod-front/actions/workflows/ci.yml/badge.svg)](https://github.com/EsupPortail/Esup-Pod-front/actions)
+![Release version](https://img.shields.io/github/v/release/EsupPortail/Esup-Pod-front)
+![Repository size](https://img.shields.io/github/repo-size/EsupPortail/Esup-Pod-front)
+![Open issues](https://img.shields.io/github/issues-raw/EsupPortail/Esup-Pod-front)
+![last commit push](https://img.shields.io/github/last-commit/EsupPortail/Esup-Pod-front)
+[![Developer V5](https://img.shields.io/badge/developer--v5-Giorgio_UTZERI-blue)](https://www.linkedin.com/in/giorgio-utzeri-504b7b25a/)
+[![Developer V5](https://img.shields.io/badge/developer--v5-Benjamin_SERE-blue)](https://www.linkedin.com/in/benjamin-sere-8578b2333/)
 
-## Table of Contents
+## [FR]
 
-- Overview
-- Prerequisites
-- Installation
-- Project Structure
-- Configuration
-- CSS Customization
-- Run (pre-production)
-- Build (production)
-- Environment Variables
-- API
+### Interface web pour la gestion de fichiers vidéo
 
-## Overview
+Créé en 2014, le projet Pod a connu de nombreux changements. Initié à l’[Université de Lille](https://www.univ-lille.fr/), il est piloté par le consortium [Esup Portail](https://www.esup-portail.org/).
 
-POD V5 is a web interface built with Next.js.
-It connects to a POD backend for authentication, data retrieval, and video encoding...
+**Développement V5 :** Cette nouvelle version a été intégralement développée par **Giorgio UTZERI** et **Benjamin SERE** (Université de Lille).
 
-## Prerequisites
+**Esup-Pod V5 Front** est l'interface utilisateur web (React / Next.js) de la plateforme de gestion vidéo Pod.
+Conçue pour l’Enseignement Supérieur et la Recherche, elle offre une expérience utilisateur moderne pour consulter, uploader, éditer et partager des vidéos.
 
-- Node.js >= 18
-- npm or yarn
+> [!NOTE]
+> Ce dépôt contient le frontend **V5 (React/Next.js)**.
+> Retrouvez la documentation complète ici : [ESUP-POD V5 Front Documentation](./docs/README.md).
+> Le backend se trouve sur le dépôt `Esup-Pod` (Django).
 
-## Installation
+## [EN]
 
-```bash
-npm install
-# or
-yarn
-```
+**Esup-Pod V5 Front** is the web user interface (React / Next.js) for the Pod video management platform.
 
-## Project Structure
+Ideally suited for Higher Education and Research institutions, it provides a modern UI for browsing, uploading, editing, and sharing videos.
 
-- `src/` : source code
-- `src/api/` : API calls and routes
-- `src/components/` : UI components
-- `src/context/` : providers
-- `public/` : public assets (logos, images)
-- `env.example` : example environment variables
+> [!NOTE]
+> This repository contains the **V5 (React/Next.js)** frontend.
+> Find the full documentation here: [ESUP-POD V5 Front Documentation](./docs/README.md).
+> The backend repository is `Esup-Pod` (Django).
 
-## Configuration
+## Quick Start
 
-Create a `.env` file from `env.example`:
+Pour les développeurs, le projet utilise `yarn` (v4+).
 
 ```bash
-cp env.example .env
+yarn install       # Install dependencies
+yarn build-theme   # Build Cunningham CSS tokens
+yarn dev           # Start the development server
+yarn test          # Run Vitest test suite
+yarn typecheck     # Check TypeScript typings
+yarn lint          # Run ESLint
 ```
 
-Then adjust the variables if needed.
+L'application sera disponible sur `http://localhost:3000`.
 
-## CSS Customization
+Pour plus de détails :
 
-The interface uses the [Cunningham](https://github.com/suitenumerique/cunningham) design system.
-To customize design tokens, edit `cunningham.ts` and run:
+* [Guide de développement / Architecture](./docs/architecture.md)
 
-```bash
-npm run build-theme
-```
+### Technical documentation
 
-## Run (pre-production)
+* The documentation (to install, customize, etc…) is on the
+  [ESUP Wiki](https://www.esup-portail.org/wiki/display/ES/esup-pod "Documentation")
 
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-The application will be available at `http://localhost:3000`.
-
-## Build (production)
-
-```bash
-npm run build
-npm start
-```
-
-## Environment Variables
-
-Extract from `env.example`:
-
-```env
-NEXT_PUBLIC_APP_TITLE=Esup.POD
-NEXT_PUBLIC_APP_LOGO=/logoEsup.svg
-NEXT_PUBLIC_BACK_URL=http://pod.localhost:8000/
-```
-
-## API
-
-- Base URL configurable via `NEXT_PUBLIC_BACK_URL`.
-- Routes centralized in `src/api/routes.ts`.
+| [Université de Lille](https://www.univ-lille.fr/) | [Esup Portail](https://www.esup-portail.org/) | Ministère de lʼEnseignement supérieur et de la Recherche |
+| :---: | :---: | :---: |

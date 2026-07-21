@@ -1,33 +1,24 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { MouseEvent } from "react";
+import { useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Checkbox from "@mui/material/Checkbox";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Divider from "@mui/material/Divider";
-import Fade from "@mui/material/Fade";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import InputAdornment from "@mui/material/InputAdornment";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Paper from "@mui/material/Paper";
-import Popper from "@mui/material/Popper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import SearchIcon from "@mui/icons-material/Search";
 import { CURSUS_OPTIONS } from "@/src/constants/cursus";
 import { getUserDisplayName } from "@/src/constants/user";
 import type { Discipline, Tags, Type, User } from "@/src/types";
 import { Button } from "@openfun/cunningham-react";
-import TuneIcon from "@mui/icons-material/Tune";
 import styles from "./styles.module.css";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useUsers } from "@/src/hooks/useUsers";
+import { useChannel } from "@/src/hooks/useChannel";
+import { useTags as useTagsHook } from "@/src/hooks/useTags";
+import FilterDropdown from "./FilterDropdown";
+import AsyncFilterDropdown from "./AsyncFilterDropdown";
 
 export type VideoFiltersValue = {
   search: string;
@@ -38,6 +29,7 @@ export type VideoFiltersValue = {
   disciplineIds: number[];
   cursus: string[];
   tagSlugs: string[];
+  page: number;
 };
 
 type Props = {
@@ -90,14 +82,6 @@ const sortByOptions = (values: string[], options: SelectOption[]) => {
   );
 };
 
-type FilterDropdownProps = {
-  title: string;
-  options: SelectOption[];
-  selectedValues: string[];
-  onChange: (newValues: string[]) => void;
-  multiple?: boolean;
-};
-
 const FilterChip = ({
   label,
   onDelete,
@@ -110,168 +94,20 @@ const FilterChip = ({
     onDelete={onDelete}
     deleteIcon={<CloseIcon />}
     size="small"
-    sx={{ m: 0.25 }}
+    sx={{
+      m: 0.25,
+      borderRadius: "16px",
+      backgroundColor: "rgba(0, 0, 0, 0.06)",
+      fontWeight: 500,
+      "& .MuiChip-deleteIcon": {
+        color: "rgba(0, 0, 0, 0.4)",
+        "&:hover": {
+          color: "rgba(0, 0, 0, 0.7)",
+        },
+      },
+    }}
   />
 );
-
-const FilterDropdown = ({
-  title,
-  options,
-  selectedValues,
-  onChange,
-  multiple = true,
-}: FilterDropdownProps) => {
-  const [open, setOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isMobile = useMediaQuery("(max-width: 600px)");
-
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchText.toLowerCase()),
-  );
-
-  const selectedCount = selectedValues.length;
-  const selectedLabel =
-    !multiple && selectedCount === 1
-      ? options.find((option) => option.value === selectedValues[0])?.label
-      : null;
-
-  const handleClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setOpen((currentOpen) => !currentOpen);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleToggle = (optionValue: string) => {
-    if (!multiple) {
-      onChange(selectedValues.includes(optionValue) ? [] : [optionValue]);
-      setOpen(false);
-      return;
-    }
-
-    if (selectedValues.includes(optionValue)) {
-      onChange(selectedValues.filter((value) => value !== optionValue));
-      return;
-    }
-
-    onChange([...selectedValues, optionValue]);
-  };
-
-  const popperWidth = isMobile && anchorEl ? anchorEl.clientWidth : 240;
-
-  return (
-    <Box className={styles.filterItem}>
-      <ListItemButton
-        onClick={handleClick}
-        className={styles.filterButton}
-        aria-expanded={open}
-      >
-        <ListItemText
-          primary={title}
-          secondary={selectedLabel ?? undefined}
-          primaryTypographyProps={{
-            variant: "body2",
-            fontWeight: 500,
-            noWrap: true,
-          }}
-          secondaryTypographyProps={{
-            variant: "caption",
-            noWrap: true,
-          }}
-        />
-        {multiple && selectedCount > 0 && (
-          <Chip label={selectedCount} color="primary" size="small" />
-        )}
-        {open ? (
-          <ExpandLessIcon fontSize="small" />
-        ) : (
-          <ExpandMoreIcon fontSize="small" />
-        )}
-      </ListItemButton>
-
-      <Popper
-        open={open}
-        anchorEl={anchorEl}
-        placement="bottom-start"
-        transition
-        sx={{
-          zIndex: 1300,
-          width: popperWidth,
-          maxWidth: "100vw",
-        }}
-        modifiers={[
-          {
-            name: "offset",
-            options: {
-              offset: [0, 8],
-            },
-          },
-          {
-            name: "preventOverflow",
-            options: {
-              padding: 16,
-            },
-          },
-        ]}
-      >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={250}>
-            <Paper elevation={8} className={styles.filterMenu}>
-              <ClickAwayListener onClickAway={handleClose}>
-                <Box>
-                  {options.length > 0 && (
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      placeholder="Rechercher..."
-                      size="small"
-                      value={searchText}
-                      onChange={(event) => setSearchText(event.target.value)}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchIcon fontSize="small" />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{ mb: 1.5 }}
-                    />
-                  )}
-
-                  <FormGroup className={styles.filterOptions}>
-                    {filteredOptions.map((option) => (
-                      <FormControlLabel
-                        key={option.value}
-                        control={
-                          <Checkbox
-                            checked={selectedValues.includes(option.value)}
-                            onChange={() => handleToggle(option.value)}
-                            size="small"
-                          />
-                        }
-                        label={option.label}
-                        className={styles.filterOption}
-                      />
-                    ))}
-
-                    {filteredOptions.length === 0 && (
-                      <Typography color="text.secondary" variant="body2">
-                        Aucun résultat
-                      </Typography>
-                    )}
-                  </FormGroup>
-                </Box>
-              </ClickAwayListener>
-            </Paper>
-          </Fade>
-        )}
-      </Popper>
-    </Box>
-  );
-};
 
 export const INITIAL_VIDEO_FILTERS: VideoFiltersValue = {
   search: "",
@@ -282,6 +118,7 @@ export const INITIAL_VIDEO_FILTERS: VideoFiltersValue = {
   disciplineIds: [],
   cursus: [],
   tagSlugs: [],
+  page: 1,
 };
 
 export default function VideoFilters({
@@ -295,19 +132,43 @@ export default function VideoFilters({
   showChannelFilter = true,
   onChange,
 }: Props) {
-  const [showFilters, setShowFilters] = useState(false);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
-  const handleViewFilters = () => {
-    setShowFilters((prev) => !prev);
-  };
-  const userOptions = useMemo<SelectOption[]>(
-    () =>
-      users.map((user) => ({
-        label: getUserDisplayName(user),
-        value: user.username,
-      })),
-    [users],
+  const { fetchAll: fetchUsers } = useUsers();
+  const { fetchAll: fetchChannels } = useChannel();
+  const { fetchAll: fetchTags } = useTagsHook();
+
+  const fetchUsersOptions = useCallback(
+    async (search: string) => {
+      const usersList = await fetchUsers(search);
+      return usersList.map((u) => ({
+        label: getUserDisplayName(u),
+        value: u.username,
+      }));
+    },
+    [fetchUsers]
+  );
+
+  const fetchChannelsOptions = useCallback(
+    async (search: string) => {
+      const channelsList = await fetchChannels({ search });
+      return channelsList.map((c) => ({
+        label: c.title,
+        value: String(c.id),
+      }));
+    },
+    [fetchChannels]
+  );
+
+  const fetchTagsOptions = useCallback(
+    async (search: string) => {
+      const tagsList = await fetchTags(search);
+      return tagsList.map((t) => ({
+        label: t.name,
+        value: t.slug,
+      }));
+    },
+    [fetchTags]
   );
 
   const typeOptions = useMemo(
@@ -328,31 +189,17 @@ export default function VideoFilters({
     [disciplines],
   );
 
-  const tagOptions = useMemo<SelectOption[]>(
-    () =>
-      tags.map((tag) => ({
-        label: tag.name,
-        value: tag.slug,
-      })),
-    [tags],
-  );
+  const selectedChannelLabel = value.channel ? `Chaîne ${value.channel}` : null;
 
-  const channelOptions = useMemo<SelectOption[]>(
-    () =>
-      channels.map((channel) => ({
-        label: `Chaîne ${channel}`,
-        value: String(channel),
-      })),
-    [channels],
-  );
-
-  const selectedChannel =
-    channelOptions.find((option) => option.value === String(value.channel)) ??
-    null;
-
-  const selectedUsers = userOptions.filter((option) =>
-    value.ownerUsernames.includes(option.value),
-  );
+  const selectedUsers = useMemo(() => {
+    return value.ownerUsernames.map((username) => {
+      const fullUser = users.find((u) => u.username === username);
+      return {
+        label: fullUser ? getUserDisplayName(fullUser) : username,
+        value: username,
+      };
+    });
+  }, [value.ownerUsernames, users]);
 
   const selectedTypes = typeOptions.filter((option) =>
     value.typeSlugs.includes(String(option.value)),
@@ -366,9 +213,15 @@ export default function VideoFilters({
     value.cursus.includes(option.value),
   );
 
-  const selectedTags = tagOptions.filter((option) =>
-    value.tagSlugs.includes(String(option.value)),
-  );
+  const selectedTags = useMemo(() => {
+    return value.tagSlugs.map((slug) => {
+      const fullTag = tags.find((t) => t.slug === slug);
+      return {
+        label: fullTag ? fullTag.name : slug,
+        value: slug,
+      };
+    });
+  }, [value.tagSlugs, tags]);
 
   const removeValue = <T extends string | number>(
     list: T[],
@@ -379,8 +232,8 @@ export default function VideoFilters({
 
   const appliedFiltersCount =
     (value.search.trim() ? 1 : 0) +
-    (selectedChannel ? 1 : 0) +
-    (showUserFilter ? selectedUsers.length : 0) +
+    (value.channel ? 1 : 0) +
+    (showUserFilter ? value.ownerUsernames.length : 0) +
     selectedTypes.length +
     selectedDisciplines.length +
     selectedCursus.length +
@@ -388,306 +241,262 @@ export default function VideoFilters({
 
   return (
     <div className={styles.filtersContent}>
-      <div className={styles.filtersContentHeader}>
-        <Box className={styles.filtersButtonRow}>
-          <Button
-            onClick={handleViewFilters}
-            size={isMobile ? "medium" : "small"}
-            fullWidth={isMobile}
-            icon={<TuneIcon />}
-            variant="bordered"
-            color="brand"
-          >
-            Filtrer
-          </Button>
-          {appliedFiltersCount > 0 && (
-            <Chip
-              label={`Filtres appliqués (${appliedFiltersCount})`}
-              color="primary"
-              size="small"
-              onDelete={() => onChange(INITIAL_VIDEO_FILTERS)}
-              deleteIcon={<CloseIcon />}
-            />
-          )}
-        </Box>
-        <Box className={styles.searchRow}>
-          <FilterDropdown
-            title="Tri"
-            options={ORDERING_OPTIONS}
-            selectedValues={value.ordering ? [value.ordering] : []}
+      {/* Vinted-style horizontal scrollable pill bar */}
+      <div className={styles.row}>
+        {/* Unified inline search bar */}
+        <TextField
+          id="video-filters-search"
+          size="small"
+          placeholder="Rechercher une vidéo..."
+          value={value.search}
+          onChange={(event) => {
+            const nextSearch =
+              typeof event.target.value === "string"
+                ? event.target.value
+                : "";
+
+            if (nextSearch === value.search) {
+              return;
+            }
+
+            onChange({
+              ...value,
+              search: nextSearch,
+            });
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            minWidth: isMobile ? "100%" : "220px",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "9999px",
+              backgroundColor: "#fff",
+              paddingLeft: "12px",
+            },
+          }}
+        />
+
+        {/* Tri/Ordering Pill (Single selection) */}
+        <FilterDropdown
+          title="Tri"
+          options={ORDERING_OPTIONS}
+          selectedValues={value.ordering ? [value.ordering] : []}
+          multiple={false}
+          onChange={(nextValues) => {
+            const nextOrdering = nextValues[0] ?? "";
+            if (nextOrdering === value.ordering) return;
+            onChange({
+              ...value,
+              ordering: nextOrdering,
+            });
+          }}
+        />
+
+        {/* Channel Pill (Async single select) */}
+        {showChannelFilter && (
+          <AsyncFilterDropdown
+            title="Chaîne"
+            selectedValues={value.channel ? [String(value.channel)] : []}
+            fetchOptions={fetchChannelsOptions}
             multiple={false}
             onChange={(nextValues) => {
-              const nextOrdering = nextValues[0] ?? "";
-
-              if (nextOrdering === value.ordering) {
-                return;
-              }
-
-              onChange({
-                ...value,
-                ordering: nextOrdering,
-              });
+              const nextChannel = nextValues[0] ? Number(nextValues[0]) : null;
+              if (nextChannel === value.channel) return;
+              onChange({ ...value, channel: nextChannel });
             }}
           />
-
-          <TextField
-            id="video-filters-search"
-            size="small"
-            className={styles.searchField}
-            label="Rechercher"
-            value={value.search}
-            onChange={(event) => {
-              const nextSearch =
-                typeof event.target.value === "string"
-                  ? event.target.value
-                  : "";
-
-              if (nextSearch === value.search) {
-                return;
-              }
-
-              onChange({
-                ...value,
-                search: nextSearch,
-              });
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-      </div>
-      <Paper
-        elevation={1}
-        className={`${styles.wrapper} ${
-          showFilters ? styles.open : styles.closed
-        }`}
-      >
-        <Box className={styles.row}>
-          {showChannelFilter && (
-            <FilterDropdown
-              title="Chaînes"
-              options={channelOptions}
-              selectedValues={selectedChannel ? [selectedChannel.value] : []}
-              multiple={false}
-              onChange={(nextValues) => {
-                const nextChannel = nextValues[0]
-                  ? Number(nextValues[0])
-                  : null;
-
-                if (nextChannel === value.channel) {
-                  return;
-                }
-
-                onChange({
-                  ...value,
-                  channel: nextChannel,
-                });
-              }}
-            />
-          )}
-
-          {showUserFilter && (
-            <FilterDropdown
-              title="Utilisateurs"
-              options={userOptions}
-              selectedValues={value.ownerUsernames}
-              onChange={(nextOwnerUsernames) => {
-                if (haveSameValues(value.ownerUsernames, nextOwnerUsernames)) {
-                  return;
-                }
-
-                onChange({
-                  ...value,
-                  ownerUsernames: nextOwnerUsernames,
-                });
-              }}
-            />
-          )}
-
-          <FilterDropdown
-            title="Types"
-            options={typeOptions}
-            selectedValues={value.typeSlugs}
-            onChange={(nextTypeSlugs) => {
-              if (haveSameValues(value.typeSlugs, nextTypeSlugs)) {
-                return;
-              }
-              onChange({
-                ...value,
-                typeSlugs: nextTypeSlugs,
-              });
-            }}
-          />
-
-          <FilterDropdown
-            title="Disciplines"
-            options={disciplineOptions}
-            selectedValues={value.disciplineIds.map(String)}
-            onChange={(nextValues) => {
-              const nextDisciplineIds = nextValues.map(Number);
-
-              if (haveSameValues(value.disciplineIds, nextDisciplineIds)) {
-                return;
-              }
-
-              onChange({
-                ...value,
-                disciplineIds: nextDisciplineIds,
-              });
-            }}
-          />
-
-          <FilterDropdown
-            title="Cursus"
-            options={CURSUS_OPTIONS}
-            selectedValues={value.cursus}
-            onChange={(nextCursus) => {
-              console.log(value.cursus);
-              if (haveSameValues(value.cursus, nextCursus)) {
-                return;
-              }
-
-              onChange({
-                ...value,
-                cursus: nextCursus,
-              });
-            }}
-          />
-
-          <FilterDropdown
-            title="Mots-clés"
-            options={tagOptions}
-            selectedValues={value.tagSlugs}
-            onChange={(nextTagSlugs) => {
-              const currentNormalized = normalizeValues(value.tagSlugs);
-              const nextNormalized = normalizeValues(nextTagSlugs);
-
-              if (haveSameValues(currentNormalized, nextNormalized)) {
-                return;
-              }
-
-              onChange({
-                ...value,
-                tagSlugs: sortByOptions(nextTagSlugs, tagOptions),
-              });
-            }}
-          />
-        </Box>
-
-        {appliedFiltersCount > 0 && <Divider />}
-
-        {appliedFiltersCount > 0 && (
-          <Box>
-            <Typography variant="subtitle2" gutterBottom>
-              Filtres sélectionnés :
-            </Typography>
-
-            <Box className={styles.chips}>
-              {value.search.trim() && (
-                <FilterChip
-                  label={`Recherche : ${value.search}`}
-                  onDelete={() => onChange({ ...value, search: "" })}
-                />
-              )}
-
-              {showChannelFilter && selectedChannel && (
-                <FilterChip
-                  label={`Chaîne : ${selectedChannel.label}`}
-                  onDelete={() =>
-                    onChange({
-                      ...value,
-                      channel: null,
-                    })
-                  }
-                />
-              )}
-
-              {showUserFilter &&
-                selectedUsers.map((option) => (
-                  <FilterChip
-                    key={`user-${option.value}`}
-                    label={`Utilisateur : ${option.label}`}
-                    onDelete={() =>
-                      onChange({
-                        ...value,
-                        ownerUsernames: removeValue(
-                          value.ownerUsernames,
-                          option.value,
-                        ),
-                      })
-                    }
-                  />
-                ))}
-
-              {selectedTypes.map((option) => (
-                <FilterChip
-                  key={`type-${option.value}`}
-                  label={`Type : ${option.label}`}
-                  onDelete={() =>
-                    onChange({
-                      ...value,
-                      typeSlugs: removeValue(
-                        value.typeSlugs,
-                        String(option.value),
-                      ),
-                    })
-                  }
-                />
-              ))}
-
-              {selectedDisciplines.map((option) => (
-                <FilterChip
-                  key={`discipline-${option.value}`}
-                  label={`Discipline : ${option.label}`}
-                  onDelete={() =>
-                    onChange({
-                      ...value,
-                      disciplineIds: removeValue(
-                        value.disciplineIds,
-                        Number(option.value),
-                      ),
-                    })
-                  }
-                />
-              ))}
-
-              {selectedCursus.map((option) => (
-                <FilterChip
-                  key={`cursus-${option.value}`}
-                  label={`Cursus : ${option.label}`}
-                  onDelete={() =>
-                    onChange({
-                      ...value,
-                      cursus: removeValue(value.cursus, option.value),
-                    })
-                  }
-                />
-              ))}
-
-              {selectedTags.map((option) => (
-                <FilterChip
-                  key={`tag-${option.value}`}
-                  label={`Mot-clé : ${option.label}`}
-                  onDelete={() =>
-                    onChange({
-                      ...value,
-                      tagSlugs: removeValue(
-                        value.tagSlugs,
-                        String(option.value),
-                      ),
-                    })
-                  }
-                />
-              ))}
-            </Box>
-          </Box>
         )}
-      </Paper>
+
+        {/* User Pill (Async multi select) */}
+        {showUserFilter && (
+          <AsyncFilterDropdown
+            title="Auteur"
+            selectedValues={value.ownerUsernames}
+            fetchOptions={fetchUsersOptions}
+            onChange={(nextOwnerUsernames) => {
+              if (haveSameValues(value.ownerUsernames, nextOwnerUsernames)) return;
+              onChange({ ...value, ownerUsernames: nextOwnerUsernames });
+            }}
+          />
+        )}
+
+        {/* Types Pill (Multi select) */}
+        <FilterDropdown
+          title="Types"
+          options={typeOptions}
+          selectedValues={value.typeSlugs}
+          onChange={(nextTypeSlugs) => {
+            if (haveSameValues(value.typeSlugs, nextTypeSlugs)) return;
+            onChange({
+              ...value,
+              typeSlugs: nextTypeSlugs,
+            });
+          }}
+        />
+
+        {/* Disciplines Pill (Multi select) */}
+        <FilterDropdown
+          title="Disciplines"
+          options={disciplineOptions}
+          selectedValues={value.disciplineIds.map(String)}
+          onChange={(nextValues) => {
+            const nextDisciplineIds = nextValues.map(Number);
+            if (haveSameValues(value.disciplineIds, nextDisciplineIds)) return;
+            onChange({
+              ...value,
+              disciplineIds: nextDisciplineIds,
+            });
+          }}
+        />
+
+        {/* Cursus Pill (Multi select) */}
+        <FilterDropdown
+          title="Cursus"
+          options={CURSUS_OPTIONS}
+          selectedValues={value.cursus}
+          onChange={(nextCursus) => {
+            if (haveSameValues(value.cursus, nextCursus)) return;
+            onChange({
+              ...value,
+              cursus: nextCursus,
+            });
+          }}
+        />
+
+        {/* Mots-clés Pill (Async multi select) */}
+        <AsyncFilterDropdown
+          title="Mots-clés"
+          selectedValues={value.tagSlugs}
+          fetchOptions={fetchTagsOptions}
+          onChange={(nextTagSlugs) => {
+            if (haveSameValues(value.tagSlugs, nextTagSlugs)) return;
+            onChange({
+              ...value,
+              tagSlugs: nextTagSlugs,
+            });
+          }}
+        />
+      </div>
+
+      {/* Selected Chips Row with Clean Clear Action */}
+      {appliedFiltersCount > 0 && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 2,
+            gap: "12px",
+            pt: 1.5,
+            borderTop: "1px solid rgba(0, 0, 0, 0.12)",
+          }}
+        >
+          <Box className={styles.chips}>
+            {value.search.trim() && (
+              <FilterChip
+                label={`Recherche : ${value.search}`}
+                onDelete={() => onChange({ ...value, search: "" })}
+              />
+            )}
+
+            {showChannelFilter && value.channel && (
+              <FilterChip
+                label={selectedChannelLabel ?? `Chaîne : ${value.channel}`}
+                onDelete={() => onChange({ ...value, channel: null })}
+              />
+            )}
+
+            {showUserFilter && selectedUsers.map((u) => (
+              <FilterChip
+                key={`user-${u.value}`}
+                label={`Auteur : ${u.label}`}
+                onDelete={() =>
+                  onChange({
+                    ...value,
+                    ownerUsernames: removeValue(value.ownerUsernames, u.value),
+                  })
+                }
+              />
+            ))}
+
+            {selectedTypes.map((option) => (
+              <FilterChip
+                key={`type-${option.value}`}
+                label={`Type : ${option.label}`}
+                onDelete={() =>
+                  onChange({
+                    ...value,
+                    typeSlugs: removeValue(
+                      value.typeSlugs,
+                      String(option.value),
+                    ),
+                  })
+                }
+              />
+            ))}
+
+            {selectedDisciplines.map((option) => (
+              <FilterChip
+                key={`discipline-${option.value}`}
+                label={`Discipline : ${option.label}`}
+                onDelete={() =>
+                  onChange({
+                    ...value,
+                    disciplineIds: removeValue(
+                      value.disciplineIds,
+                      Number(option.value),
+                    ),
+                  })
+                }
+              />
+            ))}
+
+            {selectedCursus.map((option) => (
+              <FilterChip
+                key={`cursus-${option.value}`}
+                label={`Cursus : ${option.label}`}
+                onDelete={() =>
+                  onChange({
+                    ...value,
+                    cursus: removeValue(value.cursus, option.value),
+                  })
+                }
+              />
+            ))}
+
+            {selectedTags.map((option) => (
+              <FilterChip
+                key={`tag-${option.value}`}
+                label={`Mot-clé : ${option.label}`}
+                onDelete={() =>
+                  onChange({
+                    ...value,
+                    tagSlugs: removeValue(
+                      value.tagSlugs,
+                      String(option.value),
+                    ),
+                  })
+                }
+              />
+            ))}
+          </Box>
+
+          <Button
+            onClick={() => onChange(INITIAL_VIDEO_FILTERS)}
+            variant="tertiary"
+            size="small"
+            style={{ fontWeight: 600, fontSize: "0.85rem" }}
+          >
+            Effacer les filtres
+          </Button>
+        </Box>
+      )}
     </div>
   );
 }

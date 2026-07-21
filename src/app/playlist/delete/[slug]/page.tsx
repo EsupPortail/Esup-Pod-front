@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Paper from "@mui/material/Paper";
-import { Loader, Alert, Button } from "@openfun/cunningham-react";
+import { Loader, Alert, Button, VariantType } from "@openfun/cunningham-react";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import styles from "./styles.module.css";
@@ -51,7 +51,7 @@ export default function DeletePlaylistPage() {
 
         {usePlaylistError ? (
           <div>
-            <Alert type="error" className={styles.delete_error_alert}>
+            <Alert type={VariantType.ERROR} className={styles.delete_error_alert}>
               {usePlaylistError ?? "Playlist introuvable."}
             </Alert>
             <Button

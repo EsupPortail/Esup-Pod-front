@@ -12,11 +12,15 @@ export function useUsers() {
   const [useUserLoading, setUseUserLoading] = useState(false);
   const [useUserError, setUseUserError] = useState<string | null>(null);
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = useCallback(async (search?: string) => {
     setUseUserLoading(true);
     setUseUserError(null);
     try {
-      const res = await authFetch(getRoutes().user.list, {
+      const url = new URL(getRoutes().user.list);
+      if (search) {
+        url.searchParams.set("search", search);
+      }
+      const res = await authFetch(url.toString(), {
         accessToken,
         onRefresh: refresh,
       });

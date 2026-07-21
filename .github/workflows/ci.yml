@@ -1,0 +1,92 @@
+name: Pod V5 Frontend CI/CD
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - dev
+      - main
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build theme
+        run: yarn build-theme
+
+      - name: Check Typings (TypeScript)
+        run: yarn typecheck
+
+      - name: Run Linter (ESLint)
+        run: yarn lint
+
+      - name: Run Unit Tests (Vitest)
+        run: yarn test --run
+
+  test-docker:
+    needs: [quality-check]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Create .env file
+        run: cp env.example .env
+
+      - name: Build Stack
+        run: make build
+
+      - name: Start Stack
+        run: make start
+
+      - name: Wait for Frontend to be ready
+        run: |
+          set -e
+          echo "Waiting for Frontend on port 3000..."
+          count=0
+          until curl -sf http://127.0.0.1:3000/ > /dev/null || [ $count -eq 60 ]; do
+             echo "Waiting for Frontend... ($count/60)"
+             sleep 2
+             count=$((count+1))
+          done
+
+          if [ $count -eq 60 ]; then
+            echo "Frontend failed to start"
+            make logs
+            exit 1
+          fi
+
+      - name: Basic Load Test
+        run: |
+          fail=0
+          for i in {1..20}; do
+            curl -sf http://127.0.0.1:3000/ > /dev/null || fail=1 &
+          done
+          wait
+          if [ "$fail" -ne 0 ]; then
+            echo "Load test failed"
+            exit 1
+          fi
+
+      - name: Teardown
+        if: always()
+        run: make clean

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Button } from "@openfun/cunningham-react";
+import styles from "./styles.module.css";
 
 type BackButtonProps = {
   label?: string;
@@ -17,21 +17,14 @@ export default function BackButton({
   const router = useRouter();
 
   return (
-    <Button
+    <button
       onClick={onClick ?? (() => router.back())}
-      variant="tertiary"
-      size="nano"
-      color="neutral"
       type="button"
-      style={{
-        color: "var(--c--contextuals--content--semantic--brand--neutral)",
-      }}
-      className={["back-button", className].filter(Boolean).join(" ")}
-      icon={<span className="material-icons">arrow_back</span>}
-      iconPosition="left"
+      className={[styles.backButton, className].filter(Boolean).join(" ")}
       aria-label={label}
     >
+      <span className="material-icons">arrow_back</span>
       {label}
-    </Button>
+    </button>
   );
 }

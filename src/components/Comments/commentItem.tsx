@@ -68,8 +68,11 @@ export default function CommentItem({
     !!user && (user.is_staff || String(user.id) === String(comment.author));
 
   const initials = useMemo(() => {
-    return getInitialsFromAuthorName(comment.author_name);
-  }, [comment.author_name]);
+    const nameToUse = comment.author_name && comment.author_name.trim() 
+      ? comment.author_name 
+      : comment.author_username;
+    return getInitialsFromAuthorName(nameToUse || "");
+  }, [comment.author_name, comment.author_username]);
 
   const profilePictureUrl = getProfilePictureUrl(comment.author_picture);
 
@@ -138,7 +141,7 @@ export default function CommentItem({
         <div className={styles.body}>
           <div className={styles.meta}>
             <strong>
-              {comment.author_name
+              {comment.author_name && comment.author_name.trim()
                 ? getAuthorDisplayName(comment.author_name)
                 : comment.author_username}
             </strong>

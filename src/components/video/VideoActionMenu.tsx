@@ -8,8 +8,12 @@ import Edit from "@mui/icons-material/Edit";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import MenuButton from "@mui/joy/MenuButton";
 import Dropdown from "@mui/joy/Dropdown";
+import ContentCopy from "@mui/icons-material/ContentCopy";
 import Link from "next/link";
 import type { Video } from "@/src/types";
+import { useDuplicateVideo } from "@/src/hooks/useVideos";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface VideoCardActionMenuProps {
   video: Video;
@@ -18,6 +22,23 @@ interface VideoCardActionMenuProps {
 export default function VideoCardActionMenu({
   video,
 }: VideoCardActionMenuProps) {
+  const { mutateAsync: duplicateVideo } = useDuplicateVideo();
+  const [isDuplicating, setIsDuplicating] = useState(false);
+  const router = useRouter();
+
+  const handleDuplicate = async () => {
+    setIsDuplicating(true);
+    try {
+      const newVideo = await duplicateVideo(video.slug);
+      // Redirige vers l'édition de la nouvelle vidéo dupliquée
+      router.push(`/video/edit/${newVideo.slug}`);
+    } catch (e) {
+      console.error("Duplication failed", e);
+    } finally {
+      setIsDuplicating(false);
+    }
+  };
+
   return (
     <Dropdown>
       <MenuButton
@@ -39,6 +60,12 @@ export default function VideoCardActionMenu({
             <Edit />
           </ListItemDecorator>
           Éditer la video
+        </MenuItem>
+        <MenuItem onClick={handleDuplicate} disabled={isDuplicating}>
+          <ListItemDecorator>
+            <ContentCopy />
+          </ListItemDecorator>
+          {isDuplicating ? "Duplication..." : "Dupliquer"}
         </MenuItem>
         <ListDivider />
         <MenuItem

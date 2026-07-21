@@ -1,0 +1,84 @@
+.welcomeBanner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--c--globals--spacings--lg);
+  margin-bottom: var(--c--globals--spacings--lg);
+  align-items: stretch;
+}
+
+.welcomeText {
+  flex: 1 1 300px;
+}
+
+.welcomeGreenBox {
+  flex: 1 1 300px;
+  background-color: var(--c--globals--colors--gray-100);
+  color: var(--c--globals--colors--gray-900);
+  border: 1px solid var(--c--globals--colors--gray-200);
+  padding: var(--c--globals--spacings--md);
+  border-radius: 8px;
+  display: flex;
+  gap: var(--c--globals--spacings--sm);
+  align-items: center;
+}
+
+.welcomeLinkTitle {
+  color: var(--c--globals--colors--brand-600);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: var(--c--globals--font--sizes--md);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.welcomeLink {
+  color: var(--c--globals--colors--brand-600);
+  text-decoration: none;
+  font-weight: 500;
+}
+.welcomeLinkTitle:hover,
+.welcomeLink:hover {
+  text-decoration: underline;
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--c--globals--spacings--md);
+  margin-bottom: var(--c--globals--spacings--xxl);
+}
+
+.title {
+  margin-bottom: var(--c--globals--spacings--xs);
+}
+
+.subtitle {
+  margin-bottom: var(--c--globals--spacings--md);
+  font-weight: var(--c--globals--font--weights--bold);
+}
+
+@media (max-width: 1024px) {
+  .welcomeText p {
+    display: none;
+  }
+  .welcomeGreenBox {
+    display: none;
+  }
+  .welcomeBanner {
+    margin-bottom: 0;
+    gap: 0;
+  }
+  .actionButtons {
+    gap: var(--c--globals--spacings--xs);
+    margin-bottom: var(--c--globals--spacings--md);
+    margin-top: var(--c--globals--spacings--md);
+  }
+  .title {
+    font-size: var(--c--globals--font--sizes--h3);
+    margin-bottom: 0;
+  }
+  .subtitle {
+    font-size: var(--c--globals--font--sizes--body);
+    margin-bottom: var(--c--globals--spacings--sm);
+  }
+}

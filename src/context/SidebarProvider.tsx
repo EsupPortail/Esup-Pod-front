@@ -8,14 +8,14 @@ type SidebarContextValue = {
   sidebarOpen: boolean;
   sidebarFixed: boolean;
   handleFixSidebar: () => void;
-  handleViewSidebar: () => void;
+  handleViewSidebar: (open: boolean) => void;
 };
 
 export const SidebarContext = createContext<SidebarContextValue | undefined>(
   undefined,
 );
 
-export default function SidebarProvider(props: any) {
+export default function SidebarProvider({ children }: { children: React.ReactNode }) {
   // Comportement sidebar
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [sidebarOpen, setSideBarOpen] = useState(false);
@@ -67,9 +67,9 @@ export default function SidebarProvider(props: any) {
     setSideBarOpen((prev) => !prev);
   };
 
-  const handleViewSidebar = () => {
+  const handleViewSidebar = (open: boolean) => {
     if (!sidebarFixed) {
-      setSideBarOpen((prev) => !prev);
+      setSideBarOpen(open);
     }
   };
 
@@ -77,7 +77,7 @@ export default function SidebarProvider(props: any) {
     <SidebarContext.Provider
       value={{ handleViewSidebar, handleFixSidebar, sidebarOpen, sidebarFixed }}
     >
-      {props.children}
+      {children}
     </SidebarContext.Provider>
   );
 }

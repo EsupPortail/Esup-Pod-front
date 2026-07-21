@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Alert } from "@openfun/cunningham-react";
+import { Alert, VariantType } from "@openfun/cunningham-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthProvider";
 import styles from "./AuthStatusAlert.module.css";
@@ -75,7 +75,7 @@ export default function AuthStatusAlert({
   return (
     <Alert
       canClose
-      type="success"
+      type={VariantType.SUCCESS}
       onClose={handleClose}
       className={`${styles.authStatusAlert} ${
         isClosing ? styles.isClosing : ""

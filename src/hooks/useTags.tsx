@@ -11,11 +11,15 @@ export function useTags() {
   const [useTagsLoading, setUseTagsLoading] = useState(false);
   const [useTagsError, setUseTagsError] = useState<string | null>(null);
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = useCallback(async (search?: string) => {
     setUseTagsLoading(true);
     setUseTagsError(null);
     try {
-      const res = await authFetch(getRoutes().tags.list, {
+      const url = new URL(getRoutes().tags.list);
+      if (search) {
+        url.searchParams.set("search", search);
+      }
+      const res = await authFetch(url.toString(), {
         accessToken,
         onRefresh: refresh,
       });
