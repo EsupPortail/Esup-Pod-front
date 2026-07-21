@@ -221,23 +221,23 @@ export default function VideoPlayer({
           }}
         />
 
-      {!isReady && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#171717",
-            color: "#fff",
-          }}
-        >
-          <CenteredLoader />
-        </div>
-      )}
-    </div>
+        {!isReady && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#171717",
+              color: "#fff",
+            }}
+          >
+            <CenteredLoader />
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -618,6 +618,9 @@ export default function EditVideo() {
       if (res.ok) {
         setSuccess("Vidéo mise à jour avec succès ! 🥳");
         router.push("/dashboard");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        initialValuesRef.current = { ...data, thumbnail: null, password: "" };
+        reset(initialValuesRef.current);
       }
       await requestJson(res);
     } catch (err: unknown) {
@@ -661,7 +664,7 @@ export default function EditVideo() {
         render={({ field }) => (
           <div className={styles.input_group}>
             <label className={styles.input_label}>
-              Titre <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{fontSize: 14, verticalAlign: 'middle'}}/></span>
+              Titre <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{ fontSize: 14, verticalAlign: 'middle' }} /></span>
             </label>
             <TextField
               {...field}
@@ -683,7 +686,7 @@ export default function EditVideo() {
         render={({ field }) => (
           <div className={styles.input_group}>
             <label className={styles.input_label}>
-              Description <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{fontSize: 14, verticalAlign: 'middle'}}/></span>
+              Description <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{ fontSize: 14, verticalAlign: 'middle' }} /></span>
             </label>
             <TextField
               {...field}
@@ -1330,8 +1333,8 @@ export default function EditVideo() {
     const isAuthRequiredVal = watchedValues.is_auth_required;
     const isPasswordRequiredVal = watchedValues.is_password_required;
 
-    const ownerName = liveOwnerUser 
-      ? getUserDisplayName(liveOwnerUser) 
+    const ownerName = liveOwnerUser
+      ? getUserDisplayName(liveOwnerUser)
       : (video?.owner || "Propriétaire");
 
     const viewsCount = video?.views ?? 0;
@@ -1339,14 +1342,14 @@ export default function EditVideo() {
     return (
       <div className={styles.preview_card_wrapper}>
         <div className={styles.preview_card_title_label}>Aperçu de la carte vidéo</div>
-        
+
         <div className={styles.live_card_container}>
           {/* Media 16:9 */}
           <div className={styles.live_card_media_wrapper}>
             {(thumbnailPreview || video?.thumbnail) ? (
-              <img 
-                src={thumbnailPreview || video?.thumbnail || undefined} 
-                alt="Aperçu" 
+              <img
+                src={thumbnailPreview || video?.thumbnail || undefined}
+                alt="Aperçu"
                 className={styles.live_card_img}
               />
             ) : (
@@ -1354,7 +1357,7 @@ export default function EditVideo() {
                 <OndemandVideoIcon style={{ fontSize: 40, opacity: 0.3 }} />
               </div>
             )}
-            
+
             {/* Duration bubble */}
             {video?.duration && (
               <div className={styles.live_card_duration}>
@@ -1384,7 +1387,7 @@ export default function EditVideo() {
                 <div className={styles.live_card_title} title={titleVal}>
                   {titleVal}
                 </div>
-                
+
                 {/* Badges based on form state */}
                 <div className={styles.live_card_badges}>
                   {statusVal === "DR" && (
@@ -1408,7 +1411,7 @@ export default function EditVideo() {
               <div className={styles.live_card_meta}>
                 {ownerName}
               </div>
-              
+
               <div className={styles.live_card_stats}>
                 {viewsCount} {viewsCount > 1 ? "vues" : "vue"} • {video?.created_at ? dayjs(video.created_at).format("DD/MM/YYYY") : "Récemment"}
               </div>
@@ -1553,38 +1556,42 @@ export default function EditVideo() {
               const isActive = index === activeStep;
               const isPast = index < activeStep;
               return (
-                <div 
-                  key={label} 
+                <div
+                  key={label}
                   className={`${styles.stepper_item} ${isActive ? styles.stepper_item_active : ''} ${isPast ? styles.stepper_item_past : ''}`}
                   onClick={() => handleStepClick(index)}
                   style={{ cursor: index > 0 ? "pointer" : "default" }}
                 >
                   <span className={styles.stepper_label}>{label}</span>
-                  <div className={styles.stepper_dot}>
-                    {isPast && <CheckIcon sx={{ fontSize: 16, color: "var(--c--globals--colors--primary-600)" }} />}
-                  </div>
-                </div>
+                  <div className={styles.stepper_dot}></div>
+                </div >
               );
             })}
-          </div>
-        </div>
+          </div >
+        </div >
 
         {/* Step header: step title + Previous/Next */}
-        <div className={styles.step_header}>
+        < div className={styles.step_header} >
           <div>
             <h2 className={styles.step_title}>
               {ALL_STEPS[activeStep]}
             </h2>
-            {activeStep === 1 && (
-              <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
-            )}
-            {activeStep === 3 && (
-              <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir</p>
-            )}
-            {activeStep === 2 && (
-              <p className={styles.step_sub_title}>Ajoutez des fiches et un écran de début/fin pour montrer à vos spectateurs des vidéos, des sites Web et des incitations à l&apos;action en lien avec votre vidéo</p>
-            )}
-          </div>
+            {
+              activeStep === 1 && (
+                <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
+              )
+            }
+            {
+              activeStep === 3 && (
+                <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir</p>
+              )
+            }
+            {
+              activeStep === 2 && (
+                <p className={styles.step_sub_title}>Ajoutez des fiches et un écran de début/fin pour montrer à vos spectateurs des vidéos, des sites Web et des incitations à l&apos;action en lien avec votre vidéo</p>
+              )
+            }
+          </div >
           <div className={styles.step_nav}>
             <button
               type="button"
@@ -1612,7 +1619,7 @@ export default function EditVideo() {
               </button>
             )}
           </div>
-        </div>
+        </div >
 
         <Divider />
 
@@ -1627,10 +1634,10 @@ export default function EditVideo() {
             {renderVideoPreview()}
           </div>
         </div>
-      </form>
+      </form >
 
       {/* Confirm leave dialog */}
-      <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave}>
+      < Dialog open={confirmLeaveOpen} onClose={handleCancelLeave} >
         <DialogTitle>Modifications non enregistrées</DialogTitle>
         <DialogContent>
           Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?
@@ -1639,7 +1646,7 @@ export default function EditVideo() {
           <Button type="button" variant="secondary" color="neutral" onClick={handleCancelLeave}>Rester sur la page</Button>
           <Button type="button" variant="secondary" color="brand" onClick={handleConfirmLeave}>Quitter sans enregistrer</Button>
         </DialogActions>
-      </Dialog>
-    </div>
+      </Dialog >
+    </div >
   );
 }

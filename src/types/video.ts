@@ -116,3 +116,27 @@ export interface VideoDocument {
   is_private: boolean;
   created_at: string;
 }
+
+export interface VideoStats {
+  video_slug: string;
+  total_views: number;
+  views_last_7_days: number;
+  views_last_30_days: number;
+  peak_day: string | null;
+  peak_count: number | null;
+  daily_breakdown: Array<{
+    date: string;
+    count: number;
+  }>;
+}
+
+export interface VideoAccessToken {
+  id: string;
+  video: number;
+  name: string;
+  description: string | null;
+  valid_until: string | null;
+  is_active: boolean;
+  created_at: string;
+  url: string;
+}
