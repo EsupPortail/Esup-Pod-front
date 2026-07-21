@@ -231,7 +231,7 @@ export function useDuplicateVideo() {
   return useMutation({
     mutationFn: async (slug: string) => {
       const response = await authFetch(
-        `${getRoutes().video.get(slug)}duplicate/`,
+        getRoutes().video.duplicate(slug),
         {
           method: "POST",
           accessToken,

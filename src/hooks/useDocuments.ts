@@ -3,6 +3,7 @@ import { authFetch } from "../api/authFetch";
 import { requestJson } from "../utils/requestJson";
 import { useAuth } from "../context/AuthProvider";
 import { VideoDocument } from "../types/video";
+import { getRoutes } from "../api/routes";
 
 export function useDocuments(videoId: number | undefined) {
   const { accessToken, refresh } = useAuth();
@@ -15,7 +16,7 @@ export function useDocuments(videoId: number | undefined) {
   } = useQuery({
     queryKey: ["documents", videoId],
     queryFn: async () => {
-      const response = await authFetch(`/api/documents/?video=${videoId}`, {
+      const response = await authFetch(getRoutes().documents.list(videoId), {
         accessToken,
         onRefresh: refresh,
       });
@@ -39,7 +40,7 @@ export function useDocuments(videoId: number | undefined) {
       formData.append("is_private", data.is_private.toString());
       formData.append("file", data.file);
 
-      const response = await authFetch(`/api/documents/`, {
+      const response = await authFetch(getRoutes().documents.add, {
         method: "POST",
         body: formData,
         accessToken,
@@ -58,7 +59,7 @@ export function useDocuments(videoId: number | undefined) {
 
   const deleteMutation = useMutation({
     mutationFn: async (documentId: number) => {
-      const response = await authFetch(`/api/documents/${documentId}/`, {
+      const response = await authFetch(getRoutes().documents.delete(documentId), {
         method: "DELETE",
         accessToken,
         onRefresh: refresh,

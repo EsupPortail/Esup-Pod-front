@@ -101,6 +101,19 @@ export const getRoutes = () => {
       get: (id: number | string) => url + `api/collections/favorites/${id}/`,
       delete: (id: number | string) => url + `api/collections/favorites/${id}/`,
     },
+    documents: {
+      list: (videoId?: number) => videoId ? url + `api/documents/?video=${videoId}` : url + "api/documents/",
+      add: url + "api/documents/",
+      delete: (id: number) => url + `api/documents/${id}/`,
+    },
+    contributions: {
+      list: (videoId?: number) => videoId ? url + `api/contributions/?video=${videoId}` : url + "api/contributions/",
+      add: url + "api/contributions/",
+      delete: (id: number) => url + `api/contributions/${id}/`,
+    },
+    contributors: {
+      search: (query: string) => url + `api/contributors/?search=${encodeURIComponent(query)}`,
+    },
 
     administration: url + "admin",
   };

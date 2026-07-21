@@ -39,7 +39,7 @@ export const useContributions = (videoId: number) => {
     queryKey: ["contributions", videoId],
     queryFn: async () => {
       if (!videoId) return [];
-      const res = await authFetch(`/api/contributions/?video=${videoId}`, {
+      const res = await authFetch(getRoutes().contributions.list(videoId), {
         accessToken,
         onRefresh: refresh,
       });
@@ -56,7 +56,7 @@ export const useContributions = (videoId: number) => {
       role: string;
       job_title?: string;
     }) => {
-      const res = await authFetch("/api/contributions/", {
+      const res = await authFetch(getRoutes().contributions.add, {
         method: "POST",
         body: JSON.stringify(payload),
         accessToken,
@@ -72,7 +72,7 @@ export const useContributions = (videoId: number) => {
 
   const removeContribution = useMutation({
     mutationFn: async (id: number) => {
-      await authFetch(`/api/contributions/${id}/`, {
+      await authFetch(getRoutes().contributions.delete(id), {
         method: "DELETE",
         accessToken,
         onRefresh: refresh,
@@ -99,7 +99,7 @@ export const useContributorsSearch = (searchQuery: string) => {
     queryFn: async () => {
       if (!searchQuery || searchQuery.length < 2) return [];
       const res = await authFetch(
-        `/api/contributors/?search=${encodeURIComponent(searchQuery)}`,
+        getRoutes().contributors.search(searchQuery),
         {
           accessToken,
           onRefresh: refresh,
