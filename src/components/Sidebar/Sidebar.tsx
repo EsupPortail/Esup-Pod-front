@@ -31,20 +31,27 @@ const SideBar = () => {
     { name: "Toutes les vidéos", link: "/video" },
   ];
   if (config?.collection?.use_channels !== false) {
-    publicVideoItems.push({ name: "Chaines", link: "/channel" });
+    publicVideoItems.push({ name: "Chaînes", link: "/channel" });
   }
   if (config?.collection?.use_playlists !== false) {
     publicVideoItems.push({ name: "Listes de lecture", link: "/playlist" });
   }
 
-  const menuPrincipalItems = [
-    {
+  const menuPrincipalItems = [];
+  if (publicVideoItems.length === 1) {
+    menuPrincipalItems.push({
+      name: "Consulter les vidéos",
+      Icon: SlideshowIcon,
+      link: publicVideoItems[0].link,
+    });
+  } else if (publicVideoItems.length > 1) {
+    menuPrincipalItems.push({
       name: "Consulter les vidéos",
       Icon: SlideshowIcon,
       link: "",
       items: publicVideoItems,
-    },
-  ];
+    });
+  }
 
   const mySpaceItems = [];
   if (config?.collection?.use_favorites !== false) {
@@ -54,19 +61,36 @@ const SideBar = () => {
     mySpaceItems.push({ name: "Mes listes de lecture", link: "/playlist/me" });
   }
 
-  const menuPodItems = [
+  const menuPodItems: any[] = [
     { name: "Mon tableau de bord", Icon: DashboardRounded, link: "/dashboard" },
-    {
+  ];
+
+  const addVideoItems = [
+    { name: "Ajouter une vidéo", link: "/video/add" },
+  ];
+
+  if (addVideoItems.length === 1) {
+    menuPodItems.push({
+      name: "Ajouter une vidéo",
+      Icon: AddCircleOutlineIcon,
+      link: addVideoItems[0].link,
+    });
+  } else if (addVideoItems.length > 1) {
+    menuPodItems.push({
       name: "Déposer une vidéo",
       Icon: AddCircleOutlineIcon,
       link: "",
-      items: [
-        { name: "Ajouter une vidéo", link: "/video/add" },
-      ],
-    },
-  ];
+      items: addVideoItems,
+    });
+  }
 
-  if (mySpaceItems.length > 0) {
+  if (mySpaceItems.length === 1) {
+    menuPodItems.push({
+      name: mySpaceItems[0].name,
+      Icon: AccountBoxIcon,
+      link: mySpaceItems[0].link,
+    });
+  } else if (mySpaceItems.length > 1) {
     menuPodItems.push({
       name: "Mon espace",
       Icon: AccountBoxIcon,
