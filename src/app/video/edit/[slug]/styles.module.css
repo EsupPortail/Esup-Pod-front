@@ -126,7 +126,7 @@
 /* -------  2-column desktop layout --------- */
 .form_layout {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: 1fr 340px;
   gap: var(--c--globals--spacings--lg);
   align-items: start;
 }
@@ -649,12 +649,15 @@
 }
 
 .stepper_dot {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 2px solid var(--c--globals--colors--gray-300, #bdbdbd);
   background: white;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stepper_item_active .stepper_label {

@@ -13,6 +13,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
+import CheckIcon from "@mui/icons-material/Check";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
@@ -616,9 +617,7 @@ export default function EditVideo() {
 
       if (res.ok) {
         setSuccess("Vidéo mise à jour avec succès ! 🥳");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        initialValuesRef.current = { ...data, thumbnail: null, password: "" };
-        reset(initialValuesRef.current);
+        router.push("/dashboard");
       }
       await requestJson(res);
     } catch (err: unknown) {
@@ -1561,7 +1560,9 @@ export default function EditVideo() {
                   style={{ cursor: index > 0 ? "pointer" : "default" }}
                 >
                   <span className={styles.stepper_label}>{label}</span>
-                  <div className={styles.stepper_dot}></div>
+                  <div className={styles.stepper_dot}>
+                    {isPast && <CheckIcon sx={{ fontSize: 16, color: "var(--c--globals--colors--primary-600)" }} />}
+                  </div>
                 </div>
               );
             })}
@@ -1574,6 +1575,9 @@ export default function EditVideo() {
             <h2 className={styles.step_title}>
               {ALL_STEPS[activeStep]}
             </h2>
+            {activeStep === 1 && (
+              <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
+            )}
             {activeStep === 3 && (
               <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir</p>
             )}

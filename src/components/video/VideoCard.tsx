@@ -56,6 +56,9 @@ export default function VideoCard(props: VideosCardProps) {
       elevation={0}
       sx={{
         width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
         position: "relative",
         mb: 4,
         backgroundColor: "var(--c--globals--colors--gray-000)",
@@ -73,6 +76,11 @@ export default function VideoCard(props: VideosCardProps) {
         component={Link}
         href={href}
         sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          justifyContent: "flex-start",
           textDecoration: "none",
           "&:hover": {
             backgroundColor: "transparent",
@@ -96,28 +104,33 @@ export default function VideoCard(props: VideosCardProps) {
             {formatTime(time)}
           </time>
         </div>
-        <CardContent sx={{ padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
+        <CardContent sx={{ flex: 1, padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
           <Avatar sx={{ width: 36, height: 36, mt: 0.5 }}>{initial}</Avatar>
 
-          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "2px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
-              <Typography
-                component="div"
-                sx={{
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  lineHeight: 1.3,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  color: "var(--text-color)",
-                }}
-              >
-                {video.title}
-              </Typography>
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%", gap: "2px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+              <Tooltip title={video.title} arrow placement="top">
+                <Typography
+                  component="div"
+                  sx={{
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    lineHeight: 1.3,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "normal",
+                    color: "var(--text-color)",
+                    minHeight: "2.6em",
+                  }}
+                >
+                  {video.title}
+                </Typography>
+              </Tooltip>
               
-              <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "4px", marginTop: "2px" }}>
+              <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "4px" }}>
                 {video.encoding_status == "ER" && isOwner && (
                   <Tooltip title="Erreur d'encodage">
                     <ErrorIcon color="error" sx={{ fontSize: "1.1rem" }} />
