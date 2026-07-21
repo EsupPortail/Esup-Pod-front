@@ -135,9 +135,8 @@
 /* -------  2-column desktop layout --------- */
 .form_layout {
   display: grid;
-  <<<<<<< HEAD grid-template-columns: 1fr 340px;
-  =======grid-template-columns: 1fr 260px;
-  >>>>>>>5ce5f7f98e1642162ca099a63cf66edbba8af561 gap: var(--c--globals--spacings--lg);
+  grid-template-columns: 1fr 340px;
+  gap: var(--c--globals--spacings--lg);
   align-items: start;
 }
 
