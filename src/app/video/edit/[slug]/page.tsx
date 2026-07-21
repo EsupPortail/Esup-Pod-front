@@ -153,7 +153,7 @@ type EditVideoFormValues = {
   cursus: string;
   date_to_delete: string;
   date_of_event: string;
-  channel: number | "";
+  channel: number | string | "";
   themes: number[];
 };
 

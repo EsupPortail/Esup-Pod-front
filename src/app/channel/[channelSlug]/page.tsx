@@ -75,12 +75,12 @@ export default function Channel() {
     () =>
       videos.filter(
         (video) =>
-          video.channel === channel?.id &&
+          (video.channel === channel?.id || video.channel === channel?.slug) &&
           (!video.is_auth_required || !!user) &&
           video.status !== "DR" &&
           (video.encoding_status === "DO" || !!video.has_video_file),
       ),
-    [videos, channel?.id, user],
+    [videos, channel?.id, channel?.slug, user],
   );
 
   const hasActiveVideoFilters = useMemo(() => {
@@ -154,11 +154,11 @@ export default function Channel() {
 
   useEffect(() => {
     if (didSetInitialTab.current) return;
-    if (!channel) return;
+    if (!channel || !hasLoadedBaseThemes || useVideoLoading) return;
 
     handleTabValue();
     didSetInitialTab.current = true;
-  }, [channel, channelAllThemes.length, visibleAndPublicVideos.length]);
+  }, [channel, hasLoadedBaseThemes, useVideoLoading, channelAllThemes.length, visibleAndPublicVideos.length]);
 
   if (
     !channel ||

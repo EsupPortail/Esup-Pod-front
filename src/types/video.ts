@@ -21,7 +21,7 @@ export interface Video {
   owner_id: number;
   owner_first_name: string;
   owner_last_name: string;
-  channel: number | null;
+  channel: number | string | null;
   themes: number[];
   co_owners: number[] | null;
   status: VideoStatus;
