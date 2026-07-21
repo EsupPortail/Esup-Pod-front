@@ -50,14 +50,14 @@ export default function VideoPlayer({
     setHasError(false);
 
     let vjsPlayer: ReturnType<typeof videojs> | null = null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     let mpegtsPlayer: any | null = null;
     let isMounted = true;
     let mediaEl: HTMLVideoElement | null = null;
 
     const initPlayer = async () => {
       // ── 1. Detect stream type BEFORE touching the DOM ──────────────────
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       let mpegts: any | null = null;
       try {
         mpegts = (await import("mpegts.js")).default;
@@ -82,7 +82,6 @@ export default function VideoPlayer({
       mediaEl.playsInline = true;
       mediaEl.setAttribute("aria-label", videoTitle);
       mediaEl.setAttribute("crossOrigin", "anonymous");
-      mediaEl.tabIndex = -1; // Let video.js handle keyboard navigation, but prevent focus hole
 
       if (poster) {
         mediaEl.poster = poster;
@@ -106,8 +105,7 @@ export default function VideoPlayer({
 
       // ── 4. Init Video.js ───────────────────────────────────────────────
       const options: any = {
-        fluid: true,
-        aspectRatio: "16:9",
+        fill: true, // Replaces fluid to properly fill the 16:9 parent without layout bugs
         controls: true,
         preload: "auto",
         autoplay: !!autoPlay,
@@ -123,7 +121,7 @@ export default function VideoPlayer({
       vjsPlayer = videojs(mediaEl, options, () => {
         vjsPlayer?.hotkeys({
           volumeStep: 0.1,
-          seekStep: 5,
+          seekStep: 1, // Advance by 1 second instead of default 5
           enableModifiersForNumbers: false,
         });
       });
