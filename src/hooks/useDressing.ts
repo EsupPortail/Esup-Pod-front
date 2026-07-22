@@ -13,19 +13,18 @@ export interface CustomImage {
 }
 
 export interface Dressing {
-  id: string;
+  id: number;
   title: string;
-  watermark: CustomImage | null;
+  watermark?: CustomImage | number | null;
   watermark_url?: string;
-  screen_start?: CustomImage | null;
-  screen_start_url?: string;
-  screen_end?: CustomImage | null;
-  screen_end_url?: string;
-  margin: number;
-  opacity: number;
-  size: number;
-  x_position: number;
-  y_position: number;
+  position?: string;
+  opacity?: number;
+  opening_credits?: number | null;
+  ending_credits?: number | null;
+  margin?: number;
+  size?: number;
+  x_position?: number;
+  y_position?: number;
 }
 
 export const useWatermarks = () => {
@@ -37,8 +36,9 @@ export const useWatermarks = () => {
   const { data, isLoading, error } = useQuery<CustomImage[]>({
     queryKey: ["watermarks"],
     queryFn: async () => {
-      const res = await authFetch("/api/dressing/watermarks/", authOpts);
-      return requestJson(res);
+      const res = await authFetch(getRoutes().dressing.watermarks, authOpts);
+      const json = await requestJson<CustomImage[] | { results: CustomImage[] }>(res);
+      return Array.isArray(json) ? json : (json as any).results ?? [];
     },
     enabled: !!accessToken,
   });
@@ -48,7 +48,7 @@ export const useWatermarks = () => {
       const formData = new FormData();
       formData.append("image", file);
       
-      const res = await authFetch("/api/dressing/watermarks/", {
+      const res = await authFetch(getRoutes().dressing.watermarks, {
         ...authOpts,
         method: "POST",
         body: formData,
@@ -62,7 +62,7 @@ export const useWatermarks = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await authFetch(`/api/dressing/watermarks/${id}/`, {
+      const res = await authFetch(getRoutes().dressing.watermark(Number(id)), {
         ...authOpts,
         method: "DELETE",
       });
@@ -91,15 +91,16 @@ export const useDressings = () => {
   const { data, isLoading, error } = useQuery<Dressing[]>({
     queryKey: ["dressings"],
     queryFn: async () => {
-      const res = await authFetch("/api/dressing/dressing/", authOpts);
-      return requestJson(res);
+      const res = await authFetch(getRoutes().dressing.dressings, authOpts);
+      const json = await requestJson<Dressing[] | { results: Dressing[] }>(res);
+      return Array.isArray(json) ? json : (json as any).results ?? [];
     },
     enabled: !!accessToken,
   });
 
   const createMutation = useMutation({
     mutationFn: async (dressingData: Partial<Dressing>) => {
-      const res = await authFetch("/api/dressing/dressing/", {
+      const res = await authFetch(getRoutes().dressing.dressings, {
         ...authOpts,
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,7 +115,7 @@ export const useDressings = () => {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Dressing> }) => {
-      const res = await authFetch(`/api/dressing/dressing/${id}/`, {
+      const res = await authFetch(getRoutes().dressing.dressing(Number(id)), {
         ...authOpts,
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -129,7 +130,7 @@ export const useDressings = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const res = await authFetch(`/api/dressing/dressing/${id}/`, {
+      const res = await authFetch(getRoutes().dressing.dressing(Number(id)), {
         ...authOpts,
         method: "DELETE",
       });

@@ -114,6 +114,16 @@ export const getRoutes = () => {
     contributors: {
       search: (query: string) => url + `api/contributors/?search=${encodeURIComponent(query)}`,
     },
+    chapters: {
+      list: url + "api/chapters/",
+      get: (id: number) => url + `api/chapters/${id}/`,
+    },
+    dressing: {
+      watermarks: url + "api/dressing/watermarks/",
+      watermark: (id: number) => url + `api/dressing/watermarks/${id}/`,
+      dressings: url + "api/dressing/dressing/",
+      dressing: (id: number) => url + `api/dressing/dressing/${id}/`,
+    },
 
     administration: url + "admin",
   };

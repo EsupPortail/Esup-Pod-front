@@ -14,6 +14,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import CheckIcon from "@mui/icons-material/Check";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import MenuItem from "@mui/material/MenuItem";
@@ -67,7 +68,6 @@ import {
   VIDEO_STATUS_OPTIONS,
 } from "@/src/constants/video";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
-import VideoContributorsForm from "@/src/components/video/VideoContributorsForm";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import dayjs from "dayjs";
@@ -91,7 +91,17 @@ import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import StyleIcon from "@mui/icons-material/Style";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import GroupIcon from "@mui/icons-material/Group";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import SubtitlesIcon from "@mui/icons-material/Subtitles";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
+import SwitchVideoIcon from "@mui/icons-material/SwitchVideo";
 import { VideoDocumentsForm } from "@/src/components/video/VideoDocumentsForm";
+import VideoChaptersForm from "@/src/components/video/edit/VideoChaptersForm";
+import VideoDressingForm from "@/src/components/video/edit/VideoDressingForm";
+import VideoSocialNetworksForm from "@/src/components/video/edit/VideoSocialNetworksForm";
+import VideoContributorsForm from "@/src/components/video/VideoContributorsForm";
+import { useDuplicate } from "@/src/hooks/useDuplicate";
 
 export const breadcrumbLabel = "Éditer la vidéo";
 
@@ -122,15 +132,15 @@ function buildThemeOptions(themes: Theme[]): ThemeOption[] {
   return walk(themes);
 }
 
-// Desktop stepper steps (index 0 = Importation disabled, 1 = Détails, 2 = Eléments vidéo, 3 = Visibilité)
+// Desktop stepper steps (index 0 = Importation, 1 = Détails, 2 = Eléments vidéo, 3 = Visibilité)
 const ALL_STEPS = ["Importation", "Détails", "Éléments Video", "Visibilité"];
 
-// Mobile-only step keys (0 = Détails, 1 = Éléments, 2 = Visibilité)
+// Mobile step keys
 const MOBILE_STEPS = [
-  { label: "Importation", icon: <UploadFileIcon />, index: -1 },
-  { label: "Détails", icon: <ListAltIcon />, index: 0 },
-  { label: "Eléments Video", icon: <TuneIcon />, index: 1 },
-  { label: "Visibilité", icon: <VisibilityIcon />, index: 2 },
+  { label: "Importation", icon: <UploadFileIcon />, index: 0 },
+  { label: "Détails", icon: <ListAltIcon />, index: 1 },
+  { label: "Eléments Video", icon: <TuneIcon />, index: 2 },
+  { label: "Visibilité", icon: <VisibilityIcon />, index: 3 },
 ];
 
 type EditVideoFormValues = {
@@ -154,6 +164,7 @@ type EditVideoFormValues = {
   cursus: string;
   date_to_delete: string;
   date_of_event: string;
+  publication_date: string;
   channel: number | string | "";
   themes: number[];
 };
@@ -203,6 +214,7 @@ export default function EditVideo() {
   const { tags, fetchAll: fetchTags } = useTags();
   const { channels, fetchAll: fetchChannels } = useChannel();
   const { themes, fetchAll: fetchThemes, useThemeError } = useTheme();
+  const { duplicateVideo, isDuplicating } = useDuplicate(getVideoSlug ?? "");
 
   // Desktop stepper: starts on step index 1 (Détails), since Importation (0) is disabled
   const [activeStep, setActiveStep] = useState(1);
@@ -220,6 +232,16 @@ export default function EditVideo() {
   // Vignette: local URL preview for newly selected file
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
 
+
+  // Modal state for chapters, dressing, documents, contributors, subtitles
+  const [chaptersModalOpen, setChaptersModalOpen] = useState(false);
+  const [dressingModalOpen, setDressingModalOpen] = useState(false);
+  const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
+  const [contributorsModalOpen, setContributorsModalOpen] = useState(false);
+  const [subtitlesModalOpen, setSubtitlesModalOpen] = useState(false);
+  const [sourceModalOpen, setSourceModalOpen] = useState(false);
+  const [sourceFile, setSourceFile] = useState<File | null>(null);
+  const [sourceUploading, setSourceUploading] = useState(false);
 
   // Visibility accordion state
   const [restrictionExpanded, setRestrictionExpanded] = useState(true);
@@ -250,18 +272,19 @@ export default function EditVideo() {
     })),
   ];
 
-  // Fields validated per step (step index maps to ALL_STEPS: 1=Détails, 2=Éléments, 3=Visibilité)
+  // Fields validated per step (0=Importation, 1=Détails, 2=Éléments, 3=Visibilité)
   const STEP_REQUIRED_FIELDS: Record<number, Array<keyof EditVideoFormValues>> = {
-    1: ["title"],           // Détails: only title is required
-    2: ["type_id"],         // Éléments Vidéo: type is required
-    3: [],                  // Visibilité: no simple required fields (custom validation at submit)
+    0: [],                  // Importation: optionnel (fiche vide)
+    1: ["title"],           // Détails: title est obligatoire
+    2: ["type_id"],         // Éléments Video: type est obligatoire
+    3: [],                  // Visibilité: validation sur submit
   };
 
   const {
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isSubmitted },
     reset,
     setValue,
     getValues,
@@ -288,6 +311,7 @@ export default function EditVideo() {
       cursus: "0",
       date_to_delete: "",
       date_of_event: "",
+      publication_date: "",
       channel: "",
       themes: [],
     },
@@ -369,6 +393,7 @@ export default function EditVideo() {
       cursus: video.cursus ?? "0",
       date_to_delete: video.date_to_delete ? dayjs(video.date_to_delete).format("YYYY-MM-DD") : "",
       date_of_event: video.date_of_event ? dayjs(video.date_of_event).format("YYYY-MM-DD") : "",
+      publication_date: video.publication_date ? dayjs(video.publication_date).format("YYYY-MM-DDTHH:mm") : "",
     };
     initialValuesRef.current = initialValues;
     reset(initialValues);
@@ -458,14 +483,11 @@ export default function EditVideo() {
     );
   }
 
-  /* -------------------------- Gestion du stepper -------------------------- */
-  // Desktop stepper: step 0 is disabled (Importation), steps 1-3 are active
   const handleNextStep = async () => {
     const fieldsToValidate = STEP_REQUIRED_FIELDS[activeStep] ?? [];
     if (fieldsToValidate.length > 0) {
       const valid = await trigger(fieldsToValidate);
       if (!valid) {
-        // Show which fields are missing
         const labels = fieldsToValidate
           .filter((f) => !!errors[f] || !getValues(f))
           .map((f) => FORM_FIELD_LABELS[f] ?? f);
@@ -483,13 +505,10 @@ export default function EditVideo() {
   };
   const handlePreviousStep = () => {
     setformError(null);
-    setActiveStep((c) => Math.max(c - 1, 1));
+    setActiveStep((c) => Math.max(c - 1, 0));
   };
   const handleStepClick = async (idx: number) => {
-    if (idx <= 0) return;
-    // Only validate if navigating forward
     if (idx > activeStep) {
-      // Validate all steps between current and target
       for (let step = activeStep; step < idx; step++) {
         const fieldsToValidate = STEP_REQUIRED_FIELDS[step] ?? [];
         if (fieldsToValidate.length > 0) {
@@ -562,11 +581,58 @@ export default function EditVideo() {
     if (deleted) await refetch();
   };
 
+  /* -------------------------- Duplication -------------------------- */
+  const handleDuplicate = async () => {
+    try {
+      const result = await duplicateVideo() as any;
+      if (result?.slug) {
+        router.push(`/video/edit/${result.slug}`);
+      }
+    } catch (e: any) {
+      setformError(e.message || "Erreur lors de la duplication.");
+    }
+  };
+
+  /* -------------------------- Change source -------------------------- */
+  const handleSourceChange = async () => {
+    if (!sourceFile || !video?.slug) return;
+    setSourceUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("video_file", sourceFile);
+      const res = await authFetch(getRoutes().video.update(video.slug), {
+        accessToken, onRefresh: refresh,
+        method: "PATCH",
+        body: fd,
+      });
+      if (!res.ok) throw new Error("Erreur lors du changement de source.");
+      if (res.ok) {
+        setSuccess("Source vidéo mise à jour. Re-encodage lancé.");
+        setSourceModalOpen(false);
+        setSourceFile(null);
+        await refetch();
+        setActiveStep(1);
+        setMobilePanelIndex(1);
+      }
+    } catch (e: any) {
+      setformError(e.message || "Erreur lors du changement de source.");
+    } finally {
+      setSourceUploading(false);
+    }
+  };
+
+
   /* -------------------------- Submit form -------------------------- */
   const onSubmit = async (data: EditVideoFormValues) => {
     setformError(null);
     setSuccess(null);
     if (!accessToken) { setformError("Vous devez être connecté·e pour modifier cette vidéo."); return; }
+    if (data.status === "PU" && !video?.has_video_file && !video?.video_url && !sourceFile) {
+      setformError("Aucun fichier source n'a été importé à l'étape Importation. La fiche ne peut pas être publiée en mode Public.");
+      setActiveStep(0);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (data.status === "RE" && !data.is_auth_required && !data.is_password_required) {
       setformError("Pour un statut restreint, choisissez au moins une restriction.");
       return;
@@ -585,6 +651,9 @@ export default function EditVideo() {
       formData.append("cursus", data.cursus);
       formData.append("date_to_delete", data.date_to_delete);
       formData.append("date_of_event", data.date_of_event);
+      if (data.publication_date) {
+        formData.append("publication_date", data.publication_date);
+      }
       if (data.channel !== "") {
         formData.append("channel", String(data.channel));
         data.themes.forEach((id) => formData.append("theme", String(id)));
@@ -653,6 +722,117 @@ export default function EditVideo() {
   /* -----------------------------------------------------------------------
    *  Step content renderers
    * --------------------------------------------------------------------- */
+
+  const renderImportStep = () => {
+    const hasSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
+    const isPublicEmpty = selectedStatus === "PU" && !hasSource;
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
+          Gérez la vidéo source et l&apos;encodage de votre média.
+        </p>
+
+        {isPublicEmpty && (
+          <div style={{ margin: "4px 0 8px" }}>
+            <Alert type={VariantType.ERROR} canClose={false}>
+              <b>Importation obligatoire pour publication publique</b> : Vous avez sélectionné le statut <b>Public</b> mais aucun fichier source n&apos;est importé. Veuillez importer un fichier vidéo ci-dessous.
+            </Alert>
+          </div>
+        )}
+
+        {!hasSource ? (
+          <div
+            style={{
+              padding: "16px 20px",
+              background: "#fffbebf5",
+              border: "1.5px solid #fcd34d",
+              borderRadius: 10,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontWeight: 700, color: "#b45309", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
+              Fiche vide sans source vidéo
+            </div>
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#92400e", lineHeight: 1.5 }}>
+              Cette vidéo n&apos;a pas encore de fichier source associé. Vous pouvez compléter les métadonnées (titre, description, etc.), mais <b>vous devez ajouter une vidéo source ci-dessous avant de pouvoir la publier</b>.
+            </p>
+          </div>
+        ) : (
+          <div
+            style={{
+              padding: "16px 20px",
+              background: "#f0fdf4",
+              border: "1.5px solid #bbf7d0",
+              borderRadius: 10,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontWeight: 700, color: "#15803d", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
+              ✅ Fichier source associé
+            </div>
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#166534" }}>
+              Source actuelle : <b>{String(video?.video_url || sourceFile?.name || "").split("/").pop()}</b>
+              {video?.encoding_status_label ? ` • Statut d'encodage : ${video.encoding_status_label}` : ""}
+            </p>
+          </div>
+        )}
+
+        <div
+          style={{
+            padding: "20px",
+            background: "white",
+            border: isPublicEmpty ? "1.5px solid #d32f2f" : "1.5px solid #e5e7eb",
+            borderRadius: 10,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "0.95rem", color: "#111" }}>
+            {hasSource ? "Remplacer le fichier source vidéo" : "Ajouter un fichier vidéo"}
+          </div>
+          <p style={{ margin: 0, fontSize: "0.85rem", color: "#6b7280" }}>
+            Sélectionnez un fichier vidéo depuis votre ordinateur. Un nouveau processus d&apos;encodage sera automatiquement lancé.
+          </p>
+
+          <FileUploader
+            text="Glissez un fichier vidéo ici ou cliquez pour parcourir"
+            accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"}
+            onChange={(e: any) => {
+              const file = e?.target?.files?.[0] || e || null;
+              setSourceFile(file);
+              if (file) {
+                setActiveStep(1);
+                setMobilePanelIndex(1);
+              }
+            }}
+          />
+
+          {sourceFile && (
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#374151", fontWeight: 500 }}>
+              📹 Fichier sélectionné : {sourceFile.name}
+            </p>
+          )}
+
+          <button
+            type="button"
+            className={`${styles.action_pill_btn} ${styles.primary}`}
+            style={{ alignSelf: "flex-start" }}
+            disabled={!sourceFile || sourceUploading}
+            onClick={handleSourceChange}
+          >
+            <SwitchVideoIcon fontSize="small" />
+            {sourceUploading ? "Envoi et re-encodage..." : (hasSource ? "Remplacer et re-encoder" : "Ajouter la vidéo")}
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   const renderDetailsStep = () => (
     <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
@@ -950,379 +1130,334 @@ export default function EditVideo() {
           />
         )}
       />
+      <Controller
+        name="publication_date"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            value={field.value || ""}
+            fullWidth
+            type="datetime-local"
+            label="Date et heure de publication planifiée"
+            slotProps={{ inputLabel: { shrink: true } }}
+            helperText="Définissez une date/heure dans le futur à laquelle la vidéo sera rendue publique."
+            InputProps={{ style: { borderRadius: '8px' } }}
+          />
+        )}
+      />
     </div>
   );
 
-  const renderElementsStep = () => (
-    <>
-      <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
-        Ajoutez des fiches ou un écran de décut/fin pour montrer à vos spectateurs des vidéos, des sites Web et des invitations à l'action en lien avec votre vidéo
-      </p>
+  const renderElementsStep = () => {
+    const hasEncodedSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
 
-      <div className={styles.elements_list}>
-        {/* Sous-titres */}
-        <div className={styles.element_card}>
-          <div className={styles.element_card_info}>
-            <span className={styles.element_card_title}>Compléter la vidéo</span>
-            <span className={styles.element_card_desc}>explication</span>
-          </div>
-          <div className={styles.element_card_actions}>
-            <button className={styles.element_action_btn} type="button">
-              <ClosedCaptionIcon fontSize="small" /> Sous titrage automatique
-            </button>
-            <Accordion style={{ boxShadow: "none", border: "none", background: "transparent" }}>
-              <AccordionSummary expandIcon={null} sx={{ padding: 0, minHeight: "unset", display: "none" }} />
-              <AccordionDetails sx={{ padding: "8px 0 0 0", display: "flex", flexDirection: "column", gap: "8px" }}>
-                {/* Subtitle manager inline */}
-                {video?.subtitles?.length ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {video.subtitles.map((s) => (
-                      <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <span style={{ fontSize: "0.8rem" }}>Version {s.language.toUpperCase()}{s.is_default && " • Par défaut"}</span>
-                        <Button type="button" size="small" color="warning" variant="secondary" disabled={useSubtitleLoading} onClick={() => handleDeleteSubtitle(s.id)}>Supprimer</Button>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </AccordionDetails>
-            </Accordion>
-            <button className={styles.element_action_btn} type="button" onClick={handleAddSubtitle} disabled={!subtitleFile}>
-              Ajouter
-            </button>
-          </div>
-        </div>
+    return (
+      <>
+        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
+          Enrichissez votre vidéo avec des sous-titres, chapitres, documents, contributeurs et un habillage visuel.
+        </p>
 
-        {/* Documents joints */}
-        {video && <VideoDocumentsForm videoId={video.id} />}
-
-        {/* Contributeurs */}
-        {video && <VideoContributorsForm videoId={video.id} />}
-
-        {/* Chapitrage */}
-        <div className={styles.element_card}>
-          <div className={styles.element_card_info}>
-            <span className={styles.element_card_title}>Chapitrer la vidéo</span>
-            <span className={styles.element_card_desc}>explication</span>
-          </div>
-          <div className={styles.element_card_actions}>
-            <button className={styles.element_action_btn} type="button">
-              <BookmarksIcon fontSize="small" /> Ajouter
-            </button>
-          </div>
-        </div>
-
-        {config?.dressing?.use_dressing !== false && (
+        <div className={styles.elements_list}>
+          {/* Sous-titres manuels */}
           <div className={styles.element_card}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Habiller la vidéo</span>
-              <span className={styles.element_card_desc}>explication</span>
+              <span className={styles.element_card_title}>Sous-titres manuels</span>
+              <span className={styles.element_card_desc}>
+                Ajoutez des fichiers de sous-titres (.vtt, .srt) dans une ou plusieurs langues.
+                {video?.subtitles?.length ? ` — ${video.subtitles.length} sous-titre(s) actif(s)` : ""}
+              </span>
             </div>
             <div className={styles.element_card_actions}>
-              <button className={styles.element_action_btn} type="button">
-                <StyleIcon fontSize="small" /> Mes habillages
-              </button>
-              <button className={styles.element_action_btn} type="button">
-                Ajouter
+              <button
+                className={styles.element_action_btn}
+                type="button"
+                disabled={!video}
+                onClick={() => setSubtitlesModalOpen(true)}
+              >
+                <SubtitlesIcon fontSize="small" /> Gérer les sous-titres
               </button>
             </div>
           </div>
-        )}
 
-        {/* Découpage */}
-        <div className={styles.element_card}>
-          <div className={styles.element_card_info}>
-            <span className={styles.element_card_title}>Découper la vidéo</span>
-            <span className={styles.element_card_desc}>explication</span>
+          {/* Documents joints */}
+          <div className={styles.element_card}>
+            <div className={styles.element_card_info}>
+              <span className={styles.element_card_title}>Documents joints</span>
+              <span className={styles.element_card_desc}>
+                Associez des fichiers PDF, diaporamas ou autres documents à cette vidéo.
+              </span>
+            </div>
+            <div className={styles.element_card_actions}>
+              <button
+                className={styles.element_action_btn}
+                type="button"
+                disabled={!video}
+                onClick={() => setDocumentsModalOpen(true)}
+              >
+                <AttachFileIcon fontSize="small" /> Gérer les documents
+              </button>
+            </div>
           </div>
-          <div className={styles.element_card_actions}>
-            <button className={styles.element_action_btn} type="button">
-              <ContentCutIcon fontSize="small" /> Découper
-            </button>
+
+          {/* Contributeurs */}
+          <div className={styles.element_card}>
+            <div className={styles.element_card_info}>
+              <span className={styles.element_card_title}>Contributeurs &amp; Intervenants</span>
+              <span className={styles.element_card_desc}>
+                Ajoutez des auteurs, réalisateurs ou intervenants à votre vidéo.
+              </span>
+            </div>
+            <div className={styles.element_card_actions}>
+              <button
+                className={styles.element_action_btn}
+                type="button"
+                disabled={!video}
+                onClick={() => setContributorsModalOpen(true)}
+              >
+                <GroupIcon fontSize="small" /> Gérer les contributeurs
+              </button>
+            </div>
+          </div>
+
+          {/* Chapitrage */}
+          <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
+            <div className={styles.element_card_info}>
+              <span className={styles.element_card_title}>Chapitrer la vidéo</span>
+              <span className={styles.element_card_desc}>
+                Découpez votre vidéo en chapitres avec des marqueurs dans la barre de progression (style YouTube).
+              </span>
+            </div>
+            <div className={styles.element_card_actions}>
+              <button
+                className={styles.element_action_btn}
+                type="button"
+                disabled={!hasEncodedSource}
+                onClick={() => setChaptersModalOpen(true)}
+              >
+                <BookmarksIcon fontSize="small" /> Gérer les chapitres
+              </button>
+            </div>
+          </div>
+
+          {/* Habillage */}
+          {config?.dressing?.use_dressing !== false && (
+            <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
+              <div className={styles.element_card_info}>
+                <span className={styles.element_card_title}>Habiller la vidéo</span>
+                <span className={styles.element_card_desc}>
+                  Appliquez un habillage (filigrane, amorce d&apos;ouverture / fermeture) à cette vidéo.
+                </span>
+              </div>
+              <div className={styles.element_card_actions}>
+                <button
+                  className={styles.element_action_btn}
+                  type="button"
+                  disabled={!hasEncodedSource}
+                  onClick={() => setDressingModalOpen(true)}
+                >
+                  <StyleIcon fontSize="small" /> Choisir un habillage
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Découpage */}
+          <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
+            <div className={styles.element_card_info}>
+              <span className={styles.element_card_title}>Découper la vidéo</span>
+              <span className={styles.element_card_desc}>
+                Définissez un point d&apos;entrée et de sortie pour raccourcir votre vidéo.
+              </span>
+            </div>
+            <div className={styles.element_card_actions}>
+              <button
+                className={styles.element_action_btn}
+                type="button"
+                disabled={!hasEncodedSource}
+              >
+                <ContentCutIcon fontSize="small" /> Découper
+              </button>
+            </div>
           </div>
         </div>
+      </>
+    );
+  };
 
-        {/* IA */}
-        <div className={styles.element_card}>
-          <div className={styles.element_card_info}>
-            <span className={styles.element_card_title}>Améliorer les informations de la vidéo avec l&apos;IA</span>
-            <span className={styles.element_card_desc}>explication</span>
-          </div>
-          <div className={styles.element_card_actions}>
-            <button className={styles.element_action_btn} type="button">
-              <AutoFixHighIcon fontSize="small" /> Ajouter
-            </button>
-          </div>
-        </div>
-      </div>
+  const renderVisibilityStep = () => {
+    const hasSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
+    const isPublicWithoutSource = selectedStatus === "PU" && !hasSource;
 
-      <Divider sx={{ my: 1 }} />
+    return (
+      <>
+        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
+          Choisissez quand publier votre vidéo et qui peut la voir
+        </p>
 
-      {/* Cursus */}
-      <Controller
-        name="cursus"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.input_group}>
-            <label className={styles.input_label}>Cursus universitaire</label>
-            <TextField {...field} select fullWidth variant="outlined" helperText="Sélectionner un cursus universitaire qui convient à l'audience de ce contenu." InputProps={{ style: { borderRadius: '8px' } }}>
-              {(config?.video?.metadata_cursus || CURSUS_OPTIONS).map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-              ))}
-            </TextField>
-          </div>
-        )}
-      />
-
-      {/* Tags */}
-      <Controller
-        name="tags"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.input_group}>
-            <label className={styles.input_label}>Mots clés</label>
-            <Autocomplete
-              multiple
-              freeSolo
-              options={tagOptions}
-              value={field.value ? field.value.split(",").map((t) => t.trim()).filter(Boolean) : []}
-              inputValue={tagInputValue}
-              onInputChange={(_, newVal) => {
-                if (newVal.includes(" ")) {
-                  const splitted = newVal.split(/\s+/).map((t) => t.trim()).filter(Boolean);
-                  const current = field.value ? field.value.split(",").map((t) => t.trim()).filter(Boolean) : [];
-                  const merged = Array.from(new Set([...current, ...splitted]));
-                  field.onChange(merged.join(","));
-                  setTagInputValue("");
-                } else {
-                  setTagInputValue(newVal);
-                }
-              }}
-              onChange={(_, newVal) => {
-                const normalized = newVal.map((t) => t.trim()).filter(Boolean);
-                field.onChange(normalized.join(","));
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((opt, i) => {
-                  const { key, ...tagProps } = getTagProps({ index: i });
-                  return <Chip key={key} label={opt} {...tagProps} />;
-                })
-              }
-              renderInput={(params) => (
-                <TextField {...params} variant="outlined" helperText="Séparer les mots clés par des espaces, écrire les mots clés en plusieurs mots entre guillemets." InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
-              )}
-            />
-          </div>
-        )}
-      />
-
-      {/* Disciplines */}
-      <Controller
-        name="disciplines"
-        control={control}
-        render={({ field }) => (
-          <div className={styles.input_group}>
-            <label className={styles.input_label}>Disciplines</label>
-            <Autocomplete
-              multiple
-              options={disciplines}
-              value={disciplines.filter((d) => field.value?.includes(d.id))}
-              onChange={(_, newVal) => field.onChange(newVal.map((d) => d.id))}
-              getOptionLabel={(opt) => opt.title}
-              isOptionEqualToValue={(opt, val) => opt.id === val.id}
-              renderInput={(params) => (
-                <TextField {...params} variant="outlined" helperText="Les disciplines auxquelles appartient votre contenu." fullWidth InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
-              )}
-            />
-          </div>
-        )}
-      />
-
-      {/* Type */}
-      <Controller
-        name="type_id"
-        control={control}
-        rules={{ required: "Le type de la vidéo est obligatoire." }}
-        render={({ field }) => (
-          <div className={styles.input_group}>
-            <label className={styles.input_label}>
-              Type <span className={styles.required_star}>*</span>
-            </label>
-            <TextField {...field} required select fullWidth variant="outlined" error={Boolean(errors.type_id)} helperText={errors.type_id?.message ?? "Sélectionnez le type de la vidéo."} InputProps={{ style: { borderRadius: '8px' } }}>
-              <MenuItem value="" disabled>Sélectionnez un type</MenuItem>
-              {types.map((t) => (
-                <MenuItem key={t.id} value={t.id}>{t.title}</MenuItem>
-              ))}
-            </TextField>
-          </div>
-        )}
-      />
-    </>
-  );
-
-  const renderVisibilityStep = () => (
-    <>
-      <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
-        Choisissez quand publier votre vidéo et qui peut la voir
-      </p>
-
-      {/* Restrictions section */}
-      <div className={styles.visibility_section}>
-        <button
-          type="button"
-          className={styles.visibility_section_header}
-          onClick={() => setRestrictionExpanded(!restrictionExpanded)}
-        >
-          <span>Restrictions</span>
-          <ExpandMoreIcon style={{ transform: restrictionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-        </button>
-        {restrictionExpanded && (
-          <div className={styles.visibility_section_content}>
-            <p style={{ fontSize: "0.8rem", color: "var(--c--globals--colors--gray-500)", margin: "0 0 8px" }}>
-              Choisissez de rendre votre vidéo publique, non répertoriée ou privée
-            </p>
-            <Controller
-              name="status"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup {...field}>
-                  <div className={styles.radio_option}>
-                    <Radio value="DR" size="small" sx={{ mt: "-3px" }} />
-                    <div className={styles.radio_option_content}>
-                      <h4>Brouillon / Privé</h4>
-                      <p>En mode &ldquo;Brouillon / Privé&rdquo;, le contenu n&apos;apparaît nulle part et personne d&apos;autre que vous ne peut le voir. Vous pouvez ajouter des jetons pour permettre un accès direct par lien.</p>
-                      {selectedStatus === "DR" && (
-                        <button type="button" className={styles.element_action_btn} style={{ marginTop: 8 }}>
-                          Intégrer/Partager
-                        </button>
+        {/* Restrictions section */}
+        <div className={styles.visibility_section}>
+          <button
+            type="button"
+            className={styles.visibility_section_header}
+            onClick={() => setRestrictionExpanded(!restrictionExpanded)}
+          >
+            <span>Restrictions</span>
+            <ExpandMoreIcon style={{ transform: restrictionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
+          </button>
+          {restrictionExpanded && (
+            <div className={styles.visibility_section_content}>
+              <p style={{ fontSize: "0.8rem", color: "var(--c--globals--colors--gray-500)", margin: "0 0 8px" }}>
+                Choisissez de rendre votre vidéo publique, non répertoriée ou privée
+              </p>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup {...field}>
+                    <div className={styles.radio_option}>
+                      <Radio value="DR" size="small" sx={{ mt: "-3px" }} />
+                      <div className={styles.radio_option_content}>
+                        <h4>Brouillon / Privé</h4>
+                        <p>En mode &ldquo;Brouillon / Privé&rdquo;, le contenu n&apos;apparaît nulle part et personne d&apos;autre que vous ne peut le voir. Vous pouvez ajouter des jetons pour permettre un accès direct par lien.</p>
+                        {selectedStatus === "DR" && (
+                          <button type="button" className={styles.element_action_btn} style={{ marginTop: 8 }}>
+                            Intégrer/Partager
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <Divider />
+                    <div className={styles.radio_option}>
+                      <Radio value="RE" size="small" sx={{ mt: "-3px" }} />
+                      <div className={styles.radio_option_content}>
+                        <h4>Accès restreint</h4>
+                        <p>En mode &ldquo;Accès restreint&rdquo;, vous pouvez choisir les restrictions pour la vidéo. Voir cette vidéo n&apos;est pas possible sans mot de passe.</p>
+                      </div>
+                    </div>
+                    <Divider />
+                    <div className={styles.radio_option}>
+                      <Radio value="PU" size="small" sx={{ mt: "-3px" }} />
+                      <div className={styles.radio_option_content}>
+                        <h4>Public</h4>
+                        <p>Dans le mode &ldquo;Public&rdquo;, le contenu est visible par tout le monde.</p>
+                        {isPublicWithoutSource && (
+                          <div style={{ marginTop: 8, padding: "8px 12px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 6, color: "#991b1b", fontSize: "0.825rem", display: "flex", alignItems: "center", gap: 6 }}>
+                            Impossible d&apos;activer le mode Public sans fichier source. Veuillez d&apos;abord ajouter une vidéo à l&apos;étape <b>Importation</b>.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              {selectedStatus === "RE" && (
+                <div style={{ marginTop: 8, padding: "12px", background: "var(--c--globals--colors--gray-050)", borderRadius: 6 }}>
+                  <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>Options de restriction :</p>
+                  <Controller
+                    name="is_auth_required"
+                    control={control}
+                    render={({ field, fieldState }) => (
+                      <FormControl error={Boolean(fieldState.error)}>
+                        <FormControlLabel
+                          control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
+                          label="Authentification requise"
+                        />
+                        <FormHelperText>{fieldState.error?.message ?? "Limiter l'accès aux personnes authentifiées."}</FormHelperText>
+                      </FormControl>
+                    )}
+                  />
+                  <Controller
+                    name="is_password_required"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControlLabel
+                        control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
+                        label="Mot de passe requis"
+                      />
+                    )}
+                  />
+                  {isPasswordRequired && (
+                    <Controller
+                      name="password"
+                      control={control}
+                      rules={{ validate: (value) => value.trim().length === 0 || value.trim().length >= 4 || "Le mot de passe doit contenir au moins 4 caractères." }}
+                      render={({ field }) => (
+                        <TextField {...field} fullWidth type="password" autoComplete="new-password" label="Mot de passe de la vidéo" error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
                       )}
-                    </div>
-                  </div>
-                  <Divider />
-                  <div className={styles.radio_option}>
-                    <Radio value="RE" size="small" sx={{ mt: "-3px" }} />
-                    <div className={styles.radio_option_content}>
-                      <h4>Accès restreint</h4>
-                      <p>En mode &ldquo;Accès restreint&rdquo;, vous pouvez choisir les restrictions pour la vidéo. Voir cette vidéo n&apos;est pas possible sans mot de passe.</p>
-                    </div>
-                  </div>
-                  <Divider />
-                  <div className={styles.radio_option}>
-                    <Radio value="PU" size="small" sx={{ mt: "-3px" }} />
-                    <div className={styles.radio_option_content}>
-                      <h4>Public</h4>
-                      <p>Dans le mode &ldquo;Public&rdquo;, le contenu est visible par tout le monde.</p>
-                    </div>
-                  </div>
-                </RadioGroup>
+                    />
+                  )}
+                </div>
               )}
-            />
-            {selectedStatus === "RE" && (
-              <div style={{ marginTop: 8, padding: "12px", background: "var(--c--globals--colors--gray-050)", borderRadius: 6 }}>
-                <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>Options de restriction :</p>
+            </div>
+          )}
+        </div>
+
+        {/* Diffusion config */}
+        <div className={styles.visibility_section}>
+          <button type="button" className={styles.visibility_section_header} onClick={() => setDiffusionExpanded(!diffusionExpanded)}>
+            <div>
+              <span>Configuration de la Diffusion</span>
+            </div>
+            <ExpandMoreIcon style={{ transform: diffusionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
+          </button>
+          {diffusionExpanded && (
+            <div className={styles.visibility_section_content}>
+              {config?.video?.enable_downloads !== false && (
                 <Controller
-                  name="is_auth_required"
+                  name="allow_downloading"
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl error={Boolean(fieldState.error)}>
-                      <FormControlLabel
-                        control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                        label="Authentification requise"
-                      />
-                      <FormHelperText>{fieldState.error?.message ?? "Limiter l'accès aux personnes authentifiées."}</FormHelperText>
+                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Autoriser le téléchargement" />
+                      <FormHelperText>{fieldState.error?.message ?? "Autoriser le téléchargement de votre vidéo."}</FormHelperText>
                     </FormControl>
                   )}
                 />
+              )}
+              {config?.video?.enable_comments !== false && (
                 <Controller
-                  name="is_password_required"
+                  name="disable_comment"
                   control={control}
-                  render={({ field }) => (
-                    <FormControlLabel
-                      control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                      label="Mot de passe requis"
-                    />
+                  render={({ field, fieldState }) => (
+                    <FormControl error={Boolean(fieldState.error)}>
+                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Désactiver les commentaires" />
+                      <FormHelperText>{fieldState.error?.message ?? "Désactiver l'ajout de commentaires sous votre vidéo."}</FormHelperText>
+                    </FormControl>
                   )}
                 />
-                {isPasswordRequired && (
-                  <Controller
-                    name="password"
-                    control={control}
-                    rules={{ validate: (value) => value.trim().length === 0 || value.trim().length >= 4 || "Le mot de passe doit contenir au moins 4 caractères." }}
-                    render={({ field }) => (
-                      <TextField {...field} fullWidth type="password" autoComplete="new-password" label="Mot de passe de la vidéo" error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
-                    )}
-                  />
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Diffusion config */}
-      <div className={styles.visibility_section}>
-        <button type="button" className={styles.visibility_section_header} onClick={() => setDiffusionExpanded(!diffusionExpanded)}>
-          <div>
-            <span>Configuration de la Diffusion</span>
-            <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--c--globals--colors--gray-500)", fontWeight: 400 }}>Explication</p>
-          </div>
-          <ExpandMoreIcon style={{ transform: diffusionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-        </button>
-        {diffusionExpanded && (
-          <div className={styles.visibility_section_content}>
-            {config?.video?.enable_downloads !== false && (
-              <Controller
-                name="allow_downloading"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <FormControl error={Boolean(fieldState.error)}>
-                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Autoriser le téléchargement" />
-                    <FormHelperText>{fieldState.error?.message ?? "Autoriser le téléchargement de votre vidéo."}</FormHelperText>
-                  </FormControl>
-                )}
-              />
-            )}
-            {config?.video?.enable_comments !== false && (
-              <Controller
-                name="disable_comment"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <FormControl error={Boolean(fieldState.error)}>
-                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Désactiver les commentaires" />
-                    <FormHelperText>{fieldState.error?.message ?? "Désactiver l'ajout de commentaires sous votre vidéo."}</FormHelperText>
-                  </FormControl>
-                )}
-              />
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Advanced */}
-      <div className={styles.visibility_section}>
-        <button type="button" className={styles.visibility_section_header} onClick={() => setAdvancedExpanded(!advancedExpanded)}>
-          <div>
-            <span>Options avancées</span>
-            <p style={{ margin: 0, fontSize: "0.75rem", color: "var(--c--globals--colors--gray-500)", fontWeight: 400 }}>Explication</p>
-          </div>
-          <ExpandMoreIcon style={{ transform: advancedExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-        </button>
-        {advancedExpanded && (
-          <div className={styles.visibility_section_content}>
-            <Controller
-              name="is_360"
-              control={control}
-              render={({ field, fieldState }) => (
-                <FormControl error={Boolean(fieldState.error)}>
-                  <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Il s'agit d'une vidéo 360°" />
-                  <FormHelperText>{fieldState.error?.message ?? "Activer le lecteur 360° pour cette vidéo."}</FormHelperText>
-                </FormControl>
               )}
-            />
-          </div>
-        )}
-      </div>
-    </>
-  );
+              {video && <VideoSocialNetworksForm video={video!} onNetworksUpdated={() => refetch()} />}
+            </div>
+          )}
+        </div>
+
+        {/* Advanced */}
+        <div className={styles.visibility_section}>
+          <button type="button" className={styles.visibility_section_header} onClick={() => setAdvancedExpanded(!advancedExpanded)}>
+            <div>
+              <span>Options avancées</span>
+            </div>
+            <ExpandMoreIcon style={{ transform: advancedExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
+          </button>
+          {advancedExpanded && (
+            <div className={styles.visibility_section_content}>
+              <Controller
+                name="is_360"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <FormControl error={Boolean(fieldState.error)}>
+                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Il s'agit d'une vidéo 360°" />
+                    <FormHelperText>{fieldState.error?.message ?? "Activer le lecteur 360° pour cette vidéo."}</FormHelperText>
+                  </FormControl>
+                )}
+              />
+            </div>
+          )}
+        </div>
+      </>
+    );
+  };
 
   /* -----------------------------------------------------------------------
    *  Video preview sidebar
@@ -1341,8 +1476,6 @@ export default function EditVideo() {
 
     return (
       <div className={styles.preview_card_wrapper}>
-        <div className={styles.preview_card_title_label}>Aperçu de la carte vidéo</div>
-
         <div className={styles.live_card_container}>
           {/* Media 16:9 */}
           <div className={styles.live_card_media_wrapper}>
@@ -1452,7 +1585,7 @@ export default function EditVideo() {
             <span style={{ fontWeight: 600 }}>{video?.title}</span>
             {video?.views != null && (
               <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)" }}>
-                <VisibilityIcon fontSize="small" /> {video.views}
+                <VisibilityIcon fontSize="small" /> {video?.views}
               </span>
             )}
           </div>
@@ -1486,15 +1619,16 @@ export default function EditVideo() {
                 {MOBILE_STEPS.find((s) => s.index === mobilePanelIndex)?.label ?? "Retour"}
               </button>
               <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                {mobilePanelIndex === 0 && renderDetailsStep()}
-                {mobilePanelIndex === 1 && renderElementsStep()}
-                {mobilePanelIndex === 2 && renderVisibilityStep()}
+                {mobilePanelIndex === 0 && renderImportStep()}
+                {mobilePanelIndex === 1 && renderDetailsStep()}
+                {mobilePanelIndex === 2 && renderElementsStep()}
+                {mobilePanelIndex === 3 && renderVisibilityStep()}
               </div>
             </div>
           )}
         </form>
 
-        <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave}>
+        <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave} PaperProps={{ sx: { borderRadius: 3 } }}>
           <DialogTitle>Modifications non enregistrées</DialogTitle>
           <DialogContent>Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?</DialogContent>
           <DialogActions>
@@ -1502,9 +1636,132 @@ export default function EditVideo() {
             <Button type="button" variant="secondary" color="brand" onClick={handleConfirmLeave}>Quitter sans enregistrer</Button>
           </DialogActions>
         </Dialog>
+
+        {/* Chapters Modal */}
+        <Dialog open={chaptersModalOpen} onClose={() => setChaptersModalOpen(false)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <BookmarksIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Chapitres de la vidéo
+          </DialogTitle>
+          <DialogContent dividers>
+            {video && <VideoChaptersForm video={video!} />}
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => setChaptersModalOpen(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Dressing Modal */}
+        <Dialog open={dressingModalOpen} onClose={() => setDressingModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <StyleIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Habillage de la vidéo
+          </DialogTitle>
+          <DialogContent dividers>
+            {video && <VideoDressingForm video={video!} onDressingUpdated={() => refetch()} />}
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => setDressingModalOpen(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Subtitles Modal */}
+        <Dialog open={subtitlesModalOpen} onClose={() => setSubtitlesModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <SubtitlesIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Sous-titres manuels
+          </DialogTitle>
+          <DialogContent dividers>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "4px 0" }}>
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+                Ajoutez des sous-titres au format <b>.vtt</b> ou <b>.srt</b>. Chaque fichier correspond à une langue.
+              </p>
+              {video?.subtitles?.length ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {video?.subtitles?.map((s) => (
+                    <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid #e5e7eb", borderRadius: 10, background: "white" }}>
+                      <div>
+                        <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{s.language.toUpperCase()}</span>
+                        {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
+                      </div>
+                      <Button type="button" size="small" color="warning" variant="secondary" disabled={useSubtitleLoading} onClick={() => handleDeleteSubtitle(s.id)}>Supprimer</Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ color: "#9ca3af", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
+              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb" }}>
+                <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>Ajouter un sous-titre</span>
+                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                  <TextField select label="Langue" value={subtitleLanguage} onChange={(e) => setSubtitleLanguage(e.target.value as LanguageSubtitle)} size="small" sx={{ minWidth: 140 }} InputProps={{ style: { borderRadius: 10 } }}>
+                    {SUBTITLE_LANGUAGE_OPTIONS.map((opt) => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
+                  </TextField>
+                  <FormControlLabel control={<Checkbox checked={subtitleIsDefault} onChange={(e) => setSubtitleIsDefault(e.target.checked)} size="small" />} label="Par défaut" />
+                </div>
+                <FileUploader text="Sélectionner un fichier .vtt ou .srt" accept=".vtt,.srt" onChange={(e: any) => setSubtitleFile(e?.target?.files?.[0] || e || null)} />
+                {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📄 {subtitleFile?.name}</p>}
+                <Button type="button" color="brand" disabled={!subtitleFile || useSubtitleLoading} onClick={async () => { await handleAddSubtitle(); await refetch(); }}>
+                  {useSubtitleLoading ? "Ajout en cours…" : "Ajouter le sous-titre"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => setSubtitlesModalOpen(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Documents Modal */}
+        <Dialog open={documentsModalOpen} onClose={() => setDocumentsModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <AttachFileIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Documents joints
+          </DialogTitle>
+          <DialogContent dividers>
+            {video && <VideoDocumentsForm videoId={video!.id} />}
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => setDocumentsModalOpen(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Contributors Modal */}
+        <Dialog open={contributorsModalOpen} onClose={() => setContributorsModalOpen(false)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <GroupIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Contributeurs &amp; Intervenants
+          </DialogTitle>
+          <DialogContent dividers>
+            {video && <VideoContributorsForm videoId={video!.id} />}
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => setContributorsModalOpen(false)}>Fermer</Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Source Modal */}
+        <Dialog open={sourceModalOpen} onClose={() => { setSourceModalOpen(false); setSourceFile(null); }} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+          <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+            <SwitchVideoIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+            Changer la source vidéo
+          </DialogTitle>
+          <DialogContent dividers>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "4px 0" }}>
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>Remplacez le fichier source de cette vidéo. Un nouveau processus d&apos;encodage sera lancé.</p>
+              <FileUploader text="Sélectionner un nouveau fichier vidéo" accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"} onChange={(e: any) => setSourceFile(e?.target?.files?.[0] || e || null)} />
+              {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📹 {sourceFile?.name}</p>}
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" variant="secondary" color="neutral" onClick={() => { setSourceModalOpen(false); setSourceFile(null); }}>Annuler</Button>
+            <Button type="button" color="brand" disabled={!sourceFile || sourceUploading} onClick={handleSourceChange}>{sourceUploading ? "Upload…" : "Remplacer"}</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
+
 
   /* -----------------------------------------------------------------------
    *  DESKTOP: 2-column layout with stepper
@@ -1514,17 +1771,6 @@ export default function EditVideo() {
 
   return (
     <div>
-      {/* Breadcrumb */}
-      <div className={styles.breadcrumb}>
-        <Link href="/">Accueil</Link>
-        <span>/</span>
-        <Link href="/dashboard">Tableau de bord</Link>
-        <span>/</span>
-        <span>Éditer</span>
-        <span>/</span>
-        <span>{video?.title}</span>
-      </div>
-
       {/* Alerts */}
       {formError && <Alert canClose type={VariantType.ERROR} aria-live="assertive">{formError}</Alert>}
       {useSubtitleError && <Alert canClose type={VariantType.ERROR} aria-live="assertive">{useSubtitleError}</Alert>}
@@ -1535,8 +1781,8 @@ export default function EditVideo() {
         <div className={styles.page_header}>
           <h1 className={styles.page_title}>Éditer la vidéo « {video?.title} »</h1>
           <div className={styles.header_actions}>
-            <button type="button" className={styles.action_pill_btn} onClick={() => alert("Fonctionnalité de duplication bientôt disponible.")}>
-              <ContentCopyIcon fontSize="small" /> Dupliquer
+            <button type="button" className={styles.action_pill_btn} onClick={handleDuplicate} disabled={isDuplicating}>
+              <FileCopyIcon fontSize="small" /> {isDuplicating ? "Duplication…" : "Dupliquer"}
             </button>
             <button type="submit" className={`${styles.action_pill_btn} ${styles.primary}`} disabled={isSubmitting}>
               <SaveIcon fontSize="small" /> Enregistrer
@@ -1547,51 +1793,76 @@ export default function EditVideo() {
           </div>
         </div>
 
-        {/* Custom Stepper matching mockup */}
+        {/* Formik-style Stepper with validation indicators */}
         <div className={styles.stepper_wrapper}>
           <div className={styles.custom_stepper}>
             <div className={styles.stepper_line_bg}></div>
             <div className={styles.stepper_line_progress} style={{ width: `${(activeStep / (ALL_STEPS.length - 1)) * 100}%` }}></div>
             {ALL_STEPS.map((label, index) => {
               const isActive = index === activeStep;
-              const isPast = index < activeStep;
+
+              // Validation & completion logic
+              const isStep0Error = Boolean(watchedValues.status === "PU" && !video?.has_video_file && !video?.video_url && !sourceFile);
+              const isStep1Error = Boolean(errors.title || errors.type_id || (!watchedValues.title?.trim() && isSubmitted));
+              const isStep3Error = Boolean(watchedValues.status === "PU" && !video?.has_video_file && !video?.video_url && !sourceFile);
+              const isError = (index === 0 && isStep0Error) || (index === 1 && isStep1Error) || (index === 3 && isStep3Error);
+
+              const isCompleted = !isError && (
+                (index === 0 && Boolean(video?.has_video_file || video?.video_url || sourceFile)) ||
+                (index === 1 && Boolean(watchedValues.title?.trim() && watchedValues.type_id && !errors.title && !errors.type_id)) ||
+                (index === 2 && Boolean(video?.subtitles?.length || video?.documents?.length || video?.co_owners?.length)) ||
+                (index === 3 && Boolean(watchedValues.status))
+              );
+
+              let itemClass = styles.stepper_item;
+              if (isActive) itemClass += ` ${styles.stepper_item_active}`;
+              if (isCompleted && !isActive) itemClass += ` ${styles.stepper_item_completed}`;
+              if (isError) itemClass += ` ${styles.stepper_item_error}`;
+
               return (
                 <div
                   key={label}
-                  className={`${styles.stepper_item} ${isActive ? styles.stepper_item_active : ''} ${isPast ? styles.stepper_item_past : ''}`}
+                  className={itemClass}
                   onClick={() => handleStepClick(index)}
                   style={{ cursor: index > 0 ? "pointer" : "default" }}
                 >
+                  <div className={styles.stepper_dot}>
+                    {isError ? (
+                      <PriorityHighIcon style={{ fontSize: 18 }} />
+                    ) : isCompleted && !isActive ? (
+                      <CheckIcon style={{ fontSize: 18 }} />
+                    ) : (
+                      index + 1
+                    )}
+                  </div>
                   <span className={styles.stepper_label}>{label}</span>
-                  <div className={styles.stepper_dot}></div>
-                </div >
+                  {isError && (
+                    <span className={styles.stepper_badge_status} style={{ background: "#ffebee", color: "#d32f2f" }}>
+                      Incomplet
+                    </span>
+                  )}
+                </div>
               );
             })}
-          </div >
-        </div >
+          </div>
+        </div>
 
         {/* Step header: step title + Previous/Next */}
-        < div className={styles.step_header} >
+        <div className={styles.step_header}>
           <div>
             <h2 className={styles.step_title}>
               {ALL_STEPS[activeStep]}
             </h2>
-            {
-              activeStep === 1 && (
-                <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
-              )
-            }
-            {
-              activeStep === 3 && (
-                <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir</p>
-              )
-            }
-            {
-              activeStep === 2 && (
-                <p className={styles.step_sub_title}>Ajoutez des fiches et un écran de début/fin pour montrer à vos spectateurs des vidéos, des sites Web et des incitations à l&apos;action en lien avec votre vidéo</p>
-              )
-            }
-          </div >
+            {activeStep === 1 && (
+              <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
+            )}
+            {activeStep === 3 && (
+              <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir.</p>
+            )}
+            {activeStep === 2 && (
+              <p className={styles.step_sub_title}>Enrichissez votre vidéo avec des sous-titres, documents et contributeurs.</p>
+            )}
+          </div>
           <div className={styles.step_nav}>
             <button
               type="button"
@@ -1619,25 +1890,26 @@ export default function EditVideo() {
               </button>
             )}
           </div>
-        </div >
+        </div>
 
         <Divider />
 
         {/* 2-column layout */}
         <div className={styles.form_layout}>
           <div className={styles.form_left}>
-            {formPanelIndex === 0 && renderDetailsStep()}
-            {formPanelIndex === 1 && renderElementsStep()}
-            {formPanelIndex === 2 && renderVisibilityStep()}
+            {activeStep === 0 && renderImportStep()}
+            {activeStep === 1 && renderDetailsStep()}
+            {activeStep === 2 && renderElementsStep()}
+            {activeStep === 3 && renderVisibilityStep()}
           </div>
           <div className={styles.form_right}>
             {renderVideoPreview()}
           </div>
         </div>
-      </form >
+      </form>
 
       {/* Confirm leave dialog */}
-      < Dialog open={confirmLeaveOpen} onClose={handleCancelLeave} >
+      <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave} PaperProps={{ sx: { borderRadius: 3 } }}>
         <DialogTitle>Modifications non enregistrées</DialogTitle>
         <DialogContent>
           Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?
@@ -1646,7 +1918,170 @@ export default function EditVideo() {
           <Button type="button" variant="secondary" color="neutral" onClick={handleCancelLeave}>Rester sur la page</Button>
           <Button type="button" variant="secondary" color="brand" onClick={handleConfirmLeave}>Quitter sans enregistrer</Button>
         </DialogActions>
-      </Dialog >
-    </div >
+      </Dialog>
+
+      {/* Chapters Modal */}
+      <Dialog open={chaptersModalOpen} onClose={() => setChaptersModalOpen(false)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <BookmarksIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Chapitres de la vidéo
+        </DialogTitle>
+        <DialogContent dividers>
+          {video && <VideoChaptersForm video={video!} />}
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => setChaptersModalOpen(false)}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dressing Modal */}
+      <Dialog open={dressingModalOpen} onClose={() => setDressingModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <StyleIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Habillage de la vidéo
+        </DialogTitle>
+        <DialogContent dividers>
+          {video && <VideoDressingForm video={video!} onDressingUpdated={() => refetch()} />}
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => setDressingModalOpen(false)}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Subtitles Modal */}
+      <Dialog open={subtitlesModalOpen} onClose={() => setSubtitlesModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <SubtitlesIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Sous-titres manuels
+        </DialogTitle>
+        <DialogContent dividers>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "4px 0" }}>
+            <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+              Ajoutez des sous-titres au format <b>.vtt</b> ou <b>.srt</b>. Chaque fichier correspond à une langue.
+            </p>
+
+            {/* Existing subtitles */}
+            {video?.subtitles?.length ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {video?.subtitles?.map((s) => (
+                  <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid #e5e7eb", borderRadius: 10, background: "white" }}>
+                    <div>
+                      <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{s.language.toUpperCase()}</span>
+                      {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
+                    </div>
+                    <Button type="button" size="small" color="warning" variant="secondary" disabled={useSubtitleLoading} onClick={() => handleDeleteSubtitle(s.id)}>
+                      Supprimer
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: "#9ca3af", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
+            )}
+
+            {/* Add new subtitle */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb" }}>
+              <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>Ajouter un sous-titre</span>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                <TextField
+                  select
+                  label="Langue"
+                  value={subtitleLanguage}
+                  onChange={(e) => setSubtitleLanguage(e.target.value as LanguageSubtitle)}
+                  size="small"
+                  sx={{ minWidth: 140 }}
+                  InputProps={{ style: { borderRadius: 10 } }}
+                >
+                  {SUBTITLE_LANGUAGE_OPTIONS.map((opt) => (
+                    <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                  ))}
+                </TextField>
+                <FormControlLabel
+                  control={<Checkbox checked={subtitleIsDefault} onChange={(e) => setSubtitleIsDefault(e.target.checked)} size="small" />}
+                  label="Par défaut"
+                />
+              </div>
+              <FileUploader
+                text="Sélectionner un fichier .vtt ou .srt"
+                accept=".vtt,.srt"
+                onChange={(e: any) => setSubtitleFile(e?.target?.files?.[0] || e || null)}
+              />
+              {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📄 {subtitleFile?.name}</p>}
+              <Button
+                type="button"
+                color="brand"
+                disabled={!subtitleFile || useSubtitleLoading}
+                onClick={async () => { await handleAddSubtitle(); await refetch(); }}
+              >
+                {useSubtitleLoading ? "Ajout en cours…" : "Ajouter le sous-titre"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => setSubtitlesModalOpen(false)}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Documents Modal */}
+      <Dialog open={documentsModalOpen} onClose={() => setDocumentsModalOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <AttachFileIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Documents joints
+        </DialogTitle>
+        <DialogContent dividers>
+          {video && <VideoDocumentsForm videoId={video!.id} />}
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => setDocumentsModalOpen(false)}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Contributors Modal */}
+      <Dialog open={contributorsModalOpen} onClose={() => setContributorsModalOpen(false)} maxWidth="md" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <GroupIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Contributeurs &amp; Intervenants
+        </DialogTitle>
+        <DialogContent dividers>
+          {video && <VideoContributorsForm videoId={video!.id} />}
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => setContributorsModalOpen(false)}>Fermer</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Source change Modal */}
+      <Dialog open={sourceModalOpen} onClose={() => { setSourceModalOpen(false); setSourceFile(null); }} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, fontWeight: 700 }}>
+          <SwitchVideoIcon sx={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+          Changer la source vidéo
+        </DialogTitle>
+        <DialogContent dividers>
+          <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "4px 0" }}>
+            <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+              Remplacez le fichier source de cette vidéo. Un nouveau processus d&apos;encodage sera automatiquement lancé.
+            </p>
+            {video?.video_url && (
+              <div style={{ padding: "10px 14px", background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: "0.85rem", color: "#374151" }}>
+                <span style={{ fontWeight: 600 }}>Source actuelle :</span> {String(video?.video_url).split("/").pop()}
+              </div>
+            )}
+            <FileUploader
+              text="Sélectionner un nouveau fichier vidéo"
+              accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"}
+              onChange={(e: any) => setSourceFile(e?.target?.files?.[0] || e || null)}
+            />
+            {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📹 {sourceFile?.name}</p>}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" variant="secondary" color="neutral" onClick={() => { setSourceModalOpen(false); setSourceFile(null); }}>Annuler</Button>
+          <Button type="button" color="brand" disabled={!sourceFile || sourceUploading} onClick={handleSourceChange}>
+            {sourceUploading ? "Upload en cours…" : "Remplacer la source"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }

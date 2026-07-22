@@ -6,6 +6,30 @@ import type {
   VideoStatus,
 } from "@/src/constants/video";
 
+export interface Chapter {
+  id: number;
+  video: number;
+  title: string;
+  time_start: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SocialNetwork {
+  id: number;
+  name: string;
+  icon_name: string;
+  share_url_template: string;
+  is_active: boolean;
+  order: number;
+}
+
+export interface DownloadOption {
+  label: string;
+  resolution: string;
+  url: string;
+}
+
 // Objet Video renvoye par l'API
 export interface Video {
   id: number;
@@ -36,6 +60,7 @@ export interface Video {
   allow_downloading: boolean;
   disable_comment: boolean;
   date_of_event: string | null;
+  publication_date?: string | null;
   license: VideoLicense;
   cursus: CursusCode | null;
   language: string | null;
@@ -49,6 +74,11 @@ export interface Video {
   type_name: string | null;
   views?: number | null;
   documents?: VideoDocument[] | null;
+  chapters?: Chapter[] | null;
+  dressing?: number | null;
+  social_networks?: number[] | null;
+  social_network_details?: SocialNetwork[] | null;
+  download_options?: DownloadOption[] | null;
 }
 
 // Objet Video pour le formulaire de creation et d'edition

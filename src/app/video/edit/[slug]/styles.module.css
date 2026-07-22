@@ -135,7 +135,7 @@
 /* -------  2-column desktop layout --------- */
 .form_layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: 1fr 450px;
   gap: var(--c--globals--spacings--lg);
   align-items: start;
 }
@@ -305,7 +305,7 @@
   flex-direction: column;
   gap: var(--c--globals--spacings--sm);
   border: 1.5px solid var(--c--globals--colors--gray-200);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .restreint_fields p {
@@ -325,7 +325,7 @@
   align-items: flex-start;
   background-color: #eaf1fb;
   padding: var(--c--globals--spacings--sm);
-  border-radius: 6px;
+  border-radius: 10px;
   gap: var(--c--globals--spacings--xs);
 }
 
@@ -346,7 +346,7 @@
   justify-content: space-between;
   padding: 12px 16px;
   border: 1.5px solid var(--c--globals--colors--gray-200, #e0e0e0);
-  border-radius: 8px;
+  border-radius: 10px;
   background: white;
   gap: var(--c--globals--spacings--sm);
   flex-wrap: wrap;
@@ -399,7 +399,7 @@
 /* -------  Visibilité accordion-style section --------- */
 .visibility_section {
   border: 1.5px solid var(--c--globals--colors--gray-200);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -469,10 +469,13 @@
     grid-template-columns: 1fr;
   }
 
-  /* Video preview goes to top on mobile */
+  /* Video preview centered on mobile */
   .form_right {
     position: static;
     order: -1;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto 16px auto;
   }
 
   /* Mobile step nav list */
@@ -481,7 +484,7 @@
     flex-direction: column;
     gap: 0;
     border: 1.5px solid var(--c--globals--colors--gray-200);
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
     margin-top: var(--c--globals--spacings--sm);
   }
@@ -499,9 +502,8 @@
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--c--globals--colors--gray-900);
-    transition: background 0.12s;
-    gap: 12px;
+    color: var(--c--globals--colors--gray-800);
+    transition: background 0.15s ease;
   }
 
   .mobile_menu_item:last-child {
@@ -512,18 +514,20 @@
     background: var(--c--globals--colors--gray-050);
   }
 
-  .mobile_menu_item_icon {
-    color: var(--c--globals--colors--primary-600, #00818a);
+  .mobile_menu_item_left {
     display: flex;
     align-items: center;
+    gap: 12px;
   }
 
-  .mobile_menu_item_chevron {
-    color: var(--c--globals--colors--gray-400);
-    margin-left: auto;
+  .mobile_menu_item_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--c--globals--colors--primary-600, #00818a);
   }
 
-  /* Mobile back button within a step */
+  /* Back button in mobile sub-panel */
   .mobile_back_btn {
     display: inline-flex;
     align-items: center;
@@ -542,6 +546,14 @@
 
   .mobile_back_btn:hover {
     background: rgba(0, 129, 138, 0.06);
+  }
+}
+
+/* Intermediate screens (Laptops / Small Desktops) */
+@media (min-width: 933px) and (max-width: 1280px) {
+  .form_layout {
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
   }
 }
 
@@ -580,7 +592,7 @@
   width: 140px;
   height: 90px;
   border: 1.5px dashed var(--c--globals--colors--primary-600, #00818a);
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -617,33 +629,35 @@
 }
 
 /* -------  Custom Stepper UI  --------- */
+/* -------  Custom Formik-style Stepper UI  --------- */
 .custom_stepper {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin: 16px 0 32px;
+  margin: 20px 0 36px;
+  padding: 0 10px;
 }
 
 .stepper_line_bg {
   position: absolute;
-  top: 30px;
-  left: 30px;
-  right: 30px;
+  top: 16px;
+  left: 50px;
+  right: 50px;
   height: 3px;
-  background-color: var(--c--globals--colors--gray-300, #e0e0e0);
+  background-color: var(--c--globals--colors--gray-200, #e5e7eb);
   z-index: 1;
 }
 
 .stepper_line_progress {
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: 16px;
+  left: 50px;
   height: 3px;
   background-color: var(--c--globals--colors--primary-600, #00818a);
   z-index: 2;
-  transition: width 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stepper_item {
@@ -652,40 +666,85 @@
   align-items: center;
   gap: 8px;
   z-index: 3;
-  width: 120px;
+  width: 140px;
+  user-select: none;
+  transition: transform 0.15s ease;
 }
 
-.stepper_label {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--c--globals--colors--gray-800);
+.stepper_item:hover {
+  transform: translateY(-2px);
 }
 
 .stepper_dot {
-  width: 22px;
-  height: 22px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  border: 2px solid var(--c--globals--colors--gray-300, #bdbdbd);
+  border: 2px solid var(--c--globals--colors--gray-300, #d1d5db);
   background: white;
-  transition: all 0.3s ease;
+  color: var(--c--globals--colors--gray-600, #6b7280);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+.stepper_label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--c--globals--colors--gray-700, #4b5563);
+  text-align: center;
+  transition: color 0.2s ease;
+  line-height: 1.25;
+}
+
+.stepper_badge_status {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-top: 2px;
+  white-space: nowrap;
+}
+
+/* Active State */
 .stepper_item_active .stepper_label {
   font-weight: 700;
-  color: var(--c--globals--colors--gray-900);
+  color: var(--c--globals--colors--gray-900, #111827);
 }
 
 .stepper_item_active .stepper_dot {
   background: var(--c--globals--colors--primary-600, #00818a);
   border-color: var(--c--globals--colors--primary-600, #00818a);
-  box-shadow: 0 0 0 3px rgba(0, 129, 138, 0.2);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(0, 129, 138, 0.2);
 }
 
-.stepper_item_past .stepper_dot {
+/* Completed State */
+.stepper_item_completed .stepper_dot {
+  background: var(--c--globals--colors--primary-600, #00818a);
   border-color: var(--c--globals--colors--primary-600, #00818a);
+  color: white;
+}
+
+.stepper_item_completed .stepper_label {
+  color: var(--c--globals--colors--primary-700, #006b72);
+  font-weight: 600;
+}
+
+/* Error / Invalid State */
+.stepper_item_error .stepper_dot {
+  background: #d32f2f !important;
+  border-color: #d32f2f !important;
+  color: white !important;
+  box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2) !important;
+}
+
+.stepper_item_error .stepper_label {
+  color: #d32f2f !important;
+  font-weight: 700 !important;
 }
 
 

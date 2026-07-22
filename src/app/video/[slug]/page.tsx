@@ -43,6 +43,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import styles from "./styles.module.css";
 import BackButton from "@/src/components/BackButton/BackButton";
+import VideoShareMenu from "@/src/components/video/VideoShareMenu";
+import VideoDownloadMenu from "@/src/components/video/VideoDownloadMenu";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -359,12 +361,13 @@ export default function Video() {
   /* ------------------------------------------------------------------
    * Gestion du téléchargement de la vidéo
    * ------------------------------------------------------------------ */
-  const handleDownload = async () => {
+  const handleDownload = async (targetUrl?: string, resolution?: string) => {
     if (!video || isDownloading) return;
     setDownloadError(null);
     setIsDownloading(true);
     try {
-      const response = await authFetch(getRoutes().video.stream(video.slug), {
+      const urlToFetch = targetUrl || getRoutes().video.stream(video.slug);
+      const response = await authFetch(urlToFetch, {
         accessToken,
         onRefresh: refresh,
       });
@@ -374,12 +377,17 @@ export default function Video() {
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      const filename = getDownloadFilename(
+      const ext = resolution && resolution !== "Original" ? `_${resolution}.mp4` : `.mp4`;
+      const baseFilename = getDownloadFilename(
         response.headers.get("content-disposition"),
         video.slug,
       );
+      const finalFilename = resolution && resolution !== "Original"
+        ? baseFilename.replace(/\.mp4$/i, "") + ext
+        : baseFilename;
+
       link.href = downloadUrl;
-      link.download = filename;
+      link.download = finalFilename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -535,9 +543,14 @@ export default function Video() {
               </div>
 
               <div className={styles.video_actions_row}>
-                <button className={styles.action_pill} onClick={handleShare}>
-                  <ShareIcon fontSize="small" /> {isCopied ? "Lien copié !" : "Partager"}
-                </button>
+                <VideoShareMenu video={video} className={styles.action_pill} />
+                {video.allow_downloading && (
+                  <VideoDownloadMenu
+                    video={video}
+                    className={styles.action_pill}
+                    onDownloadStreamUrl={(url, res) => handleDownload(url, res)}
+                  />
+                )}
                 {user && config?.collection?.use_playlists !== false && (
                   <PlaylistActionMenu playlists={myPlaylists} videoId={video.id} />
                 )}
