@@ -94,7 +94,7 @@ export default function VideosDisplay({
       <div className={styles.toolbar}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {selectable && (
-            <div style={{ transform: "scale(0.85)", transformOrigin: "left center" }}>
+            <div style={{ transform: "scale(0.7)", transformOrigin: "left center" }}>
               <Checkbox
                 label="Tout sélectionner"
                 checked={isAllSelected}

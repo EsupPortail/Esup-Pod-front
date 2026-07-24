@@ -87,6 +87,8 @@ export default function VideoCard(props: VideosCardProps) {
             zIndex: 10,
             // Isole le Checkbox Cunningham visuellement — on masque le label
             lineHeight: 0,
+            transform: "scale(0.7)",
+            transformOrigin: "top left",
           }}
         >
           <Checkbox
