@@ -2,15 +2,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { requestJson } from "../utils/requestJson";
+import { getRoutes } from "../api/routes";
 
 export const useBulkActions = () => {
   const queryClient = useQueryClient();
   const { accessToken, refresh: refreshAuthToken } = useAuth();
   const authOpts = { accessToken, onRefresh: refreshAuthToken };
+  const routes = getRoutes();
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: async ({ videoIds, fields }: { videoIds: number[]; fields: any }) => {
-      const res = await authFetch(`/api/videos/bulk/`, {
+    mutationFn: async ({ videoIds, fields }: { videoIds: number[]; fields: Record<string, any> }) => {
+      const res = await authFetch(routes.video.bulk, {
         ...authOpts,
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -25,7 +27,7 @@ export const useBulkActions = () => {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async (videoIds: number[]) => {
-      const res = await authFetch(`/api/videos/bulk/`, {
+      const res = await authFetch(routes.video.bulk, {
         ...authOpts,
         method: "DELETE",
         headers: { "Content-Type": "application/json" },

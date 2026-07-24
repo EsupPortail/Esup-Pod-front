@@ -10,8 +10,27 @@ import ErrorIcon from "@mui/icons-material/Error";
 import Tooltip from "@mui/material/Tooltip";
 
 /* Définit les colonnes du tableau de vidéos.*/
-export function getVideoGridColumns(): Column<VideoDisplayRow>[] {
+export function getVideoGridColumns(selectable: boolean = false): Column<VideoDisplayRow>[] {
   return [
+    ...(selectable
+      ? [
+          {
+            id: "select",
+            field: "select",
+            headerName: "",
+            enableSorting: false,
+            renderCell: ({ row }: { row: VideoDisplayRow }) => (
+              <input
+                type="checkbox"
+                checked={!!row.selected}
+                onChange={(e) => row.onSelectToggle?.(e.target.checked)}
+                onClick={(e) => e.stopPropagation()}
+                style={{ width: "18px", height: "18px", cursor: "pointer" }}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       field: "thumbnail",
       headerName: "",

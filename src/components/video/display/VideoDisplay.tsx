@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Pagination, usePagination } from "@openfun/cunningham-react";
+import { Checkbox, Pagination, usePagination } from "@openfun/cunningham-react";
 import VideosList from "@/src/components/video/VideosList";
 import type { VideoViewMode, VideosDisplayProps } from "./types";
 import { mapVideosToDisplayRows } from "./VideoDisplay.mapper";
@@ -19,6 +19,10 @@ export default function VideosDisplay({
   page: externalPage,
   onPageChange,
   loading = false,
+  selectable = false,
+  selectedVideoIds = [],
+  onSelectVideo,
+  onSelectAll,
 }: VideosDisplayProps) {
   const [view, setView] = useState<VideoViewMode>(defaultView);
 
@@ -72,23 +76,52 @@ export default function VideosDisplay({
   }, [videos, page, pageSize, videosCount]);
 
   const gridRows = useMemo(() => {
-    return mapVideosToDisplayRows(paginatedVideos, currentUserId);
-  }, [paginatedVideos, currentUserId]);
+    return mapVideosToDisplayRows(
+      paginatedVideos,
+      currentUserId,
+      selectedVideoIds,
+      onSelectVideo
+    );
+  }, [paginatedVideos, currentUserId, selectedVideoIds, onSelectVideo]);
+
+  const isAllSelected = useMemo(() => {
+    if (paginatedVideos.length === 0) return false;
+    return paginatedVideos.every((v) => selectedVideoIds.includes(v.id));
+  }, [paginatedVideos, selectedVideoIds]);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
-        <p>
-          {count} vidéo{count > 1 ? "s" : ""} trouvée{count > 1 ? "s" : ""}
-        </p>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          {selectable && (
+            <div style={{ transform: "scale(0.85)", transformOrigin: "left center" }}>
+              <Checkbox
+                label="Tout sélectionner"
+                checked={isAllSelected}
+                onChange={(e) => onSelectAll?.((e.target as HTMLInputElement).checked)}
+                aria-label="Sélectionner toutes les vidéos de la page"
+              />
+            </div>
+          )}
+
+          <p>
+            {count} vidéo{count > 1 ? "s" : ""} trouvée{count > 1 ? "s" : ""}
+          </p>
+        </div>
 
         <VideoViewToggle view={view} onChange={handleChangeView} />
       </div>
 
       {view === "cards" ? (
-        <VideosList videosList={paginatedVideos} loading={loading} />
+        <VideosList
+          videosList={paginatedVideos}
+          loading={loading}
+          selectable={selectable}
+          selectedVideoIds={selectedVideoIds}
+          onSelectVideo={onSelectVideo}
+        />
       ) : (
-        <VideoGrid rows={gridRows} />
+        <VideoGrid rows={gridRows} selectable={selectable} />
       )}
 
       {pagesCount && pagesCount > 1 && (

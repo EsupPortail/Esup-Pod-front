@@ -5,6 +5,7 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
+import { Checkbox } from "@openfun/cunningham-react";
 import styles from "./VideoCard.module.css";
 import Link from "next/link";
 import Avatar from "@mui/material/Avatar";
@@ -21,10 +22,13 @@ import ErrorIcon from "@mui/icons-material/Error";
 interface VideosCardProps {
   video: Video;
   isOwner?: boolean;
+  selectable?: boolean;
+  selected?: boolean;
+  onSelectToggle?: (checked: boolean) => void;
 }
 
 export default function VideoCard(props: VideosCardProps) {
-  const { video, isOwner = false } = props;
+  const { video, isOwner = false, selectable = false, selected = false, onSelectToggle } = props;
   const time = secondToMinute(video.duration || 0);
 
   // Détection du contexte : playlist ou favoris
@@ -58,8 +62,12 @@ export default function VideoCard(props: VideosCardProps) {
         width: "100%",
         position: "relative",
         mb: 4,
-        backgroundColor: "var(--c--globals--colors--gray-000)",
-        border: "1px solid var(--c--globals--colors--gray-200)",
+        backgroundColor: selected
+          ? "rgba(10, 89, 219, 0.04)"
+          : "var(--c--globals--colors--gray-000)",
+        border: selected
+          ? "2px solid var(--c--contextuals--background--semantic--brand--primary)"
+          : "1px solid var(--c--globals--colors--gray-200)",
         borderRadius: "12px",
         transition: "all 0.3s ease",
         "&:hover": {
@@ -69,6 +77,29 @@ export default function VideoCard(props: VideosCardProps) {
         }
       }}
     >
+      {selectable && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+            zIndex: 10,
+            // Isole le Checkbox Cunningham visuellement — on masque le label
+            lineHeight: 0,
+          }}
+        >
+          <Checkbox
+            label=""
+            checked={selected}
+            onChange={(e) => {
+              onSelectToggle?.((e.target as HTMLInputElement).checked);
+            }}
+            aria-label="Sélectionner cette vidéo"
+          />
+        </div>
+      )}
+
       <CardActionArea
         component={Link}
         href={href}

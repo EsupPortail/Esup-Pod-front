@@ -14,6 +14,10 @@ export interface VideosDisplayProps {
   page?: number;
   onPageChange?: (page: number) => void;
   loading?: boolean;
+  selectable?: boolean;
+  selectedVideoIds?: number[];
+  onSelectVideo?: (videoId: number, checked: boolean) => void;
+  onSelectAll?: (checked: boolean) => void;
 }
 
 export interface VideoViewToggleProps {
@@ -41,4 +45,6 @@ export interface VideoDisplayRow {
   href: string;
   editHref: string;
   deleteHref: string;
+  selected?: boolean;
+  onSelectToggle?: (checked: boolean) => void;
 }

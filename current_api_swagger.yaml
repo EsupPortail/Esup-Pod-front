@@ -1271,6 +1271,160 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
+  /api/chapters/:
+    get:
+      operationId: chapters_list
+      description: API endpoint for managing video chapters.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - chapters
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedChapterList'
+          description: ''
+    post:
+      operationId: chapters_create
+      description: API endpoint for managing video chapters.
+      tags:
+      - chapters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+          description: ''
+  /api/chapters/{id}/:
+    get:
+      operationId: chapters_retrieve
+      description: API endpoint for managing video chapters.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Chapter.
+        required: true
+      tags:
+      - chapters
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+          description: ''
+    put:
+      operationId: chapters_update
+      description: API endpoint for managing video chapters.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Chapter.
+        required: true
+      tags:
+      - chapters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChapterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+          description: ''
+    patch:
+      operationId: chapters_partial_update
+      description: API endpoint for managing video chapters.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Chapter.
+        required: true
+      tags:
+      - chapters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChapterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChapterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChapterRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chapter'
+          description: ''
+    delete:
+      operationId: chapters_destroy
+      description: API endpoint for managing video chapters.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Chapter.
+        required: true
+      tags:
+      - chapters
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/collections/channels/:
     get:
       operationId: collections_channels_list
@@ -3505,6 +3659,54 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/dublin-core/:
+    get:
+      operationId: dublin_core_list
+      description: GET /api/dublin-core/ — paginated list of Dublin Core records.
+      summary: List Dublin Core metadata
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - dublin-core
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDublinCoreList'
+          description: ''
+  /api/dublin-core/{slug}/:
+    get:
+      operationId: dublin_core_retrieve
+      description: GET /api/dublin-core/{slug}/ — single video Dublin Core record.
+      summary: Retrieve Dublin Core metadata
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: URL friendly identifier.
+        required: true
+      tags:
+      - dublin-core
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DublinCore'
+          description: ''
   /api/encoding/webhook/:
     post:
       operationId: encoding_webhook_create
@@ -3564,6 +3766,132 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+          description: ''
+  /api/info/pages/:
+    get:
+      operationId: info_pages_list
+      description: |-
+        Retrieves flatpages (static pages like terms, about, etc.)
+        managed by Django admin.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - info
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFlatPageList'
+          description: ''
+  /api/info/pages/{url}/:
+    get:
+      operationId: info_pages_retrieve
+      description: |-
+        Retrieves flatpages (static pages like terms, about, etc.)
+        managed by Django admin.
+      parameters:
+      - in: path
+        name: url
+        schema:
+          type: string
+          pattern: ^.*$
+        required: true
+      tags:
+      - info
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlatPage'
+          description: ''
+  /api/marker/{video_slug}/:
+    get:
+      operationId: marker_retrieve
+      description: |-
+        GET /api/marker/{video_slug}/
+        Returns the current playback position for the authenticated user. Returns 0 if no marker exists yet.
+      summary: Get playback marker
+      parameters:
+      - in: path
+        name: video_slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - marker
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMarkerTime'
+          description: ''
+  /api/marker/{video_slug}/reset/:
+    delete:
+      operationId: marker_reset_destroy
+      description: |-
+        DELETE /api/marker/{video_slug}/reset/
+        Resets (deletes) the marker for the authenticated user on this video.
+      summary: Reset playback marker
+      parameters:
+      - in: path
+        name: video_slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - marker
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/marker/{video_slug}/save/:
+    post:
+      operationId: marker_save_create
+      description: |-
+        POST /api/marker/{video_slug}/save/
+        Saves or updates the playback position for the authenticated user.
+      summary: Save playback marker
+      parameters:
+      - in: path
+        name: video_slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - marker
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                marker:
+                  type: integer
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserMarkerTime'
           description: ''
   /api/overlays/:
     get:
@@ -3733,6 +4061,56 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/social-networks/:
+    get:
+      operationId: social_networks_list
+      description: |-
+        API endpoint for retrieving active social networks for share buttons.
+        Read-only for normal users; management done via Django Admin.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - social-networks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSocialNetworkList'
+          description: ''
+  /api/social-networks/{id}/:
+    get:
+      operationId: social_networks_retrieve
+      description: |-
+        API endpoint for retrieving active social networks for share buttons.
+        Read-only for normal users; management done via Django Admin.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Social Network.
+        required: true
+      tags:
+      - social-networks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocialNetwork'
+          description: ''
   /api/subtitles/:
     get:
       operationId: subtitles_list
@@ -4535,6 +4913,64 @@ paths:
                   stream_token:
                     type: string
           description: Token created successfully.
+  /api/videos/{slug}/dublin-core/:
+    get:
+      operationId: videos_dublin_core_retrieve
+      description: |-
+        GET /api/videos/{slug}/dublin-core/
+        Returns Dublin Core metadata for a single video.
+        The video must be publicly visible.
+      summary: Dublin Core metadata for a video
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: URL friendly identifier.
+        required: true
+      tags:
+      - videos
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DublinCore'
+          description: ''
+        '400':
+          description: Dublin Core feature is disabled.
+        '403':
+          description: Video is not publicly available.
+  /api/videos/{slug}/duplicate/:
+    post:
+      operationId: videos_duplicate_create
+      description: |-
+        Creates a full duplicate of a video, including file copy and M2M relations.
+        The title is automatically set to 'Copy of <original title>'.
+        Restricted to the video owner, co-owners, and superusers.
+        Only available when USE_DUPLICATE is enabled in settings.
+      summary: Duplicate a video
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: URL friendly identifier.
+        required: true
+      tags:
+      - videos
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: ''
   /api/videos/{slug}/register_view/:
     post:
       operationId: videos_register_view_create
@@ -4767,6 +5203,143 @@ paths:
                     type: string
                     example: Incorrect password or hash
           description: Incorrect password or invalid legacy hash.
+  /api/videos/bulk/:
+    patch:
+      operationId: videos_bulk_partial_update
+      description: |-
+        Applies a PATCH or DELETE operation to multiple videos at once.
+        Requires ownership or co-ownership of every selected video.
+        Checks ownership on every video before processing.
+        If more than BULK_ASYNC_THRESHOLD videos are selected (configurable, default 20),
+        the operation is processed asynchronously and returns 202 Accepted.
+        Returns 400 if the feature is disabled via USE_BULK_ACTIONS setting.
+      summary: Bulk update or delete videos
+      tags:
+      - videos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_ids:
+                  type: array
+                  items:
+                    type: integer
+                  description: List of video IDs to process.
+                fields:
+                  type: object
+                  description: Fields to update (PATCH only).
+              required:
+              - video_ids
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: integer
+          description: ''
+        '202':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+    delete:
+      operationId: videos_bulk_destroy
+      description: |-
+        Applies a PATCH or DELETE operation to multiple videos at once.
+        Requires ownership or co-ownership of every selected video.
+        Checks ownership on every video before processing.
+        If more than BULK_ASYNC_THRESHOLD videos are selected (configurable, default 20),
+        the operation is processed asynchronously and returns 202 Accepted.
+        Returns 400 if the feature is disabled via USE_BULK_ACTIONS setting.
+      summary: Bulk update or delete videos
+      tags:
+      - videos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: integer
+          description: ''
+        '202':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
   /api/videos/me/:
     get:
       operationId: videos_me_list
@@ -5172,6 +5745,63 @@ components:
           description: Legacy ID from Pod V4 for migration/redirection.
       required:
       - title
+    Chapter:
+      type: object
+      description: Serializer for Chapter model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        video:
+          type: integer
+        title:
+          type: string
+          title: Chapter Title
+          description: Title or description of the chapter.
+          maxLength: 250
+        time_start:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: Start Time (s)
+          description: Start time of the chapter in seconds.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - title
+      - updated_at
+      - video
+    ChapterRequest:
+      type: object
+      description: Serializer for Chapter model.
+      properties:
+        video:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+          title: Chapter Title
+          description: Title or description of the chapter.
+          maxLength: 250
+        time_start:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: Start Time (s)
+          description: Start time of the chapter in seconds.
+      required:
+      - title
+      - video
     Comment:
       type: object
       description: |-
@@ -5194,6 +5824,9 @@ components:
           type: integer
           readOnly: true
         author_name:
+          type: string
+          readOnly: true
+        author_username:
           type: string
           readOnly: true
         author_picture:
@@ -5226,6 +5859,7 @@ components:
       - author
       - author_name
       - author_picture
+      - author_username
       - children
       - content
       - id
@@ -5636,6 +6270,61 @@ components:
             type: integer
       required:
       - title
+    DublinCore:
+      type: object
+      description: |-
+        Read-only serializer exposing Dublin Core metadata for a Video.
+        Maps directly to Video.get_dublin_core() output.
+      properties:
+        title:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        creator:
+          type: string
+          readOnly: true
+        publisher:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          readOnly: true
+        format:
+          type: string
+          readOnly: true
+        rights:
+          type: string
+          readOnly: true
+        coverage:
+          type: string
+          readOnly: true
+        subject:
+          type: string
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+        language:
+          type: string
+          readOnly: true
+        identifier:
+          type: string
+          readOnly: true
+      required:
+      - coverage
+      - creator
+      - date
+      - description
+      - format
+      - identifier
+      - language
+      - publisher
+      - rights
+      - subject
+      - title
+      - type
     EncodingStatusEnum:
       enum:
       - PE
@@ -5688,6 +6377,25 @@ components:
           type: integer
       required:
       - video
+    FlatPage:
+      type: object
+      description: Serializer for FlatPage model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        url:
+          type: string
+          maxLength: 100
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+      required:
+      - id
+      - title
+      - url
     Group:
       type: object
       description: Serializer for standard Django groups.
@@ -5959,6 +6667,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Channel'
+    PaginatedChapterList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Chapter'
     PaginatedCommentList:
       type: object
       required:
@@ -6120,6 +6851,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Dressing'
+    PaginatedDublinCoreList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DublinCore'
     PaginatedFavoriteList:
       type: object
       required:
@@ -6143,6 +6897,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Favorite'
+    PaginatedFlatPageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlatPage'
     PaginatedGroupList:
       type: object
       required:
@@ -6258,6 +7035,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Site'
+    PaginatedSocialNetworkList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SocialNetwork'
     PaginatedSubtitleList:
       type: object
       required:
@@ -6467,6 +7267,25 @@ components:
           minimum: -2147483648
           nullable: true
           description: Legacy ID from Pod V4 for migration/redirection.
+    PatchedChapterRequest:
+      type: object
+      description: Serializer for Chapter model.
+      properties:
+        video:
+          type: integer
+        title:
+          type: string
+          minLength: 1
+          title: Chapter Title
+          description: Title or description of the chapter.
+          maxLength: 250
+        time_start:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: Start Time (s)
+          description: Start time of the chapter in seconds.
     PatchedContributionRequest:
       type: object
       description: Serializer for the Contribution model.
@@ -6834,15 +7653,6 @@ components:
         last_name:
           type: string
           maxLength: 150
-        is_staff:
-          type: boolean
-          title: Staff status
-          description: Designates whether the user can log into this admin site.
-        is_superuser:
-          type: boolean
-          title: Superuser status
-          description: Designates that this user has all permissions without explicitly
-            assigning them.
     PatchedVideoRequest:
       type: object
       description: Serializer for the Video model.
@@ -6898,6 +7708,10 @@ components:
           type: string
           format: date
           nullable: true
+        publication_date:
+          type: string
+          format: date-time
+          nullable: true
         license:
           type: string
           minLength: 1
@@ -6915,9 +7729,10 @@ components:
           nullable: true
           description: Language spoken in the video (e.g. 'fr', 'en').
         channel:
-          type: integer
+          type: string
+          minLength: 1
+          description: URL friendly identifier.
           nullable: true
-          description: The channel this video belongs to.
         themes:
           type: array
           items:
@@ -6939,6 +7754,13 @@ components:
             type: integer
         tags:
           type: string
+        dressing:
+          type: integer
+          nullable: true
+        social_networks:
+          type: array
+          items:
+            type: integer
     Playlist:
       type: object
       description: Serializer for the Playlist model.
@@ -7233,6 +8055,72 @@ components:
       required:
       - domain
       - name
+    SocialNetwork:
+      type: object
+      description: Serializer for SocialNetwork model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Network Name
+          description: Name of the social network (e.g. X, Facebook, LinkedIn).
+          maxLength: 100
+        icon_name:
+          type: string
+          description: Identifier or icon class name for frontend rendering.
+          maxLength: 50
+        share_url_template:
+          type: string
+          description: 'URL pattern for sharing. Placeholders: {url} for video link,
+            {title} for video title.'
+          maxLength: 500
+        is_active:
+          type: boolean
+          description: Whether this network is available for sharing across the portal.
+        order:
+          type: integer
+          maximum: 65535
+          minimum: 0
+          title: Display Order
+          description: Order in which the share button appears.
+      required:
+      - id
+      - name
+      - share_url_template
+    SocialNetworkRequest:
+      type: object
+      description: Serializer for SocialNetwork model.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          title: Network Name
+          description: Name of the social network (e.g. X, Facebook, LinkedIn).
+          maxLength: 100
+        icon_name:
+          type: string
+          description: Identifier or icon class name for frontend rendering.
+          maxLength: 50
+        share_url_template:
+          type: string
+          minLength: 1
+          description: 'URL pattern for sharing. Placeholders: {url} for video link,
+            {title} for video title.'
+          maxLength: 500
+        is_active:
+          type: boolean
+          description: Whether this network is available for sharing across the portal.
+        order:
+          type: integer
+          maximum: 65535
+          minimum: 0
+          title: Display Order
+          description: Order in which the share button appears.
+      required:
+      - name
+      - share_url_template
     StatusEnum:
       enum:
       - DR
@@ -7633,13 +8521,10 @@ components:
           maxLength: 150
         is_staff:
           type: boolean
-          title: Staff status
-          description: Designates whether the user can log into this admin site.
+          readOnly: true
         is_superuser:
           type: boolean
-          title: Superuser status
-          description: Designates that this user has all permissions without explicitly
-            assigning them.
+          readOnly: true
         affiliation:
           type: string
           nullable: true
@@ -7662,9 +8547,35 @@ components:
       - affiliation
       - establishment
       - id
+      - is_staff
+      - is_superuser
       - server_roles
       - username
       - userpicture
+    UserMarkerTime:
+      type: object
+      description: Serializer for the UserMarkerTime model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        video:
+          type: integer
+        marker:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          title: Marker (seconds)
+          description: Last playback position in seconds.
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - id
+      - updated_at
+      - video
     UserRequest:
       type: object
       description: Serializer for the User model, enriched with Owner profile data.
@@ -7687,15 +8598,6 @@ components:
         last_name:
           type: string
           maxLength: 150
-        is_staff:
-          type: boolean
-          title: Staff status
-          description: Designates whether the user can log into this admin site.
-        is_superuser:
-          type: boolean
-          title: Superuser status
-          description: Designates that this user has all permissions without explicitly
-            assigning them.
       required:
       - username
     Video:
@@ -7819,6 +8721,10 @@ components:
           type: string
           format: date
           nullable: true
+        publication_date:
+          type: string
+          format: date-time
+          nullable: true
         license:
           type: string
           title: Code
@@ -7833,9 +8739,9 @@ components:
           nullable: true
           description: Language spoken in the video (e.g. 'fr', 'en').
         channel:
-          type: integer
+          type: string
+          description: URL friendly identifier.
           nullable: true
-          description: The channel this video belongs to.
         themes:
           type: array
           items:
@@ -7880,9 +8786,56 @@ components:
           nullable: true
           readOnly: true
           description: The number of views of the video (if enabled in config).
+        contributions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contribution'
+          readOnly: true
+        overlays:
+          type: array
+          items:
+            $ref: '#/components/schemas/Overlay'
+          readOnly: true
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+          readOnly: true
+        chapters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Chapter'
+          readOnly: true
+        dressing:
+          type: integer
+          nullable: true
+        dressing_details:
+          allOf:
+          - $ref: '#/components/schemas/Dressing'
+          readOnly: true
+        social_networks:
+          type: array
+          items:
+            type: integer
+        social_network_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/SocialNetwork'
+          readOnly: true
+        download_options:
+          type: array
+          items:
+            type: object
+            additionalProperties: {}
+          readOnly: true
       required:
+      - chapters
+      - contributions
       - created_at
       - discipline_details
+      - documents
+      - download_options
+      - dressing_details
       - duration
       - encoding_status
       - encoding_status_label
@@ -7892,11 +8845,13 @@ components:
       - hyperlinks
       - id
       - is_video
+      - overlays
       - owner
       - owner_first_name
       - owner_id
       - owner_last_name
       - slug
+      - social_network_details
       - status_label
       - subtitles
       - thumbnail_url
@@ -8053,6 +9008,10 @@ components:
           type: string
           format: date
           nullable: true
+        publication_date:
+          type: string
+          format: date-time
+          nullable: true
         license:
           type: string
           minLength: 1
@@ -8070,9 +9029,10 @@ components:
           nullable: true
           description: Language spoken in the video (e.g. 'fr', 'en').
         channel:
-          type: integer
+          type: string
+          minLength: 1
+          description: URL friendly identifier.
           nullable: true
-          description: The channel this video belongs to.
         themes:
           type: array
           items:
@@ -8094,6 +9054,13 @@ components:
             type: integer
         tags:
           type: string
+        dressing:
+          type: integer
+          nullable: true
+        social_networks:
+          type: array
+          items:
+            type: integer
       required:
       - title
   securitySchemes:

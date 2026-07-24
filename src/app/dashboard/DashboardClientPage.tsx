@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import VideosDisplay from "@/src/components/video/display/VideoDisplay";
 import VideoFilters, {
   type VideoFiltersValue,
 } from "@/src/components/video/filters/VideoFilters";
+import BulkActionsBar from "@/src/components/video/bulk/BulkActionsBar";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { useVideoListFilters } from "@/src/hooks/useVideoListFilters";
@@ -19,6 +20,7 @@ export const breadcrumbLabel = "Tableau de bord";
 export default function Dashboard() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { user } = useAuth();
+  const [selectedVideoIds, setSelectedVideoIds] = useState<number[]>([]);
 
   const {
     filters,
@@ -37,7 +39,31 @@ export default function Dashboard() {
     enabled: mounted && !isInitializing && isAuthenticated,
   });
 
+  const selectedVideos = useMemo(() => {
+    return videos.filter((video) => selectedVideoIds.includes(video.id));
+  }, [videos, selectedVideoIds]);
 
+  const handleSelectVideo = (videoId: number, checked?: boolean) => {
+    setSelectedVideoIds((prev) => {
+      const isCurrentlySelected = prev.includes(videoId);
+      const shouldBeSelected = checked !== undefined ? checked : !isCurrentlySelected;
+      if (shouldBeSelected) {
+        return prev.includes(videoId) ? prev : [...prev, videoId];
+      } else {
+        return prev.filter((id) => id !== videoId);
+      }
+    });
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allIds = videos.map((v) => v.id);
+      setSelectedVideoIds((prev) => [...new Set([...prev, ...allIds])]);
+    } else {
+      const pageIds = new Set(videos.map((v) => v.id));
+      setSelectedVideoIds((prev) => prev.filter((id) => !pageIds.has(id)));
+    }
+  };
 
   const hasActiveVideoFilters = useMemo(() => {
     const base: VideoFiltersValue = filters;
@@ -62,7 +88,7 @@ export default function Dashboard() {
   return (
     <div>
       <BackButton />
-      <h1>Mon tableau de bord</h1>
+      <h1 style={{ marginTop: "16px", marginBottom: "28px" }}>Mon tableau de bord</h1>
 
       {useVideoError && (
         <Alert canClose type={VariantType.ERROR}>
@@ -74,6 +100,16 @@ export default function Dashboard() {
         <CenteredLoader />
       ) : (
         <div>
+          <BulkActionsBar
+            selectedVideos={selectedVideos}
+            types={types}
+            disciplines={disciplines}
+            tags={tags}
+            channels={channels}
+            onApplySuccess={() => setSelectedVideoIds([])}
+            onClearSelection={() => setSelectedVideoIds([])}
+          />
+
           <VideoFilters
             value={filters}
             users={user ? users : []}
@@ -114,6 +150,10 @@ export default function Dashboard() {
               currentUserId={user?.id}
               defaultView="grid"
               storageKey="dashboard-videos-view"
+              selectable={true}
+              selectedVideoIds={selectedVideoIds}
+              onSelectVideo={handleSelectVideo}
+              onSelectAll={handleSelectAll}
             />
           )}
         </div>

@@ -9,11 +9,12 @@ import styles from "./styles.module.css";
 
 interface VideoGridProps {
   rows: VideoDisplayRow[];
+  selectable?: boolean;
 }
 /* Renderer tableau.
 Passe les rows à DataGrid avec les colonnes et tri des données
 */
-export default function VideoGrid({ rows }: VideoGridProps) {
+export default function VideoGrid({ rows, selectable = false }: VideoGridProps) {
   const [sortModel, setSortModel] = useState<SortModel>([]);
 
   const sortedRows = useMemo(() => {
@@ -57,11 +58,13 @@ export default function VideoGrid({ rows }: VideoGridProps) {
     });
   }, [rows, sortModel]);
 
+  const columns = useMemo(() => getVideoGridColumns(selectable), [selectable]);
+
   return (
     <DataGrid
       className={styles.dataGrid}
       rows={sortedRows}
-      columns={getVideoGridColumns()}
+      columns={columns}
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting
