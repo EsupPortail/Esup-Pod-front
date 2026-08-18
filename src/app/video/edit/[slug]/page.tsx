@@ -51,6 +51,7 @@ import { useTypes } from "@/src/hooks/useTypes";
 import type { User, Theme } from "@/src/types";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "./styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import { Chip } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -105,8 +106,8 @@ import { useDuplicate } from "@/src/hooks/useDuplicate";
 
 export const breadcrumbLabel = "Éditer la vidéo";
 
-function getUserLabel(user: User) {
-  const fullName = getUserDisplayName(user);
+function getUserLabel(user: User, config?: any) {
+  const fullName = getUserDisplayName(user, config?.authentication, false);
   return fullName || user.username;
 }
 
@@ -234,6 +235,7 @@ export default function EditVideo() {
 
 
   // Modal state for chapters, dressing, documents, contributors, subtitles
+  const { t } = useTranslation();
   const [chaptersModalOpen, setChaptersModalOpen] = useState(false);
   const [dressingModalOpen, setDressingModalOpen] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
@@ -242,6 +244,19 @@ export default function EditVideo() {
   const [sourceModalOpen, setSourceModalOpen] = useState(false);
   const [sourceFile, setSourceFile] = useState<File | null>(null);
   const [sourceUploading, setSourceUploading] = useState(false);
+
+  // Dynamic translated steps
+  const ALL_STEPS = useMemo(
+    () => [
+      t("videoEdit.stepImport"),
+      t("videoEdit.stepDetails"),
+      t("videoEdit.stepElements"),
+      t("videoEdit.stepVisibility"),
+    ],
+    [t]
+  );
+
+  const hasSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
 
   // Visibility accordion state
   const [restrictionExpanded, setRestrictionExpanded] = useState(true);
@@ -322,6 +337,13 @@ export default function EditVideo() {
   const watchOwner = useWatch({ control, name: "owner" });
   const watchedValues = useWatch({ control });
   const selectedChannel = useWatch({ control, name: "channel" });
+
+  // If no source file exists, enforce Brouillon / Privé status ("DR")
+  useEffect(() => {
+    if (!hasSource && watchedValues.status !== "DR") {
+      setValue("status", "DR");
+    }
+  }, [hasSource, watchedValues.status, setValue]);
 
   const themeOptions = useMemo(() => buildThemeOptions(themes), [themes]);
   const initialValuesRef = useRef<EditVideoFormValues | null>(null);
@@ -430,10 +452,10 @@ export default function EditVideo() {
 
   const selectedOwner = useMemo(() => {
     return users.find((user) => {
-      const fullName = getUserDisplayName(user);
+      const fullName = getUserDisplayName(user, config?.authentication, false);
       return user.username === video?.owner || fullName === video?.owner;
     }) ?? null;
-  }, [users, video?.owner]);
+  }, [users, video?.owner, config]);
 
   const liveOwnerUser = useMemo(() => {
     return users.find((u) => u.username === watchOwner) || selectedOwner;
@@ -728,56 +750,51 @@ export default function EditVideo() {
     const isPublicEmpty = selectedStatus === "PU" && !hasSource;
 
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
-          Gérez la vidéo source et l&apos;encodage de votre média.
-        </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
 
         {isPublicEmpty && (
-          <div style={{ margin: "4px 0 8px" }}>
-            <Alert type={VariantType.ERROR} canClose={false}>
-              <b>Importation obligatoire pour publication publique</b> : Vous avez sélectionné le statut <b>Public</b> mais aucun fichier source n&apos;est importé. Veuillez importer un fichier vidéo ci-dessous.
-            </Alert>
-          </div>
+          <Alert type={VariantType.ERROR} canClose={false}>
+            {t("videoEdit.publicNoSourceAlert")}
+          </Alert>
         )}
 
         {!hasSource ? (
           <div
             style={{
               padding: "16px 20px",
-              background: "#fffbebf5",
-              border: "1.5px solid #fcd34d",
+              background: "rgba(245, 158, 11, 0.12)",
+              border: "1.5px solid rgba(245, 158, 11, 0.4)",
               borderRadius: 10,
               display: "flex",
               flexDirection: "column",
               gap: 8,
             }}
           >
-            <div style={{ fontWeight: 700, color: "#b45309", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
-              Fiche vide sans source vidéo
+            <div style={{ fontWeight: 700, color: "#f59e0b", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
+              ⚠️ {t("videoEdit.noSourceWarningTitle")}
             </div>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#92400e", lineHeight: 1.5 }}>
-              Cette vidéo n&apos;a pas encore de fichier source associé. Vous pouvez compléter les métadonnées (titre, description, etc.), mais <b>vous devez ajouter une vidéo source ci-dessous avant de pouvoir la publier</b>.
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#fbbf24", lineHeight: 1.5 }}>
+              {t("videoEdit.noSourceWarningDesc")}
             </p>
           </div>
         ) : (
           <div
             style={{
               padding: "16px 20px",
-              background: "#f0fdf4",
-              border: "1.5px solid #bbf7d0",
+              background: "rgba(34, 197, 94, 0.12)",
+              border: "1.5px solid rgba(34, 197, 94, 0.4)",
               borderRadius: 10,
               display: "flex",
               flexDirection: "column",
               gap: 8,
             }}
           >
-            <div style={{ fontWeight: 700, color: "#15803d", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
-              ✅ Fichier source associé
+            <div style={{ fontWeight: 700, color: "#4ade80", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
+              ✅ {t("videoEdit.noSourceFileBadge")}
             </div>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#166534" }}>
-              Source actuelle : <b>{String(video?.video_url || sourceFile?.name || "").split("/").pop()}</b>
-              {video?.encoding_status_label ? ` • Statut d'encodage : ${video.encoding_status_label}` : ""}
+            <p style={{ margin: 0, fontSize: "0.85rem", color: "#86efac" }}>
+              {String(video?.video_url || sourceFile?.name || "").split("/").pop()}
+              {video?.encoding_status_label ? ` • ${video.encoding_status_label}` : ""}
             </p>
           </div>
         )}
@@ -785,23 +802,23 @@ export default function EditVideo() {
         <div
           style={{
             padding: "20px",
-            background: "white",
-            border: isPublicEmpty ? "1.5px solid #d32f2f" : "1.5px solid #e5e7eb",
+            background: "var(--c--theme--colors--card-bg, #0f172a)",
+            border: isPublicEmpty ? "1.5px solid #ef4444" : "1.5px solid var(--border-color, #334155)",
             borderRadius: 10,
             display: "flex",
             flexDirection: "column",
             gap: 16,
           }}
         >
-          <div style={{ fontWeight: 600, fontSize: "0.95rem", color: "#111" }}>
-            {hasSource ? "Remplacer le fichier source vidéo" : "Ajouter un fichier vidéo"}
+          <div style={{ fontWeight: 600, fontSize: "0.95rem" }}>
+            {t("videoEdit.importHeaderTitle")}
           </div>
-          <p style={{ margin: 0, fontSize: "0.85rem", color: "#6b7280" }}>
-            Sélectionnez un fichier vidéo depuis votre ordinateur. Un nouveau processus d&apos;encodage sera automatiquement lancé.
+          <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-color-muted, #94a3b8)" }}>
+            {t("videoEdit.selectVideoFile")}
           </p>
 
           <FileUploader
-            text="Glissez un fichier vidéo ici ou cliquez pour parcourir"
+            text={t("videoEdit.selectVideoFile")}
             accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"}
             onChange={(e: any) => {
               const file = e?.target?.files?.[0] || e || null;
@@ -814,8 +831,8 @@ export default function EditVideo() {
           />
 
           {sourceFile && (
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#374151", fontWeight: 500 }}>
-              📹 Fichier sélectionné : {sourceFile.name}
+            <p style={{ margin: 0, fontSize: "0.85rem", fontWeight: 500 }}>
+              📹 {sourceFile.name}
             </p>
           )}
 
@@ -827,7 +844,7 @@ export default function EditVideo() {
             onClick={handleSourceChange}
           >
             <SwitchVideoIcon fontSize="small" />
-            {sourceUploading ? "Envoi et re-encodage..." : (hasSource ? "Remplacer et re-encoder" : "Ajouter la vidéo")}
+            {sourceUploading ? t("common.loading") : t("videoEdit.addVideoFileBtn")}
           </button>
         </div>
       </div>
@@ -844,15 +861,15 @@ export default function EditVideo() {
         render={({ field }) => (
           <div className={styles.input_group}>
             <label className={styles.input_label}>
-              Titre <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{ fontSize: 14, verticalAlign: 'middle' }} /></span>
+              {t("videoEdit.titleLabel")} <span className={styles.required_star}>*</span>
             </label>
             <TextField
               {...field}
               fullWidth
               variant="outlined"
-              placeholder="Titre de la vidéo en Français"
+              placeholder={t("videoEdit.titlePlaceholder")}
               error={Boolean(errors.title)}
-              helperText={errors.title?.message ?? "Un titre aussi court et précis que possible, reflétant le sujet principal / le contexte de ce contenu. (taille maximale : 250 caractères)"}
+              helperText={errors.title?.message ?? t("videoEdit.titleHelper")}
               InputProps={{ style: { borderRadius: '8px' } }}
             />
           </div>
@@ -866,7 +883,7 @@ export default function EditVideo() {
         render={({ field }) => (
           <div className={styles.input_group}>
             <label className={styles.input_label}>
-              Description <span className={styles.required_star}>*</span> <span className={styles.lang_indicator}>FR <ExpandMoreIcon style={{ fontSize: 14, verticalAlign: 'middle' }} /></span>
+              {t("videoEdit.descriptionLabel")}
             </label>
             <TextField
               {...field}
@@ -874,8 +891,8 @@ export default function EditVideo() {
               multiline
               rows={4}
               variant="outlined"
-              placeholder="Description de la vidéo en Français"
-              helperText="Décrivez votre contenu, ajoutez toutes les informations nécessaires, et mettez en forme le résultat en utilisant la barre d'outils."
+              placeholder={t("videoEdit.descriptionPlaceholder")}
+              helperText={t("videoEdit.descriptionHelper")}
               InputProps={{ style: { borderRadius: '8px' } }}
             />
           </div>
@@ -889,14 +906,14 @@ export default function EditVideo() {
         render={({ field }) => (
           <div className={styles.input_group}>
             <label className={styles.input_label}>
-              Langue principale <span className={styles.required_star}>*</span>
+              {t("videoEdit.mainLanguageLabel")} <span className={styles.required_star}>*</span>
             </label>
             <TextField
               {...field}
               select
               fullWidth
               variant="outlined"
-              helperText="La langue principalement utilisée dans ce contenu."
+              helperText={t("videoEdit.mainLanguageHelper")}
               InputProps={{ style: { borderRadius: '8px' } }}
             >
               {(config?.video?.metadata_languages || VIDEO_LANGUAGE_OPTIONS).map((opt) => (
@@ -909,9 +926,67 @@ export default function EditVideo() {
         )}
       />
 
+      {/* Tags */}
+      <Controller
+        name="tags"
+        control={control}
+        render={({ field }) => {
+          const selectedTags = field.value
+            ? field.value.split(",").map((t) => t.trim()).filter(Boolean)
+            : [];
+          return (
+            <div className={styles.input_group}>
+              <label className={styles.input_label}>{t("videoEdit.tagsLabel", "Mots-clés")}</label>
+              <Autocomplete
+                multiple
+                freeSolo
+                options={tagOptions}
+                value={selectedTags}
+                inputValue={tagInputValue}
+                onInputChange={(_, newInputValue) => {
+                  let value = newInputValue;
+                  if (config?.video?.force_lowercase_tags !== false) {
+                    value = value.toLowerCase();
+                  }
+                  if (config?.video?.max_tag_length && value.length > config.video.max_tag_length) {
+                    value = value.substring(0, config.video.max_tag_length);
+                  }
+                  setTagInputValue(value);
+                }}
+                onChange={(_, newValue) => {
+                  let formattedTags = newValue.map((t) => t.trim()).filter(Boolean);
+                  if (config?.video?.force_lowercase_tags !== false) {
+                    formattedTags = formattedTags.map((t) => t.toLowerCase());
+                  }
+                  if (config?.video?.max_tag_length) {
+                    formattedTags = formattedTags.map((t) => t.substring(0, config!.video!.max_tag_length!));
+                  }
+                  formattedTags = Array.from(new Set(formattedTags));
+                  field.onChange(formattedTags.join(","));
+                }}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    variant="outlined"
+                    helperText={t("videoEdit.tagsHelper", "Appuyez sur Entrée pour ajouter un mot-clé")}
+                    InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }}
+                  />
+                )}
+              />
+            </div>
+          );
+        }}
+      />
+
       {/* Thumbnail */}
       <div className={styles.input_group}>
-        <label className={styles.input_label}>Vignettes</label>
+        <label className={styles.input_label}>{t("videoEdit.thumbnailLabel")}</label>
         <div className={styles.vignette_area}>
           {/* Preview zone */}
           {(thumbnailPreview ?? video?.thumbnail) ? (
@@ -923,14 +998,14 @@ export default function EditVideo() {
               />
               <div className={styles.vignette_overlay}>
                 <label htmlFor="thumbnail-input" className={styles.vignette_overlay_btn}>
-                  <UploadFileIcon fontSize="small" /> Changer
+                  <UploadFileIcon fontSize="small" /> {t("videoEdit.changeBtn")}
                 </label>
                 <button
                   type="button"
                   className={`${styles.vignette_overlay_btn} ${styles.vignette_overlay_btn_danger}`}
                   onClick={removeThumbnail}
                 >
-                  <DeleteOutlineIcon fontSize="small" /> Supprimer
+                  <DeleteOutlineIcon fontSize="small" /> {t("videoEdit.deleteBtn")}
                 </button>
               </div>
             </div>
@@ -939,8 +1014,8 @@ export default function EditVideo() {
               <div className={styles.vignette_empty_icon}>
                 <UploadFileIcon style={{ fontSize: 32, color: "var(--c--globals--colors--primary-600, #00818a)" }} />
               </div>
-              <span className={styles.vignette_empty_title}>+ Importer une vignette</span>
-              <span className={styles.vignette_empty_hint}>JPG ou PNG · Recommandé : 1280 × 720 px</span>
+              <span className={styles.vignette_empty_title}>{t("videoEdit.uploadThumbnailBtn")}</span>
+              <span className={styles.vignette_empty_hint}>{t("videoEdit.thumbnailDimensionsHint")}</span>
             </label>
           )}
           <input
@@ -956,7 +1031,7 @@ export default function EditVideo() {
           />
         </div>
         <p className={styles.vignette_helper_text}>
-          La vignette doit respecter les règles de la communauté. Assurez-vous que l&apos;image a le bon droit d&apos;auteur.
+          {t("videoEdit.thumbnailCopyrightHelper")}
         </p>
         {errors.thumbnail && (
           <p style={{ color: "var(--c--globals--colors--error-600, #d32f2f)", fontSize: "0.8rem", margin: "4px 0 0" }}>
@@ -973,16 +1048,16 @@ export default function EditVideo() {
           render={({ field }) => (
             <div className={styles.input_group}>
               <label className={styles.input_label}>
-                Propriétaire <span className={styles.required_star}>*</span>
+                {t("videoEdit.ownerLabel")} <span className={styles.required_star}>*</span>
               </label>
               <Autocomplete
                 options={users}
                 value={users.find((u) => u.username === field.value) ?? selectedOwner}
                 onChange={(_, newVal) => field.onChange(newVal?.username ?? "")}
-                getOptionLabel={getUserLabel}
+                getOptionLabel={(opt) => getUserLabel(opt, config)}
                 isOptionEqualToValue={(opt, val) => opt.id === val.id}
                 renderInput={(params) => (
-                  <TextField {...params} fullWidth variant="outlined" helperText="Un super‑utilisateur peut changer le propriétaire d'une vidéo." InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
+                  <TextField {...params} fullWidth variant="outlined" helperText={t("videoEdit.ownerHelper")} InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
                 )}
               />
             </div>
@@ -996,17 +1071,17 @@ export default function EditVideo() {
         control={control}
         render={({ field }) => (
           <div className={styles.input_group}>
-            <label className={styles.input_label}>Propriétaires additionnels</label>
+            <label className={styles.input_label}>{t("videoEdit.coOwnersLabel")}</label>
             <Autocomplete
               multiple
               options={availableCoOwners}
               value={availableCoOwners.filter((u) => field.value?.includes(u.id))}
               onChange={(_, newVal) => field.onChange(newVal.map((u) => u.id))}
-              getOptionLabel={getUserLabel}
+              getOptionLabel={(opt) => getUserLabel(opt, config)}
               isOptionEqualToValue={(opt, val) => opt.id === val.id}
               filterSelectedOptions
               renderInput={(params) => (
-                <TextField {...params} fullWidth variant="outlined" helperText="Les propriétaires additionnels auront les mêmes droits que vous, sauf qu'ils ne peuvent pas supprimer ce contenu." InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
+                <TextField {...params} fullWidth variant="outlined" helperText={t("videoEdit.coOwnersHelper")} InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }} />
               )}
             />
           </div>
@@ -1019,8 +1094,8 @@ export default function EditVideo() {
         control={control}
         render={({ field }) => (
           <div className={styles.input_group}>
-            <label className={styles.input_label}>Licence</label>
-            <TextField {...field} select fullWidth variant="outlined" helperText="Droits d'utilisation de votre contenu." InputProps={{ style: { borderRadius: '8px' } }}>
+            <label className={styles.input_label}>{t("videoEdit.licenseLabel")}</label>
+            <TextField {...field} select fullWidth variant="outlined" helperText={t("videoEdit.licenseHelper")} InputProps={{ style: { borderRadius: '8px' } }}>
               {licenseOptions.map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
               ))}
@@ -1028,7 +1103,6 @@ export default function EditVideo() {
           </div>
         )}
       />
-
 
       {/* Channel & Themes */}
       {channelsOptions.length > 0 && (
@@ -1041,16 +1115,16 @@ export default function EditVideo() {
               <TextField
                 select
                 fullWidth
-                label="Chaine"
+                label={t("videoEdit.channelLabel")}
                 value={field.value === "" ? "_NONE_" : field.value}
                 onChange={(event) => {
                   const value = event.target.value;
                   field.onChange(value === "_NONE_" ? "" : Number(value));
                 }}
-                helperText="Vous avez les permissions pour associer cette vidéo à une chaine."
+                helperText={t("videoEdit.channelHelper")}
                 slotProps={{ inputLabel: { shrink: true } }}
               >
-                <MenuItem value="_NONE_">Aucune</MenuItem>
+                <MenuItem value="_NONE_">{t("videoEdit.noneOption")}</MenuItem>
                 {channelsOptions.map((channel) => (
                   <MenuItem key={channel.id} value={channel.id}>{channel.title}</MenuItem>
                 ))}
@@ -1068,13 +1142,13 @@ export default function EditVideo() {
                   <TextField
                     select
                     fullWidth
-                    label="Thèmes"
+                    label={t("videoEdit.themesLabel")}
                     value={selectedIds}
                     onChange={(event) => {
                       const value = event.target.value;
                       field.onChange((typeof value === "string" ? value.split(",") : value).map(Number));
                     }}
-                    helperText={useThemeError ?? "Vous pouvez sélectionner un ou plusieurs thèmes liés à la chaine."}
+                    helperText={useThemeError ?? t("videoEdit.themesHelper")}
                     error={Boolean(useThemeError)}
                     slotProps={{
                       inputLabel: { shrink: true },
@@ -1111,10 +1185,10 @@ export default function EditVideo() {
         render={({ field }) => (
           <DatePicker
             disabled={!(isStaff || isEmployee || isSuperUser)}
-            label="Date de suppression"
+            label={t("videoEdit.dateToDeleteLabel")}
             value={field.value ? dayjs(field.value) : null}
             onChange={(v) => field.onChange(v ? dayjs(v).format("YYYY-MM-DD") : "")}
-            slotProps={{ textField: { fullWidth: true, helperText: "Date planifiée de suppression de la vidéo. Seul un super‑utilisateur/staff peut la modifier." } }}
+            slotProps={{ textField: { fullWidth: true, helperText: t("videoEdit.dateToDeleteHelper") } }}
           />
         )}
       />
@@ -1123,10 +1197,10 @@ export default function EditVideo() {
         control={control}
         render={({ field }) => (
           <DatePicker
-            label="Date de l'événement"
+            label={t("videoEdit.dateOfEventLabel")}
             value={field.value ? dayjs(field.value) : null}
             onChange={(v) => field.onChange(v ? dayjs(v).format("YYYY-MM-DD") : "")}
-            slotProps={{ textField: { fullWidth: true, helperText: "Date de l'événement lié à cette vidéo." } }}
+            slotProps={{ textField: { fullWidth: true, helperText: t("videoEdit.dateOfEventHelper") } }}
           />
         )}
       />
@@ -1139,9 +1213,9 @@ export default function EditVideo() {
             value={field.value || ""}
             fullWidth
             type="datetime-local"
-            label="Date et heure de publication planifiée"
+            label={t("videoEdit.publicationDateLabel")}
             slotProps={{ inputLabel: { shrink: true } }}
-            helperText="Définissez une date/heure dans le futur à laquelle la vidéo sera rendue publique."
+            helperText={t("videoEdit.publicationDateHelper")}
             InputProps={{ style: { borderRadius: '8px' } }}
           />
         )}
@@ -1154,18 +1228,14 @@ export default function EditVideo() {
 
     return (
       <>
-        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
-          Enrichissez votre vidéo avec des sous-titres, chapitres, documents, contributeurs et un habillage visuel.
-        </p>
-
         <div className={styles.elements_list}>
           {/* Sous-titres manuels */}
           <div className={styles.element_card}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Sous-titres manuels</span>
+              <span className={styles.element_card_title}>{t("videoEdit.subtitlesTitle")}</span>
               <span className={styles.element_card_desc}>
-                Ajoutez des fichiers de sous-titres (.vtt, .srt) dans une ou plusieurs langues.
-                {video?.subtitles?.length ? ` — ${video.subtitles.length} sous-titre(s) actif(s)` : ""}
+                {t("videoEdit.subtitlesDesc")}
+                {video?.subtitles?.length ? ` — ${video.subtitles.length} active(s)` : ""}
               </span>
             </div>
             <div className={styles.element_card_actions}>
@@ -1175,7 +1245,7 @@ export default function EditVideo() {
                 disabled={!video}
                 onClick={() => setSubtitlesModalOpen(true)}
               >
-                <SubtitlesIcon fontSize="small" /> Gérer les sous-titres
+                <SubtitlesIcon fontSize="small" /> {t("videoEdit.subtitlesTitle")}
               </button>
             </div>
           </div>
@@ -1183,9 +1253,9 @@ export default function EditVideo() {
           {/* Documents joints */}
           <div className={styles.element_card}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Documents joints</span>
+              <span className={styles.element_card_title}>{t("videoEdit.documentsTitle")}</span>
               <span className={styles.element_card_desc}>
-                Associez des fichiers PDF, diaporamas ou autres documents à cette vidéo.
+                {t("videoEdit.documentsDesc")}
               </span>
             </div>
             <div className={styles.element_card_actions}>
@@ -1195,7 +1265,7 @@ export default function EditVideo() {
                 disabled={!video}
                 onClick={() => setDocumentsModalOpen(true)}
               >
-                <AttachFileIcon fontSize="small" /> Gérer les documents
+                <AttachFileIcon fontSize="small" /> {t("videoEdit.documentsTitle")}
               </button>
             </div>
           </div>
@@ -1203,9 +1273,9 @@ export default function EditVideo() {
           {/* Contributeurs */}
           <div className={styles.element_card}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Contributeurs &amp; Intervenants</span>
+              <span className={styles.element_card_title}>{t("videoEdit.contributorsTitle")}</span>
               <span className={styles.element_card_desc}>
-                Ajoutez des auteurs, réalisateurs ou intervenants à votre vidéo.
+                {t("videoEdit.contributorsDesc")}
               </span>
             </div>
             <div className={styles.element_card_actions}>
@@ -1215,7 +1285,7 @@ export default function EditVideo() {
                 disabled={!video}
                 onClick={() => setContributorsModalOpen(true)}
               >
-                <GroupIcon fontSize="small" /> Gérer les contributeurs
+                <GroupIcon fontSize="small" /> {t("videoEdit.contributorsTitle")}
               </button>
             </div>
           </div>
@@ -1223,9 +1293,9 @@ export default function EditVideo() {
           {/* Chapitrage */}
           <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Chapitrer la vidéo</span>
+              <span className={styles.element_card_title}>{t("videoEdit.chaptersTitle")}</span>
               <span className={styles.element_card_desc}>
-                Découpez votre vidéo en chapitres avec des marqueurs dans la barre de progression (style YouTube).
+                {t("videoEdit.chaptersDesc")}
               </span>
             </div>
             <div className={styles.element_card_actions}>
@@ -1235,7 +1305,7 @@ export default function EditVideo() {
                 disabled={!hasEncodedSource}
                 onClick={() => setChaptersModalOpen(true)}
               >
-                <BookmarksIcon fontSize="small" /> Gérer les chapitres
+                <BookmarksIcon fontSize="small" /> {t("videoEdit.chaptersTitle")}
               </button>
             </div>
           </div>
@@ -1244,9 +1314,9 @@ export default function EditVideo() {
           {config?.dressing?.use_dressing !== false && (
             <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
               <div className={styles.element_card_info}>
-                <span className={styles.element_card_title}>Habiller la vidéo</span>
+                <span className={styles.element_card_title}>{t("videoEdit.dressingTitle")}</span>
                 <span className={styles.element_card_desc}>
-                  Appliquez un habillage (filigrane, amorce d&apos;ouverture / fermeture) à cette vidéo.
+                  {t("videoEdit.dressingDesc")}
                 </span>
               </div>
               <div className={styles.element_card_actions}>
@@ -1256,7 +1326,7 @@ export default function EditVideo() {
                   disabled={!hasEncodedSource}
                   onClick={() => setDressingModalOpen(true)}
                 >
-                  <StyleIcon fontSize="small" /> Choisir un habillage
+                  <StyleIcon fontSize="small" /> {t("videoEdit.dressingTitle")}
                 </button>
               </div>
             </div>
@@ -1265,9 +1335,9 @@ export default function EditVideo() {
           {/* Découpage */}
           <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
             <div className={styles.element_card_info}>
-              <span className={styles.element_card_title}>Découper la vidéo</span>
+              <span className={styles.element_card_title}>{t("videoEdit.trimTitle")}</span>
               <span className={styles.element_card_desc}>
-                Définissez un point d&apos;entrée et de sortie pour raccourcir votre vidéo.
+                {t("videoEdit.trimDesc")}
               </span>
             </div>
             <div className={styles.element_card_actions}>
@@ -1275,8 +1345,9 @@ export default function EditVideo() {
                 className={styles.element_action_btn}
                 type="button"
                 disabled={!hasEncodedSource}
+                onClick={() => router.push(`/video/edit/${getVideoSlug}/trim`)}
               >
-                <ContentCutIcon fontSize="small" /> Découper
+                <ContentCutIcon fontSize="small" /> {t("videoEdit.trimTitle")}
               </button>
             </div>
           </div>
@@ -1287,13 +1358,19 @@ export default function EditVideo() {
 
   const renderVisibilityStep = () => {
     const hasSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
-    const isPublicWithoutSource = selectedStatus === "PU" && !hasSource;
 
     return (
       <>
-        <p style={{ fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)", marginTop: 0 }}>
-          Choisissez quand publier votre vidéo et qui peut la voir
+        <p style={{ fontSize: "0.875rem", color: "var(--text-color-muted, #94a3b8)", marginTop: 0 }}>
+          {t("videoEdit.visibilityHeaderSub")}
         </p>
+
+        {!hasSource && (
+          <div style={{ padding: "12px 16px", background: "rgba(239, 68, 68, 0.12)", border: "1.5px solid rgba(239, 68, 68, 0.4)", borderRadius: 10, color: "#fca5a5", fontSize: "0.875rem", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
+            <PriorityHighIcon style={{ fontSize: 20, flexShrink: 0 }} />
+            <span>{t("videoEdit.noSourceDraftNotice")}</span>
+          </div>
+        )}
 
         {/* Restrictions section */}
         <div className={styles.visibility_section}>
@@ -1302,13 +1379,13 @@ export default function EditVideo() {
             className={styles.visibility_section_header}
             onClick={() => setRestrictionExpanded(!restrictionExpanded)}
           >
-            <span>Restrictions</span>
+            <span>{t("videoEdit.restrictionsHeader")}</span>
             <ExpandMoreIcon style={{ transform: restrictionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
           </button>
           {restrictionExpanded && (
             <div className={styles.visibility_section_content}>
-              <p style={{ fontSize: "0.8rem", color: "var(--c--globals--colors--gray-500)", margin: "0 0 8px" }}>
-                Choisissez de rendre votre vidéo publique, non répertoriée ou privée
+              <p style={{ fontSize: "0.8rem", color: "var(--text-color-muted, #94a3b8)", margin: "0 0 8px" }}>
+                {t("videoEdit.restrictionsSub")}
               </p>
               <Controller
                 name="status"
@@ -1318,42 +1395,32 @@ export default function EditVideo() {
                     <div className={styles.radio_option}>
                       <Radio value="DR" size="small" sx={{ mt: "-3px" }} />
                       <div className={styles.radio_option_content}>
-                        <h4>Brouillon / Privé</h4>
-                        <p>En mode &ldquo;Brouillon / Privé&rdquo;, le contenu n&apos;apparaît nulle part et personne d&apos;autre que vous ne peut le voir. Vous pouvez ajouter des jetons pour permettre un accès direct par lien.</p>
-                        {selectedStatus === "DR" && (
-                          <button type="button" className={styles.element_action_btn} style={{ marginTop: 8 }}>
-                            Intégrer/Partager
-                          </button>
-                        )}
+                        <h4>{t("videoEdit.draftPrivateTitle")}</h4>
+                        <p>{t("videoEdit.draftPrivateDesc")}</p>
                       </div>
                     </div>
                     <Divider />
-                    <div className={styles.radio_option}>
-                      <Radio value="RE" size="small" sx={{ mt: "-3px" }} />
+                    <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
+                      <Radio value="RE" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
                       <div className={styles.radio_option_content}>
-                        <h4>Accès restreint</h4>
-                        <p>En mode &ldquo;Accès restreint&rdquo;, vous pouvez choisir les restrictions pour la vidéo. Voir cette vidéo n&apos;est pas possible sans mot de passe.</p>
+                        <h4>{t("videoEdit.restrictedTitle")}</h4>
+                        <p>{t("videoEdit.restrictedDesc")}</p>
                       </div>
                     </div>
                     <Divider />
-                    <div className={styles.radio_option}>
-                      <Radio value="PU" size="small" sx={{ mt: "-3px" }} />
+                    <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
+                      <Radio value="PU" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
                       <div className={styles.radio_option_content}>
-                        <h4>Public</h4>
-                        <p>Dans le mode &ldquo;Public&rdquo;, le contenu est visible par tout le monde.</p>
-                        {isPublicWithoutSource && (
-                          <div style={{ marginTop: 8, padding: "8px 12px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 6, color: "#991b1b", fontSize: "0.825rem", display: "flex", alignItems: "center", gap: 6 }}>
-                            Impossible d&apos;activer le mode Public sans fichier source. Veuillez d&apos;abord ajouter une vidéo à l&apos;étape <b>Importation</b>.
-                          </div>
-                        )}
+                        <h4>{t("videoEdit.publicTitle")}</h4>
+                        <p>{t("videoEdit.publicDesc")}</p>
                       </div>
                     </div>
                   </RadioGroup>
                 )}
               />
-              {selectedStatus === "RE" && (
-                <div style={{ marginTop: 8, padding: "12px", background: "var(--c--globals--colors--gray-050)", borderRadius: 6 }}>
-                  <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>Options de restriction :</p>
+              {selectedStatus === "RE" && hasSource && (
+                <div style={{ marginTop: 8, padding: "12px", background: "var(--c--theme--colors--card-bg, #0f172a)", borderRadius: 6, border: "1px solid var(--border-color, #334155)" }}>
+                  <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>{t("videoEdit.restrictionOptions")}</p>
                   <Controller
                     name="is_auth_required"
                     control={control}
@@ -1361,9 +1428,9 @@ export default function EditVideo() {
                       <FormControl error={Boolean(fieldState.error)}>
                         <FormControlLabel
                           control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                          label="Authentification requise"
+                          label={t("videoEdit.authRequiredLabel")}
                         />
-                        <FormHelperText>{fieldState.error?.message ?? "Limiter l'accès aux personnes authentifiées."}</FormHelperText>
+                        <FormHelperText>{fieldState.error?.message ?? t("videoEdit.authRequiredHelper")}</FormHelperText>
                       </FormControl>
                     )}
                   />
@@ -1373,7 +1440,7 @@ export default function EditVideo() {
                     render={({ field }) => (
                       <FormControlLabel
                         control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                        label="Mot de passe requis"
+                        label={t("videoEdit.passwordRequiredLabel")}
                       />
                     )}
                   />
@@ -1383,7 +1450,7 @@ export default function EditVideo() {
                       control={control}
                       rules={{ validate: (value) => value.trim().length === 0 || value.trim().length >= 4 || "Le mot de passe doit contenir au moins 4 caractères." }}
                       render={({ field }) => (
-                        <TextField {...field} fullWidth type="password" autoComplete="new-password" label="Mot de passe de la vidéo" error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
+                        <TextField {...field} fullWidth type="password" autoComplete="new-password" label={t("videoEdit.passwordLabel")} error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
                       )}
                     />
                   )}
@@ -1397,37 +1464,37 @@ export default function EditVideo() {
         <div className={styles.visibility_section}>
           <button type="button" className={styles.visibility_section_header} onClick={() => setDiffusionExpanded(!diffusionExpanded)}>
             <div>
-              <span>Configuration de la Diffusion</span>
+              <span>{t("videoEdit.diffusionTitle")}</span>
             </div>
             <ExpandMoreIcon style={{ transform: diffusionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
           </button>
           {diffusionExpanded && (
             <div className={styles.visibility_section_content}>
-              {config?.video?.enable_downloads !== false && (
-                <Controller
-                  name="allow_downloading"
-                  control={control}
-                  render={({ field, fieldState }) => (
-                    <FormControl error={Boolean(fieldState.error)}>
-                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Autoriser le téléchargement" />
-                      <FormHelperText>{fieldState.error?.message ?? "Autoriser le téléchargement de votre vidéo."}</FormHelperText>
-                    </FormControl>
-                  )}
-                />
-              )}
-              {config?.video?.enable_comments !== false && (
+              <Controller
+                name="allow_downloading"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <FormControl error={Boolean(fieldState.error)}>
+                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.allowDownloadLabel")} />
+                    <FormHelperText>{fieldState.error?.message ?? t("videoEdit.allowDownloadHelper")}</FormHelperText>
+                  </FormControl>
+                )}
+              />
+              {config?.video?.active_video_comment !== false && (
                 <Controller
                   name="disable_comment"
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl error={Boolean(fieldState.error)}>
-                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Désactiver les commentaires" />
-                      <FormHelperText>{fieldState.error?.message ?? "Désactiver l'ajout de commentaires sous votre vidéo."}</FormHelperText>
+                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.disableCommentsLabel")} />
+                      <FormHelperText>{fieldState.error?.message ?? t("videoEdit.disableCommentsHelper")}</FormHelperText>
                     </FormControl>
                   )}
                 />
               )}
-              {video && <VideoSocialNetworksForm video={video!} onNetworksUpdated={() => refetch()} />}
+              {video && config?.video?.hide_share !== true && (
+                <VideoSocialNetworksForm video={video!} onNetworksUpdated={() => refetch()} />
+              )}
             </div>
           )}
         </div>
@@ -1436,7 +1503,7 @@ export default function EditVideo() {
         <div className={styles.visibility_section}>
           <button type="button" className={styles.visibility_section_header} onClick={() => setAdvancedExpanded(!advancedExpanded)}>
             <div>
-              <span>Options avancées</span>
+              <span>{t("videoEdit.advancedOptionsTitle")}</span>
             </div>
             <ExpandMoreIcon style={{ transform: advancedExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
           </button>
@@ -1447,8 +1514,8 @@ export default function EditVideo() {
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl error={Boolean(fieldState.error)}>
-                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label="Il s'agit d'une vidéo 360°" />
-                    <FormHelperText>{fieldState.error?.message ?? "Activer le lecteur 360° pour cette vidéo."}</FormHelperText>
+                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.is360Label")} />
+                    <FormHelperText>{fieldState.error?.message ?? t("videoEdit.is360Helper")}</FormHelperText>
                   </FormControl>
                 )}
               />
@@ -1469,7 +1536,7 @@ export default function EditVideo() {
     const isPasswordRequiredVal = watchedValues.is_password_required;
 
     const ownerName = liveOwnerUser
-      ? getUserDisplayName(liveOwnerUser)
+      ? getUserDisplayName(liveOwnerUser, config?.authentication, false)
       : (video?.owner || "Propriétaire");
 
     const viewsCount = video?.views ?? 0;
@@ -1546,7 +1613,10 @@ export default function EditVideo() {
               </div>
 
               <div className={styles.live_card_stats}>
-                {viewsCount} {viewsCount > 1 ? "vues" : "vue"} • {video?.created_at ? dayjs(video.created_at).format("DD/MM/YYYY") : "Récemment"}
+                {config?.video?.show_views !== false && (
+                  <>{viewsCount} {viewsCount > 1 ? "vues" : "vue"} • </>
+                )}
+                {video?.created_at ? dayjs(video.created_at).format("DD/MM/YYYY") : "Récemment"}
               </div>
             </div>
           </div>
@@ -1583,7 +1653,7 @@ export default function EditVideo() {
           {/* Video title + views chip */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0" }}>
             <span style={{ fontWeight: 600 }}>{video?.title}</span>
-            {video?.views != null && (
+            {config?.video?.show_views !== false && video?.views != null && (
               <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)" }}>
                 <VisibilityIcon fontSize="small" /> {video?.views}
               </span>
@@ -1673,25 +1743,25 @@ export default function EditVideo() {
           </DialogTitle>
           <DialogContent dividers>
             <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "4px 0" }}>
-              <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--text-color-muted, #94a3b8)" }}>
                 Ajoutez des sous-titres au format <b>.vtt</b> ou <b>.srt</b>. Chaque fichier correspond à une langue.
               </p>
               {video?.subtitles?.length ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {video?.subtitles?.map((s) => (
-                    <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid #e5e7eb", borderRadius: 10, background: "white" }}>
+                    <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid var(--border-color, #e5e7eb)", borderRadius: 10, background: "var(--c--theme--colors--card-bg, #ffffff)" }}>
                       <div>
                         <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{s.language.toUpperCase()}</span>
-                        {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
+                        {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "rgba(34, 197, 94, 0.2)", color: "#4ade80", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
                       </div>
                       <Button type="button" size="small" color="warning" variant="secondary" disabled={useSubtitleLoading} onClick={() => handleDeleteSubtitle(s.id)}>Supprimer</Button>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p style={{ color: "#9ca3af", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
+                <p style={{ color: "var(--text-color-muted, #9ca3af)", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
               )}
-              <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "var(--c--theme--colors--card-bg, rgba(255,255,255,0.04))", borderRadius: 10, border: "1.5px solid var(--border-color, #e5e7eb)" }}>
                 <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>Ajouter un sous-titre</span>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
                   <TextField select label="Langue" value={subtitleLanguage} onChange={(e) => setSubtitleLanguage(e.target.value as LanguageSubtitle)} size="small" sx={{ minWidth: 140 }} InputProps={{ style: { borderRadius: 10 } }}>
@@ -1779,16 +1849,22 @@ export default function EditVideo() {
       <form className={styles.form} noValidate onSubmit={onFormSubmit}>
         {/* Page header: title + action buttons */}
         <div className={styles.page_header}>
-          <h1 className={styles.page_title}>Éditer la vidéo « {video?.title} »</h1>
+          <h1 className={styles.page_title}>
+            {video?.title
+              ? t("videoEdit.pageTitle", { title: video.title })
+              : t("videoEdit.pageTitleDefault")}
+          </h1>
           <div className={styles.header_actions}>
-            <button type="button" className={styles.action_pill_btn} onClick={handleDuplicate} disabled={isDuplicating}>
-              <FileCopyIcon fontSize="small" /> {isDuplicating ? "Duplication…" : "Dupliquer"}
-            </button>
+            {config?.video?.use_duplicate !== false && (
+              <button type="button" className={styles.action_pill_btn} onClick={handleDuplicate} disabled={isDuplicating}>
+                <FileCopyIcon fontSize="small" /> {isDuplicating ? t("videoAction.duplicating") : t("videoEdit.duplicate")}
+              </button>
+            )}
             <button type="submit" className={`${styles.action_pill_btn} ${styles.primary}`} disabled={isSubmitting}>
-              <SaveIcon fontSize="small" /> Enregistrer
+              <SaveIcon fontSize="small" /> {t("videoEdit.save")}
             </button>
             <button type="button" className={styles.action_pill_btn} onClick={() => openConfirmLeave(() => router.push(`/video/${getVideoSlug}`))}>
-              <CloseIcon fontSize="small" /> Quitter la page
+              <CloseIcon fontSize="small" /> {t("videoEdit.quit")}
             </button>
           </div>
         </div>
@@ -1801,46 +1877,79 @@ export default function EditVideo() {
             {ALL_STEPS.map((label, index) => {
               const isActive = index === activeStep;
 
-              // Validation & completion logic
-              const isStep0Error = Boolean(watchedValues.status === "PU" && !video?.has_video_file && !video?.video_url && !sourceFile);
-              const isStep1Error = Boolean(errors.title || errors.type_id || (!watchedValues.title?.trim() && isSubmitted));
-              const isStep3Error = Boolean(watchedValues.status === "PU" && !video?.has_video_file && !video?.video_url && !sourceFile);
-              const isError = (index === 0 && isStep0Error) || (index === 1 && isStep1Error) || (index === 3 && isStep3Error);
+              // Step 1 validation (Details: title is required)
+              const isDetailsValid = Boolean(watchedValues.title?.trim());
 
-              const isCompleted = !isError && (
-                (index === 0 && Boolean(video?.has_video_file || video?.video_url || sourceFile)) ||
-                (index === 1 && Boolean(watchedValues.title?.trim() && watchedValues.type_id && !errors.title && !errors.type_id)) ||
-                (index === 2 && Boolean(video?.subtitles?.length || video?.documents?.length || video?.co_owners?.length)) ||
-                (index === 3 && Boolean(watchedValues.status))
+              // Completion logic per step
+              const isStep0Completed = hasSource;
+              const isStep1Completed = isDetailsValid;
+              const isStep2Completed = Boolean(video?.subtitles?.length || video?.documents?.length || video?.co_owners?.length);
+
+              // An upcoming step (index > activeStep) can NEVER be marked as completed!
+              const isPastStepCompleted = index < activeStep && (
+                (index === 0 && isStep0Completed) ||
+                (index === 1 && isStep1Completed) ||
+                (index === 2 && isStep2Completed)
               );
 
+              const isCompleted = isPastStepCompleted;
+
+              const isError = (index === 1 && !isDetailsValid && (isSubmitted || activeStep > 1));
+
               let itemClass = styles.stepper_item;
-              if (isActive) itemClass += ` ${styles.stepper_item_active}`;
-              if (isCompleted && !isActive) itemClass += ` ${styles.stepper_item_completed}`;
-              if (isError) itemClass += ` ${styles.stepper_item_error}`;
+              if (isError) {
+                itemClass += ` ${styles.stepper_item_error}`;
+              } else if (isActive) {
+                itemClass += ` ${styles.stepper_item_active}`;
+              } else if (isCompleted) {
+                itemClass += ` ${styles.stepper_item_completed}`;
+              }
+
+              let stepDesc = "";
+              if (isActive) {
+                stepDesc = `▶ ${t("videoEdit.stepInProgress")}`;
+              } else if (index === 0) {
+                stepDesc = hasSource ? t("videoEdit.mediaAttached") : t("videoEdit.noSourceFileBadge");
+              } else if (index === 1) {
+                stepDesc = isDetailsValid ? t("videoEdit.titleFilled") : t("videoEdit.titleRequired");
+              } else if (index === 2) {
+                stepDesc = t("videoEdit.subtitlesAndDocs");
+              } else if (index === 3) {
+                stepDesc = t("videoEdit.draftOrPublic");
+              }
 
               return (
                 <div
                   key={label}
                   className={itemClass}
                   onClick={() => handleStepClick(index)}
-                  style={{ cursor: index > 0 ? "pointer" : "default" }}
                 >
-                  <div className={styles.stepper_dot}>
-                    {isError ? (
-                      <PriorityHighIcon style={{ fontSize: 18 }} />
-                    ) : isCompleted && !isActive ? (
-                      <CheckIcon style={{ fontSize: 18 }} />
-                    ) : (
-                      index + 1
-                    )}
+                  <div className={styles.stepper_item_header}>
+                    <div className={styles.stepper_dot}>
+                      {isError ? (
+                        <PriorityHighIcon style={{ fontSize: 16 }} />
+                      ) : isCompleted && !isActive ? (
+                        <CheckIcon style={{ fontSize: 16 }} />
+                      ) : (
+                        index + 1
+                      )}
+                    </div>
+                    <span className={styles.stepper_title}>{label}</span>
                   </div>
-                  <span className={styles.stepper_label}>{label}</span>
-                  {isError && (
-                    <span className={styles.stepper_badge_status} style={{ background: "#ffebee", color: "#d32f2f" }}>
-                      Incomplet
-                    </span>
-                  )}
+                  <div
+                    className={styles.stepper_description}
+                    style={
+                      isActive
+                        ? { color: "#60a5fa", fontWeight: 600 }
+                        : isError
+                        ? { color: "#fca5a5", fontWeight: 600 }
+                        : index === 0 && !hasSource
+                        ? { color: "#60a5fa", fontWeight: 500 }
+                        : undefined
+                    }
+                  >
+                    {stepDesc}
+                  </div>
                 </div>
               );
             })}
@@ -1853,14 +1962,17 @@ export default function EditVideo() {
             <h2 className={styles.step_title}>
               {ALL_STEPS[activeStep]}
             </h2>
-            {activeStep === 1 && (
-              <p className={styles.step_sub_title}>Les champs marqués d&apos;un <span className={styles.required_star}>*</span> sont obligatoires.</p>
+            {activeStep === 0 && (
+              <p className={styles.step_sub_title}>{t("videoEdit.importHeaderSub")}</p>
             )}
-            {activeStep === 3 && (
-              <p className={styles.step_sub_title}>Choisissez quand publier votre vidéo et qui peut la voir.</p>
+            {activeStep === 1 && (
+              <p className={styles.step_sub_title}>{t("videoEdit.requiredFieldsPrompt")}</p>
             )}
             {activeStep === 2 && (
-              <p className={styles.step_sub_title}>Enrichissez votre vidéo avec des sous-titres, documents et contributeurs.</p>
+              <p className={styles.step_sub_title}>{t("videoEdit.elementsHeaderSub")}</p>
+            )}
+            {activeStep === 3 && (
+              <p className={styles.step_sub_title}>{t("videoEdit.visibilityHeaderSub")}</p>
             )}
           </div>
           <div className={styles.step_nav}>
@@ -1870,7 +1982,7 @@ export default function EditVideo() {
               disabled={activeStep <= 1}
               onClick={handlePreviousStep}
             >
-              Précédent
+              {t("videoEdit.previous")}
             </button>
             {activeStep < ALL_STEPS.length - 1 ? (
               <button
@@ -1878,7 +1990,7 @@ export default function EditVideo() {
                 className={styles.step_nav_btn}
                 onClick={handleNextStep}
               >
-                Suivant
+                {t("videoEdit.next")}
               </button>
             ) : (
               <button
@@ -1886,7 +1998,7 @@ export default function EditVideo() {
                 className={styles.step_nav_btn}
                 onClick={onFormSubmit}
               >
-                Valider
+                {t("common.save")}
               </button>
             )}
           </div>
@@ -1956,7 +2068,7 @@ export default function EditVideo() {
         </DialogTitle>
         <DialogContent dividers>
           <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: "4px 0" }}>
-            <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+            <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--text-color-muted, #94a3b8)" }}>
               Ajoutez des sous-titres au format <b>.vtt</b> ou <b>.srt</b>. Chaque fichier correspond à une langue.
             </p>
 
@@ -1964,10 +2076,10 @@ export default function EditVideo() {
             {video?.subtitles?.length ? (
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {video?.subtitles?.map((s) => (
-                  <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid #e5e7eb", borderRadius: 10, background: "white" }}>
+                  <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", border: "1.5px solid var(--border-color, #e5e7eb)", borderRadius: 10, background: "var(--c--theme--colors--card-bg, #ffffff)" }}>
                     <div>
                       <span style={{ fontWeight: 600, fontSize: "0.9rem" }}>{s.language.toUpperCase()}</span>
-                      {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "#dcfce7", color: "#15803d", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
+                      {s.is_default && <span style={{ marginLeft: 8, fontSize: "0.75rem", background: "rgba(34, 197, 94, 0.2)", color: "#4ade80", padding: "2px 8px", borderRadius: 999 }}>Par défaut</span>}
                     </div>
                     <Button type="button" size="small" color="warning" variant="secondary" disabled={useSubtitleLoading} onClick={() => handleDeleteSubtitle(s.id)}>
                       Supprimer
@@ -1976,11 +2088,11 @@ export default function EditVideo() {
                 ))}
               </div>
             ) : (
-              <p style={{ color: "#9ca3af", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
+              <p style={{ color: "var(--text-color-muted, #9ca3af)", fontStyle: "italic", fontSize: "0.875rem", margin: 0 }}>Aucun sous-titre ajouté.</p>
             )}
 
             {/* Add new subtitle */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 16, background: "var(--c--theme--colors--card-bg, rgba(255,255,255,0.04))", borderRadius: 10, border: "1.5px solid var(--border-color, #e5e7eb)" }}>
               <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>Ajouter un sous-titre</span>
               <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
                 <TextField

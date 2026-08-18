@@ -15,6 +15,7 @@ import { useFavorites } from "@/src/hooks/useFavorites";
 import type { Video } from "@/src/types";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Mes vidéos favorites";
@@ -23,6 +24,7 @@ export default function FavoritesPlaylistPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { isInitializing, mounted } = useRequireAuth();
+  const { t } = useTranslation();
   const { favorites, fetchAll, useFavoritesError } = useFavorites();
 
   const { filters, setFilters, users, types, disciplines, tags } =
@@ -217,11 +219,11 @@ export default function FavoritesPlaylistPage() {
 
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton label={t("common.back")} />
 
       <div>
         <div className={styles.title_row}>
-          <h1>Mes vidéos favorites</h1>
+          <h1>{t("favorites.title")}</h1>
           {favoriteVideos.length > 0 && (
             <div className={styles.start_favorites_button}>
               <Button
@@ -231,7 +233,7 @@ export default function FavoritesPlaylistPage() {
                 onClick={handleStartFavoritesPlaylist}
               >
                 <PlayArrowIcon />
-                Lancer la liste de lecture
+                {t("favorites.startPlaylist")}
               </Button>
             </div>
           )}
@@ -239,7 +241,7 @@ export default function FavoritesPlaylistPage() {
 
         {favoriteVideos.length === 0 ? (
           <Alert type={VariantType.INFO}>
-            Aucune vidéo favorite pour le moment.
+            {t("favorites.noFavorites")}
           </Alert>
         ) : (
           <div>
@@ -270,8 +272,8 @@ export default function FavoritesPlaylistPage() {
             {filteredFavoriteVideos.length === 0 ? (
               <Alert type={VariantType.INFO}>
                 {hasActiveVideoFilters
-                  ? "Aucune vidéo ne correspond à vos filtres."
-                  : "Aucune vidéo favorite pour le moment."}
+                  ? t("favorites.noMatchingFilters")
+                  : t("favorites.noFavorites")}
               </Alert>
             ) : (
               <VideosDisplay

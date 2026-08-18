@@ -8,6 +8,7 @@ import CollectionFilters from "@/src/components/collection/filters/CollectionFil
 import { useCollectionListFilters } from "@/src/hooks/useCollectionListFilters";
 import { useMounted } from "@/src/hooks/useMounted";
 import { useAuth } from "@/src/context/AuthProvider";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 
 export const breadcrumbLabel = "Listes de lecture";
@@ -17,6 +18,7 @@ export default function PlaylistsPage() {
     useCollectionListFilters({ mode: "playlists" });
   const mounted = useMounted();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const publicPlaylists = useMemo(
     () => playlists.filter((playlist) => playlist.is_public),
@@ -38,8 +40,8 @@ export default function PlaylistsPage() {
 
   return (
     <div>
-      <BackButton label="Retour" />
-      <h1>Listes de lecture</h1>
+      <BackButton label={t("common.back")} />
+      <h1>{t("playlists.allTitle")}</h1>
 
       {error && (
         <Alert canClose type={VariantType.ERROR}>
@@ -68,8 +70,8 @@ export default function PlaylistsPage() {
       {publicPlaylists.length === 0 && !loading ? (
         <Alert type={VariantType.INFO}>
           {hasActiveFilters
-            ? "Aucune playlist ne correspond à vos filtres."
-            : "Aucune playlist disponible pour le moment."}
+            ? t("playlists.noMatchingFilters")
+            : t("playlists.noPublicPlaylists")}
         </Alert>
       ) : (
         <CollectionDisplay

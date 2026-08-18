@@ -73,6 +73,7 @@ export interface Video {
   type_id?: number | null;
   type_name: string | null;
   views?: number | null;
+  views_count?: number | null;
   documents?: VideoDocument[] | null;
   chapters?: Chapter[] | null;
   dressing?: number | null;

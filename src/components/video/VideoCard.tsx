@@ -9,8 +9,9 @@ import { Checkbox } from "@openfun/cunningham-react";
 import styles from "./VideoCard.module.css";
 import Link from "next/link";
 import Avatar from "@mui/material/Avatar";
-import { setInitial } from "@/src/constants/user";
+import { setInitial, getVideoOwnerDisplayName } from "@/src/constants/user";
 import { usePathname, useParams } from "next/navigation";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import type { Video } from "@/src/types";
 import { formatTime, timeAgo, secondToMinute } from "@/src/constants/date";
 import VideoActionMenu from "@/src/components/video/VideoActionMenu";
@@ -18,6 +19,7 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import ErrorIcon from "@mui/icons-material/Error";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface VideosCardProps {
   video: Video;
@@ -29,6 +31,7 @@ interface VideosCardProps {
 
 export default function VideoCard(props: VideosCardProps) {
   const { video, isOwner = false, selectable = false, selected = false, onSelectToggle } = props;
+  const { locale } = useTranslation();
   const time = secondToMinute(video.duration || 0);
 
   // Détection du contexte : playlist ou favoris
@@ -52,7 +55,10 @@ export default function VideoCard(props: VideosCardProps) {
     href = `/video/${video.slug}?favorites=1`;
   }
 
-  const initial = setInitial(video.owner_last_name, video.owner_first_name);
+  const { config } = useAppConfig();
+  const displayName = getVideoOwnerDisplayName(video, config?.authentication, true);
+  const isAnonymous = displayName === "Anonyme";
+  const initial = isAnonymous ? "A" : setInitial(video.owner_last_name, video.owner_first_name);
 
   return (
     <Card
@@ -85,10 +91,12 @@ export default function VideoCard(props: VideosCardProps) {
             top: 8,
             left: 8,
             zIndex: 10,
-            // Isole le Checkbox Cunningham visuellement — on masque le label
             lineHeight: 0,
-            transform: "scale(0.7)",
+            transform: "scale(0.8)",
             transformOrigin: "top left",
+            backgroundColor: "rgba(15, 23, 42, 0.75)",
+            borderRadius: "6px",
+            padding: "2px 4px",
           }}
         >
           <Checkbox
@@ -155,7 +163,7 @@ export default function VideoCard(props: VideosCardProps) {
                 {video.title}
               </Typography>
 
-              <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "4px", marginTop: "2px" }}>
+              <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "6px", alignItems: "center", marginTop: "2px" }}>
                 {video.encoding_status == "ER" && isOwner && (
                   <Tooltip title="Erreur d'encodage">
                     <ErrorIcon color="error" sx={{ fontSize: "1.1rem" }} />
@@ -178,17 +186,17 @@ export default function VideoCard(props: VideosCardProps) {
                 )}
                 {video.status == "DR" && (
                   <Tooltip title="Vidéo privée">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--c--globals--colors--gray-500)" }}>visibility_off</span>
+                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>visibility_off</span>
                   </Tooltip>
                 )}
                 {video.has_password && (
                   <Tooltip title="Vidéo protégée par un mot de passe">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--c--globals--colors--gray-500)" }}>key</span>
+                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>key</span>
                   </Tooltip>
                 )}
                 {video.is_auth_required && (
                   <Tooltip title="Vidéo visible pour les utilisateurs authentifiés">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--c--globals--colors--gray-500)" }}>verified_user</span>
+                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>verified_user</span>
                   </Tooltip>
                 )}
                 {isOwner && (
@@ -198,7 +206,7 @@ export default function VideoCard(props: VideosCardProps) {
                       e.stopPropagation();
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
-                    style={{ marginLeft: "4px" }}
+                    style={{ marginLeft: "2px" }}
                   >
                     <VideoActionMenu video={video} />
                   </div>
@@ -210,7 +218,7 @@ export default function VideoCard(props: VideosCardProps) {
               component="div"
               sx={{
                 fontSize: "0.85rem",
-                color: "text.secondary",
+                color: "var(--text-color-muted, #94a3b8)",
                 mt: 0.5,
                 display: "flex",
                 alignItems: "center",
@@ -219,11 +227,13 @@ export default function VideoCard(props: VideosCardProps) {
                 lineHeight: 1.2
               }}
             >
-              <address style={{ display: "inline", fontStyle: "normal" }}>
-                {video.owner_first_name} {video.owner_last_name}
+              <address style={{ display: "inline", fontStyle: "normal", color: "var(--text-color-muted, #94a3b8)" }}>
+                {displayName}
               </address>
-              <span style={{ fontSize: "10px", opacity: 0.6 }}>•</span>
-              <time dateTime={video.created_at}>{timeAgo(video.created_at)}</time>
+              <span style={{ fontSize: "10px", opacity: 0.8, color: "var(--text-color-muted, #94a3b8)" }}>•</span>
+              <time dateTime={video.created_at} style={{ color: "var(--text-color-muted, #94a3b8)", fontWeight: 500 }}>
+                {timeAgo(video.created_at, locale)}
+              </time>
             </Typography>
           </div>
         </CardContent>

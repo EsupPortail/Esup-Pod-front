@@ -9,6 +9,7 @@ import { getUserDisplayName } from "@/src/constants/user";
 import type { User } from "@/src/types";
 import { debounce } from "@mui/material/utils";
 import Box from "@mui/material/Box";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 
 export type AsyncUserFilterDropdownProps = {
   selectedUsernames: string[];
@@ -21,6 +22,7 @@ export default function AsyncUserFilterDropdown({
   selectedUsernames,
   onChange,
 }: AsyncUserFilterDropdownProps) {
+  const { config } = useAppConfig();
   const { fetchAll, fetchUser } = useUsers();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
@@ -52,7 +54,7 @@ export default function AsyncUserFilterDropdown({
         try {
           const users = await fetchAll(search);
           const newOptions = users.map((user) => ({
-            label: getUserDisplayName(user),
+            label: getUserDisplayName(user, config?.authentication, true),
             value: user.username,
             user,
           }));

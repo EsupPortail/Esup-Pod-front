@@ -29,14 +29,38 @@ export default function CunninghamStyleProvider({
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("pod_theme");
-    // Initialise le thème depuis le localStorage en une seule opération
-    setTheme(savedTheme ?? "default");
+    const initialTheme = savedTheme ?? "default";
+    setTheme(initialTheme);
     setIsThemeSelected(true);
+
+    if (typeof document !== "undefined") {
+      if (initialTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.classList.add("cunningham-theme--dark");
+        document.body.classList.add("dark-mode");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        document.documentElement.classList.remove("cunningham-theme--dark");
+        document.body.classList.remove("dark-mode");
+      }
+    }
   }, []);
 
   useEffect(() => {
     if (!isThemeSelected) return;
     localStorage.setItem("pod_theme", theme);
+
+    if (typeof document !== "undefined") {
+      if (theme === "dark") {
+        document.documentElement.setAttribute("data-theme", "dark");
+        document.documentElement.classList.add("cunningham-theme--dark");
+        document.body.classList.add("dark-mode");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        document.documentElement.classList.remove("cunningham-theme--dark");
+        document.body.classList.remove("dark-mode");
+      }
+    }
   }, [theme, isThemeSelected]);
 
   const handleTheme = useCallback(() => {

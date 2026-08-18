@@ -124,6 +124,14 @@ export const getRoutes = () => {
       dressings: url + "api/dressing/dressing/",
       dressing: (id: number) => url + `api/dressing/dressing/${id}/`,
     },
+    layout: {
+      blocks: url + "api/layout/blocks/",
+      get: (frontend_id: string) => url + `api/layout/blocks/${frontend_id}/`,
+    },
+    live: {
+      events: url + "api/live/events/",
+      current: url + "api/live/events/?is_current=true",
+    },
 
     administration: url + "admin",
   };

@@ -18,35 +18,38 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 const SideBar = () => {
   const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const { config } = useAppConfig();
+  const { t } = useTranslation();
 
   /* ----------------------------- *
    *  Menus – données statiques
    * -------------------------------- */
   const publicVideoItems = [
-    { name: "Toutes les vidéos", link: "/video" },
+    { name: t("common.allVideos"), link: "/video" },
   ];
   if (config?.collection?.use_channels !== false) {
-    publicVideoItems.push({ name: "Chaînes", link: "/channel" });
+    publicVideoItems.push({ name: t("common.channels"), link: "/channel" });
   }
   if (config?.collection?.use_playlists !== false) {
-    publicVideoItems.push({ name: "Listes de lecture", link: "/playlist" });
+    publicVideoItems.push({ name: t("common.playlists"), link: "/playlist" });
   }
 
   const menuPrincipalItems = [];
   if (publicVideoItems.length === 1) {
     menuPrincipalItems.push({
-      name: "Consulter les vidéos",
+      name: t("sidebar.browseVideos"),
       Icon: SlideshowIcon,
       link: publicVideoItems[0].link,
     });
   } else if (publicVideoItems.length > 1) {
     menuPrincipalItems.push({
-      name: "Consulter les vidéos",
+      name: t("sidebar.browseVideos"),
       Icon: SlideshowIcon,
       link: "",
       items: publicVideoItems,
@@ -55,29 +58,33 @@ const SideBar = () => {
 
   const mySpaceItems = [];
   if (config?.collection?.use_favorites !== false) {
-    mySpaceItems.push({ name: "Mes vidéos favorites", link: "/favorites" });
+    mySpaceItems.push({ name: t("sidebar.myFavorites"), link: "/favorites" });
   }
   if (config?.collection?.use_playlists !== false) {
-    mySpaceItems.push({ name: "Mes listes de lecture", link: "/playlist/me" });
+    mySpaceItems.push({ name: t("sidebar.myPlaylists"), link: "/playlist/me" });
+  }
+  if ((config as any)?.dressing?.use_dressing !== false) {
+    mySpaceItems.push({ name: t("sidebar.videoBranding"), link: "/dressing" });
   }
 
   const menuPodItems: any[] = [
-    { name: "Mon tableau de bord", Icon: DashboardRounded, link: "/dashboard" },
+    { name: t("sidebar.dashboard"), Icon: DashboardRounded, link: "/dashboard" },
   ];
 
-  const addVideoItems = [
-    { name: "Ajouter une vidéo", link: "/video/add" },
-  ];
+  const addVideoItems = [];
+  if ((config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff) {
+    addVideoItems.push({ name: t("common.addVideo"), link: "/video/add" });
+  }
 
   if (addVideoItems.length === 1) {
     menuPodItems.push({
-      name: "Ajouter une vidéo",
+      name: t("common.addVideo"),
       Icon: AddCircleOutlineIcon,
       link: addVideoItems[0].link,
     });
   } else if (addVideoItems.length > 1) {
     menuPodItems.push({
-      name: "Déposer une vidéo",
+      name: t("common.addVideo"),
       Icon: AddCircleOutlineIcon,
       link: "",
       items: addVideoItems,
@@ -92,7 +99,7 @@ const SideBar = () => {
     });
   } else if (mySpaceItems.length > 1) {
     menuPodItems.push({
-      name: "Mon espace",
+      name: t("sidebar.mySpace"),
       Icon: AccountBoxIcon,
       link: "",
       items: mySpaceItems,
@@ -102,7 +109,7 @@ const SideBar = () => {
   return (
     <nav
       id="sidebar-nav"
-      aria-label="Menu principal"
+      aria-label={t("sidebar.mainMenu")}
       aria-labelledby="sidebar-title"
       className={`${styles.sidebar} ${
         sidebarOpen ? styles.open : styles.closed
@@ -115,7 +122,7 @@ const SideBar = () => {
         <Button
           className={styles.button_close}
           onClick={handleFixSidebar}
-          aria-label="Fermer le menu"
+          aria-label={t("sidebar.closeMenu")}
         >
           <CloseIcon aria-hidden="true" />
         </Button>
@@ -125,18 +132,18 @@ const SideBar = () => {
         {accessToken && user ? (
           <>
             <Chip
-              label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
+              label={`${t("sidebar.welcome")} ${user?.first_name || user?.username || "admin"} 👋`}
               sx={{
                 backgroundColor: sidebarOpen
-                  ? "var(--background-brand-secondary)"
-                  : "var(--c--globals--colors--gray-000)",
+                  ? "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))"
+                  : "transparent",
                 color: sidebarOpen
-                  ? "var(--background-brand)"
-                  : "var(--c--globals--colors--gray-000)",
+                  ? "var(--background-brand, #3b82f6)"
+                  : "inherit",
+                fontWeight: 600,
+                fontSize: "0.85rem",
                 marginLeft: "14px",
                 marginTop: "16px",
-                fontSize: "var(--c--globals--font--sizes--md)",
-                fontWeight: "var(--c--globals--font--weights--bold)",
                 marginBottom: "var(--c--globals--spacings--xs)",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -160,7 +167,7 @@ const SideBar = () => {
                   : "var(--c--globals--colors--gray-000)",
               }}
             >
-              Menu principal
+              {t("sidebar.mainMenu")}
             </h3>
             <List component="nav" disablePadding>
               {menuPrincipalItems.map((item, index) => (

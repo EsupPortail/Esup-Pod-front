@@ -18,6 +18,7 @@ import AsyncFilterDropdown from "@/src/components/video/filters/AsyncFilterDropd
 import { useUsers } from "@/src/hooks/useUsers";
 import { useChannel } from "@/src/hooks/useChannel";
 import { useCallback } from "react";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import DateFilterDropdown from "./DateFilterDropdown";
 
 export type CollectionFilterMode = "channels" | "playlists" | "themes";
@@ -77,12 +78,21 @@ const FilterChip = ({
     sx={{
       m: 0.25,
       borderRadius: "16px",
-      backgroundColor: "rgba(0, 0, 0, 0.06)",
-      fontWeight: 500,
+      backgroundColor: "rgba(59, 130, 246, 0.15)",
+      color: "var(--text-color, #0f172a)",
+      border: "1px solid rgba(59, 130, 246, 0.35)",
+      fontWeight: 600,
+      fontSize: "0.8rem",
+      "html[data-theme='dark'] &": {
+        backgroundColor: "rgba(59, 130, 246, 0.25)",
+        color: "#ffffff",
+        borderColor: "#3b82f6",
+        boxShadow: "0 2px 8px rgba(59, 130, 246, 0.2)",
+      },
       "& .MuiChip-deleteIcon": {
-        color: "rgba(0, 0, 0, 0.4)",
+        color: "rgba(148, 163, 184, 0.9)",
         "&:hover": {
-          color: "rgba(0, 0, 0, 0.7)",
+          color: "#ef4444",
         },
       },
     }}
@@ -107,6 +117,7 @@ export default function CollectionFilters({
   showUserFilter = true,
   onChange,
 }: Props) {
+  const { config } = useAppConfig();
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const isThemeMode = mode === "themes";
@@ -120,7 +131,7 @@ export default function CollectionFilters({
     async (search: string) => {
       const usersList = await fetchUsers(search);
       return usersList.map((u) => ({
-        label: getUserDisplayName(u),
+        label: getUserDisplayName(u, config?.authentication, true),
         value: u.username,
       }));
     },
@@ -142,7 +153,7 @@ export default function CollectionFilters({
     return value.ownerUsernames.map((username) => {
       const fullUser = users.find((u) => u.username === username);
       return {
-        label: fullUser ? getUserDisplayName(fullUser) : username,
+        label: fullUser ? getUserDisplayName(fullUser, config?.authentication, true) : username,
         value: username,
       };
     });
@@ -302,7 +313,7 @@ export default function CollectionFilters({
             onClick={() => onChange(INITIAL_COLLECTION_FILTERS)}
             variant="tertiary"
             size="small"
-            style={{ fontWeight: 600, fontSize: "0.85rem" }}
+            className={styles.clearFiltersBtn}
           >
             Effacer les filtres
           </Button>

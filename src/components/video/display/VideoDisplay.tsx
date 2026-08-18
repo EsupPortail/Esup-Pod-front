@@ -9,6 +9,8 @@ import VideoGrid from "./VideoGrid";
 import VideoViewToggle from "./VideoViewToggle";
 import styles from "./styles.module.css";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export default function VideosDisplay({
   videos,
   currentUserId,
@@ -24,6 +26,7 @@ export default function VideosDisplay({
   onSelectVideo,
   onSelectAll,
 }: VideosDisplayProps) {
+  const { t } = useTranslation();
   const [view, setView] = useState<VideoViewMode>(defaultView);
 
   useEffect(() => {
@@ -94,18 +97,18 @@ export default function VideosDisplay({
       <div className={styles.toolbar}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {selectable && (
-            <div style={{ transform: "scale(0.7)", transformOrigin: "left center" }}>
+            <div className={styles.selectAllContainer}>
               <Checkbox
-                label="Tout sélectionner"
+                label={t("common.selectAll")}
                 checked={isAllSelected}
                 onChange={(e) => onSelectAll?.((e.target as HTMLInputElement).checked)}
-                aria-label="Sélectionner toutes les vidéos de la page"
+                aria-label={t("common.selectAll")}
               />
             </div>
           )}
 
           <p>
-            {count} vidéo{count > 1 ? "s" : ""} trouvée{count > 1 ? "s" : ""}
+            {count} {t("common.videosFound")}
           </p>
         </div>
 
@@ -121,7 +124,7 @@ export default function VideosDisplay({
           onSelectVideo={onSelectVideo}
         />
       ) : (
-        <VideoGrid rows={gridRows} selectable={selectable} />
+        <VideoGrid rows={gridRows} selectable={selectable} onSelectAll={onSelectAll} />
       )}
 
       {pagesCount && pagesCount > 1 && (

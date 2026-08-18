@@ -11,17 +11,22 @@ import {
   VariantType,
 } from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import { useAuth } from "../../context/AuthProvider";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 
 export const breadcrumbLabel = "Connexion à mon profil POD";
 
 function LoginContent() {
   const { logIn } = useAuth();
+  const { t } = useTranslation();
+  const { config } = useAppConfig();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const params = useSearchParams();
   const authRequired = params.get("reason") === "auth";
   const redirect = params.get("redirect");
+  const backUrl = process.env.NEXT_PUBLIC_BACK_URL || "";
 
   type LoginFormValues = {
     username: string;
@@ -51,7 +56,7 @@ function LoginContent() {
         router.push(safeRedirect);
       }
     } catch (err: any) {
-      setError(err?.message ?? "Une erreur est survenue.");
+      setError(err?.message ?? t("common.error"));
     }
   };
   /* ------------------------------------------------------------------ */
@@ -62,7 +67,7 @@ function LoginContent() {
       {authRequired && (
         <div role="alert" aria-live="polite">
           <Alert canClose type={VariantType.WARNING}>
-            Vous devez être connecté pour accéder à cette page.
+            {t("auth.loginRequired")}
           </Alert>
         </div>
       )}
@@ -76,14 +81,42 @@ function LoginContent() {
         </div>
       )}
 
-      <h1>Connexion</h1>
+      <h1>{t("common.login")}</h1>
 
-      {/* ==== Formulaire ==== */}
-      <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
-        {/* ==== Formulaire ==== */}
+      {/* ==== SSO Buttons ==== */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px", width: "100%" }}>
+        {config?.authentication?.use_cas && (
+          <Button
+            onClick={() => window.location.href = `${backUrl}/login/cas/`}
+            variant="secondary"
+          >
+            Connexion CAS
+          </Button>
+        )}
+        {config?.authentication?.use_shib && (
+          <Button
+            onClick={() => window.location.href = `${backUrl}/login/shibboleth/`}
+            variant="secondary"
+          >
+            Connexion {config?.authentication?.shibboleth_name || "Shibboleth"}
+          </Button>
+        )}
+        {config?.authentication?.use_oidc && (
+          <Button
+            onClick={() => window.location.href = `${backUrl}/login/oidc/`}
+            variant="secondary"
+          >
+            Connexion {config?.authentication?.oidc_name || "OIDC"}
+          </Button>
+        )}
+      </div>
+
+      {config?.authentication?.use_local_auth !== false && (
+        <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
+          {/* ==== Formulaire ==== */}
         <Input
           id="login-username"
-          label="Nom d'utilisateur *"
+          label={`${t("auth.username")} *`}
           autoComplete="login"
           state={errors.username ? "error" : "default"}
           aria-describedby="username-error"
@@ -103,7 +136,7 @@ function LoginContent() {
         {/* ==== Mot de passe ==== */}
         <InputPassword
           id="login-password"
-          label="Mot de passe *"
+          label={`${t("auth.password")} *`}
           autoComplete="password"
           state={errors.password ? "error" : "default"}
           aria-describedby="password-error"
@@ -121,10 +154,11 @@ function LoginContent() {
         )}
 
         {/* ==== Bouton de soumission ==== */}
-        <Button variant="primary" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Connexion..." : "Connexion"}
-        </Button>
-      </form>
+          <Button variant="primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? t("common.loading") : t("auth.submitLogin")}
+          </Button>
+        </form>
+      )}
     </div>
   );
 }

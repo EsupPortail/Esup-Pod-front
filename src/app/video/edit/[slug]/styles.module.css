@@ -628,34 +628,33 @@
   max-width: 350px;
 }
 
-/* -------  Custom Stepper UI  --------- */
-/* -------  Custom Formik-style Stepper UI  --------- */
+/* ------- Figma-style Steps Progress Indicator --------- */
 .custom_stepper {
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  margin: 20px 0 36px;
-  padding: 0 10px;
+  margin: 16px 0 28px;
+  padding: 0;
 }
 
 .stepper_line_bg {
   position: absolute;
-  top: 16px;
-  left: 50px;
-  right: 50px;
-  height: 3px;
-  background-color: var(--c--globals--colors--gray-200, #e5e7eb);
+  top: 14px;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background-color: var(--border-color, #334155);
   z-index: 1;
 }
 
 .stepper_line_progress {
   position: absolute;
-  top: 16px;
-  left: 50px;
-  height: 3px;
-  background-color: var(--c--globals--colors--primary-600, #00818a);
+  top: 14px;
+  left: 30px;
+  height: 2px;
+  background-color: #3b82f6;
   z-index: 2;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -663,88 +662,94 @@
 .stepper_item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 4px;
   z-index: 3;
-  width: 140px;
+  cursor: pointer;
+  max-width: 220px;
   user-select: none;
   transition: transform 0.15s ease;
 }
 
 .stepper_item:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+}
+
+.stepper_item_header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--c--theme--colors--card-bg, #0b1329);
+  padding: 2px 12px 2px 2px;
+  border-radius: 999px;
 }
 
 .stepper_dot {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--c--globals--colors--gray-300, #d1d5db);
-  background: white;
-  color: var(--c--globals--colors--gray-600, #6b7280);
-  font-size: 0.875rem;
-  font-weight: 600;
+  border: 2px solid var(--border-color, #475569);
+  background: var(--c--theme--colors--card-bg, #1e293b);
+  color: var(--text-color-muted, #94a3b8);
+  font-size: 0.8rem;
+  font-weight: 700;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
 }
 
-.stepper_label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--c--globals--colors--gray-700, #4b5563);
-  text-align: center;
-  transition: color 0.2s ease;
-  line-height: 1.25;
-}
-
-.stepper_badge_status {
-  font-size: 0.72rem;
+.stepper_title {
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-  margin-top: 2px;
+  color: var(--text-color-muted, #94a3b8);
   white-space: nowrap;
 }
 
+.stepper_description {
+  font-size: 0.75rem;
+  color: var(--text-color-muted, #64748b);
+  padding-left: 36px;
+  line-height: 1.3;
+}
+
 /* Active State */
-.stepper_item_active .stepper_label {
-  font-weight: 700;
-  color: var(--c--globals--colors--gray-900, #111827);
+.stepper_item_active .stepper_title {
+  color: #60a5fa !important;
+  font-weight: 700 !important;
 }
 
 .stepper_item_active .stepper_dot {
-  background: var(--c--globals--colors--primary-600, #00818a);
-  border-color: var(--c--globals--colors--primary-600, #00818a);
-  color: white;
-  box-shadow: 0 0 0 4px rgba(0, 129, 138, 0.2);
-}
-
-/* Completed State */
-.stepper_item_completed .stepper_dot {
-  background: var(--c--globals--colors--primary-600, #00818a);
-  border-color: var(--c--globals--colors--primary-600, #00818a);
-  color: white;
-}
-
-.stepper_item_completed .stepper_label {
-  color: var(--c--globals--colors--primary-700, #006b72);
-  font-weight: 600;
-}
-
-/* Error / Invalid State */
-.stepper_item_error .stepper_dot {
-  background: #d32f2f !important;
-  border-color: #d32f2f !important;
+  background: #3b82f6 !important;
+  border-color: #60a5fa !important;
   color: white !important;
-  box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2) !important;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.35), 0 0 12px rgba(59, 130, 246, 0.5) !important;
 }
 
-.stepper_item_error .stepper_label {
-  color: #d32f2f !important;
+/* Completed State (not active) */
+.stepper_item_completed .stepper_title {
+  color: #34d399 !important;
+  font-weight: 600 !important;
+}
+
+.stepper_item_completed .stepper_dot {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: white !important;
+}
+
+/* Error State */
+.stepper_item_error .stepper_title {
+  color: #fca5a5 !important;
   font-weight: 700 !important;
+}
+
+.stepper_item_error .stepper_dot {
+  background: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: white !important;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.35) !important;
 }
 
 
@@ -867,4 +872,68 @@
   font-size: 0.75rem;
   color: var(--c--globals--colors--gray-500);
   margin: 6px 0 0;
+}
+
+/* ========================================================================== */
+/* DARK MODE OVERRIDES FOR VIDEO EDIT PAGE                                   */
+/* ========================================================================== */
+
+html[data-theme="dark"] .page_title,
+html[data-theme="dark"] .step_title,
+html[data-theme="dark"] .input_label,
+html[data-theme="dark"] .live_card_title,
+html[data-theme="dark"] .element_card_title,
+html[data-theme="dark"] .visibility_section_header {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .step_sub_title,
+html[data-theme="dark"] .stepper_label,
+html[data-theme="dark"] .live_card_meta,
+html[data-theme="dark"] .live_card_stats,
+html[data-theme="dark"] .element_card_desc,
+html[data-theme="dark"] .radio_option_content p,
+html[data-theme="dark"] .vignette_helper_text {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .action_pill_btn,
+html[data-theme="dark"] .step_nav_btn {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .action_pill_btn:hover:not(:disabled),
+html[data-theme="dark"] .step_nav_btn:hover:not(:disabled) {
+  background-color: #334155 !important;
+  border-color: #60a5fa !important;
+  color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .action_pill_btn:disabled,
+html[data-theme="dark"] .step_nav_btn:disabled {
+  opacity: 0.4 !important;
+  background-color: #1e293b !important;
+  color: #64748b !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .live_card_container,
+html[data-theme="dark"] .element_card,
+html[data-theme="dark"] .visibility_section_header,
+html[data-theme="dark"] .visibility_section {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .stepper_line_bg {
+  background-color: #334155 !important;
+}
+
+html[data-theme="dark"] .stepper_dot {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
 }

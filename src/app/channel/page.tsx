@@ -8,6 +8,7 @@ import CollectionFilters, {
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useCollectionListFilters } from "@/src/hooks/useCollectionListFilters";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import { useEffect, useMemo } from "react";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 import { useMounted } from "@/src/hooks/useMounted";
@@ -16,6 +17,7 @@ export const breadcrumbLabel = "Chaines";
 
 export default function Channels() {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const mounted = useMounted();
   const { filters, setFilters, channels, channelsCount, themes, users, error, loading } =
     useCollectionListFilters({ mode: "channels" });
@@ -41,8 +43,8 @@ export default function Channels() {
 
   return (
     <div>
-      <BackButton label="Retour" />
-      <h1>Chaines</h1>
+      <BackButton label={t("common.back")} />
+      <h1>{t("channels.title")}</h1>
 
       {error && (
         <Alert canClose type={VariantType.ERROR}>
@@ -71,8 +73,8 @@ export default function Channels() {
       {publicChannels.length === 0 && !loading ? (
         <Alert>
           {hasActiveFilters
-            ? "Aucune chaîne ne correspond à vos filtres."
-            : "Aucune chaîne disponible pour le moment."}
+            ? t("channels.noMatchingFilters")
+            : t("channels.noChannels")}
         </Alert>
       ) : (
         <CollectionDisplay

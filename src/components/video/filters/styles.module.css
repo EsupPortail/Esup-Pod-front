@@ -1,7 +1,7 @@
 .filtersContent {
   margin-top: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12); /* Trait de séparation avec les vidéos */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 1.5rem;
 }
 
@@ -38,9 +38,6 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   align-items: flex-start;
-}
-
-.row {
   --filters-field-width: 150px;
 }
 
@@ -51,9 +48,10 @@
 
 .filterButton {
   min-height: 38px;
-  border: 1px solid rgba(0, 0, 0, 0.35) !important; /* Darker border for better visibility */
+  border: 1px solid rgba(0, 0, 0, 0.25) !important;
   border-radius: 9999px !important;
-  background-color: #fff !important;
+  background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
+  color: var(--text-color) !important;
   padding: 6px 16px !important;
   transition: all 0.2s ease-in-out !important;
   display: flex !important;
@@ -69,15 +67,18 @@
 }
 
 .filterButton.active {
-  border-color: var(--c--globals--colors--brand--main) !important;
-  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 8%, transparent) !important;
+  border-color: #2563eb !important;
+  background-color: rgba(37, 99, 235, 0.12) !important;
+  color: #1d4ed8 !important;
+  font-weight: 600 !important;
 }
 
 .filterMenu {
   padding: 0.75rem;
   border-radius: 8px !important;
-  border: 1px solid rgba(0, 0, 0, 0.25) !important; /* Explicit darker border for menu */
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
 }
 
 .filterOptions {
@@ -93,7 +94,7 @@
 .filterOption {
   margin: 0 !important;
   width: 100% !important;
-  padding: 8px 12px !important; /* Added more padding between elements */
+  padding: 8px 12px !important;
   border-radius: 6px;
   transition: background-color 0.15s ease;
   display: flex !important;
@@ -161,4 +162,59 @@
   .filterButton {
     width: auto !important;
   }
+}
+
+/* ========================================================================== */
+/* DARK MODE OVERRIDES FOR FILTERS                                            */
+/* ========================================================================== */
+
+html[data-theme="dark"] .filterButton {
+  background-color: #1e293b !important;
+  color: #94a3b8 !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterButton:hover {
+  background-color: #334155 !important;
+  border-color: #60a5fa !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .filterButton.active {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+}
+
+html[data-theme="dark"] .filterButton.active p,
+html[data-theme="dark"] .filterButton.active svg,
+html[data-theme="dark"] .filterButton.active span {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .filterMenu {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterOption:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.clearFiltersBtn {
+  color: #2563eb !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  transition: color 0.2s ease !important;
+}
+
+:global(html[data-theme="dark"]) .clearFiltersBtn {
+  color: #60a5fa !important;
+}
+
+.clearFiltersBtn:hover {
+  color: #ef4444 !important;
+  text-decoration: underline !important;
 }

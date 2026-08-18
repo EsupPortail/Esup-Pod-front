@@ -15,11 +15,14 @@ import BackButton from "@/src/components/BackButton/BackButton";
 
 import type { Video } from "@/src/types";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export const breadcrumbLabel = "Tableau de bord";
 
 export default function Dashboard() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [selectedVideoIds, setSelectedVideoIds] = useState<number[]>([]);
 
   const {
@@ -87,8 +90,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <BackButton />
-      <h1 style={{ marginTop: "16px", marginBottom: "28px" }}>Mon tableau de bord</h1>
+      <h1 style={{ marginTop: "16px", marginBottom: "28px" }}>{t("sidebar.dashboard")}</h1>
 
       {useVideoError && (
         <Alert canClose type={VariantType.ERROR}>

@@ -319,3 +319,65 @@
     max-height: none;
   }
 }
+
+/* ========================================================================== */
+/* DARK MODE OVERRIDES FOR VIDEO DETAIL PAGE                                  */
+/* ========================================================================== */
+
+:global(html[data-theme="dark"]) .sidebar_card {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+:global(html[data-theme="dark"]) .sidebar_card_title,
+:global(html[data-theme="dark"]) .video_title_row h1,
+:global(html[data-theme="dark"]) .video_infos_details dd {
+  color: #f8fafc;
+}
+
+:global(html[data-theme="dark"]) .video_views,
+:global(html[data-theme="dark"]) .video_infos_header_time,
+:global(html[data-theme="dark"]) .video_infos_details dt,
+:global(html[data-theme="dark"]) .sidebar_list_item h4,
+:global(html[data-theme="dark"]) .sidebar_list_item p,
+:global(html[data-theme="dark"]) .sidebar_list_item ul {
+  color: #94a3b8;
+}
+
+:global(html[data-theme="dark"]) .sidebar_blue_text {
+  color: #60a5fa;
+}
+
+:global(html[data-theme="dark"]) .video_infos_description {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+
+:global(html[data-theme="dark"]) .action_pill {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+:global(html[data-theme="dark"]) .action_pill:hover {
+  background-color: #334155;
+}
+
+:global(html[data-theme="dark"]) .document_item {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+}
+
+:global(html[data-theme="dark"]) .document_item:hover {
+  background-color: #334155;
+}
+
+:global(html[data-theme="dark"]) .document_title {
+  color: #f8fafc;
+}
+
+:global(html[data-theme="dark"]) .document_date {
+  color: #94a3b8;
+}

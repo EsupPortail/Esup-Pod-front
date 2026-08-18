@@ -6,13 +6,17 @@ import TableRowsIcon from "@mui/icons-material/TableRows";
 import type { VideoViewToggleProps } from "./types";
 import styles from "./styles.module.css";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export default function VideoViewToggle({
   view,
   onChange,
 }: VideoViewToggleProps) {
+  const { t } = useTranslation();
+
   return (
     <div className={styles.toggleWrapper}>
-      <span className={styles.toggleLabel}>Affichage : </span>
+      <span className={styles.toggleLabel}>{t("common.displayMode")} </span>
 
       <div
         className={styles.toggleGroup}
@@ -30,7 +34,7 @@ export default function VideoViewToggle({
         >
           <span className={styles.toggleButtonContent}>
             <GridViewIcon fontSize="small" />
-            <span className={styles.toggleText}>Cartes</span>
+            <span className={styles.toggleText}>{t("common.viewCards")}</span>
           </span>
         </Button>
 
@@ -45,7 +49,7 @@ export default function VideoViewToggle({
         >
           <span className={styles.toggleButtonContent}>
             <TableRowsIcon fontSize="small" />
-            <span className={styles.toggleText}>Tableau</span>
+            <span className={styles.toggleText}>{t("common.viewTable")}</span>
           </span>
         </Button>
       </div>

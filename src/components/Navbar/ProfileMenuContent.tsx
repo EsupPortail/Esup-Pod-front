@@ -13,6 +13,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PanoramaOutlinedIcon from "@mui/icons-material/PanoramaOutlined";
+import PaletteOutlinedIcon from "@mui/icons-material/PaletteOutlined";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type ProfileMenuContentProps = {
   user: User;
@@ -26,6 +29,8 @@ export function ProfileMenuContent({
   onLogout,
 }: ProfileMenuContentProps) {
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const { config } = useAppConfig();
+  const { t } = useTranslation();
 
   return (
     <div className={styles.navbar_profil_menu}>
@@ -41,7 +46,7 @@ export function ProfileMenuContent({
       )}
 
       <span className={styles.navbar_profil_menu_name_user}>
-        {getUserDisplayName(user)}
+        {getUserDisplayName(user, config?.authentication, false)}
       </span>
 
       <div className={styles.navbar_profil_menu_content}>
@@ -55,8 +60,23 @@ export function ProfileMenuContent({
             className={styles.menu_item_icon}
             aria-hidden="true"
           />
-          Modifier mon image de profil
+          {t("navbar.myProfileImage")}
         </MenuItem>
+
+        {/* ----- Mes filigranes / Habillages ----- */}
+        {(config as any)?.dressing?.use_dressing !== false && (
+          <MenuItem
+            className={styles.navbar_profil_menu_item}
+            component={Link}
+            href="/dressing"
+          >
+            <PaletteOutlinedIcon
+              className={styles.menu_item_icon}
+              aria-hidden="true"
+            />
+            {t("preferences.dressing")}
+          </MenuItem>
+        )}
 
         {/* ----- Accès à l’administration (superUser uniquement) ----- */}
         {user.is_superuser && (

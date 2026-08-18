@@ -20,6 +20,8 @@ import dynamic from "next/dynamic";
 import type { User } from "@/src/types";
 import { ProfileMenuContent } from "./ProfileMenuContent";
 import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
+import { LanguageSelector } from "../Language/LanguageSelector";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
@@ -31,10 +33,13 @@ const SearchForm = dynamic(
   { ssr: false },
 );
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 /* ------------------------------------------------------------------ */
 /*  Bouton de connexion                                               */
 /* ------------------------------------------------------------------ */
 export function LoginButton() {
+  const { t } = useTranslation();
   return (
     <Link key="login-link" href="/login">
       <Button
@@ -47,9 +52,9 @@ export function LoginButton() {
         iconPosition="right"
         variant="primary"
         size="medium"
-        aria-label="Connexion"
+        aria-label={t("common.login")}
       >
-        <span className={styles.navbar_button_display}>Connexion</span>
+        <span className={styles.navbar_button_display}>{t("common.login")}</span>
       </Button>
     </Link>
   );
@@ -162,9 +167,12 @@ export function AuthMenu({
 export default function Navbar() {
   const { handleFixSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user, isInitializing } = useAuth();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const router = useRouter();
+  const { config } = useAppConfig();
+  const canUpload = (config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff;
 
   return (
     <div>
@@ -230,7 +238,7 @@ export default function Navbar() {
         )}
 
         {/* ------------------- Bouton “Ajouter une vidéo” ------------------- */}
-        {accessToken && user && !isInitializing && (
+        {accessToken && user && !isInitializing && canUpload && (
           <div className={styles.navbar_add_video}>
             <Button
               className={styles.navbar_button}
@@ -241,15 +249,20 @@ export default function Navbar() {
               href="/video/add"
             >
               <span className={styles.navbar_button_display}>
-                Ajouter une vidéo
+                {t("common.addVideo")}
               </span>
             </Button>
           </div>
         )}
 
+        {/* ------------------- Sélecteur de langue ------------------- */}
+        <div style={{ marginLeft: "var(--c--globals--spacings--s)", display: "flex", alignItems: "center" }}>
+          <LanguageSelector variant="compact" />
+        </div>
+
         {/* ------------------- Paramètres / accessibilité ------------------- */}
         <IconButton
-          sx={{ ml: "var(--c--globals--spacings--s)" }}
+          sx={{ ml: "var(--c--globals--spacings--xs)" }}
           aria-label="Affichage et accessibilité"
           component={Link}
           href="/user-settings"

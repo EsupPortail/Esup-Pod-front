@@ -13,6 +13,9 @@ import AuthStatusAlert from "../components/Notifications/AuthStatusAlert";
 import { PlaylistCreationProvider } from "../context/PlaylistCreationContext";
 import { QueryProvider } from "../context/QueryProvider";
 
+import { AppConfigProvider } from "../context/AppConfigProvider";
+import { LanguageProvider } from "../context/LanguageProvider";
+
 export const metadata: Metadata = {
   title: {
     template: "%s | Esup POD V5",
@@ -33,36 +36,55 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('pod_theme');
+                  if (saved === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.documentElement.classList.add('cunningham-theme--dark', 'dark-mode');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body>
         <a href="#main" className="skip-link">Aller au contenu principal</a>
         <div className="layout">
           <CunninghamStyleProvider>
-            <DatePickerProvider>
-              <QueryProvider>
-                <AuthProvider>
-                  <PlaylistCreationProvider>
-                    <SidebarProvider>
-                      <Navbar />
-                      <Sidebar />
-                      <main id="main" className="main">
-                        <Breadcrumb />
-                        <div className="content">
-                          <Suspense fallback={null}>
-                            <AuthStatusAlert autoDismissMs={5000} />
-                          </Suspense>
-                          {children}
-                        </div>
-                      </main>
-                      <Footer />
-                    </SidebarProvider>
-                  </PlaylistCreationProvider>
-                </AuthProvider>
-              </QueryProvider>
-            </DatePickerProvider>
+            <AppConfigProvider>
+              <LanguageProvider>
+                <DatePickerProvider>
+                  <QueryProvider>
+                    <AuthProvider>
+                      <PlaylistCreationProvider>
+                        <SidebarProvider>
+                          <Navbar />
+                          <Sidebar />
+                          <main id="main" className="main">
+                            <Breadcrumb />
+                            <div className="content">
+                              <Suspense fallback={null}>
+                                <AuthStatusAlert autoDismissMs={5000} />
+                              </Suspense>
+                              {children}
+                            </div>
+                          </main>
+                          <Footer />
+                        </SidebarProvider>
+                      </PlaylistCreationProvider>
+                    </AuthProvider>
+                  </QueryProvider>
+                </DatePickerProvider>
+              </LanguageProvider>
+            </AppConfigProvider>
           </CunninghamStyleProvider>
         </div>
       </body>

@@ -1,8 +1,9 @@
-"use client";
-
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import type { Video, Chapter } from "@/src/types";
+import { useMarker } from "@/src/hooks/useMarker";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "videojs-hotkeys";
@@ -25,11 +26,18 @@ export default function VideoPlayer({
   onPlay,
   onEnded,
 }: Props) {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [aspectRatio, setAspectRatio] = useState<string>("16 / 9");
   const [hoveredChapter, setHoveredChapter] = useState<string | null>(null);
+
+  const { config } = useAppConfig();
+  const useMarkerTime = config?.video?.use_marker_time !== false;
+  const { markerTime, saveMarker, resetMarker } = useMarker(video.slug);
+  const vjsPlayerRef = useRef<any>(null);
+  const hasSeekedRef = useRef(false);
 
   // Stable serialized keys
   const videoId = video.id;
@@ -122,6 +130,8 @@ export default function VideoPlayer({
           enableModifiersForNumbers: false,
         });
       });
+      
+      vjsPlayerRef.current = vjsPlayer;
 
       vjsPlayer.one("loadedmetadata", () => {
         if (!isMounted) return;
@@ -175,6 +185,7 @@ export default function VideoPlayer({
       }
       if (vjsPlayer) {
         vjsPlayer.dispose();
+        vjsPlayerRef.current = null;
       } else if (mediaEl && containerEl.contains(mediaEl)) {
         containerEl.removeChild(mediaEl);
       }
@@ -182,23 +193,129 @@ export default function VideoPlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [streamUrl, videoId, videoTitle, poster, subtitlesKey, autoPlay]);
 
-  if (hasError) {
+  // Handle seeking to marker time once ready
+  useEffect(() => {
+    if (isReady && useMarkerTime && markerTime > 0 && !hasSeekedRef.current && vjsPlayerRef.current) {
+      vjsPlayerRef.current.currentTime(markerTime);
+      hasSeekedRef.current = true;
+    }
+  }, [isReady, markerTime, useMarkerTime]);
+
+  // Handle saving marker time
+  useEffect(() => {
+    if (!isReady || !useMarkerTime || !vjsPlayerRef.current) return;
+    const player = vjsPlayerRef.current;
+
+    const handlePause = () => {
+      const time = player.currentTime();
+      if (time && time > 5) { // don't save if very start
+        saveMarker(Math.floor(time));
+      }
+    };
+
+    const handleEnded = () => {
+      resetMarker();
+      hasSeekedRef.current = false;
+    };
+
+    player.on("pause", handlePause);
+    player.on("ended", handleEnded);
+
+    return () => {
+      player.off("pause", handlePause);
+      player.off("ended", handleEnded);
+    };
+  }, [isReady, useMarkerTime, saveMarker, resetMarker]);
+
+  const isEncoding = video.encoding_status === "PR";
+
+  if (hasError || !streamUrl) {
     return (
       <div
         role="alert"
         aria-live="assertive"
         style={{
-          display: "flex",
+          position: "relative",
+          width: "100%",
+          maxWidth: "100%",
+          maxHeight: "78vh",
           aspectRatio: aspectRatio,
-          maxHeight: "75vh",
+          margin: "0 auto",
+          overflow: "hidden",
+          borderRadius: "12px",
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#171717",
-          color: "#fff",
-          borderRadius: "12px",
+          backgroundColor: "#0f172a",
+          boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.15)",
         }}
       >
-        Impossible de charger la vidéo.
+        {poster && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: `url(${poster})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              filter: "blur(20px) brightness(0.3)",
+              transform: "scale(1.1)",
+            }}
+          />
+        )}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "8px 16px",
+            backgroundColor: "rgba(15, 23, 42, 0.65)",
+            backdropFilter: "blur(8px)",
+            borderRadius: "9999px",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            color: "#e2e8f0",
+            fontSize: "0.85rem",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.25)",
+          }}
+        >
+          <span className="material-icons" style={{ fontSize: "1.1rem", color: "#94a3b8" }}>
+            {isEncoding ? "hourglass_empty" : "info"}
+          </span>
+          <span>
+            {isEncoding
+              ? t("videoPlayer.encodingInProgress")
+              : t("videoPlayer.unableToLoad")}
+          </span>
+          <button
+            onClick={() => {
+              setHasError(false);
+              setIsReady(false);
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#60a5fa",
+              fontWeight: 600,
+              fontSize: "0.825rem",
+              cursor: "pointer",
+              padding: "2px 6px",
+              borderRadius: "4px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "4px",
+              marginLeft: "4px",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+            onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
+          >
+            <span className="material-icons" style={{ fontSize: "0.95rem" }}>
+              refresh
+            </span>
+            {t("videoPlayer.retry")}
+          </button>
+        </div>
       </div>
     );
   }

@@ -84,60 +84,60 @@ const ALL_ENCODED = (videos: Video[]) =>
 const SOME_ENCODING = (videos: Video[]) =>
   videos.some((v) => v.encoding_status === "PE" || v.encoding_status === "PR");
 
-const ACTIONS_OPTIONS: ActionOption[] = [
+const getActionsOptions = (t: (key: string) => string): ActionOption[] => [
   // ── Métadonnées (toujours disponibles) ─────────────────────────
   {
     value: "type",
-    label: "Changer le type",
+    label: t("bulk.changeType"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "channel",
-    label: "Changer la chaîne",
+    label: t("bulk.changeChannel"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "description",
-    label: "Modifier la description",
+    label: t("bulk.editDescription"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "license",
-    label: "Changer la licence",
+    label: t("bulk.changeLicense"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "date_evt",
-    label: "Définir la date de l'événement",
+    label: t("bulk.setEventDate"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "tags",
-    label: "Ajouter / Remplacer des mots-clés",
+    label: t("bulk.addReplaceKeywords"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "discipline",
-    label: "Changer la discipline",
+    label: t("bulk.changeDiscipline"),
     group: "edit",
     condition: () => true,
   },
   {
     value: "cursus",
-    label: "Changer le niveau d'études",
+    label: t("bulk.changeCursus"),
     group: "edit",
     condition: () => true,
   },
   // ── Actions nécessitant l'encodage terminé ──────────────────────
   {
     value: "status",
-    label: "Publier / Dépublier",
+    label: t("bulk.publishUnpublish"),
     group: "edit",
     condition: ALL_ENCODED,
     conditionLabel:
@@ -145,7 +145,7 @@ const ACTIONS_OPTIONS: ActionOption[] = [
   },
   {
     value: "is_auth_required",
-    label: "Restreindre aux membres connectés",
+    label: t("bulk.restrictAuth"),
     group: "edit",
     condition: ALL_ENCODED,
     conditionLabel:
@@ -153,7 +153,7 @@ const ACTIONS_OPTIONS: ActionOption[] = [
   },
   {
     value: "allow_downloading",
-    label: "Autoriser / Interdire le téléchargement",
+    label: t("bulk.allowDownloading"),
     group: "edit",
     condition: ALL_ENCODED,
     conditionLabel:
@@ -161,7 +161,7 @@ const ACTIONS_OPTIONS: ActionOption[] = [
   },
   {
     value: "disable_comment",
-    label: "Activer / Désactiver les commentaires",
+    label: t("bulk.disableComments"),
     group: "edit",
     condition: ALL_ENCODED,
     conditionLabel:
@@ -170,14 +170,14 @@ const ACTIONS_OPTIONS: ActionOption[] = [
   // ── Programmation temporelle (toujours disponible) ──────────────
   {
     value: "date_delete",
-    label: "Programmer une suppression automatique",
+    label: t("bulk.scheduleDeletion"),
     group: "edit",
     condition: () => true,
   },
   // ── Zone de danger ──────────────────────────────────────────────
   {
     value: "delete",
-    label: "Supprimer les vidéos sélectionnées",
+    label: t("bulk.deleteSelected"),
     group: "danger",
     condition: () => true,
   },
@@ -210,6 +210,8 @@ interface Toast {
   severity: "success" | "error";
 }
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export default function BulkActionsBar({
   selectedVideos,
   types,
@@ -219,6 +221,7 @@ export default function BulkActionsBar({
   onApplySuccess,
   onClearSelection,
 }: BulkActionsBarProps) {
+  const { t } = useTranslation();
   const [selectedAction, setSelectedAction] = useState<BulkActionKey>("");
   const [fieldValue, setFieldValue] = useState<any>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -238,11 +241,11 @@ export default function BulkActionsBar({
   // Actions disponibles / désactivées pour la sélection courante
   const resolvedActions = useMemo(
     () =>
-      ACTIONS_OPTIONS.map((opt) => ({
+      getActionsOptions(t).map((opt) => ({
         ...opt,
         enabled: opt.condition(selectedVideos),
       })),
-    [selectedVideos]
+    [selectedVideos, t]
   );
 
   const showToast = useCallback((message: string, severity: "success" | "error") => {
@@ -353,7 +356,7 @@ export default function BulkActionsBar({
   };
 
   const getActionLabel = (key: BulkActionKey) =>
-    ACTIONS_OPTIONS.find((opt) => opt.value === key)?.label ?? key;
+    getActionsOptions(t).find((opt: ActionOption) => opt.value === key)?.label ?? key;
 
   // La confirmation est désactivée si le champ requis est vide
   // Sauf pour les actions ne nécessitant pas de valeur (delete, channel)
@@ -363,13 +366,14 @@ export default function BulkActionsBar({
 
   return (
     <>
-      {/* ── Barre d'actions ────────────────────────────────────────── */}
-      <div
-        style={{
-          backgroundColor: "var(--c--globals--colors--gray-050)",
-          border: "1px solid var(--c--globals--colors--gray-200)",
-          borderRadius: "12px",
-          padding: "16px 20px",
+      {/* ── Barre d'actions contextuelle (affichée uniquement lors d'une sélection) ── */}
+      {hasSelection && (
+        <div
+          style={{
+            backgroundColor: "var(--c--theme--colors--card-bg, rgba(255, 255, 255, 0.05))",
+            border: "1px solid var(--border-color, rgba(0, 0, 0, 0.12))",
+            borderRadius: "12px",
+            padding: "16px 20px",
           marginBottom: "24px",
         }}
       >
@@ -385,7 +389,7 @@ export default function BulkActionsBar({
           {/* Titre + badge sélection */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <h2 style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>
-              Modifier en lot
+              {t("bulk.title")}
             </h2>
             {hasSelection ? (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -400,7 +404,7 @@ export default function BulkActionsBar({
                     padding: "2px 10px",
                   }}
                 >
-                  {count} vidéo{count > 1 ? "s" : ""} sélectionnée{count > 1 ? "s" : ""}
+                  {count} {t("common.videos")}
                 </span>
                 {/* Avertissement encodage en cours */}
                 {hasEncodingInProgress && (
@@ -437,7 +441,7 @@ export default function BulkActionsBar({
                 }}
               >
                 <InfoOutlinedIcon fontSize="small" />
-                Cochez des vidéos pour activer les actions
+                {t("bulk.checkVideosPrompt")}
               </span>
             )}
           </div>
@@ -457,7 +461,7 @@ export default function BulkActionsBar({
                 }}
               >
                 <Typography variant="body2" fontWeight={500} noWrap>
-                  Choisir une action…
+                  {t("bulk.chooseAction")}
                 </Typography>
                 {dropdownOpen ? (
                   <ExpandLessIcon fontSize="small" />
@@ -471,14 +475,14 @@ export default function BulkActionsBar({
                 anchorEl={anchorEl}
                 placement="bottom-start"
                 transition
-                sx={{ zIndex: 1300, width: anchorEl?.clientWidth || 290 }}
+                sx={{ zIndex: 1300, minWidth: 320, width: Math.max(anchorEl?.clientWidth || 0, 320) }}
                 modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
               >
                 {({ TransitionProps }) => (
                   <Fade {...TransitionProps} timeout={200}>
                     <Paper elevation={8} className={filterStyles.filterMenu}>
                       <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
-                        <Box>
+                        <Box sx={{ p: 0.5 }}>
                           {/* Groupe édition */}
                           <Typography
                             variant="caption"
@@ -487,13 +491,13 @@ export default function BulkActionsBar({
                               color: "text.secondary",
                               px: 1.5,
                               pt: 1,
-                              pb: 0.5,
+                              pb: 0.8,
                               display: "block",
                               textTransform: "uppercase",
                               letterSpacing: "0.5px",
                             }}
                           >
-                            Modifier les vidéos
+                            {t("bulk.editGroup")}
                           </Typography>
 
                           {resolvedActions
@@ -515,18 +519,23 @@ export default function BulkActionsBar({
                                     }
                                     sx={{
                                       borderRadius: "6px",
-                                      py: 0.8,
+                                      py: 0.9,
                                       px: 1.5,
                                       fontSize: "0.875rem",
                                       display: "flex",
                                       alignItems: "center",
-                                      gap: 1,
-                                      opacity: opt.enabled ? 1 : 0.45,
+                                      gap: 1.2,
+                                      whiteSpace: "nowrap",
+                                      color: opt.enabled ? "var(--text-color, #0f172a)" : "#64748b",
+                                      "&.Mui-disabled": {
+                                        opacity: 0.75,
+                                        color: "#64748b !important",
+                                      },
                                     }}
                                   >
                                     {!opt.enabled && (
                                       <LockIcon
-                                        sx={{ fontSize: "0.85rem", color: "text.disabled" }}
+                                        sx={{ fontSize: "0.9rem", color: "#64748b !important", opacity: 0.9 }}
                                       />
                                     )}
                                     {opt.label}
@@ -535,7 +544,7 @@ export default function BulkActionsBar({
                               </Tooltip>
                             ))}
 
-                          <Divider sx={{ my: 1 }} />
+                          <Divider sx={{ my: 1.5, borderColor: "var(--border-color, rgba(0, 0, 0, 0.12))" }} />
 
                           {/* Groupe danger */}
                           <Typography
@@ -544,13 +553,14 @@ export default function BulkActionsBar({
                               fontWeight: 700,
                               color: "error.main",
                               px: 1.5,
+                              pt: 0.5,
                               pb: 0.5,
                               display: "block",
                               textTransform: "uppercase",
                               letterSpacing: "0.5px",
                             }}
                           >
-                            Zone de danger
+                            {t("bulk.dangerZone")}
                           </Typography>
                           {resolvedActions
                             .filter((o) => o.group === "danger")
@@ -561,10 +571,11 @@ export default function BulkActionsBar({
                                 sx={{
                                   color: "error.main",
                                   borderRadius: "6px",
-                                  py: 0.8,
+                                  py: 0.9,
                                   px: 1.5,
                                   fontSize: "0.875rem",
                                   mb: 0.5,
+                                  fontWeight: 600,
                                 }}
                               >
                                 {opt.label}
@@ -585,12 +596,13 @@ export default function BulkActionsBar({
                 color="neutral"
                 onClick={onClearSelection}
               >
-                Tout désélectionner
+                {t("bulk.deselectAll")}
               </Button>
             )}
           </div>
         </div>
       </div>
+      )}
 
       {/* ── Modal ─────────────────────────────────────────────────── */}
       <Modal

@@ -12,30 +12,40 @@
 
 .welcomeGreenBox {
   flex: 1 1 300px;
-  background-color: var(--c--globals--colors--gray-100);
-  color: var(--c--globals--colors--gray-900);
-  border: 1px solid var(--c--globals--colors--gray-200);
+  background-color: var(--c--theme--colors--card-bg, #1e293b);
+  color: var(--text-color, #f8fafc);
+  border: 1px solid var(--c--globals--colors--gray-200, #334155);
   padding: var(--c--globals--spacings--md);
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   gap: var(--c--globals--spacings--sm);
   align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .welcomeLinkTitle {
-  color: var(--c--globals--colors--brand-600);
+  color: var(--c--globals--colors--primary-600, #3b82f6);
   text-decoration: none;
-  font-weight: bold;
-  font-size: var(--c--globals--font--sizes--md);
+  font-weight: 700;
+  font-size: 1rem;
   display: block;
   margin-bottom: 4px;
 }
 
-.welcomeLink {
-  color: var(--c--globals--colors--brand-600);
-  text-decoration: none;
-  font-weight: 500;
+html[data-theme="dark"] .welcomeLinkTitle {
+  color: #60a5fa !important;
 }
+
+.welcomeLink {
+  color: var(--c--globals--colors--primary-600, #3b82f6);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+html[data-theme="dark"] .welcomeLink {
+  color: #60a5fa !important;
+}
+
 .welcomeLinkTitle:hover,
 .welcomeLink:hover {
   text-decoration: underline;

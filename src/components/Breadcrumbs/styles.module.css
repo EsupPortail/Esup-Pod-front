@@ -1,14 +1,28 @@
 .breadcrumb {
-  background-color: var(--c--globals--colors--gray-000); /* Solid white to match nav */
-  padding: 6px var(--c--globals--spacings--md); /* Thinner padding */
-  border-bottom: 1px solid var(--c--globals--colors--gray-200); /* Thin border */
+  background-color: var(--c--globals--colors--gray-025);
+  padding: 8px var(--c--globals--spacings--md);
+  border-bottom: 1px solid var(--c--globals--colors--gray-200);
   position: -webkit-sticky;
   position: sticky;
   top: var(--navbar-height);
   z-index: 898;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .breadcrumbLink {
   font-size: var(--c--globals--font--sizes--xs) !important;
   color: var(--text-color) !important;
+}
+
+html[data-theme="dark"] .breadcrumb {
+  background-color: #1e293b !important;
+  border-bottom-color: #334155 !important;
+}
+
+html[data-theme="dark"] .breadcrumbLink {
+  color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .breadcrumbLink:hover {
+  color: #60a5fa !important;
 }

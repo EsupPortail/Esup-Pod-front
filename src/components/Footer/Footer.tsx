@@ -3,8 +3,11 @@ import styles from "./styles.module.css";
 import { useAppInfo } from "@/src/hooks/useAppInfo";
 import Link from "next/link";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export default function Footer() {
   const { info } = useAppInfo();
+  const { t } = useTranslation();
   const projectName = info?.project ?? "Esup.Pod";
   const version = info?.version ?? "N/A";
 
@@ -26,12 +29,12 @@ export default function Footer() {
           </address>
         </div>
         <div className={styles.footer_link}>
-          <Link href="/pages/mentions-legales">Mentions légales</Link>
-          <Link href="/pages/accessibilite">Accessibilité : Partiellement conforme</Link>
-          <Link href="/pages/plan-du-site">Plan du site</Link>
-          <Link href="/pages/utiliser-pod">Utiliser pod</Link>
-          <Link href="/pages/comment-faire">Comment faire</Link>
-          <Link href="/pages/droits-auteur">Droits d'auteur</Link>
+          <Link href="/pages/mentions-legales">{t("footer.legalNotice")}</Link>
+          <Link href="/pages/accessibilite">{t("footer.accessibilityPartially")}</Link>
+          <Link href="/pages/plan-du-site">{t("footer.siteMap")}</Link>
+          <Link href="/pages/utiliser-pod">{t("home.btnUsePod")}</Link>
+          <Link href="/pages/comment-faire">{t("home.btnHowTo")}</Link>
+          <Link href="/pages/droits-auteur">{t("home.btnCopyright")}</Link>
         </div>
         <div className={styles.footer_extra_link}>
           <div className={styles.footer_extra_link_icons}>
@@ -40,13 +43,13 @@ export default function Footer() {
             <img src="/linkedin_icon.png" alt="Linkedin" />
           </div>
           <div className={styles.footer_link_esup}>
-            <a href="https://github.com/EsupPortail/Esup-Pod-front" target="_blank" rel="noreferrer">Projet Esup-Pod</a>
-            <a href="https://www.esup-portail.org/" target="_blank" rel="noreferrer">Esup portail</a>
+            <a href="https://github.com/EsupPortail/Esup-Pod-front" target="_blank" rel="noreferrer">{t("footer.esupProject")}</a>
+            <a href="https://www.esup-portail.org/" target="_blank" rel="noreferrer">{t("footer.esupPortal")}</a>
           </div>
         </div>
       </div>
       <p className={styles.credits_infos}>
-        {projectName} | Plateforme vidéo - Consortium Esup • Version {version}
+        {projectName} | {t("footer.videoPlatform")} - Consortium Esup • Version {version}
       </p>
     </footer>
   );

@@ -10,12 +10,14 @@ import BackButton from "@/src/components/BackButton/BackButton";
 import { useVideoListFilters } from "@/src/hooks/useVideoListFilters";
 import { useSearchParams } from "next/navigation";
 import { useMounted } from "@/src/hooks/useMounted";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 
 export const breadcrumbLabel = "Toutes les vidéos";
 
 function VideosList() {
   const { user, isInitializing } = useAuth();
+  const { t } = useTranslation();
   const mounted = useMounted();
   const searchParams = useSearchParams();
 
@@ -42,8 +44,6 @@ function VideosList() {
     },
   });
 
-
-
   const hasActiveFilters = useMemo(() => {
     const base: VideoFiltersValue = filters;
 
@@ -64,8 +64,8 @@ function VideosList() {
 
   return (
     <div>
-      <BackButton label="Retour" />
-      <h1>Toutes les vidéos</h1>
+      <BackButton label={t("common.back")} />
+      <h1>{t("common.allVideos")}</h1>
 
       {useVideoError && (
         <Alert canClose type={VariantType.ERROR}>
@@ -101,8 +101,8 @@ function VideosList() {
       {videos.length === 0 && !useVideoLoading ? (
         <Alert>
           {hasActiveFilters
-            ? "Aucune vidéo ne correspond à vos filtres."
-            : "Aucune vidéo publique disponible pour le moment."}
+            ? t("favorites.noMatchingFilters")
+            : t("home.noRecentVideos")}
         </Alert>
       ) : (
         <VideosDisplay

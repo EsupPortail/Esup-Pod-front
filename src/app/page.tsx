@@ -10,11 +10,20 @@ import CenteredLoader from "../components/Loader/CenteredLoader";
 import { useMounted } from "../hooks/useMounted";
 import styles from "./page.module.css";
 
+import { useAppConfig } from "../hooks/useAppConfig";
+import WebTVLayout from "../components/WebTV/WebTVLayout";
+
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 export default function Accueil() {
   const router = useRouter();
   const mounted = useMounted();
+  const { config } = useAppConfig();
   const { videos, useVideoError, useVideoLoading } = useVideosList(undefined, "all", { enabled: mounted });
   const { user } = useAuth();
+  const { t } = useTranslation();
+
+  const isWebTV = (config as any)?.video?.webtv_mode === true;
 
   const latestVisiblePublicVideos = useMemo(() => {
     return [...videos]
@@ -35,10 +44,14 @@ export default function Accueil() {
     return <CenteredLoader />;
   }
 
+  if (isWebTV) {
+    return <WebTVLayout />;
+  }
+
   return (
     <div>
       <h1 className={styles.title}>Pod Univ</h1>
-      <h2 className={styles.subtitle}>Bienvenue sur votre plateforme POD !</h2>
+      <h2 className={styles.subtitle}>{t("home.welcomeSubtitle")}</h2>
       
       <div>
         <div className={styles.welcomeBanner}>
@@ -46,7 +59,7 @@ export default function Accueil() {
           {/* Left Text */}
           <div className={styles.welcomeText}>
             <p style={{ lineHeight: 1.6 }}>
-              La vidéo est un média de choix quand il s'agit de communiquer, d'enseigner et d'apprendre. Voici quelques usages qui pourraient vous intéresser.
+              {t("home.welcomeIntro")}
             </p>
           </div>
 
@@ -54,22 +67,25 @@ export default function Accueil() {
           <div className={styles.welcomeGreenBox}>
             <span className="material-icons" style={{ fontSize: "3rem", opacity: 0.9 }}>help_outline</span>
             <div>
-              <Link href="/pages/comment-faire" className={styles.welcomeLinkTitle}>Comment faire ?</Link>
-              <p style={{ fontSize: "0.85rem", lineHeight: 1.4 }}>Vous avez envie de mettre en ligne vos propres contenus ? Ce <Link href="/pages/utiliser-pod" className={styles.welcomeLink}>guide de prise en main</Link> rapide vous présentera les fonctionnalités de base de Pod.</p>
+              <Link href="/pages/comment-faire" className={styles.welcomeLinkTitle}>{t("home.howToTitle")}</Link>
+              <p style={{ fontSize: "0.85rem", lineHeight: 1.4 }}>
+                {t("home.howToDescPrefix")}
+                <Link href="/pages/utiliser-pod" className={styles.welcomeLink}>{t("home.quickGuideLink")}</Link>
+                {t("home.howToDescSuffix")}
+              </p>
             </div>
           </div>
         </div>
 
         {/* Buttons Row */}
         <div className={styles.actionButtons}>
-          <Button onClick={() => router.push('/video/add')} icon={<span className="material-icons">add_circle</span>} variant="primary">Ajouter une vidéo</Button>
-          <Button onClick={() => router.push('/pages/utiliser-pod')} icon={<span className="material-icons">play_circle</span>} variant="primary">Utiliser pod</Button>
-          <Button onClick={() => router.push('/pages/comment-faire')} icon={<span className="material-icons">help_outline</span>} variant="primary">Comment faire</Button>
-          <Button onClick={() => router.push('/pages/droits-auteur')} icon={<span className="material-icons">security</span>} variant="primary">Du droit d'auteur</Button>
+          {user && ((config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff) && (
+            <Button onClick={() => router.push('/video/add')} icon={<span className="material-icons">add_circle</span>} variant="primary">{t("common.addVideo")}</Button>
+          )}
+          <Button onClick={() => router.push('/pages/utiliser-pod')} icon={<span className="material-icons">play_circle</span>} variant="primary">{t("home.btnUsePod")}</Button>
+          <Button onClick={() => router.push('/pages/comment-faire')} icon={<span className="material-icons">help_outline</span>} variant="primary">{t("home.btnHowTo")}</Button>
+          <Button onClick={() => router.push('/pages/droits-auteur')} icon={<span className="material-icons">security</span>} variant="primary">{t("home.btnCopyright")}</Button>
         </div>
-
-
-
 
         <div style={{ marginTop: "var(--c--globals--spacings--xxl)" }}>
           <h2
@@ -81,7 +97,7 @@ export default function Accueil() {
               marginBottom: "var(--c--globals--spacings--md)"
             }}
           >
-            Dernières vidéos publiées
+            {t("home.latestVideos")}
           </h2>
           {latestVisiblePublicVideos.length > 0 ? (
             <div
@@ -100,7 +116,7 @@ export default function Accueil() {
                     variant="primary"
                     size="medium"
                   >
-                    Afficher toutes les vidéos
+                    {t("home.btnAllVideos")}
                   </Button>
                 </Link>
               </div>
@@ -109,8 +125,8 @@ export default function Accueil() {
             !useVideoLoading && (
               <Alert type={useVideoError ? VariantType.WARNING : VariantType.INFO}>
                 {useVideoError 
-                  ? "Le service vidéo est momentanément indisponible." 
-                  : "Aucune vidéo publique récente 🥺"}
+                  ? t("home.videoServiceError")
+                  : t("home.noRecentVideos")}
               </Alert>
             )
           )}

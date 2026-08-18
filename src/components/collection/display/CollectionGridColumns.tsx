@@ -21,23 +21,37 @@ export function getCollectionGridColumns({
       headerName: "",
       enableSorting: false,
       renderCell: ({ row }) => (
-        <Link href={row.href}>
-          <img className={styles.thumbnail} src={row.thumbnailUrl} alt="" />
+        <Link href={row.href} className={styles.thumbnailWrapper}>
+          <img className={styles.thumbnail} src={row.thumbnailUrl} alt={row.title} />
         </Link>
       ),
     },
     {
       field: "title",
       headerName: "Titre",
-      renderCell: ({ row }) => <Link href={row.href}>{row.title}</Link>,
+      renderCell: ({ row }) => (
+        <Link href={row.href} className={styles.tableTitleLink}>
+          {row.title}
+        </Link>
+      ),
     },
     {
       field: "typeLabel",
       headerName: "Type",
+      renderCell: ({ row }) => (
+        <span className={styles.typeBadge}>
+          {row.typeLabel}
+        </span>
+      ),
     },
     {
       field: "videosCount",
       headerName: "Vidéos",
+      renderCell: ({ row }) => (
+        <span className={styles.countBadge}>
+          {row.videosCount}
+        </span>
+      ),
     },
   ];
 
@@ -45,7 +59,11 @@ export function getCollectionGridColumns({
     columns.push({
       field: "themesCount",
       headerName: "Thèmes",
-      renderCell: ({ row }) => row.themesCount,
+      renderCell: ({ row }) => (
+        <span className={styles.countBadge}>
+          {row.themesCount}
+        </span>
+      ),
     });
   }
 
@@ -53,7 +71,11 @@ export function getCollectionGridColumns({
     columns.push({
       field: "subThemesCount",
       headerName: "Sous-thèmes",
-      renderCell: ({ row }) => row.subThemesCount,
+      renderCell: ({ row }) => (
+        <span className={styles.countBadge}>
+          {row.subThemesCount}
+        </span>
+      ),
     });
   }
 
@@ -61,13 +83,21 @@ export function getCollectionGridColumns({
     columns.push({
       field: "createdAtValue",
       headerName: "Création",
-      renderCell: ({ row }) => row.createdAtLabel,
+      renderCell: ({ row }) => (
+        <span className={styles.dateText}>
+          {row.createdAtLabel}
+        </span>
+      ),
     });
 
     columns.push({
       field: "updatedAtValue",
       headerName: "Modifiée le",
-      renderCell: ({ row }) => row.updatedAtLabel,
+      renderCell: ({ row }) => (
+        <span className={styles.dateText}>
+          {row.updatedAtLabel}
+        </span>
+      ),
     });
     columns.push({
       field: "Actions",

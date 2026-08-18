@@ -52,6 +52,10 @@
   height: 35px;
 }
 
+html[data-theme="dark"] .navbar_logo img {
+  filter: brightness(0) invert(1) drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+}
+
 .navbar_logo strong {
   font-size: var(--c--globals--font--sizes--h2);
 }

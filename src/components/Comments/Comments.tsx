@@ -12,6 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import { useAuth } from "@/src/context/AuthProvider";
 import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
 import { useComments } from "@/src/hooks/useComments";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import CommentItem from "./commentItem";
 import styles from "./styles.module.css";
 
@@ -20,6 +21,7 @@ type CommentsProps = {
 };
 
 export default function Comments({ videoSlug }: CommentsProps) {
+  const { t, locale } = useTranslation();
   const { user, accessToken } = useAuth();
   const {
     comments,
@@ -44,8 +46,12 @@ export default function Comments({ videoSlug }: CommentsProps) {
   }, [fetchComments]);
 
   const commentCountLabel = useMemo(() => {
-    return `${comments.length} commentaire${comments.length > 1 ? "s" : ""}`;
-  }, [comments.length]);
+    const count = comments.length;
+    if (count <= 1) {
+      return t("comments.count", { count });
+    }
+    return t("comments.countPlural", { count });
+  }, [comments.length, t]);
 
   const initials = user ? setInitial(user.last_name, user.first_name) : "";
 
@@ -72,7 +78,7 @@ export default function Comments({ videoSlug }: CommentsProps) {
 
   return (
     <section className={styles.comments}>
-      <h2 className={styles.title}>Commentaires</h2>
+      <h2 className={styles.title}>{t("comments.title")}</h2>
       <p className={styles.count}>{commentCountLabel}</p>
 
       {useCommentsError && (
@@ -87,7 +93,7 @@ export default function Comments({ videoSlug }: CommentsProps) {
 
           <div className={styles.formContent}>
             <TextArea
-              label="Ajouter un commentaire"
+              label={t("comments.addPlaceholder")}
               fullWidth
               rows={4}
               value={content}
@@ -103,14 +109,14 @@ export default function Comments({ videoSlug }: CommentsProps) {
                 onClick={handleSubmit}
                 disabled={!content.trim() || isSubmitting}
               >
-                {isSubmitting ? "Publication..." : "Commenter"}
+                {isSubmitting ? t("comments.submitting") : t("comments.submit")}
               </Button>
             </div>
           </div>
         </div>
       ) : (
         <Alert type={VariantType.INFO}>
-          Connectez-vous pour ajouter un commentaire.
+          {t("comments.loginToComment")}
         </Alert>
       )}
 
@@ -135,7 +141,7 @@ export default function Comments({ videoSlug }: CommentsProps) {
           ))}
         </div>
       ) : (
-        <Alert>Aucun commentaire pour le moment.</Alert>
+        <Alert>{t("comments.noCommentsYet")}</Alert>
       )}
     </section>
   );

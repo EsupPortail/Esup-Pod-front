@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useSidebar } from "../../context/SidebarProvider";
 import styles from "./styles.module.css";
 import type { MenuItemProps } from "@/src/types";
@@ -16,12 +17,22 @@ import IconExpandLess from "@mui/icons-material/ExpandLess";
 import IconExpandMore from "@mui/icons-material/ExpandMore";
 
 const MenuItem = (props: MenuItemProps) => {
+  const pathname = usePathname();
   const { sidebarOpen, handleFixSidebar } = useSidebar();
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
-  const [open, setOpen] = useState(false);
+
+  const isChildActive = isExpandable && items.some(item =>
+    Boolean(item.link) && (pathname === item.link || (Boolean(item.link) && item.link !== "/" && Boolean(pathname?.startsWith(item.link!))))
+  );
+
+  const [open, setOpen] = useState(isChildActive);
   const isNavigable = !isExpandable && Boolean(link);
   const isMobile = useMediaQuery("(max-width: 1024px)");
+
+  const isSelfActive = isNavigable && Boolean(link) && (
+    pathname === link || (Boolean(link) && link !== "/" && Boolean(pathname?.startsWith(link!)))
+  );
 
   function handleClick() {
     if (isExpandable && sidebarOpen) {
@@ -37,8 +48,12 @@ const MenuItem = (props: MenuItemProps) => {
   useEffect(() => {
     if (!sidebarOpen) {
       setOpen(false);
+    } else if (isChildActive) {
+      setOpen(true);
     }
-  }, [sidebarOpen]);
+  }, [sidebarOpen, isChildActive]);
+
+  const isChildItem = !Icon;
 
   const MenuItemRoot = (
     <ListItemButton
@@ -47,21 +62,36 @@ const MenuItem = (props: MenuItemProps) => {
       onClick={handleClick}
       component={isNavigable ? Link : "div"}
       href={isNavigable ? link : undefined}
-      selected={isExpandable && open ? true : false}
+      selected={isSelfActive || (isExpandable && open)}
       sx={{
+        position: "relative",
+        transition: "all 0.2s ease",
+        borderRadius: "8px",
+        margin: "2px 8px",
+        backgroundColor: isSelfActive
+          ? "rgba(59, 130, 246, 0.18) !important"
+          : "transparent",
+        borderLeft: isSelfActive ? "4px solid #3b82f6 !important" : "4px solid transparent",
         "&.Mui-selected": {
-          backgroundColor:
-            "rgb(from var(--c--contextuals--background--semantic--brand--primary)  r g b / 30%)",
+          backgroundColor: isSelfActive
+            ? "rgba(59, 130, 246, 0.22) !important"
+            : "rgba(59, 130, 246, 0.08)",
+        },
+        "&:hover": {
+          backgroundColor: isSelfActive
+            ? "rgba(59, 130, 246, 0.25) !important"
+            : "rgba(255, 255, 255, 0.05)",
         },
       }}
     >
       {/* Display an icon if any */}
       {!!Icon && (
-        <ListItemIcon sx={{ paddingLeft: "6px" }}>
+        <ListItemIcon sx={{ minWidth: "36px", paddingLeft: "2px" }}>
           <Icon
             sx={{
-              color:
-                "var(--c--contextuals--content--semantic--neutral--secondary)",
+              color: isSelfActive
+                ? "#60a5fa !important"
+                : "var(--c--contextuals--content--semantic--neutral--secondary)",
             }}
           />
         </ListItemIcon>
@@ -69,9 +99,11 @@ const MenuItem = (props: MenuItemProps) => {
       <ListItemText
         sx={{
           ".MuiTypography-root": {
-            fontSize: "0.825rem",
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            fontSize: isChildItem ? "0.8rem" : "0.85rem",
+            fontWeight: isSelfActive ? 700 : 500,
+            color: isSelfActive
+              ? "#60a5fa !important"
+              : "var(--c--contextuals--content--semantic--neutral--primary)",
           },
         }}
         primary={name}
@@ -81,16 +113,14 @@ const MenuItem = (props: MenuItemProps) => {
       {isExpandable && !open && (
         <IconExpandMore
           style={{
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#60a5fa" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
       {isExpandable && open && (
         <IconExpandLess
           style={{
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#60a5fa" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
