@@ -128,26 +128,70 @@ export default function FilterDropdown({
         className={`${styles.filterButton} ${selectedCount > 0 ? styles.active : ""}`}
         aria-expanded={open}
       >
-        <Typography
-          variant="body2"
-          fontWeight={selectedCount > 0 ? 600 : 500}
-          noWrap
-          sx={{
-            color: selectedCount > 0 ? "var(--c--globals--colors--brand--main)" : "inherit",
-          }}
-        >
-          {multiple
-            ? selectedCount > 0
-              ? `${title} (${selectedCount})`
-              : title
-            : selectedCount === 1 && selectedLabel
+        <Box sx={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
+          <Typography
+            variant="body2"
+            fontWeight={selectedCount > 0 ? 600 : 500}
+            noWrap
+            sx={{
+              color: "inherit",
+            }}
+          >
+            {!multiple && selectedCount === 1 && selectedLabel
               ? `${title} : ${selectedLabel}`
               : title}
-        </Typography>
+          </Typography>
+
+          {multiple && selectedCount > 0 && (
+            <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: "#2563eb",
+                color: "#ffffff",
+                borderRadius: "9999px",
+                px: "6px",
+                fontSize: "0.725rem",
+                fontWeight: 700,
+                minWidth: "18px",
+                height: "18px",
+                lineHeight: 1,
+                flexShrink: 0,
+                "html[data-theme='dark'] &": {
+                  bgcolor: "#3b82f6",
+                },
+              }}
+            >
+              {selectedCount}
+            </Box>
+          )}
+        </Box>
+
         {open ? (
-          <ExpandLessIcon fontSize="small" sx={{ color: selectedCount > 0 ? "var(--c--globals--colors--brand--main)" : "inherit", ml: "auto" }} />
+          <ExpandLessIcon
+            fontSize="small"
+            sx={{
+              color: selectedCount > 0 ? "#2563eb" : "inherit",
+              ml: "auto",
+              flexShrink: 0,
+              "html[data-theme='dark'] &": {
+                color: selectedCount > 0 ? "#60a5fa" : "inherit",
+              },
+            }}
+          />
         ) : (
-          <ExpandMoreIcon fontSize="small" sx={{ color: selectedCount > 0 ? "var(--c--globals--colors--brand--main)" : "inherit", ml: "auto" }} />
+          <ExpandMoreIcon
+            fontSize="small"
+            sx={{
+              color: selectedCount > 0 ? "#2563eb" : "inherit",
+              ml: "auto",
+              flexShrink: 0,
+              "html[data-theme='dark'] &": {
+                color: selectedCount > 0 ? "#60a5fa" : "inherit",
+              },
+            }}
+          />
         )}
       </ListItemButton>
 

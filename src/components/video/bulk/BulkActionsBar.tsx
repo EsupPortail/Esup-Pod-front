@@ -374,234 +374,234 @@ export default function BulkActionsBar({
             border: "1px solid var(--border-color, rgba(0, 0, 0, 0.12))",
             borderRadius: "12px",
             padding: "16px 20px",
-          marginBottom: "24px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "16px",
+            marginBottom: "24px",
           }}
         >
-          {/* Titre + badge sélection */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <h2 style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>
-              {t("bulk.title")}
-            </h2>
-            {hasSelection ? (
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "16px",
+            }}
+          >
+            {/* Titre + badge sélection */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <h2 style={{ fontSize: "1.05rem", fontWeight: 700, margin: 0 }}>
+                {t("bulk.title")}
+              </h2>
+              {hasSelection ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span
+                    style={{
+                      backgroundColor:
+                        "var(--c--contextuals--background--semantic--brand--primary)",
+                      color: "#fff",
+                      fontSize: "0.8rem",
+                      fontWeight: 600,
+                      borderRadius: "12px",
+                      padding: "2px 10px",
+                    }}
+                  >
+                    {count} {t("common.videos")}
+                  </span>
+                  {/* Avertissement encodage en cours */}
+                  {hasEncodingInProgress && (
+                    <Tooltip
+                      title="Certaines vidéos sont en cours d'encodage. Les actions nécessitant l'encodage complet sont désactivées."
+                      placement="top"
+                      arrow
+                    >
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          color: "#e67e22",
+                          fontSize: "0.8rem",
+                          fontWeight: 600,
+                          cursor: "help",
+                        }}
+                      >
+                        <WarningAmberIcon fontSize="small" />
+                        Encodage en cours
+                      </span>
+                    </Tooltip>
+                  )}
+                </div>
+              ) : (
                 <span
                   style={{
-                    backgroundColor:
-                      "var(--c--contextuals--background--semantic--brand--primary)",
-                    color: "#fff",
-                    fontSize: "0.8rem",
-                    fontWeight: 600,
-                    borderRadius: "12px",
-                    padding: "2px 10px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    color: "var(--c--globals--colors--gray-500)",
+                    fontSize: "0.85rem",
                   }}
                 >
-                  {count} {t("common.videos")}
+                  <InfoOutlinedIcon fontSize="small" />
+                  {t("bulk.checkVideosPrompt")}
                 </span>
-                {/* Avertissement encodage en cours */}
-                {hasEncodingInProgress && (
-                  <Tooltip
-                    title="Certaines vidéos sont en cours d'encodage. Les actions nécessitant l'encodage complet sont désactivées."
-                    placement="top"
-                    arrow
-                  >
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "4px",
-                        color: "#e67e22",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                        cursor: "help",
-                      }}
-                    >
-                      <WarningAmberIcon fontSize="small" />
-                      Encodage en cours
-                    </span>
-                  </Tooltip>
-                )}
-              </div>
-            ) : (
-              <span
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  color: "var(--c--globals--colors--gray-500)",
-                  fontSize: "0.85rem",
-                }}
-              >
-                <InfoOutlinedIcon fontSize="small" />
-                {t("bulk.checkVideosPrompt")}
-              </span>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Contrôles */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-            <Box className={filterStyles.filterItem}>
-              <ListItemButton
-                onClick={handleDropdownClick}
-                className={filterStyles.filterButton}
-                aria-expanded={dropdownOpen}
-                disabled={!hasSelection}
-                style={{
-                  minWidth: "270px",
-                  justifyContent: "space-between",
-                  opacity: hasSelection ? 1 : 0.5,
-                }}
-              >
-                <Typography variant="body2" fontWeight={500} noWrap>
-                  {t("bulk.chooseAction")}
-                </Typography>
-                {dropdownOpen ? (
-                  <ExpandLessIcon fontSize="small" />
-                ) : (
-                  <ExpandMoreIcon fontSize="small" />
-                )}
-              </ListItemButton>
+            {/* Contrôles */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+              <Box className={filterStyles.filterItem}>
+                <ListItemButton
+                  onClick={handleDropdownClick}
+                  className={filterStyles.filterButton}
+                  aria-expanded={dropdownOpen}
+                  disabled={!hasSelection}
+                  style={{
+                    minWidth: "270px",
+                    justifyContent: "space-between",
+                    opacity: hasSelection ? 1 : 0.5,
+                  }}
+                >
+                  <Typography variant="body2" fontWeight={500} noWrap>
+                    {t("bulk.chooseAction")}
+                  </Typography>
+                  {dropdownOpen ? (
+                    <ExpandLessIcon fontSize="small" />
+                  ) : (
+                    <ExpandMoreIcon fontSize="small" />
+                  )}
+                </ListItemButton>
 
-              <Popper
-                open={dropdownOpen}
-                anchorEl={anchorEl}
-                placement="bottom-start"
-                transition
-                sx={{ zIndex: 1300, minWidth: 320, width: Math.max(anchorEl?.clientWidth || 0, 320) }}
-                modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
-              >
-                {({ TransitionProps }) => (
-                  <Fade {...TransitionProps} timeout={200}>
-                    <Paper elevation={8} className={filterStyles.filterMenu}>
-                      <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
-                        <Box sx={{ p: 0.5 }}>
-                          {/* Groupe édition */}
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              fontWeight: 700,
-                              color: "text.secondary",
-                              px: 1.5,
-                              pt: 1,
-                              pb: 0.8,
-                              display: "block",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.5px",
-                            }}
-                          >
-                            {t("bulk.editGroup")}
-                          </Typography>
+                <Popper
+                  open={dropdownOpen}
+                  anchorEl={anchorEl}
+                  placement="bottom-start"
+                  transition
+                  sx={{ zIndex: 1300, minWidth: 320, width: Math.max(anchorEl?.clientWidth || 0, 320) }}
+                  modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
+                >
+                  {({ TransitionProps }) => (
+                    <Fade {...TransitionProps} timeout={200}>
+                      <Paper elevation={8} className={filterStyles.filterMenu}>
+                        <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
+                          <Box sx={{ p: 0.5 }}>
+                            {/* Groupe édition */}
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                fontWeight: 700,
+                                color: "text.secondary",
+                                px: 1.5,
+                                pt: 1,
+                                pb: 0.8,
+                                display: "block",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.5px",
+                              }}
+                            >
+                              {t("bulk.editGroup")}
+                            </Typography>
 
-                          {resolvedActions
-                            .filter((o) => o.group === "edit")
-                            .map((opt) => (
-                              <Tooltip
-                                key={opt.value}
-                                title={!opt.enabled ? (opt.conditionLabel ?? "Non disponible pour cette sélection") : ""}
-                                placement="right"
-                                arrow
-                                disableHoverListener={opt.enabled}
-                              >
-                                {/* span requis pour le Tooltip quand MenuItem est disabled */}
-                                <span style={{ display: "block" }}>
-                                  <MenuItem
-                                    disabled={!opt.enabled}
-                                    onClick={() =>
-                                      opt.enabled && handleSelectAction(opt.value)
-                                    }
-                                    sx={{
-                                      borderRadius: "6px",
-                                      py: 0.9,
-                                      px: 1.5,
-                                      fontSize: "0.875rem",
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: 1.2,
-                                      whiteSpace: "nowrap",
-                                      color: opt.enabled ? "var(--text-color, #0f172a)" : "#64748b",
-                                      "&.Mui-disabled": {
-                                        opacity: 0.75,
-                                        color: "#64748b !important",
-                                      },
-                                    }}
-                                  >
-                                    {!opt.enabled && (
-                                      <LockIcon
-                                        sx={{ fontSize: "0.9rem", color: "#64748b !important", opacity: 0.9 }}
-                                      />
-                                    )}
-                                    {opt.label}
-                                  </MenuItem>
-                                </span>
-                              </Tooltip>
-                            ))}
+                            {resolvedActions
+                              .filter((o) => o.group === "edit")
+                              .map((opt) => (
+                                <Tooltip
+                                  key={opt.value}
+                                  title={!opt.enabled ? (opt.conditionLabel ?? "Non disponible pour cette sélection") : ""}
+                                  placement="right"
+                                  arrow
+                                  disableHoverListener={opt.enabled}
+                                >
+                                  {/* span requis pour le Tooltip quand MenuItem est disabled */}
+                                  <span style={{ display: "block" }}>
+                                    <MenuItem
+                                      disabled={!opt.enabled}
+                                      onClick={() =>
+                                        opt.enabled && handleSelectAction(opt.value)
+                                      }
+                                      sx={{
+                                        borderRadius: "6px",
+                                        py: 0.9,
+                                        px: 1.5,
+                                        fontSize: "0.875rem",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 1.2,
+                                        whiteSpace: "nowrap",
+                                        color: opt.enabled ? "var(--text-color, #0f172a)" : "#64748b",
+                                        "&.Mui-disabled": {
+                                          opacity: 0.75,
+                                          color: "#64748b !important",
+                                        },
+                                      }}
+                                    >
+                                      {!opt.enabled && (
+                                        <LockIcon
+                                          sx={{ fontSize: "0.9rem", color: "#64748b !important", opacity: 0.9 }}
+                                        />
+                                      )}
+                                      {opt.label}
+                                    </MenuItem>
+                                  </span>
+                                </Tooltip>
+                              ))}
 
-                          <Divider sx={{ my: 1.5, borderColor: "var(--border-color, rgba(0, 0, 0, 0.12))" }} />
+                            <Divider sx={{ my: 1.5, borderColor: "var(--border-color, rgba(0, 0, 0, 0.12))" }} />
 
-                          {/* Groupe danger */}
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              fontWeight: 700,
-                              color: "error.main",
-                              px: 1.5,
-                              pt: 0.5,
-                              pb: 0.5,
-                              display: "block",
-                              textTransform: "uppercase",
-                              letterSpacing: "0.5px",
-                            }}
-                          >
-                            {t("bulk.dangerZone")}
-                          </Typography>
-                          {resolvedActions
-                            .filter((o) => o.group === "danger")
-                            .map((opt) => (
-                              <MenuItem
-                                key={opt.value}
-                                onClick={() => handleSelectAction(opt.value)}
-                                sx={{
-                                  color: "error.main",
-                                  borderRadius: "6px",
-                                  py: 0.9,
-                                  px: 1.5,
-                                  fontSize: "0.875rem",
-                                  mb: 0.5,
-                                  fontWeight: 600,
-                                }}
-                              >
-                                {opt.label}
-                              </MenuItem>
-                            ))}
-                        </Box>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Fade>
-                )}
-              </Popper>
-            </Box>
+                            {/* Groupe danger */}
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                fontWeight: 700,
+                                color: "error.main",
+                                px: 1.5,
+                                pt: 0.5,
+                                pb: 0.5,
+                                display: "block",
+                                textTransform: "uppercase",
+                                letterSpacing: "0.5px",
+                              }}
+                            >
+                              {t("bulk.dangerZone")}
+                            </Typography>
+                            {resolvedActions
+                              .filter((o) => o.group === "danger")
+                              .map((opt) => (
+                                <MenuItem
+                                  key={opt.value}
+                                  onClick={() => handleSelectAction(opt.value)}
+                                  sx={{
+                                    color: "error.main",
+                                    borderRadius: "6px",
+                                    py: 0.9,
+                                    px: 1.5,
+                                    fontSize: "0.875rem",
+                                    mb: 0.5,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {opt.label}
+                                </MenuItem>
+                              ))}
+                          </Box>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Fade>
+                  )}
+                </Popper>
+              </Box>
 
-            {hasSelection && (
-              <Button
-                type="button"
-                variant="tertiary"
-                color="neutral"
-                onClick={onClearSelection}
-              >
-                {t("bulk.deselectAll")}
-              </Button>
-            )}
+              {hasSelection && (
+                <Button
+                  type="button"
+                  variant="tertiary"
+                  color="neutral"
+                  onClick={onClearSelection}
+                >
+                  {t("bulk.deselectAll")}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
       )}
 
       {/* ── Modal ─────────────────────────────────────────────────── */}
@@ -831,7 +831,7 @@ export default function BulkActionsBar({
                             whiteSpace: "nowrap",
                           }}
                         >
-                          ⏳ Encodage
+                          Encodage
                         </span>
                       </Tooltip>
                     )}

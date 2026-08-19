@@ -936,7 +936,7 @@ export default function EditVideo() {
             : [];
           return (
             <div className={styles.input_group}>
-              <label className={styles.input_label}>{t("videoEdit.tagsLabel", "Mots-clés")}</label>
+              <label className={styles.input_label}>{t("videoEdit.tagsLabel")}</label>
               <Autocomplete
                 multiple
                 freeSolo
@@ -974,7 +974,7 @@ export default function EditVideo() {
                     {...params}
                     fullWidth
                     variant="outlined"
-                    helperText={t("videoEdit.tagsHelper", "Appuyez sur Entrée pour ajouter un mot-clé")}
+                    helperText={t("videoEdit.tagsHelper")}
                     InputProps={{ ...params.InputProps, style: { borderRadius: '8px' } }}
                   />
                 )}

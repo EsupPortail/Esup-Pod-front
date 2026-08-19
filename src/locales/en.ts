@@ -97,6 +97,7 @@ export const en: TranslationKeys = {
     languageSelectLabel: "Choose your preferred interface language:",
     themeSectionTitle: "Visual Theme",
     darkModeLabel: "Dark mode",
+    lightModeLabel: "Light mode",
   },
   filters: {
     searchPlaceholder: "Search video...",

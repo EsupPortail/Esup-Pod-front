@@ -218,3 +218,29 @@
     width: 100%;
   }
 }
+
+.paginationWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.paginationInfo {
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+:global(html[data-theme="dark"]) .paginationInfo {
+  color: #94a3b8;
+}
+
+.scrollTopBtn {
+  margin-top: 0.5rem !important;
+  text-transform: none !important;
+}
+

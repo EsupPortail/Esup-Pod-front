@@ -40,12 +40,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
         setLocaleState(stored);
         dayjs.locale(stored);
       } else {
-        // Detect browser language if available
-        const browserLang = navigator.language.slice(0, 2) as SupportedLocale;
-        if (dictionaries[browserLang]) {
-          setLocaleState(browserLang);
-          dayjs.locale(browserLang);
-        }
+        setLocaleState("fr");
+        dayjs.locale("fr");
       }
     }
   }, []);

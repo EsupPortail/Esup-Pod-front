@@ -48,10 +48,10 @@
 
 .filterButton {
   min-height: 38px;
-  border: 1px solid rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
   border-radius: 9999px !important;
   background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
-  color: var(--text-color) !important;
+  color: var(--text-color, #0f172a) !important;
   padding: 6px 16px !important;
   transition: all 0.2s ease-in-out !important;
   display: flex !important;
@@ -59,18 +59,38 @@
   gap: 0.5rem !important;
   text-transform: none !important;
   cursor: pointer !important;
+  font-family: inherit !important;
 }
 
 .filterButton:hover {
-  border-color: var(--c--globals--colors--brand--main) !important;
-  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 4%, transparent) !important;
+  border-color: #2563eb !important;
+  background-color: rgba(37, 99, 235, 0.04) !important;
 }
 
 .filterButton.active {
-  border-color: #2563eb !important;
-  background-color: rgba(37, 99, 235, 0.12) !important;
+  border: 1.5px solid #2563eb !important;
+  background-color: #eff6ff !important;
   color: #1d4ed8 !important;
   font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+html[data-theme="dark"] .filterButton {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterButton:hover {
+  background-color: #334155 !important;
+  border-color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .filterButton.active {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+  border: 1.5px solid #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
 }
 
 .filterMenu {

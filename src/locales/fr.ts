@@ -95,6 +95,7 @@ export const fr = {
     languageSelectLabel: "Choisissez la langue de l'interface :",
     themeSectionTitle: "Thème visuel",
     darkModeLabel: "Mode sombre",
+    lightModeLabel: "Mode clair",
   },
   filters: {
     searchPlaceholder: "Rechercher une vidéo...",

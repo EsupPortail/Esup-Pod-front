@@ -3,11 +3,15 @@
 import React, { useState } from "react";
 import { Button } from "@openfun/cunningham-react";
 import SettingsIcon from "@mui/icons-material/Settings";
-import CloseIcon from "@mui/icons-material/Close";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Dialog from "@mui/material/Dialog";
 import { useRouter } from "next/navigation";
@@ -23,6 +27,11 @@ import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
 import { LanguageSelector } from "../Language/LanguageSelector";
 import { useAppConfig } from "@/src/hooks/useAppConfig";
 
+import { useCunninghamTheme } from "@/src/context/CunninghamProvider";
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
+import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
+import Tooltip from "@mui/material/Tooltip";
+
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
 /* ------------------------------------------------------------------ */
@@ -34,6 +43,104 @@ const SearchForm = dynamic(
 );
 
 import { useTranslation } from "@/src/hooks/useTranslation";
+
+/* ------------------------------------------------------------------ */
+/*  Menu Préférences Unifié (Thème, Langue, Paramètres)               */
+/* ------------------------------------------------------------------ */
+export function PreferencesMenu() {
+  const { theme, handleTheme } = useCunninghamTheme();
+  const { t } = useTranslation();
+  const isDark = theme === "dark";
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <>
+      <Tooltip title={t("preferences.settingsHeader")} arrow>
+        <IconButton
+          onClick={handleClick}
+          aria-label={t("preferences.settingsHeader")}
+          aria-controls={open ? "preferences-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          size="small"
+          sx={{
+            color: "var(--text-color, inherit)",
+            height: "36px",
+            width: "36px",
+            borderRadius: "8px",
+            border: "1px solid var(--border-color, rgba(140, 140, 140, 0.25))",
+            backgroundColor: "rgba(128, 128, 128, 0.05)",
+            transition: "all 0.2s ease-in-out",
+            "&:hover": {
+              backgroundColor: "rgba(128, 128, 128, 0.12)",
+              borderColor: "rgba(128, 128, 128, 0.4)",
+            },
+          }}
+        >
+          <SettingsIcon sx={{ fontSize: "1.2rem" }} />
+        </IconButton>
+      </Tooltip>
+
+      <Menu
+        id="preferences-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        slotProps={{
+          paper: {
+            elevation: 3,
+            sx: {
+              p: 1,
+              mt: 1,
+              minWidth: 200,
+              borderRadius: "12px",
+              backgroundColor: "var(--c--theme--colors--card-bg, #ffffff)",
+              color: "var(--text-color, inherit)",
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <MenuItem onClick={handleTheme} sx={{ borderRadius: "8px", gap: 1.5, py: 1 }}>
+          {isDark ? (
+            <LightModeOutlinedIcon sx={{ fontSize: "1.2rem", color: "#f59e0b" }} />
+          ) : (
+            <DarkModeOutlinedIcon sx={{ fontSize: "1.2rem" }} />
+          )}
+          <Typography variant="body2" fontWeight={500}>
+            {isDark ? t("preferences.lightModeLabel") : t("preferences.darkModeLabel")}
+          </Typography>
+        </MenuItem>
+
+        <Box sx={{ px: 1, py: 0.5 }}>
+          <LanguageSelector variant="compact" />
+        </Box>
+
+        <Divider sx={{ my: 0.5 }} />
+
+        <MenuItem
+          component={Link}
+          href="/user-settings"
+          onClick={handleClose}
+          sx={{ borderRadius: "8px", gap: 1.5, py: 1 }}
+        >
+          <SettingsIcon sx={{ fontSize: "1.2rem" }} />
+          <Typography variant="body2" fontWeight={500}>
+            {t("preferences.title")}
+          </Typography>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  Bouton de connexion                                               */
@@ -91,17 +198,24 @@ export function AuthMenu({
   return (
     <div>
       <div className={styles.navbar_profil}>
-        <IconButton
-          onClick={handleClickMenu}
-          size="small"
-          aria-controls={openMenu ? "account-menu" : undefined}
-          aria-expanded={openMenu ? "true" : undefined}
-          aria-label="Ouvrir le menu du profil"
-        >
-          <Avatar src={profilePictureUrl} sx={{ width: 45, height: 45 }}>
-            {initial}
-          </Avatar>
-        </IconButton>
+        <Tooltip title={user.is_staff ? `${user.username} (Admin)` : user.username} arrow>
+          <IconButton
+            onClick={handleClickMenu}
+            size="small"
+            aria-controls={openMenu ? "account-menu" : undefined}
+            aria-expanded={openMenu ? "true" : undefined}
+            aria-label="Ouvrir le menu du profil"
+            sx={{
+              p: "2px",
+              border: user.is_staff ? "2px solid #3b82f6" : "2px solid transparent",
+              borderRadius: "50%",
+            }}
+          >
+            <Avatar src={profilePictureUrl} sx={{ width: 42, height: 42 }}>
+              {initial}
+            </Avatar>
+          </IconButton>
+        </Tooltip>
       </div>
 
       {isMobile ? (
@@ -202,7 +316,7 @@ export default function Navbar() {
             className={styles.navbar_button_menu}
           >
             {sidebarOpen ? (
-              <CloseIcon aria-hidden="true" />
+              <MenuOpenIcon aria-hidden="true" />
             ) : (
               <MenuIcon aria-hidden="true" />
             )}
@@ -255,27 +369,10 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* ------------------- Sélecteur de langue ------------------- */}
-        <div style={{ marginLeft: "var(--c--globals--spacings--s)", display: "flex", alignItems: "center" }}>
-          <LanguageSelector variant="compact" />
+        {/* ------------------- Utilitaires (Menu Préférences Unifié) ------------------- */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "var(--c--globals--spacings--s)", marginRight: "var(--c--globals--spacings--s)" }}>
+          <PreferencesMenu />
         </div>
-
-        {/* ------------------- Paramètres / accessibilité ------------------- */}
-        <IconButton
-          sx={{ ml: "var(--c--globals--spacings--xs)" }}
-          aria-label="Affichage et accessibilité"
-          component={Link}
-          href="/user-settings"
-        >
-          <SettingsIcon
-            aria-hidden="true"
-            sx={{
-              fontSize: "var(--c--globals--font--sizes--h1)",
-              color:
-                "var(--c--contextuals--content--semantic--neutral--primary)",
-            }}
-          />
-        </IconButton>
 
         {/* ------------------- Auth / connexion ------------------- */}
         {accessToken && user ? (

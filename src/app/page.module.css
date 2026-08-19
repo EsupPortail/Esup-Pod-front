@@ -12,9 +12,9 @@
 
 .welcomeGreenBox {
   flex: 1 1 300px;
-  background-color: var(--c--theme--colors--card-bg, #1e293b);
-  color: var(--text-color, #f8fafc);
-  border: 1px solid var(--c--globals--colors--gray-200, #334155);
+  background-color: var(--c--globals--colors--gray-050, #f8fafc);
+  color: var(--text-color, #0f172a);
+  border: 1px solid var(--c--globals--colors--gray-200, #e2e8f0);
   padding: var(--c--globals--spacings--md);
   border-radius: 12px;
   display: flex;
@@ -23,8 +23,22 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+.welcomeGreenBox span[class*="material-icons"] {
+  color: var(--c--globals--colors--primary-600, #2563eb);
+}
+
+html[data-theme="dark"] .welcomeGreenBox {
+  background-color: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+html[data-theme="dark"] .welcomeGreenBox span[class*="material-icons"] {
+  color: #60a5fa;
+}
+
 .welcomeLinkTitle {
-  color: var(--c--globals--colors--primary-600, #3b82f6);
+  color: var(--c--globals--colors--primary-600, #2563eb);
   text-decoration: none;
   font-weight: 700;
   font-size: 1rem;
@@ -37,7 +51,7 @@ html[data-theme="dark"] .welcomeLinkTitle {
 }
 
 .welcomeLink {
-  color: var(--c--globals--colors--primary-600, #3b82f6);
+  color: var(--c--globals--colors--primary-600, #2563eb);
   text-decoration: none;
   font-weight: 600;
 }

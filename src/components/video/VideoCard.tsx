@@ -20,6 +20,9 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import ErrorIcon from "@mui/icons-material/Error";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
 import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface VideosCardProps {
@@ -93,11 +96,15 @@ export default function VideoCard(props: VideosCardProps) {
             left: 8,
             zIndex: 10,
             lineHeight: 0,
-            transform: "scale(0.8)",
+            transform: "scale(0.85)",
             transformOrigin: "top left",
-            backgroundColor: "rgba(15, 23, 42, 0.75)",
+            backgroundColor: selected
+              ? "var(--c--contextuals--background--semantic--brand--primary, #3b82f6)"
+              : "var(--c--theme--colors--card-bg, #ffffff)",
+            border: selected ? "1px solid #2563eb" : "1px solid rgba(0, 0, 0, 0.2)",
             borderRadius: "6px",
             padding: "2px 4px",
+            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
           }}
         >
           <Checkbox
@@ -185,19 +192,19 @@ export default function VideoCard(props: VideosCardProps) {
                     <CheckCircleOutlinedIcon color="success" sx={{ fontSize: "1.1rem" }} />
                   </Tooltip>
                 )}
-                {video.status == "DR" && (
-                  <Tooltip title="Vidéo privée">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>visibility_off</span>
+                {video.status === "DR" && (
+                  <Tooltip title="Vidée privée / Brouillon">
+                    <VisibilityOffOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
                   </Tooltip>
                 )}
                 {video.has_password && (
-                  <Tooltip title="Vidéo protégée par un mot de passe">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>key</span>
+                  <Tooltip title="Vidéo protégée par mot de passe">
+                    <LockOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
                   </Tooltip>
                 )}
                 {video.is_auth_required && (
-                  <Tooltip title="Vidéo visible pour les utilisateurs authentifiés">
-                    <span className="material-icons" style={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }}>verified_user</span>
+                  <Tooltip title="Réservé aux utilisateurs authentifiés">
+                    <ShieldOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
                   </Tooltip>
                 )}
                 {isOwner && (

@@ -40,7 +40,7 @@ export default function Accueil() {
       .slice(0, 10);
   }, [videos, user]);
 
-  if (!mounted || useVideoLoading) {
+  if (!mounted || (useVideoLoading && !useVideoError)) {
     return <CenteredLoader />;
   }
 

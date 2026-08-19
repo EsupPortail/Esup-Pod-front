@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -8,6 +8,12 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
+import TuneIcon from "@mui/icons-material/Tune";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import Badge from "@mui/material/Badge";
+import Collapse from "@mui/material/Collapse";
+import Paper from "@mui/material/Paper";
 import { getCursusOptions } from "@/src/constants/cursus";
 import { getUserDisplayName } from "@/src/constants/user";
 import type { Discipline, Tags, Type, User } from "@/src/types";
@@ -66,23 +72,6 @@ const haveSameValues = <T extends string | number>(
     (currentValue, index) => currentValue === nextValues[index],
   );
 
-const normalizeValues = <T extends string | number>(values: T[]) =>
-  [...values].sort((first, second) =>
-    String(first).localeCompare(String(second)),
-  );
-
-const sortByOptions = (values: string[], options: SelectOption[]) => {
-  const orderByValue = new Map(
-    options.map((option, index) => [option.value, index]),
-  );
-
-  return [...values].sort(
-    (first, second) =>
-      (orderByValue.get(first) ?? Number.MAX_SAFE_INTEGER) -
-      (orderByValue.get(second) ?? Number.MAX_SAFE_INTEGER),
-  );
-};
-
 const FilterChip = ({
   label,
   onDelete,
@@ -90,33 +79,41 @@ const FilterChip = ({
   label: string;
   onDelete: () => void;
 }) => (
-  <Chip
-    label={label}
-    onDelete={onDelete}
-    deleteIcon={<CloseIcon />}
-    size="small"
-    sx={{
-      m: 0.25,
-      borderRadius: "16px",
-      backgroundColor: "rgba(59, 130, 246, 0.15)",
-      color: "var(--text-color, #0f172a)",
-      border: "1px solid rgba(59, 130, 246, 0.35)",
-      fontWeight: 600,
-      fontSize: "0.8rem",
-      "html[data-theme='dark'] &": {
-        backgroundColor: "rgba(59, 130, 246, 0.25)",
-        color: "#ffffff",
-        borderColor: "#3b82f6",
-        boxShadow: "0 2px 8px rgba(59, 130, 246, 0.2)",
-      },
-      "& .MuiChip-deleteIcon": {
-        color: "rgba(148, 163, 184, 0.9)",
+  <div
+    className={`${styles.filterButton} ${styles.active}`}
+    onClick={onDelete}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onDelete();
+      }
+    }}
+  >
+    <Typography
+      variant="body2"
+      fontWeight={600}
+      noWrap
+      sx={{ color: "inherit" }}
+    >
+      {label}
+    </Typography>
+    <CloseIcon
+      fontSize="small"
+      sx={{
+        ml: 0.5,
+        fontSize: "1.1rem",
+        color: "inherit",
+        opacity: 0.8,
+        transition: "opacity 0.2s ease, color 0.2s ease",
         "&:hover": {
+          opacity: 1,
           color: "#ef4444",
         },
-      },
-    }}
-  />
+      }}
+    />
+  </div>
 );
 
 export const INITIAL_VIDEO_FILTERS: VideoFiltersValue = {
@@ -144,6 +141,7 @@ export default function VideoFilters({
   showChannelFilter = true,
   onChange,
 }: Props) {
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const isMobile = useMediaQuery("(max-width: 600px)");
   const { t } = useTranslation();
   const { config } = useAppConfig();
@@ -271,20 +269,23 @@ export default function VideoFilters({
     return list.filter((item) => item !== target);
   };
 
-  const appliedFiltersCount =
-    (value.search.trim() ? 1 : 0) +
-    (value.channel ? 1 : 0) +
+  const secondaryFiltersCount =
     (!hideUser ? value.ownerUsernames.length : 0) +
-    (!hideTypes ? selectedTypes.length : 0) +
     (!hideDisciplines ? selectedDisciplines.length : 0) +
     (!hideCursus ? selectedCursus.length : 0) +
     (!hideTags ? selectedTags.length : 0);
 
+  const appliedFiltersCount =
+    (value.search.trim() ? 1 : 0) +
+    (value.channel ? 1 : 0) +
+    (!hideTypes ? selectedTypes.length : 0) +
+    secondaryFiltersCount;
+
   return (
     <div className={styles.filtersContent}>
-      {/* Vinted-style horizontal scrollable pill bar */}
+      {/* Primary horizontal filter row */}
       <div className={styles.row}>
-        {/* Unified inline search bar */}
+        {/* Search bar */}
         <TextField
           id="video-filters-search"
           size="small"
@@ -296,10 +297,7 @@ export default function VideoFilters({
                 ? event.target.value
                 : "";
 
-            if (nextSearch === value.search) {
-              return;
-            }
-
+            if (nextSearch === value.search) return;
             onChange({
               ...value,
               search: nextSearch,
@@ -321,7 +319,7 @@ export default function VideoFilters({
           }}
         />
 
-        {/* Tri/Ordering Pill (Single selection) */}
+        {/* Tri/Ordering Pill */}
         <FilterDropdown
           title={t("filters.sort")}
           options={orderingOptions}
@@ -337,7 +335,7 @@ export default function VideoFilters({
           }}
         />
 
-        {/* Channel Pill (Async single select) */}
+        {/* Channel Pill */}
         {showChannelFilter && (
           <AsyncFilterDropdown
             title={t("common.channel")}
@@ -352,20 +350,7 @@ export default function VideoFilters({
           />
         )}
 
-        {/* User Pill (Async multi select) */}
-        {!hideUser && (
-          <AsyncFilterDropdown
-            title={t("filters.author")}
-            selectedValues={value.ownerUsernames}
-            fetchOptions={fetchUsersOptions}
-            onChange={(nextOwnerUsernames) => {
-              if (haveSameValues(value.ownerUsernames, nextOwnerUsernames)) return;
-              onChange({ ...value, ownerUsernames: nextOwnerUsernames });
-            }}
-          />
-        )}
-
-        {/* Types Pill (Multi select) */}
+        {/* Types Pill */}
         {!hideTypes && (
           <FilterDropdown
             title={t("filters.types")}
@@ -381,57 +366,123 @@ export default function VideoFilters({
           />
         )}
 
-        {/* Disciplines Pill (Multi select) */}
-        {!hideDisciplines && (
-          <FilterDropdown
-            title={t("common.disciplines")}
-            options={disciplineOptions}
-            selectedValues={value.disciplineIds.map(String)}
-            onChange={(nextValues) => {
-              const nextDisciplineIds = nextValues.map(Number);
-              if (haveSameValues(value.disciplineIds, nextDisciplineIds)) return;
-              onChange({
-                ...value,
-                disciplineIds: nextDisciplineIds,
-              });
+        {/* Advanced Filters Toggle Button */}
+        <div
+          className={`${styles.filterButton} ${showAdvanced || secondaryFiltersCount > 0 ? styles.active : ""}`}
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setShowAdvanced(!showAdvanced);
+            }
+          }}
+        >
+          <Badge
+            badgeContent={secondaryFiltersCount}
+            color="primary"
+            sx={{
+              "& .MuiBadge-badge": {
+                fontSize: "0.7rem",
+                height: 18,
+                minWidth: 18,
+              },
             }}
-          />
-        )}
-
-        {/* Cursus Pill (Multi select) */}
-        {!hideCursus && (
-          <FilterDropdown
-            title={t("filters.cursus")}
-            options={cursusOptions}
-            selectedValues={value.cursus}
-            onChange={(nextCursus) => {
-              if (haveSameValues(value.cursus, nextCursus)) return;
-              onChange({
-                ...value,
-                cursus: nextCursus,
-              });
-            }}
-          />
-        )}
-
-        {/* Mots-clés Pill (Async multi select - tags untranslated as requested) */}
-        {!hideTags && (
-          <AsyncFilterDropdown
-            title={t("filters.keywords")}
-            selectedValues={value.tagSlugs}
-            fetchOptions={fetchTagsOptions}
-            onChange={(nextTagSlugs) => {
-              if (haveSameValues(value.tagSlugs, nextTagSlugs)) return;
-              onChange({
-                ...value,
-                tagSlugs: nextTagSlugs,
-              });
-            }}
-          />
-        )}
+          >
+            <TuneIcon fontSize="small" sx={{ color: "inherit" }} />
+          </Badge>
+          <Typography variant="body2" fontWeight={600} sx={{ color: "inherit" }}>
+            Filtres avancés
+          </Typography>
+          {showAdvanced ? (
+            <ExpandLessIcon fontSize="small" sx={{ color: "inherit" }} />
+          ) : (
+            <ExpandMoreIcon fontSize="small" sx={{ color: "inherit" }} />
+          )}
+        </div>
       </div>
 
-      {/* Selected Chips Row with Clean Clear Action */}
+      {/* Advanced Secondary Filters Panel */}
+      <Collapse in={showAdvanced} timeout="auto" unmountOnExit>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            mt: 1.5,
+            borderRadius: "12px",
+            backgroundColor: "rgba(0, 0, 0, 0.02)",
+            border: "1px solid rgba(0, 0, 0, 0.08)",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.5,
+          }}
+        >
+          {/* User Pill (Async multi select) */}
+          {!hideUser && (
+            <AsyncFilterDropdown
+              title={t("filters.author")}
+              selectedValues={value.ownerUsernames}
+              fetchOptions={fetchUsersOptions}
+              onChange={(nextOwnerUsernames) => {
+                if (haveSameValues(value.ownerUsernames, nextOwnerUsernames)) return;
+                onChange({ ...value, ownerUsernames: nextOwnerUsernames });
+              }}
+            />
+          )}
+
+          {/* Disciplines Pill (Multi select) */}
+          {!hideDisciplines && (
+            <FilterDropdown
+              title={t("common.disciplines")}
+              options={disciplineOptions}
+              selectedValues={value.disciplineIds.map(String)}
+              onChange={(nextValues) => {
+                const nextDisciplineIds = nextValues.map(Number);
+                if (haveSameValues(value.disciplineIds, nextDisciplineIds)) return;
+                onChange({
+                  ...value,
+                  disciplineIds: nextDisciplineIds,
+                });
+              }}
+            />
+          )}
+
+          {/* Cursus Pill (Multi select) */}
+          {!hideCursus && (
+            <FilterDropdown
+              title={t("filters.cursus")}
+              options={cursusOptions}
+              selectedValues={value.cursus}
+              onChange={(nextCursus) => {
+                if (haveSameValues(value.cursus, nextCursus)) return;
+                onChange({
+                  ...value,
+                  cursus: nextCursus,
+                });
+              }}
+            />
+          )}
+
+          {/* Mots-clés Pill (Async multi select) */}
+          {!hideTags && (
+            <AsyncFilterDropdown
+              title={t("filters.keywords")}
+              selectedValues={value.tagSlugs}
+              fetchOptions={fetchTagsOptions}
+              onChange={(nextTagSlugs) => {
+                if (haveSameValues(value.tagSlugs, nextTagSlugs)) return;
+                onChange({
+                  ...value,
+                  tagSlugs: nextTagSlugs,
+                });
+              }}
+            />
+          )}
+        </Paper>
+      </Collapse>
+
+      {/* Active Filter Chips Row with Clear Action */}
       {appliedFiltersCount > 0 && (
         <Box
           sx={{

@@ -111,9 +111,8 @@ const SideBar = () => {
       id="sidebar-nav"
       aria-label={t("sidebar.mainMenu")}
       aria-labelledby="sidebar-title"
-      className={`${styles.sidebar} ${
-        sidebarOpen ? styles.open : styles.closed
-      }`}
+      className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed
+        }`}
       onMouseEnter={isMobile ? undefined : () => handleViewSidebar(true)}
       onMouseLeave={isMobile ? undefined : () => handleViewSidebar(false)}
     >
@@ -134,12 +133,9 @@ const SideBar = () => {
             <Chip
               label={`${t("sidebar.welcome")} ${user?.first_name || user?.username || "admin"} 👋`}
               sx={{
-                backgroundColor: sidebarOpen
-                  ? "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))"
-                  : "transparent",
-                color: sidebarOpen
-                  ? "var(--background-brand, #3b82f6)"
-                  : "inherit",
+                display: sidebarOpen ? "inline-flex" : "none",
+                backgroundColor: "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))",
+                color: "var(--background-brand, #3b82f6)",
                 fontWeight: 600,
                 fontSize: "0.85rem",
                 marginLeft: "14px",
@@ -150,7 +146,7 @@ const SideBar = () => {
                 textOverflow: "ellipsis",
               }}
             />
-            <List component="nav" disablePadding sx={{ mt: 2 }}>
+            <List component="nav" disablePadding sx={{ mt: sidebarOpen ? 2 : 1 }}>
               {[...menuPodItems, ...menuPrincipalItems].map((item, index) => (
                 <MenuItem {...item} key={index} />
               ))}
@@ -162,9 +158,8 @@ const SideBar = () => {
               id="sidebar-title"
               className={styles.menu_title}
               style={{
-                color: sidebarOpen
-                  ? "var(--text-color-brand)"
-                  : "var(--c--globals--colors--gray-000)",
+                display: sidebarOpen ? "block" : "none",
+                color: "var(--text-color-brand)",
               }}
             >
               {t("sidebar.mainMenu")}

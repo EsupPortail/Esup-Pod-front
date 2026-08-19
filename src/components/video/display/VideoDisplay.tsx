@@ -9,6 +9,8 @@ import VideoGrid from "./VideoGrid";
 import VideoViewToggle from "./VideoViewToggle";
 import styles from "./styles.module.css";
 
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import Button from "@mui/material/Button";
 import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function VideosDisplay({
@@ -92,6 +94,13 @@ export default function VideosDisplay({
     return paginatedVideos.every((v) => selectedVideoIds.includes(v.id));
   }, [paginatedVideos, selectedVideoIds]);
 
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const startItem = count > 0 ? (page - 1) * pageSize + 1 : 0;
+  const endItem = Math.min(page * pageSize, count);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
@@ -127,18 +136,38 @@ export default function VideosDisplay({
         <VideoGrid rows={gridRows} selectable={selectable} onSelectAll={onSelectAll} />
       )}
 
-      {pagesCount && pagesCount > 1 && (
-        <div className={styles.pagination}>
-          <Pagination
-            {...pagination}
-            page={page}
-            onPageChange={(p) => {
-              setPage(p);
-              onPageChange?.(p);
-            }}
-            pageSize={pageSize}
-            displayGoto={false}
-          />
+      {count > 0 && (
+        <div className={styles.paginationWrapper}>
+          <p className={styles.paginationInfo}>
+            Affichage de {startItem} à {endItem} sur {count} vidéo{count > 1 ? "s" : ""}
+            {pagesCount && pagesCount > 1 ? ` (Page ${page} sur ${pagesCount})` : ""}
+          </p>
+
+          {pagesCount && pagesCount > 1 && (
+            <Pagination
+              {...pagination}
+              page={page}
+              onPageChange={(p) => {
+                setPage(p);
+                onPageChange?.(p);
+                handleScrollToTop();
+              }}
+              pageSize={pageSize}
+              displayGoto={false}
+            />
+          )}
+
+          {count > 10 && (
+            <Button
+              size="small"
+              variant="text"
+              startIcon={<ArrowUpwardIcon fontSize="small" />}
+              onClick={handleScrollToTop}
+              className={styles.scrollTopBtn}
+            >
+              Remonter en haut
+            </Button>
+          )}
         </div>
       )}
     </div>

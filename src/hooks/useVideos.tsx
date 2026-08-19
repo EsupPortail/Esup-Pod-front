@@ -130,7 +130,12 @@ export function useVideosList(
         accessToken,
         onRefresh: refresh,
       });
-      if (!response.ok) throw new Error("Erreur de chargement des vidéos.");
+      if (!response.ok) {
+        if (response.status === 401) throw new Error("Accès non autorisé (401). Veuillez vous connecter.");
+        if (response.status === 404) throw new Error("Ressource introuvable (404).");
+        if (response.status >= 500) throw new Error("Le serveur API est indisponible ou en erreur (500).");
+        throw new Error(`Erreur lors du chargement des vidéos (${response.status}).`);
+      }
       return requestJson<VideoListResponse>(response);
     },
     getNextPageParam: (lastPage, allPages) => {
@@ -141,6 +146,7 @@ export function useVideosList(
       return undefined;
     },
     initialPageParam: 1,
+    retry: 1,
     staleTime: 30000, // 30 seconds stale time for video lists
     enabled: options?.enabled ?? true,
   });

@@ -11,6 +11,7 @@ import {
   Collapse,
   Divider,
   ListItemButton,
+  Tooltip,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import IconExpandLess from "@mui/icons-material/ExpandLess";
@@ -67,30 +68,39 @@ const MenuItem = (props: MenuItemProps) => {
         position: "relative",
         transition: "all 0.2s ease",
         borderRadius: "8px",
-        margin: "2px 8px",
+        margin: sidebarOpen ? "2px 8px" : "4px auto",
+        width: sidebarOpen ? "auto" : "44px",
+        height: sidebarOpen ? "auto" : "44px",
+        padding: sidebarOpen ? "6px 12px !important" : "8px 0 !important",
+        justifyContent: sidebarOpen ? "flex-start" : "center",
         backgroundColor: isSelfActive
-          ? "rgba(59, 130, 246, 0.18) !important"
+          ? "rgba(59, 130, 246, 0.15) !important"
           : "transparent",
-        borderLeft: isSelfActive ? "4px solid #3b82f6 !important" : "4px solid transparent",
         "&.Mui-selected": {
           backgroundColor: isSelfActive
-            ? "rgba(59, 130, 246, 0.22) !important"
+            ? "rgba(59, 130, 246, 0.15) !important"
             : "rgba(59, 130, 246, 0.08)",
         },
         "&:hover": {
           backgroundColor: isSelfActive
-            ? "rgba(59, 130, 246, 0.25) !important"
-            : "rgba(255, 255, 255, 0.05)",
+            ? "rgba(59, 130, 246, 0.22) !important"
+            : "rgba(0, 0, 0, 0.04)",
         },
       }}
     >
       {/* Display an icon if any */}
       {!!Icon && (
-        <ListItemIcon sx={{ minWidth: "36px", paddingLeft: "2px" }}>
+        <ListItemIcon
+          sx={{
+            minWidth: sidebarOpen ? "36px" : "0",
+            paddingLeft: sidebarOpen ? "2px" : "0",
+            justifyContent: "center",
+          }}
+        >
           <Icon
             sx={{
               color: isSelfActive
-                ? "#60a5fa !important"
+                ? "#3b82f6 !important"
                 : "var(--c--contextuals--content--semantic--neutral--secondary)",
             }}
           />
@@ -98,11 +108,12 @@ const MenuItem = (props: MenuItemProps) => {
       )}
       <ListItemText
         sx={{
+          display: sidebarOpen ? "block" : "none",
           ".MuiTypography-root": {
             fontSize: isChildItem ? "0.8rem" : "0.85rem",
-            fontWeight: isSelfActive ? 700 : 500,
+            fontWeight: isSelfActive ? 600 : 500,
             color: isSelfActive
-              ? "#60a5fa !important"
+              ? "#3b82f6 !important"
               : "var(--c--contextuals--content--semantic--neutral--primary)",
           },
         }}
@@ -110,24 +121,24 @@ const MenuItem = (props: MenuItemProps) => {
         inset={!Icon}
       />
       {/* Display the expand menu if the item has children */}
-      {isExpandable && !open && (
+      {isExpandable && sidebarOpen && !open && (
         <IconExpandMore
           style={{
-            color: isChildActive ? "#60a5fa" : "var(--c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
-      {isExpandable && open && (
+      {isExpandable && sidebarOpen && open && (
         <IconExpandLess
           style={{
-            color: isChildActive ? "#60a5fa" : "var(--c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
     </ListItemButton>
   );
 
-  const MenuItemChildren = isExpandable ? (
+  const MenuItemChildren = isExpandable && sidebarOpen ? (
     <Collapse in={open} timeout="auto" unmountOnExit>
       <Divider />
       <List component="div" disablePadding>
@@ -140,7 +151,9 @@ const MenuItem = (props: MenuItemProps) => {
 
   return (
     <>
-      {MenuItemRoot}
+      <Tooltip title={!sidebarOpen ? name : ""} placement="right" arrow disableHoverListener={sidebarOpen}>
+        <div>{MenuItemRoot}</div>
+      </Tooltip>
       {MenuItemChildren}
     </>
   );
