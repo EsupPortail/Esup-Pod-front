@@ -393,7 +393,7 @@
 	--c--contextuals--background--surface--primary: var(--c--globals--colors--gray-000);
 	--c--contextuals--background--surface--secondary: var(--c--globals--colors--gray-000);
 	--c--contextuals--background--surface--tertiary: var(--c--globals--colors--gray-025);
-	--c--contextuals--background--semantic--brand--primary: var(--c--globals--colors--brand-550);
+	--c--contextuals--background--semantic--brand--primary: #154685;
 	--c--contextuals--background--semantic--brand--primary-hover: var(--c--globals--colors--brand-650);
 	--c--contextuals--background--semantic--brand--secondary: var(--c--globals--colors--brand-100);
 	--c--contextuals--background--semantic--brand--secondary-hover: var(--c--globals--colors--brand-150);

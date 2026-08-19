@@ -29,6 +29,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+
+# swagger / api spec
+*.yaml
 
 # env files (can opt-in for committing if needed)
 .env*

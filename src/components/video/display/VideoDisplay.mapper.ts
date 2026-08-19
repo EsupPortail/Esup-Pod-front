@@ -1,3 +1,4 @@
+import { getThumbnailUrl } from "@/src/utils/url";
 import { formatTime, secondToMinute, timeAgo } from "@/src/constants/date";
 import type { Video } from "@/src/types";
 import type { VideoDisplayRow } from "./types";
@@ -19,7 +20,7 @@ export function mapVideoToDisplayRow(
     video,
     slug: video.slug,
     title: video.title,
-    thumbnailUrl: video.thumbnail_url || "/default_thumbnail.svg",
+    thumbnailUrl: getThumbnailUrl(video.thumbnail_url),
     durationLabel: formatTime(secondToMinute(video.duration || 0)),
     createdAtLabel: timeAgo(video.created_at),
     createdAtValue: video.created_at,

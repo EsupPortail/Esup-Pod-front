@@ -11,7 +11,6 @@ import "videojs-hotkeys";
 type Props = {
   video: Video;
   streamUrl: string;
-  /** Si true, la vidéo se lance automatiquement (playlist/favoris) */
   autoPlay?: boolean;
   /** Callback appelé quand la vidéo commence. */
   onPlay?: () => void;

@@ -51,6 +51,9 @@ export const getRoutes = () => {
     types: {
       list: url + "api/types/",
     },
+    channels: {
+      list: url + "api/channels/",
+    },
     tags: {
       list: url + "api/tags/",
     },
