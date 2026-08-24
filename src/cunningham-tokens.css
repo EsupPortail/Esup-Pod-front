@@ -586,6 +586,7 @@
 	--c--contextuals--border--palette--gray--tertiary: var(--c--globals--colors--gray-150);
 	--c--components--forms-input--placeholder-color: #6A788A;
 	--c--components--forms-labelledbox--label-color--small: #6A788A;
+	--c--components--forms-checkbox--border-radius: 6px;
 }
 .cunningham-theme--dark{
 	--c--globals--colors--logo-1: #377FDB;

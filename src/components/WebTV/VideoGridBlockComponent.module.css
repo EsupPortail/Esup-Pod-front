@@ -97,9 +97,12 @@
   color: #111111;
   margin: 0;
   line-height: 1.3;
+  min-height: 2.6em;
+  max-height: 2.6em;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }

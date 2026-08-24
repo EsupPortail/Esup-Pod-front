@@ -3817,6 +3817,950 @@ paths:
               schema:
                 $ref: '#/components/schemas/FlatPage'
           description: ''
+  /api/layout/blocks/:
+    get:
+      operationId: layout_blocks_list
+      description: Retrieve the list of all block configurations defined by the administration.
+        The frontend should call this endpoint upon initialization to configure its
+        layout components.
+      summary: List all block configurations
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - Layout Blocks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBlockConfigList'
+          description: ''
+  /api/layout/blocks/{frontend_id}/:
+    get:
+      operationId: layout_blocks_retrieve
+      description: Retrieve the personalization settings for a specific block using
+        its `frontend_id`.
+      summary: Retrieve a specific block configuration
+      parameters:
+      - in: path
+        name: frontend_id
+        schema:
+          type: string
+          title: Frontend Identifier
+          description: The strict ID matching the frontend block component (e.g.,
+            'webtv-hero-direct', 'collection-actu')
+        required: true
+      tags:
+      - Layout Blocks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockConfig'
+          description: ''
+  /api/live/broadcasters/:
+    get:
+      operationId: live_broadcasters_list
+      description: Returns all public broadcasters for the current site. Filter by
+        building with `?building={id}`.
+      summary: List broadcasters
+      parameters:
+      - in: query
+        name: building
+        schema:
+          type: integer
+      - in: query
+        name: is_restricted
+        schema:
+          type: boolean
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: public
+        schema:
+          type: boolean
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBroadcasterList'
+          description: ''
+  /api/live/broadcasters/{slug}/:
+    get:
+      operationId: live_broadcasters_retrieve
+      description: Returns details of a broadcaster. Restricted broadcasters require
+        authentication.
+      summary: Get broadcaster
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Broadcaster'
+          description: ''
+    put:
+      operationId: live_broadcasters_update
+      description: |-
+        ViewSet for Broadcaster.
+
+        GET  /api/live/broadcasters/                          — List public broadcasters.
+        GET  /api/live/broadcasters/{slug}/                   — Broadcaster detail.
+        PATCH /api/live/broadcasters/{slug}/                  — Update status (triggers transcription).
+        GET  /api/live/broadcasters/from_building/            — Broadcasters of a given building.
+        GET  /api/live/broadcasters/{slug}/restriction/       — Check if broadcaster is restricted.
+        GET  /api/live/broadcasters/{slug}/available/         — Is available AND recording status.
+        POST /api/live/broadcasters/{slug}/start_record/      — Start recording (piloting).
+        POST /api/live/broadcasters/{slug}/stop_record/       — Stop recording (piloting).
+        POST /api/live/broadcasters/{slug}/split_record/      — Split recording (Wowza only).
+        POST /api/live/broadcasters/{slug}/start_stream/      — Start RTMP stream (SMP only).
+        POST /api/live/broadcasters/{slug}/stop_stream/       — Stop RTMP stream (SMP only).
+        GET  /api/live/broadcasters/{slug}/record_status/     — Is currently recording?
+        GET  /api/live/broadcasters/{slug}/record_info/       — Current recording info (duration, file).
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Broadcaster'
+          description: ''
+    patch:
+      operationId: live_broadcasters_partial_update
+      description: Handle status updates and trigger live transcription if needed
+        (V4 behaviour).
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBroadcasterRequest'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Broadcaster'
+          description: ''
+  /api/live/broadcasters/{slug}/available/:
+    get:
+      operationId: live_broadcasters_available_retrieve
+      description: Check if the broadcaster is available to start a new recording
+        AND whether it is currently recording. Mirrors the V4 `ajax_is_stream_available_to_record`.
+      summary: Is available to record
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: boolean
+                  recording:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/record_info/:
+    get:
+      operationId: live_broadcasters_record_info_retrieve
+      description: Return metadata about the current recording (filename, duration
+        in seconds, segment number).
+      summary: Current record info
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  duration:
+                    type: integer
+                  currentFile:
+                    type: string
+                  segmentNumber:
+                    type: string
+          description: ''
+  /api/live/broadcasters/{slug}/record_status/:
+    get:
+      operationId: live_broadcasters_record_status_retrieve
+      description: Return whether the broadcaster is currently recording.
+      summary: Recording status
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_recording:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/restriction/:
+    get:
+      operationId: live_broadcasters_restriction_retrieve
+      description: Check if this broadcaster's access is restricted.
+      summary: Broadcaster restriction status
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  restricted:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/rtmp_config/:
+    get:
+      operationId: live_broadcasters_rtmp_config_retrieve
+      description: Return the RTMP stream configuration for this broadcaster (SMP
+        only).
+      summary: RTMP config
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+          description: ''
+  /api/live/broadcasters/{slug}/split_record/:
+    post:
+      operationId: live_broadcasters_split_record_create
+      description: Split the current recording segment (Wowza only). Creates an intermediate
+        video.
+      summary: Split recording
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/start_record/:
+    post:
+      operationId: live_broadcasters_start_record_create
+      description: Start the recording on the broadcaster (requires piloting rights).
+        Provide `event_id` in the request body.
+      summary: Start recording
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/start_stream/:
+    post:
+      operationId: live_broadcasters_start_stream_create
+      description: Start RTMP stream (SMP only).
+      summary: Start stream
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Broadcaster'
+          description: ''
+  /api/live/broadcasters/{slug}/stop_record/:
+    post:
+      operationId: live_broadcasters_stop_record_create
+      description: Stop the current recording. Creates the video via Celery after
+        stopping.
+      summary: Stop recording
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+          description: ''
+  /api/live/broadcasters/{slug}/stop_stream/:
+    post:
+      operationId: live_broadcasters_stop_stream_create
+      description: Stop RTMP stream (SMP only).
+      summary: Stop stream
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: Auto-generated URL-friendly identifier from the name.
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BroadcasterRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Broadcaster'
+          description: ''
+  /api/live/broadcasters/from_building/:
+    get:
+      operationId: live_broadcasters_from_building_list
+      description: Return all public broadcasters for a given building (identified
+        by name). Pass `?building=<name>` as query param.
+      summary: Broadcasters from building
+      parameters:
+      - in: query
+        name: building
+        schema:
+          type: integer
+      - in: query
+        name: is_restricted
+        schema:
+          type: boolean
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: public
+        schema:
+          type: boolean
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBroadcasterList'
+          description: ''
+  /api/live/buildings/:
+    get:
+      operationId: live_buildings_list
+      description: Returns all buildings visible on the current site.
+      summary: List buildings
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBuildingList'
+          description: ''
+  /api/live/buildings/{id}/:
+    get:
+      operationId: live_buildings_retrieve
+      description: Returns details of a specific building.
+      summary: Get building
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Building.
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Building'
+          description: ''
+  /api/live/events/:
+    get:
+      operationId: live_events_list
+      description: Returns upcoming (non-draft, non-past) events for the current site.
+        Supports filtering by `?broadcaster={id}` and `?type={slug}`.
+      summary: List upcoming events
+      parameters:
+      - in: query
+        name: broadcaster
+        schema:
+          type: integer
+      - in: query
+        name: is_draft
+        schema:
+          type: boolean
+      - in: query
+        name: is_restricted
+        schema:
+          type: boolean
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: type
+        schema:
+          type: integer
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEventList'
+          description: ''
+    post:
+      operationId: live_events_create
+      description: Plan a new live event. Requires event management rights.
+      summary: Create event
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+  /api/live/events/{slug}/:
+    get:
+      operationId: live_events_retrieve
+      description: Returns event details. Draft events are only visible to their owners.
+      summary: Get event
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+    put:
+      operationId: live_events_update
+      description: |-
+        Full CRUD ViewSet for live Events.
+
+        GET  /api/live/events/                  — List upcoming events.
+        GET  /api/live/my-events/               — List user's own events (via @action).
+        GET  /api/live/events/{slug}/           — Event detail.
+        POST /api/live/events/                  — Plan a new event.
+        PATCH /api/live/events/{slug}/          — Update an event.
+        DELETE /api/live/events/{slug}/         — Delete an event.
+        POST /api/live/events/{slug}/unlock/    — Unlock a password-protected event.
+        POST /api/live/events/{slug}/heartbeat/ — Send a viewer heartbeat ping.
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+    patch:
+      operationId: live_events_partial_update
+      description: Update an event. Requires ownership.
+      summary: Update event
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEventRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEventRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEventRequest'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+    delete:
+      operationId: live_events_destroy
+      description: Delete an event. Only the owner or a superuser may delete.
+      summary: Delete event
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/live/events/{slug}/heartbeat/:
+    post:
+      operationId: live_events_heartbeat_create
+      description: Send a periodic heartbeat ping to register this viewer as active.
+        Should be called every 45 seconds. Requires a unique `viewkey` string in the
+        request body.
+      summary: Send heartbeat
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                viewkey:
+                  type: string
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  viewers:
+                    type: integer
+                  heartbeat_delay:
+                    type: integer
+          description: ''
+  /api/live/events/{slug}/unlock/:
+    post:
+      operationId: live_events_unlock_create
+      description: Validate the password for a password-protected event. Returns 200
+        on success.
+      summary: Unlock event
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
+  /api/live/events/{slug}/video-cards/:
+    get:
+      operationId: live_events_video_cards_retrieve
+      description: Return the list of videos linked to this event (as serialized data).
+        Mirrors the V4 `event_get_video_cards` endpoint.
+      summary: Get video cards for event
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
+  /api/live/events/my-events/:
+    get:
+      operationId: live_events_my_events_retrieve
+      description: Returns all events the authenticated user owns or co-owns (past
+        and upcoming).
+      summary: My events
+      tags:
+      - live
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: ''
   /api/marker/{video_slug}/:
     get:
       operationId: marker_retrieve
@@ -4061,6 +5005,118 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/search/:
+    get:
+      operationId: search_list
+      description: |-
+        Full-text search over the video catalog using Redis Search. Supports field-level filtering, pagination, and faceted aggregations. Equivalent to the V4 Elasticsearch search endpoint.
+
+        **1. Full-text search**
+        Search for text in titles, descriptions, and tags:
+        `GET /api/search/?q=maths`
+
+        **2. Filtering (Facets)**
+        You can combine multiple filters. If you pass the same parameter multiple times, it acts as an **OR** condition (e.g., videos that have tag A OR tag B).
+        `GET /api/search/?type=cours&tag=maths&tag=physique`
+
+        **3. Pagination**
+        The endpoint is paginated. Use the `page` parameter (0-indexed).
+        `GET /api/search/?q=maths&page=1`
+
+        **4. Facets (Buckets)**
+        The response automatically includes a `facets` dictionary. This contains the available filters and the count of videos for each filter, based on the current search criteria. You can use this to dynamically build the sidebar filters in the frontend UI.
+
+        ---
+        *Note: When `SEARCH_ENGINE=disabled`, the endpoint always returns empty results. When `SEARCH_ENGINE=database`, a basic Django ORM full-text search is used without facets.*
+      summary: Search videos
+      parameters:
+      - in: query
+        name: channel
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter by channel slug (multi-value).
+      - in: query
+        name: cursus
+        schema:
+          type: string
+        description: Filter by cursus slug.
+      - in: query
+        name: date_from
+        schema:
+          type: integer
+        description: 'Filter: only videos added on or after this Unix timestamp.'
+      - in: query
+        name: date_to
+        schema:
+          type: integer
+        description: 'Filter: only videos added on or before this Unix timestamp.'
+      - in: query
+        name: discipline
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter by discipline slug (multi-value).
+      - in: query
+        name: lang
+        schema:
+          type: string
+        description: Filter by main language code (e.g. 'fr').
+      - in: query
+        name: mediatype
+        schema:
+          type: string
+        description: '''video'' or ''audio''.'
+      - in: query
+        name: owner
+        schema:
+          type: string
+        description: Filter by owner username.
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: Page number (0-indexed). Max 500.
+      - in: query
+        name: q
+        schema:
+          type: string
+        description: Full-text search query string.
+      - in: query
+        name: tag
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter by tag slug (multi-value).
+      - in: query
+        name: theme
+        schema:
+          type: array
+          items:
+            type: string
+        description: Filter by theme slug (multi-value).
+      - in: query
+        name: type
+        schema:
+          type: string
+        description: Filter by video type slug.
+      tags:
+      - search
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSearchResponseList'
+          description: Search results with pagination and optional facets.
+        '503':
+          description: Redis Search unavailable.
   /api/social-networks/:
     get:
       operationId: social_networks_list
@@ -4876,12 +5932,11 @@ paths:
   /api/videos/{slug}/create-stream-token/:
     post:
       operationId: videos_create_stream_token_create
-      description: Génère un jeton éphémère (valide 5 minutes) pour lire la vidéo.
-        Le front-end appelle cette route juste avant de charger le lecteur vidéo.
-        Cela permet d'autoriser le lecteur à lire le flux (stream) via une URL simple,
-        sans avoir besoin d'exposer le JWT principal de l'utilisateur ou d'utiliser
-        des cookies.
-      summary: Créer un jeton de stream éphémère (Create an ephemeral stream token)
+      description: Generates an ephemeral token (valid for 5 minutes) to play the
+        video. The frontend calls this endpoint just before loading the video player.
+        This allows the player to access the video stream via a simple URL, without
+        needing to expose the user's main JWT or use cookies.
+      summary: Create an ephemeral stream token
       parameters:
       - in: path
         name: slug
@@ -5013,6 +6068,37 @@ paths:
                     example: 105
           description: View registered successfully. Returns the updated total view
             count.
+  /api/videos/{slug}/stats/:
+    get:
+      operationId: videos_stats_retrieve
+      description: |-
+        GET /api/videos/{slug}/stats/
+        Returns aggregated view statistics for a video.
+        Authentication requirement depends on VIEW_STATS_AUTH setting.
+      parameters:
+      - in: query
+        name: days
+        schema:
+          type: integer
+        description: 'Number of days for the daily breakdown (default: 30, max: 365).'
+      - in: path
+        name: slug
+        schema:
+          type: string
+          description: URL friendly identifier.
+        required: true
+      tags:
+      - videos
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: Aggregated statistics.
+        '400':
+          description: Statistics feature is disabled.
+        '403':
+          description: Authentication or ownership required.
   /api/videos/{slug}/stream/:
     get:
       operationId: videos_stream_retrieve
@@ -5482,8 +6568,12 @@ paths:
   /api/videos/metadata/:
     get:
       operationId: videos_metadata_retrieve
-      description: Returns available choices for License, Cursus, and Status to help
-        the frontend.
+      description: |-
+        Returns available choices for License, Cursus, and Status to help the frontend.
+        V4 equivalent: context_video_data() — types, disciplines, cursus, licenses.
+
+        Cached in Redis (TTL=600s) as this data is nearly static.
+        Same pattern as V4: cache.get("TYPES") / cache.set("TYPES", ..., timeout=600).
       summary: Video metadata choices
       tags:
       - videos
@@ -5608,6 +6698,457 @@ components:
     BlankEnum:
       enum:
       - ''
+    BlockConfig:
+      type: object
+      description: Serializer for BlockConfig.
+      properties:
+        frontend_id:
+          type: string
+          title: Frontend Identifier
+          description: The strict ID matching the frontend block component (e.g.,
+            'webtv-hero-direct', 'collection-actu')
+          maxLength: 100
+        order:
+          type: integer
+          maximum: 4294967295
+          minimum: 0
+          format: int64
+          description: Display sequence order for the frontend layout.
+        is_active:
+          type: boolean
+          description: Whether this block should be displayed by the frontend.
+        display_title:
+          type: string
+          nullable: true
+          maxLength: 200
+        subtitle_or_text:
+          type: string
+          nullable: true
+        item_limit:
+          type: integer
+          maximum: 65535
+          minimum: 0
+          description: How many items (e.g., videos) should the frontend request for
+            this block.
+        background_color:
+          type: string
+          nullable: true
+          title: Background Color (Hex)
+          maxLength: 20
+        text_color:
+          type: string
+          nullable: true
+          title: Text Color (Hex)
+          maxLength: 20
+        extra_config:
+          title: Extra Configuration (JSON)
+          description: 'Additional frontend-specific options (e.g., auto_play: true).'
+      required:
+      - frontend_id
+    Broadcaster:
+      type: object
+      description: |-
+        Read serializer for the Broadcaster model.
+
+        The piloting_conf field is intentionally excluded from the
+        public representation as it may contain credentials.
+        Staff users can view it via the Django admin.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Unique name for this broadcaster.
+          maxLength: 200
+        slug:
+          type: string
+          readOnly: true
+          description: Auto-generated URL-friendly identifier from the name.
+          pattern: ^[-a-zA-Z0-9_]+$
+        building:
+          type: integer
+          description: Building this broadcaster belongs to.
+        description:
+          type: string
+          description: Optional description of the broadcaster.
+        poster:
+          type: string
+          format: uri
+          nullable: true
+          description: Optional poster image for this broadcaster.
+        poster_url:
+          type: string
+          description: Return the resolved poster image URL.
+          readOnly: true
+        url:
+          type: string
+          format: uri
+          title: Stream URL
+          description: URL of the live stream (RTMP/HLS).
+          maxLength: 200
+        status:
+          type: boolean
+          title: Active
+          description: Indicates whether the broadcaster is currently sending a stream.
+        enable_add_event:
+          type: boolean
+          title: Enable event creation
+          description: If enabled, users with rights can create events on this broadcaster.
+        enable_viewer_count:
+          type: boolean
+          description: Show the number of live viewers on this stream.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can access this live stream.
+        public:
+          type: boolean
+          title: Show in live list
+          description: If enabled, this broadcaster appears in the public live listing.
+        manage_groups:
+          type: array
+          items:
+            type: integer
+            title: Management groups
+          title: Management groups
+          description: Groups whose members can create events on this broadcaster.
+        piloting_implementation:
+          type: string
+          description: Identifier of the external piloting system (e.g. 'Wowza', 'SMP').
+          maxLength: 100
+        main_lang:
+          allOf:
+          - $ref: '#/components/schemas/MainLangEnum'
+          title: Main language
+          description: |-
+            Primary language used in the live stream (for transcription).
+
+            * `af` - Afrikaans
+            * `ar` - Arabic
+            * `ar-dz` - Algerian Arabic
+            * `ast` - Asturian
+            * `az` - Azerbaijani
+            * `bg` - Bulgarian
+            * `be` - Belarusian
+            * `bn` - Bengali
+            * `br` - Breton
+            * `bs` - Bosnian
+            * `ca` - Catalan
+            * `ckb` - Central Kurdish (Sorani)
+            * `cs` - Czech
+            * `cy` - Welsh
+            * `da` - Danish
+            * `de` - German
+            * `dsb` - Lower Sorbian
+            * `el` - Greek
+            * `en` - English
+            * `en-au` - Australian English
+            * `en-gb` - British English
+            * `eo` - Esperanto
+            * `es` - Spanish
+            * `es-ar` - Argentinian Spanish
+            * `es-co` - Colombian Spanish
+            * `es-mx` - Mexican Spanish
+            * `es-ni` - Nicaraguan Spanish
+            * `es-ve` - Venezuelan Spanish
+            * `et` - Estonian
+            * `eu` - Basque
+            * `fa` - Persian
+            * `fi` - Finnish
+            * `fr` - French
+            * `fy` - Frisian
+            * `ga` - Irish
+            * `gd` - Scottish Gaelic
+            * `gl` - Galician
+            * `he` - Hebrew
+            * `hi` - Hindi
+            * `hr` - Croatian
+            * `hsb` - Upper Sorbian
+            * `hu` - Hungarian
+            * `hy` - Armenian
+            * `ia` - Interlingua
+            * `id` - Indonesian
+            * `ig` - Igbo
+            * `io` - Ido
+            * `is` - Icelandic
+            * `it` - Italian
+            * `ja` - Japanese
+            * `ka` - Georgian
+            * `kab` - Kabyle
+            * `kk` - Kazakh
+            * `km` - Khmer
+            * `kn` - Kannada
+            * `ko` - Korean
+            * `ky` - Kyrgyz
+            * `lb` - Luxembourgish
+            * `lt` - Lithuanian
+            * `lv` - Latvian
+            * `mk` - Macedonian
+            * `ml` - Malayalam
+            * `mn` - Mongolian
+            * `mr` - Marathi
+            * `ms` - Malay
+            * `my` - Burmese
+            * `nb` - Norwegian Bokmål
+            * `ne` - Nepali
+            * `nl` - Dutch
+            * `nn` - Norwegian Nynorsk
+            * `os` - Ossetic
+            * `pa` - Punjabi
+            * `pl` - Polish
+            * `pt` - Portuguese
+            * `pt-br` - Brazilian Portuguese
+            * `ro` - Romanian
+            * `ru` - Russian
+            * `sk` - Slovak
+            * `sl` - Slovenian
+            * `sq` - Albanian
+            * `sr` - Serbian
+            * `sr-latn` - Serbian Latin
+            * `sv` - Swedish
+            * `sw` - Swahili
+            * `ta` - Tamil
+            * `te` - Telugu
+            * `tg` - Tajik
+            * `th` - Thai
+            * `tk` - Turkmen
+            * `tr` - Turkish
+            * `tt` - Tatar
+            * `udm` - Udmurt
+            * `ug` - Uyghur
+            * `uk` - Ukrainian
+            * `ur` - Urdu
+            * `uz` - Uzbek
+            * `vi` - Vietnamese
+            * `zh-hans` - Simplified Chinese
+            * `zh-hant` - Traditional Chinese
+        is_recording:
+          type: boolean
+          description: Return whether the broadcaster is currently recording.
+          readOnly: true
+        qrcode:
+          type: string
+          description: Return the QR code data-URI for immediate event creation.
+          readOnly: true
+      required:
+      - building
+      - id
+      - is_recording
+      - name
+      - poster_url
+      - qrcode
+      - slug
+      - url
+    BroadcasterRequest:
+      type: object
+      description: |-
+        Read serializer for the Broadcaster model.
+
+        The piloting_conf field is intentionally excluded from the
+        public representation as it may contain credentials.
+        Staff users can view it via the Django admin.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Unique name for this broadcaster.
+          maxLength: 200
+        building:
+          type: integer
+          description: Building this broadcaster belongs to.
+        description:
+          type: string
+          description: Optional description of the broadcaster.
+        poster:
+          type: string
+          format: binary
+          nullable: true
+          description: Optional poster image for this broadcaster.
+        url:
+          type: string
+          format: uri
+          minLength: 1
+          title: Stream URL
+          description: URL of the live stream (RTMP/HLS).
+          maxLength: 200
+        status:
+          type: boolean
+          title: Active
+          description: Indicates whether the broadcaster is currently sending a stream.
+        enable_add_event:
+          type: boolean
+          title: Enable event creation
+          description: If enabled, users with rights can create events on this broadcaster.
+        enable_viewer_count:
+          type: boolean
+          description: Show the number of live viewers on this stream.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can access this live stream.
+        public:
+          type: boolean
+          title: Show in live list
+          description: If enabled, this broadcaster appears in the public live listing.
+        manage_groups:
+          type: array
+          items:
+            type: integer
+            title: Management groups
+          title: Management groups
+          description: Groups whose members can create events on this broadcaster.
+        piloting_implementation:
+          type: string
+          description: Identifier of the external piloting system (e.g. 'Wowza', 'SMP').
+          maxLength: 100
+        main_lang:
+          allOf:
+          - $ref: '#/components/schemas/MainLangEnum'
+          title: Main language
+          description: |-
+            Primary language used in the live stream (for transcription).
+
+            * `af` - Afrikaans
+            * `ar` - Arabic
+            * `ar-dz` - Algerian Arabic
+            * `ast` - Asturian
+            * `az` - Azerbaijani
+            * `bg` - Bulgarian
+            * `be` - Belarusian
+            * `bn` - Bengali
+            * `br` - Breton
+            * `bs` - Bosnian
+            * `ca` - Catalan
+            * `ckb` - Central Kurdish (Sorani)
+            * `cs` - Czech
+            * `cy` - Welsh
+            * `da` - Danish
+            * `de` - German
+            * `dsb` - Lower Sorbian
+            * `el` - Greek
+            * `en` - English
+            * `en-au` - Australian English
+            * `en-gb` - British English
+            * `eo` - Esperanto
+            * `es` - Spanish
+            * `es-ar` - Argentinian Spanish
+            * `es-co` - Colombian Spanish
+            * `es-mx` - Mexican Spanish
+            * `es-ni` - Nicaraguan Spanish
+            * `es-ve` - Venezuelan Spanish
+            * `et` - Estonian
+            * `eu` - Basque
+            * `fa` - Persian
+            * `fi` - Finnish
+            * `fr` - French
+            * `fy` - Frisian
+            * `ga` - Irish
+            * `gd` - Scottish Gaelic
+            * `gl` - Galician
+            * `he` - Hebrew
+            * `hi` - Hindi
+            * `hr` - Croatian
+            * `hsb` - Upper Sorbian
+            * `hu` - Hungarian
+            * `hy` - Armenian
+            * `ia` - Interlingua
+            * `id` - Indonesian
+            * `ig` - Igbo
+            * `io` - Ido
+            * `is` - Icelandic
+            * `it` - Italian
+            * `ja` - Japanese
+            * `ka` - Georgian
+            * `kab` - Kabyle
+            * `kk` - Kazakh
+            * `km` - Khmer
+            * `kn` - Kannada
+            * `ko` - Korean
+            * `ky` - Kyrgyz
+            * `lb` - Luxembourgish
+            * `lt` - Lithuanian
+            * `lv` - Latvian
+            * `mk` - Macedonian
+            * `ml` - Malayalam
+            * `mn` - Mongolian
+            * `mr` - Marathi
+            * `ms` - Malay
+            * `my` - Burmese
+            * `nb` - Norwegian Bokmål
+            * `ne` - Nepali
+            * `nl` - Dutch
+            * `nn` - Norwegian Nynorsk
+            * `os` - Ossetic
+            * `pa` - Punjabi
+            * `pl` - Polish
+            * `pt` - Portuguese
+            * `pt-br` - Brazilian Portuguese
+            * `ro` - Romanian
+            * `ru` - Russian
+            * `sk` - Slovak
+            * `sl` - Slovenian
+            * `sq` - Albanian
+            * `sr` - Serbian
+            * `sr-latn` - Serbian Latin
+            * `sv` - Swedish
+            * `sw` - Swahili
+            * `ta` - Tamil
+            * `te` - Telugu
+            * `tg` - Tajik
+            * `th` - Thai
+            * `tk` - Turkmen
+            * `tr` - Turkish
+            * `tt` - Tatar
+            * `udm` - Udmurt
+            * `ug` - Uyghur
+            * `uk` - Ukrainian
+            * `ur` - Urdu
+            * `uz` - Uzbek
+            * `vi` - Vietnamese
+            * `zh-hans` - Simplified Chinese
+            * `zh-hant` - Traditional Chinese
+      required:
+      - building
+      - name
+      - url
+    Building:
+      type: object
+      description: Serializer for the Building model.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          description: Unique name identifying this building or location.
+          maxLength: 200
+        headband:
+          type: string
+          format: uri
+          nullable: true
+          title: Headband image
+          description: Optional banner image for this building.
+        headband_url:
+          type: string
+          description: Return the resolved headband image URL.
+          readOnly: true
+        gmapurl:
+          type: string
+          nullable: true
+          title: Google Maps URL
+          description: Optional Google Maps embed URL for this location.
+          maxLength: 250
+        sites:
+          type: array
+          items:
+            type: integer
+          description: Sites (portals) where this building is visible.
+      required:
+      - headband_url
+      - id
+      - name
+      - sites
     Channel:
       type: object
       description: Serializer for the Channel model.
@@ -6337,6 +7878,255 @@ components:
         * `PR` - Processing
         * `DO` - Done
         * `ER` - Error
+    Event:
+      type: object
+      description: |-
+        Serializer for the Event model.
+
+        Handles both read and write operations.
+        On write, only the owner (or staff) may set sensitive fields.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        slug:
+          type: string
+          readOnly: true
+          pattern: ^[-a-zA-Z0-9_]+$
+        title:
+          type: string
+          description: Short and accurate title reflecting the main subject of this
+            event.
+          maxLength: 250
+        description:
+          type: string
+          description: Optional description with context and related information.
+        owner:
+          type: string
+          readOnly: true
+        additional_owners:
+          type: array
+          items:
+            type: integer
+          description: Users who share ownership of this event (same rights, except
+            deletion).
+        start_date:
+          type: string
+          format: date-time
+          description: When the live stream begins.
+        end_date:
+          type: string
+          format: date-time
+          description: When the live stream ends.
+        broadcaster:
+          type: integer
+          description: The broadcaster used for this live stream.
+        type:
+          type: integer
+          description: Category type of this event.
+        is_draft:
+          type: boolean
+          title: Draft
+          description: Draft events are only visible to owners. Anyone with the private
+            link can still access them.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can watch this event.
+        restrict_access_to_groups:
+          type: array
+          items:
+            type: integer
+            title: Restricted groups
+          title: Restricted groups
+          description: If set, only members of these groups may access this event.
+        is_auto_start:
+          type: boolean
+          title: Auto start
+          description: If enabled, recording starts automatically when the event begins.
+        is_recording_stopped:
+          type: boolean
+          readOnly: true
+          title: Recording stopped
+          description: 'Internal flag: set to True once the recording has been stopped.'
+        iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Embedded site URL
+          description: URL of a page to display in an iframe alongside the stream.
+          maxLength: 200
+        iframe_height:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Embedded site height (px)
+          description: Height in pixels of the inline iframe.
+        aside_iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Aside embedded site URL
+          description: URL of a secondary page displayed in the aside panel.
+          maxLength: 200
+        video_on_hold:
+          type: integer
+          nullable: true
+          description: Video displayed while the live stream has not started yet.
+        thumbnail:
+          type: string
+          format: uri
+          nullable: true
+          description: Optional thumbnail image for this event.
+        thumbnail_url:
+          type: string
+          description: Return the resolved thumbnail URL.
+          readOnly: true
+        max_viewers:
+          type: integer
+          readOnly: true
+          description: Peak number of simultaneous viewers (maintained by heartbeats).
+        videos:
+          type: array
+          items:
+            type: integer
+            title: Recordings
+          readOnly: true
+          title: Recordings
+          description: Video recordings produced from this event.
+        enable_transcription:
+          type: boolean
+          description: If enabled, live transcription will be generated for this event.
+        status:
+          type: string
+          description: 'Return the temporal status of the event: ''coming'', ''current'',
+            or ''past''.'
+          readOnly: true
+        viewer_count:
+          type: integer
+          description: Return the current number of active heartbeats (live viewer
+            count).
+          readOnly: true
+      required:
+      - broadcaster
+      - id
+      - is_recording_stopped
+      - max_viewers
+      - owner
+      - slug
+      - status
+      - thumbnail_url
+      - title
+      - type
+      - videos
+      - viewer_count
+    EventRequest:
+      type: object
+      description: |-
+        Serializer for the Event model.
+
+        Handles both read and write operations.
+        On write, only the owner (or staff) may set sensitive fields.
+      properties:
+        title:
+          type: string
+          minLength: 1
+          description: Short and accurate title reflecting the main subject of this
+            event.
+          maxLength: 250
+        description:
+          type: string
+          description: Optional description with context and related information.
+        additional_owners:
+          type: array
+          items:
+            type: integer
+          description: Users who share ownership of this event (same rights, except
+            deletion).
+        start_date:
+          type: string
+          format: date-time
+          description: When the live stream begins.
+        end_date:
+          type: string
+          format: date-time
+          description: When the live stream ends.
+        broadcaster:
+          type: integer
+          description: The broadcaster used for this live stream.
+        type:
+          type: integer
+          description: Category type of this event.
+        is_draft:
+          type: boolean
+          title: Draft
+          description: Draft events are only visible to owners. Anyone with the private
+            link can still access them.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can watch this event.
+        restrict_access_to_groups:
+          type: array
+          items:
+            type: integer
+            title: Restricted groups
+          title: Restricted groups
+          description: If set, only members of these groups may access this event.
+        is_auto_start:
+          type: boolean
+          title: Auto start
+          description: If enabled, recording starts automatically when the event begins.
+        iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Embedded site URL
+          description: URL of a page to display in an iframe alongside the stream.
+          maxLength: 200
+        iframe_height:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Embedded site height (px)
+          description: Height in pixels of the inline iframe.
+        aside_iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Aside embedded site URL
+          description: URL of a secondary page displayed in the aside panel.
+          maxLength: 200
+        video_on_hold:
+          type: integer
+          nullable: true
+          description: Video displayed while the live stream has not started yet.
+        thumbnail:
+          type: string
+          format: binary
+          nullable: true
+          description: Optional thumbnail image for this event.
+        enable_transcription:
+          type: boolean
+          description: If enabled, live transcription will be generated for this event.
+      required:
+      - broadcaster
+      - title
+      - type
+    FacetBucket:
+      type: object
+      properties:
+        value:
+          type: string
+          description: The facet bucket label.
+        count:
+          type: integer
+          description: Number of videos in this bucket.
+      required:
+      - count
+      - value
     Favorite:
       type: object
       description: Serializer for the Favorite model.
@@ -6451,6 +8241,208 @@ components:
       - local
       - oidc
       - shibboleth
+    MainLangEnum:
+      enum:
+      - af
+      - ar
+      - ar-dz
+      - ast
+      - az
+      - bg
+      - be
+      - bn
+      - br
+      - bs
+      - ca
+      - ckb
+      - cs
+      - cy
+      - da
+      - de
+      - dsb
+      - el
+      - en
+      - en-au
+      - en-gb
+      - eo
+      - es
+      - es-ar
+      - es-co
+      - es-mx
+      - es-ni
+      - es-ve
+      - et
+      - eu
+      - fa
+      - fi
+      - fr
+      - fy
+      - ga
+      - gd
+      - gl
+      - he
+      - hi
+      - hr
+      - hsb
+      - hu
+      - hy
+      - ia
+      - id
+      - ig
+      - io
+      - is
+      - it
+      - ja
+      - ka
+      - kab
+      - kk
+      - km
+      - kn
+      - ko
+      - ky
+      - lb
+      - lt
+      - lv
+      - mk
+      - ml
+      - mn
+      - mr
+      - ms
+      - my
+      - nb
+      - ne
+      - nl
+      - nn
+      - os
+      - pa
+      - pl
+      - pt
+      - pt-br
+      - ro
+      - ru
+      - sk
+      - sl
+      - sq
+      - sr
+      - sr-latn
+      - sv
+      - sw
+      - ta
+      - te
+      - tg
+      - th
+      - tk
+      - tr
+      - tt
+      - udm
+      - ug
+      - uk
+      - ur
+      - uz
+      - vi
+      - zh-hans
+      - zh-hant
+      type: string
+      description: |-
+        * `af` - Afrikaans
+        * `ar` - Arabic
+        * `ar-dz` - Algerian Arabic
+        * `ast` - Asturian
+        * `az` - Azerbaijani
+        * `bg` - Bulgarian
+        * `be` - Belarusian
+        * `bn` - Bengali
+        * `br` - Breton
+        * `bs` - Bosnian
+        * `ca` - Catalan
+        * `ckb` - Central Kurdish (Sorani)
+        * `cs` - Czech
+        * `cy` - Welsh
+        * `da` - Danish
+        * `de` - German
+        * `dsb` - Lower Sorbian
+        * `el` - Greek
+        * `en` - English
+        * `en-au` - Australian English
+        * `en-gb` - British English
+        * `eo` - Esperanto
+        * `es` - Spanish
+        * `es-ar` - Argentinian Spanish
+        * `es-co` - Colombian Spanish
+        * `es-mx` - Mexican Spanish
+        * `es-ni` - Nicaraguan Spanish
+        * `es-ve` - Venezuelan Spanish
+        * `et` - Estonian
+        * `eu` - Basque
+        * `fa` - Persian
+        * `fi` - Finnish
+        * `fr` - French
+        * `fy` - Frisian
+        * `ga` - Irish
+        * `gd` - Scottish Gaelic
+        * `gl` - Galician
+        * `he` - Hebrew
+        * `hi` - Hindi
+        * `hr` - Croatian
+        * `hsb` - Upper Sorbian
+        * `hu` - Hungarian
+        * `hy` - Armenian
+        * `ia` - Interlingua
+        * `id` - Indonesian
+        * `ig` - Igbo
+        * `io` - Ido
+        * `is` - Icelandic
+        * `it` - Italian
+        * `ja` - Japanese
+        * `ka` - Georgian
+        * `kab` - Kabyle
+        * `kk` - Kazakh
+        * `km` - Khmer
+        * `kn` - Kannada
+        * `ko` - Korean
+        * `ky` - Kyrgyz
+        * `lb` - Luxembourgish
+        * `lt` - Lithuanian
+        * `lv` - Latvian
+        * `mk` - Macedonian
+        * `ml` - Malayalam
+        * `mn` - Mongolian
+        * `mr` - Marathi
+        * `ms` - Malay
+        * `my` - Burmese
+        * `nb` - Norwegian Bokmål
+        * `ne` - Nepali
+        * `nl` - Dutch
+        * `nn` - Norwegian Nynorsk
+        * `os` - Ossetic
+        * `pa` - Punjabi
+        * `pl` - Polish
+        * `pt` - Portuguese
+        * `pt-br` - Brazilian Portuguese
+        * `ro` - Romanian
+        * `ru` - Russian
+        * `sk` - Slovak
+        * `sl` - Slovenian
+        * `sq` - Albanian
+        * `sr` - Serbian
+        * `sr-latn` - Serbian Latin
+        * `sv` - Swedish
+        * `sw` - Swahili
+        * `ta` - Tamil
+        * `te` - Telugu
+        * `tg` - Tajik
+        * `th` - Thai
+        * `tk` - Turkmen
+        * `tr` - Turkish
+        * `tt` - Tatar
+        * `udm` - Udmurt
+        * `ug` - Uyghur
+        * `uk` - Ukrainian
+        * `ur` - Urdu
+        * `uz` - Uzbek
+        * `vi` - Vietnamese
+        * `zh-hans` - Simplified Chinese
+        * `zh-hant` - Traditional Chinese
     NullEnum:
       enum:
       - null
@@ -6644,6 +8636,75 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AccessGroup'
+    PaginatedBlockConfigList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlockConfig'
+    PaginatedBroadcasterList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Broadcaster'
+    PaginatedBuildingList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Building'
     PaginatedChannelList:
       type: object
       required:
@@ -6874,6 +8935,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DublinCore'
+    PaginatedEventList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
     PaginatedFavoriteList:
       type: object
       required:
@@ -7012,6 +9096,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PlaylistList'
+    PaginatedSearchResponseList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResponse'
     PaginatedSiteList:
       type: object
       required:
@@ -7220,6 +9327,174 @@ components:
           title: Auto synchronize
           description: If True, this group is automatically managed via external auth
             (CAS/LDAP).
+    PatchedBroadcasterRequest:
+      type: object
+      description: |-
+        Read serializer for the Broadcaster model.
+
+        The piloting_conf field is intentionally excluded from the
+        public representation as it may contain credentials.
+        Staff users can view it via the Django admin.
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: Unique name for this broadcaster.
+          maxLength: 200
+        building:
+          type: integer
+          description: Building this broadcaster belongs to.
+        description:
+          type: string
+          description: Optional description of the broadcaster.
+        poster:
+          type: string
+          format: binary
+          nullable: true
+          description: Optional poster image for this broadcaster.
+        url:
+          type: string
+          format: uri
+          minLength: 1
+          title: Stream URL
+          description: URL of the live stream (RTMP/HLS).
+          maxLength: 200
+        status:
+          type: boolean
+          title: Active
+          description: Indicates whether the broadcaster is currently sending a stream.
+        enable_add_event:
+          type: boolean
+          title: Enable event creation
+          description: If enabled, users with rights can create events on this broadcaster.
+        enable_viewer_count:
+          type: boolean
+          description: Show the number of live viewers on this stream.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can access this live stream.
+        public:
+          type: boolean
+          title: Show in live list
+          description: If enabled, this broadcaster appears in the public live listing.
+        manage_groups:
+          type: array
+          items:
+            type: integer
+            title: Management groups
+          title: Management groups
+          description: Groups whose members can create events on this broadcaster.
+        piloting_implementation:
+          type: string
+          description: Identifier of the external piloting system (e.g. 'Wowza', 'SMP').
+          maxLength: 100
+        main_lang:
+          allOf:
+          - $ref: '#/components/schemas/MainLangEnum'
+          title: Main language
+          description: |-
+            Primary language used in the live stream (for transcription).
+
+            * `af` - Afrikaans
+            * `ar` - Arabic
+            * `ar-dz` - Algerian Arabic
+            * `ast` - Asturian
+            * `az` - Azerbaijani
+            * `bg` - Bulgarian
+            * `be` - Belarusian
+            * `bn` - Bengali
+            * `br` - Breton
+            * `bs` - Bosnian
+            * `ca` - Catalan
+            * `ckb` - Central Kurdish (Sorani)
+            * `cs` - Czech
+            * `cy` - Welsh
+            * `da` - Danish
+            * `de` - German
+            * `dsb` - Lower Sorbian
+            * `el` - Greek
+            * `en` - English
+            * `en-au` - Australian English
+            * `en-gb` - British English
+            * `eo` - Esperanto
+            * `es` - Spanish
+            * `es-ar` - Argentinian Spanish
+            * `es-co` - Colombian Spanish
+            * `es-mx` - Mexican Spanish
+            * `es-ni` - Nicaraguan Spanish
+            * `es-ve` - Venezuelan Spanish
+            * `et` - Estonian
+            * `eu` - Basque
+            * `fa` - Persian
+            * `fi` - Finnish
+            * `fr` - French
+            * `fy` - Frisian
+            * `ga` - Irish
+            * `gd` - Scottish Gaelic
+            * `gl` - Galician
+            * `he` - Hebrew
+            * `hi` - Hindi
+            * `hr` - Croatian
+            * `hsb` - Upper Sorbian
+            * `hu` - Hungarian
+            * `hy` - Armenian
+            * `ia` - Interlingua
+            * `id` - Indonesian
+            * `ig` - Igbo
+            * `io` - Ido
+            * `is` - Icelandic
+            * `it` - Italian
+            * `ja` - Japanese
+            * `ka` - Georgian
+            * `kab` - Kabyle
+            * `kk` - Kazakh
+            * `km` - Khmer
+            * `kn` - Kannada
+            * `ko` - Korean
+            * `ky` - Kyrgyz
+            * `lb` - Luxembourgish
+            * `lt` - Lithuanian
+            * `lv` - Latvian
+            * `mk` - Macedonian
+            * `ml` - Malayalam
+            * `mn` - Mongolian
+            * `mr` - Marathi
+            * `ms` - Malay
+            * `my` - Burmese
+            * `nb` - Norwegian Bokmål
+            * `ne` - Nepali
+            * `nl` - Dutch
+            * `nn` - Norwegian Nynorsk
+            * `os` - Ossetic
+            * `pa` - Punjabi
+            * `pl` - Polish
+            * `pt` - Portuguese
+            * `pt-br` - Brazilian Portuguese
+            * `ro` - Romanian
+            * `ru` - Russian
+            * `sk` - Slovak
+            * `sl` - Slovenian
+            * `sq` - Albanian
+            * `sr` - Serbian
+            * `sr-latn` - Serbian Latin
+            * `sv` - Swedish
+            * `sw` - Swahili
+            * `ta` - Tamil
+            * `te` - Telugu
+            * `tg` - Tajik
+            * `th` - Thai
+            * `tk` - Turkmen
+            * `tr` - Turkish
+            * `tt` - Tatar
+            * `udm` - Udmurt
+            * `ug` - Uyghur
+            * `uk` - Ukrainian
+            * `ur` - Urdu
+            * `uz` - Uzbek
+            * `vi` - Vietnamese
+            * `zh-hans` - Simplified Chinese
+            * `zh-hant` - Traditional Chinese
     PatchedChannelRequest:
       type: object
       description: Serializer for the Channel model.
@@ -7422,6 +9697,96 @@ components:
           type: array
           items:
             type: integer
+    PatchedEventRequest:
+      type: object
+      description: |-
+        Serializer for the Event model.
+
+        Handles both read and write operations.
+        On write, only the owner (or staff) may set sensitive fields.
+      properties:
+        title:
+          type: string
+          minLength: 1
+          description: Short and accurate title reflecting the main subject of this
+            event.
+          maxLength: 250
+        description:
+          type: string
+          description: Optional description with context and related information.
+        additional_owners:
+          type: array
+          items:
+            type: integer
+          description: Users who share ownership of this event (same rights, except
+            deletion).
+        start_date:
+          type: string
+          format: date-time
+          description: When the live stream begins.
+        end_date:
+          type: string
+          format: date-time
+          description: When the live stream ends.
+        broadcaster:
+          type: integer
+          description: The broadcaster used for this live stream.
+        type:
+          type: integer
+          description: Category type of this event.
+        is_draft:
+          type: boolean
+          title: Draft
+          description: Draft events are only visible to owners. Anyone with the private
+            link can still access them.
+        is_restricted:
+          type: boolean
+          title: Restricted access
+          description: If enabled, only authenticated users can watch this event.
+        restrict_access_to_groups:
+          type: array
+          items:
+            type: integer
+            title: Restricted groups
+          title: Restricted groups
+          description: If set, only members of these groups may access this event.
+        is_auto_start:
+          type: boolean
+          title: Auto start
+          description: If enabled, recording starts automatically when the event begins.
+        iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Embedded site URL
+          description: URL of a page to display in an iframe alongside the stream.
+          maxLength: 200
+        iframe_height:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Embedded site height (px)
+          description: Height in pixels of the inline iframe.
+        aside_iframe_url:
+          type: string
+          format: uri
+          nullable: true
+          title: Aside embedded site URL
+          description: URL of a secondary page displayed in the aside panel.
+          maxLength: 200
+        video_on_hold:
+          type: integer
+          nullable: true
+          description: Video displayed while the live stream has not started yet.
+        thumbnail:
+          type: string
+          format: binary
+          nullable: true
+          description: Optional thumbnail image for this event.
+        enable_transcription:
+          type: boolean
+          description: If enabled, live transcription will be generated for this event.
     PatchedFavoriteRequest:
       type: object
       description: Serializer for the Favorite model.
@@ -7987,6 +10352,40 @@ components:
       description: |-
         * `GLOBAL` - Global (All establishments)
         * `ESTABLISHMENT` - Establishment specific (Restricted to user’s establishment)
+    SearchResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of videos matching the search.
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+          description: List of video objects for the current page.
+        facets:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/FacetBucket'
+          description: Faceted aggregations (buckets) for various fields.
+        has_next:
+          type: boolean
+          description: True if there is a next page of results.
+        next_page:
+          type: integer
+          description: The index of the next page (to pass as 'page' param).
+        query:
+          type: string
+          description: The full-text query that was executed.
+      required:
+      - count
+      - facets
+      - has_next
+      - next_page
+      - query
+      - results
     ServerRole:
       type: object
       description: Serializer for the ServerRole model.

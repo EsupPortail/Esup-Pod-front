@@ -70,8 +70,11 @@ export default function VideoCard(props: VideosCardProps) {
       elevation={0}
       sx={{
         width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
         position: "relative",
-        mb: 4,
+        mb: 0,
         backgroundColor: selected
           ? "rgba(10, 89, 219, 0.04)"
           : "var(--c--globals--colors--gray-000)",
@@ -95,16 +98,6 @@ export default function VideoCard(props: VideosCardProps) {
             top: 8,
             left: 8,
             zIndex: 10,
-            lineHeight: 0,
-            transform: "scale(0.85)",
-            transformOrigin: "top left",
-            backgroundColor: selected
-              ? "var(--c--contextuals--background--semantic--brand--primary, #3b82f6)"
-              : "var(--c--theme--colors--card-bg, #ffffff)",
-            border: selected ? "1px solid #2563eb" : "1px solid rgba(0, 0, 0, 0.2)",
-            borderRadius: "6px",
-            padding: "2px 4px",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.15)",
           }}
         >
           <Checkbox
@@ -127,6 +120,7 @@ export default function VideoCard(props: VideosCardProps) {
           flexDirection: "column",
           alignItems: "stretch",
           justifyContent: "flex-start",
+          height: "100%",
           textDecoration: "none",
           "&:hover": {
             backgroundColor: "transparent",
@@ -150,21 +144,24 @@ export default function VideoCard(props: VideosCardProps) {
             {formatTime(time)}
           </time>
         </div>
-        <CardContent sx={{ padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
-          <Avatar sx={{ width: 36, height: 36, mt: 0.5 }}>{initial}</Avatar>
+        <CardContent sx={{ flex: 1, width: "100%", padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
+          <Avatar sx={{ width: 36, height: 36, mt: 0.5, flexShrink: 0 }}>{initial}</Avatar>
 
           <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "2px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
               <Typography
                 component="div"
                 sx={{
+                  flex: 1,
                   fontSize: "1rem",
                   fontWeight: 600,
                   lineHeight: 1.3,
+                  height: "2.6em",
                   display: "-webkit-box",
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
+                  textOverflow: "ellipsis",
                   color: "var(--text-color)",
                 }}
               >
@@ -229,17 +226,35 @@ export default function VideoCard(props: VideosCardProps) {
                 color: "var(--text-color-muted, #94a3b8)",
                 mt: 0.5,
                 display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "6px",
-                lineHeight: 1.2
+                flexDirection: "column",
+                gap: "2px",
+                lineHeight: 1.2,
               }}
             >
-              <address style={{ display: "inline", fontStyle: "normal", color: "var(--text-color-muted, #94a3b8)" }}>
+              <address 
+                style={{ 
+                  fontStyle: "normal", 
+                  color: "var(--text-color-muted, #94a3b8)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
+                }}
+                title={displayName}
+              >
                 {displayName}
               </address>
-              <span style={{ fontSize: "10px", opacity: 0.8, color: "var(--text-color-muted, #94a3b8)" }}>•</span>
-              <time dateTime={video.created_at} style={{ color: "var(--text-color-muted, #94a3b8)", fontWeight: 500 }}>
+              <time 
+                dateTime={video.created_at} 
+                style={{ 
+                  color: "var(--text-color-muted, #94a3b8)", 
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
+                }}
+              >
                 {timeAgo(video.created_at, locale)}
               </time>
             </Typography>

@@ -9,6 +9,9 @@ export default {
         "forms-labelledbox": {
           "label-color--small": "#6A788A",
         },
+        "forms-checkbox": {
+          "border-radius": "6px",
+        },
       },
       contextuals: {
         background: {

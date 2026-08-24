@@ -30,6 +30,19 @@ export default function VideoPlayer({
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [aspectRatio, setAspectRatio] = useState<string>("16 / 9");
+  
+  const [seekIndicator, setSeekIndicator] = useState<{ type: "forward" | "backward" } | null>(null);
+  const seekIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const showSeekIndicator = (type: "forward" | "backward") => {
+    setSeekIndicator({ type });
+    if (seekIndicatorTimeoutRef.current) {
+      clearTimeout(seekIndicatorTimeoutRef.current);
+    }
+    seekIndicatorTimeoutRef.current = setTimeout(() => {
+      setSeekIndicator(null);
+    }, 600);
+  };
   const [hoveredChapter, setHoveredChapter] = useState<string | null>(null);
 
   const { config } = useAppConfig();
@@ -125,7 +138,7 @@ export default function VideoPlayer({
       vjsPlayer = videojs(mediaEl, options, () => {
         vjsPlayer?.hotkeys({
           volumeStep: 0.1,
-          seekStep: 1,
+          seekStep: 10,
           enableModifiersForNumbers: false,
         });
       });
@@ -147,6 +160,33 @@ export default function VideoPlayer({
         if (isMounted) setHasError(true);
       });
 
+      vjsPlayer.on("keydown", (e: any) => {
+        if (e.which === 37) { // Left arrow
+          showSeekIndicator("backward");
+        } else if (e.which === 39) { // Right arrow
+          showSeekIndicator("forward");
+        }
+      });
+
+      let isIntentionallyPaused = !autoPlay;
+
+      vjsPlayer.on("play", () => {
+        isIntentionallyPaused = false;
+      });
+
+      vjsPlayer.on("pause", () => {
+        if (vjsPlayer && !vjsPlayer.scrubbing()) {
+          isIntentionallyPaused = true;
+        }
+      });
+
+      vjsPlayer.on("seeked", () => {
+        if (!isIntentionallyPaused && vjsPlayer) {
+          const p = vjsPlayer.play();
+          if (p && p.catch) p.catch(() => {});
+        }
+      });
+
       if (onPlay) {
         let hasPlayed = false;
         vjsPlayer.on("play", () => {
@@ -166,7 +206,10 @@ export default function VideoPlayer({
       if (isHls) {
         vjsPlayer.src({ src: streamUrl, type: "application/x-mpegURL" });
       } else if (isTs && mpegts && mpegts.isSupported()) {
-        mpegtsPlayer = mpegts.createPlayer({ type: "mse", url: streamUrl });
+        mpegtsPlayer = mpegts.createPlayer(
+          { type: "mse", url: streamUrl },
+          { accurateSeek: false, seekType: "range" }
+        );
         mpegtsPlayer.attachMediaElement(mediaEl);
         mpegtsPlayer.load();
         if (autoPlay) mpegtsPlayer.play();
@@ -402,6 +445,45 @@ export default function VideoPlayer({
           }}
         >
           {hoveredChapter}
+        </div>
+      )}
+
+      {/* Seek Indicator Overlay */}
+      {seekIndicator && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.6)",
+            color: "#fff",
+            padding: "16px 24px",
+            borderRadius: "50%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "80px",
+            height: "80px",
+            pointerEvents: "none",
+            zIndex: 20,
+            animation: "fadeOut 0.6s ease-out forwards",
+          }}
+        >
+          <span className="material-icons" style={{ fontSize: "2rem" }}>
+            {seekIndicator.type === "forward" ? "fast_forward" : "fast_rewind"}
+          </span>
+          <span style={{ fontSize: "0.85rem", fontWeight: "bold", marginTop: "4px" }}>
+            {seekIndicator.type === "forward" ? "+10s" : "-10s"}
+          </span>
+          <style>{`
+            @keyframes fadeOut {
+              0% { opacity: 1; transform: translate(-50%, -50%) scale(0.9); }
+              20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+              100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+            }
+          `}</style>
         </div>
       )}
 

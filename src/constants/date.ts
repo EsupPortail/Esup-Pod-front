@@ -34,6 +34,11 @@ export function formatDateWithTime(dateString: string, locale: string = "fr"): s
   return date.format("D MMMM YYYY [à] HH:mm");
 }
 
+export function formatDateOnly(dateString: string, locale: string = "fr"): string {
+  const date = dayjs(dateString).locale(locale);
+  return date.format("D MMMM YYYY");
+}
+
 export function timeAgo(dateString: string, locale: string = "fr"): string {
   if (!dateString) return "";
   return dayjs(dateString).locale(locale).fromNow();

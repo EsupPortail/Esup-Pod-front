@@ -50,6 +50,7 @@ export default function VideosList({
           <Grid
             key={video.id ?? video.slug}
             size={{ xs: 12, sm: 12, md: mdSize, lg: lgSize, xl: xlSize }}
+            sx={{ display: "flex" }}
           >
             <VideoCardItem
               video={video}

@@ -18,8 +18,9 @@ import SchoolIcon from "@mui/icons-material/School";
 import MonitorIcon from "@mui/icons-material/Monitor";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import {
-  formatTime,
   formatDateWithTime,
+  formatDateOnly,
+  formatTime,
   timeAgo,
   secondToMinute,
 } from "@/src/constants/date";
@@ -517,7 +518,6 @@ export default function Video() {
             </div>
           )}
           </div>
-
           <div className={styles.video_title_row}>
             <h1>{video.title}</h1>
             {config?.video?.show_views !== false && video.views != null && (
@@ -538,7 +538,7 @@ export default function Video() {
                 <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
                   calendar_today
                 </span>
-                {formatDateWithTime(video.created_at, locale).split(' ')[0]} {/* Approximate to date */}
+                {formatDateOnly(video.created_at, locale)}
               </div>
               <div className={styles.video_infos_header_time}>
                 <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
@@ -808,7 +808,7 @@ export default function Video() {
                 {video.date_of_event && (
                   <div className={styles.sidebar_list_item}>
                     <h3><PieChartIcon fontSize="small" aria-hidden="true" /> {t("videoPage.eventDate")}</h3>
-                    <p className={styles.sidebar_blue_text}>{formatDateWithTime(video.date_of_event, locale).split(' ')[0]}</p>
+                    <p className={styles.sidebar_blue_text}>{formatDateOnly(video.date_of_event, locale)}</p>
                   </div>
                 )}
 
@@ -826,7 +826,7 @@ export default function Video() {
                 </div>
 
                 <div className={styles.sidebar_list_item}>
-                  <h4><SchoolIcon fontSize="small" /> {t("videoPage.speakers")}</h4>
+                  <h4><SchoolIcon fontSize="small" /> {t("videoPage.contributors")}</h4>
                   <p className={styles.sidebar_blue_text}>
                     {getVideoOwnerDisplayName(video, config?.authentication, true)}
                     {coOwnersUsers.length > 0 && <br />}

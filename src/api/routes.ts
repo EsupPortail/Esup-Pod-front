@@ -33,6 +33,9 @@ export const getRoutes = () => {
       tokens: url + "api/video-access-tokens/",
       hyperlinks: url + "api/video-hyperlinks/",
       markerTime: url + "api/user-marker-time/",
+      marker: (slug: string) => url + `api/marker/${slug}/`,
+      saveMarker: (slug: string) => url + `api/marker/${slug}/save/`,
+      resetMarker: (slug: string) => url + `api/marker/${slug}/reset/`,
       videoCuts: url + "api/video-cuts/",
     },
     user: {
