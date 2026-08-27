@@ -133,6 +133,9 @@ export const getRoutes = () => {
     layout: {
       blocks: url + "api/layout/blocks/",
       get: (frontend_id: string) => url + `api/layout/blocks/${frontend_id}/`,
+      syncDefaults: url + "api/layout/blocks/sync-defaults/",
+      blockTypes: url + "api/layout/block-types/",
+      registerBlockTypes: url + "api/layout/block-types/register/",
     },
     live: {
       events: url + "api/live/events/",

@@ -220,7 +220,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
             paddingTop: 12,
           }}
         >
-          💡 Pour ajouter un filigrane ou des amorces (vidéo d'ouverture / fermeture), créez
+          Pour ajouter un filigrane ou des amorces (vidéo d'ouverture / fermeture), créez
           d'abord l'habillage, puis éditez-le dans les paramètres.
         </div>
       </div>
@@ -531,16 +531,16 @@ export default function VideoDressingForm({ video, onDressingUpdated }: Props) {
           }}
         >
           <div style={{ fontWeight: 700, color: PRIMARY, fontSize: "0.875rem" }}>
-            ✅ Habillage actif : {activeDressing.title}
+            Habillage actif : {activeDressing.title}
           </div>
           {activeDressing.watermark && (
-            <div>🖼️ Filigrane — Position : {activeDressing.position}, Opacité : {activeDressing.opacity}%</div>
+            <div>Filigrane — Position : {activeDressing.position}, Opacité : {activeDressing.opacity}%</div>
           )}
           {activeDressing.opening_credits && (
-            <div>▶️ Amorce de début : vidéo #{activeDressing.opening_credits}</div>
+            <div>Amorce de début : vidéo #{activeDressing.opening_credits}</div>
           )}
           {activeDressing.ending_credits && (
-            <div>⏹️ Amorce de fin : vidéo #{activeDressing.ending_credits}</div>
+            <div>Amorce de fin : vidéo #{activeDressing.ending_credits}</div>
           )}
         </div>
       )}

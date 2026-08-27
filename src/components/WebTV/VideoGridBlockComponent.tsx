@@ -8,15 +8,6 @@ import type { BlockConfig, Video } from "@/src/types";
 import { useAppConfig } from "@/src/hooks/useAppConfig";
 import styles from "./VideoGridBlockComponent.module.css";
 
-const cardColors = [
-  "#facc15", // Yellow
-  "#64748b", // Gray
-  "#38bdf8", // Sky blue
-  "#fb7185", // Coral red
-  "#34d399", // Mint green
-  "#a78bfa", // Purple
-  "#fb923c", // Orange
-];
 
 interface VideoGridBlockProps {
   block?: BlockConfig;
@@ -27,6 +18,8 @@ interface VideoGridBlockProps {
 }
 
 import { useTranslation } from "@/src/hooks/useTranslation";
+
+import VideosList from "@/src/components/video/VideosList";
 
 export default function VideoGridBlockComponent({
   block,
@@ -40,8 +33,9 @@ export default function VideoGridBlockComponent({
   const [videos, setVideos] = useState<Video[]>(providedVideos || []);
   const [loading, setLoading] = useState(!providedVideos);
 
-  const displayTitle =
-    providedTitle || block?.display_title || block?.subtitle_or_text || t("common.videos");
+  const rawTitle =
+    providedTitle || block?.display_title || block?.subtitle_or_text || "webtv.latestVideos";
+  const displayTitle = t(rawTitle, rawTitle);
   const limit = providedLimit || block?.item_limit || (isHero ? 6 : 5);
 
   useEffect(() => {
@@ -57,8 +51,22 @@ export default function VideoGridBlockComponent({
         let endpoint = `${getRoutes().video.list}?limit=${limit}`;
 
         // Ordering or filtering derived from block extra_config
-        if (block?.extra_config?.order_by) {
-          endpoint += `&ordering=${block.extra_config.order_by}`;
+        if (block?.extra_config) {
+          const config = block.extra_config;
+          if (config.order_by) {
+            endpoint += `&ordering=${config.order_by}`;
+          }
+          if (config.channel_id) {
+            endpoint += `&channel=${config.channel_id}`;
+          }
+          if (config.type_slug) {
+            endpoint += `&type__slug=${config.type_slug}`;
+          }
+          if (config.tag_slugs && Array.isArray(config.tag_slugs)) {
+            config.tag_slugs.forEach((t: string) => {
+              endpoint += `&tags__slug=${t}`;
+            });
+          }
         }
 
         const response = await requestJson<
@@ -80,65 +88,23 @@ export default function VideoGridBlockComponent({
     fetchVideos();
   }, [block, providedVideos, limit]);
 
-  const showViews = config?.video?.show_views !== false;
-
   return (
     <section className={styles.blockWrapper}>
-      {!isHero && <div className={styles.sectionBadgeHeader}>{displayTitle}</div>}
-
-      {loading ? (
-        <div style={{ padding: "1rem", color: "#666" }}>{t("common.loading")}</div>
-      ) : videos.length > 0 ? (
-        <div className={isHero ? styles.heroGrid : styles.videosGrid}>
-          {videos.map((video, index) => {
-            const fallbackColor = cardColors[index % cardColors.length];
-            return (
-              <Link
-                key={video.id}
-                href={`/video/${video.slug}`}
-                className={styles.videoCard}
-              >
-                <div className={styles.thumbnailContainer}>
-                  {video.thumbnail ? (
-                    <img
-                      src={video.thumbnail}
-                      alt={video.title}
-                      className={styles.thumbnailImage}
-                    />
-                  ) : (
-                    <div
-                      className={styles.thumbnailPlaceholder}
-                      style={{ backgroundColor: fallbackColor }}
-                    >
-                      <span
-                        className="material-icons"
-                        style={{ fontSize: "2.5rem", opacity: 0.8 }}
-                      >
-                        play_circle_outline
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div className={styles.cardBody}>
-                  <h4 className={styles.cardTitle}>{video.title}</h4>
-                  {showViews && video.views_count != null && (
-                    <span className={styles.cardMeta}>
-                      <span
-                        className="material-icons"
-                        style={{ fontSize: "0.9rem" }}
-                      >
-                        visibility
-                      </span>
-                      {video.views_count} {video.views_count > 1 ? t("common.views") : t("common.view")}
-                    </span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+      {!isHero && (
+        <h2 style={{ 
+          color: "var(--c--contextuals--content--semantic--neutral--primary)",
+          borderBottom: "2px solid var(--c--globals--colors--gray-200)",
+          paddingBottom: "var(--c--globals--spacings--xs)",
+          marginBottom: "var(--c--globals--spacings--md)",
+          fontSize: "1.5rem"
+        }}>
+          {displayTitle}
+        </h2>
+      )}
+      {loading || videos.length > 0 ? (
+        <VideosList videosList={videos} loading={loading} />
       ) : (
-        <div style={{ padding: "1rem", color: "#888", fontStyle: "italic" }}>
+        <div style={{ padding: "1rem", color: "var(--c--globals--colors--gray-500)", fontStyle: "italic" }}>
           {t("webtv.noContent")}
         </div>
       )}

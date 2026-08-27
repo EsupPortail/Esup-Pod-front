@@ -506,6 +506,11 @@ export default function EditVideo() {
   }
 
   const handleNextStep = async () => {
+    if (activeStep === 0 && sourceFile) {
+      setformError("Veuillez cliquer sur 'Ajouter la vidéo' pour téléverser votre fichier avant de continuer.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const fieldsToValidate = STEP_REQUIRED_FIELDS[activeStep] ?? [];
     if (fieldsToValidate.length > 0) {
       const valid = await trigger(fieldsToValidate);
@@ -530,6 +535,11 @@ export default function EditVideo() {
     setActiveStep((c) => Math.max(c - 1, 0));
   };
   const handleStepClick = async (idx: number) => {
+    if (activeStep === 0 && sourceFile && idx > 0) {
+      setformError("Veuillez cliquer sur 'Ajouter la vidéo' pour téléverser votre fichier avant de continuer.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     if (idx > activeStep) {
       for (let step = activeStep; step < idx; step++) {
         const fieldsToValidate = STEP_REQUIRED_FIELDS[step] ?? [];
@@ -707,7 +717,7 @@ export default function EditVideo() {
       });
 
       if (res.ok) {
-        setSuccess("Vidéo mise à jour avec succès ! 🥳");
+        setSuccess("Vidéo mise à jour avec succès !");
         router.push("/dashboard");
         window.scrollTo({ top: 0, behavior: "smooth" });
         initialValuesRef.current = { ...data, thumbnail: null, password: "" };
@@ -746,7 +756,8 @@ export default function EditVideo() {
    * --------------------------------------------------------------------- */
 
   const renderImportStep = () => {
-    const hasSource = Boolean(video?.has_video_file || video?.video_url || sourceFile);
+    const hasServerSource = Boolean(video?.has_video_file || video?.video_url);
+    const hasSource = hasServerSource || Boolean(sourceFile);
     const isPublicEmpty = selectedStatus === "PU" && !hasSource;
 
     return (
@@ -758,62 +769,36 @@ export default function EditVideo() {
           </Alert>
         )}
 
-        {!hasSource ? (
-          <div
-            style={{
-              padding: "16px 20px",
-              background: "rgba(245, 158, 11, 0.12)",
-              border: "1.5px solid rgba(245, 158, 11, 0.4)",
-              borderRadius: 10,
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-            }}
-          >
-            <div style={{ fontWeight: 700, color: "#f59e0b", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
-              ⚠️ {t("videoEdit.noSourceWarningTitle")}
+        {!hasServerSource ? (
+          <Alert type={VariantType.WARNING} canClose={false}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+              <div style={{ fontWeight: 700 }}>
+                {t("videoEdit.noSourceWarningTitle")}
+              </div>
+              <div style={{ fontSize: "0.85rem", opacity: 0.9 }}>
+                {t("videoEdit.noSourceWarningDesc")}
+              </div>
             </div>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#fbbf24", lineHeight: 1.5 }}>
-              {t("videoEdit.noSourceWarningDesc")}
-            </p>
-          </div>
+          </Alert>
         ) : (
-          <div
-            style={{
-              padding: "16px 20px",
-              background: "rgba(34, 197, 94, 0.12)",
-              border: "1.5px solid rgba(34, 197, 94, 0.4)",
-              borderRadius: 10,
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-            }}
-          >
-            <div style={{ fontWeight: 700, color: "#4ade80", fontSize: "0.95rem", display: "flex", alignItems: "center", gap: 8 }}>
-              ✅ {t("videoEdit.noSourceFileBadge")}
+          <Alert type={VariantType.SUCCESS} canClose={false}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px", width: "100%" }}>
+              <div style={{ fontWeight: 700 }}>
+                {t("videoEdit.mediaAttached")}
+              </div>
+              <div style={{ fontSize: "0.85rem", opacity: 0.9 }}>
+                {String(video?.video_url || "").split("/").pop()}
+                {video?.encoding_status_label ? ` • ${video.encoding_status_label}` : ""}
+              </div>
             </div>
-            <p style={{ margin: 0, fontSize: "0.85rem", color: "#86efac" }}>
-              {String(video?.video_url || sourceFile?.name || "").split("/").pop()}
-              {video?.encoding_status_label ? ` • ${video.encoding_status_label}` : ""}
-            </p>
-          </div>
+          </Alert>
         )}
 
-        <div
-          style={{
-            padding: "20px",
-            background: "var(--c--theme--colors--card-bg, #0f172a)",
-            border: isPublicEmpty ? "1.5px solid #ef4444" : "1.5px solid var(--border-color, #334155)",
-            borderRadius: 10,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: "0.95rem" }}>
+        <div className={`${styles.import_card} ${isPublicEmpty ? styles.import_card_error : ""}`}>
+          <div className={styles.element_card_title}>
             {t("videoEdit.importHeaderTitle")}
           </div>
-          <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-color-muted, #94a3b8)" }}>
+          <p className={styles.element_card_desc} style={{ margin: 0 }}>
             {t("videoEdit.selectVideoFile")}
           </p>
 
@@ -823,16 +808,12 @@ export default function EditVideo() {
             onChange={(e: any) => {
               const file = e?.target?.files?.[0] || e || null;
               setSourceFile(file);
-              if (file) {
-                setActiveStep(1);
-                setMobilePanelIndex(1);
-              }
             }}
           />
 
           {sourceFile && (
-            <p style={{ margin: 0, fontSize: "0.85rem", fontWeight: 500 }}>
-              📹 {sourceFile.name}
+            <p style={{ margin: 0, fontSize: "0.85rem", fontWeight: 500, display: "flex", alignItems: "center", gap: 6 }}>
+              <OndemandVideoIcon fontSize="small" color="primary" /> {sourceFile.name}
             </p>
           )}
 
@@ -918,7 +899,7 @@ export default function EditVideo() {
             >
               {(config?.video?.metadata_languages || VIDEO_LANGUAGE_OPTIONS).map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {t(`languages.${opt.value}`, opt.label)}
                 </MenuItem>
               ))}
             </TextField>
@@ -965,9 +946,12 @@ export default function EditVideo() {
                   field.onChange(formattedTags.join(","));
                 }}
                 renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                  ))
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                      <Chip key={key} variant="outlined" label={option} {...tagProps} />
+                    );
+                  })
                 }
                 renderInput={(params) => (
                   <TextField
@@ -1291,7 +1275,7 @@ export default function EditVideo() {
           </div>
 
           {/* Chapitrage */}
-          <div className={styles.element_card} style={{ opacity: hasEncodedSource ? 1 : 0.65 }}>
+          <div className={styles.element_card} style={{ opacity: 0.5 }}>
             <div className={styles.element_card_info}>
               <span className={styles.element_card_title}>{t("videoEdit.chaptersTitle")}</span>
               <span className={styles.element_card_desc}>
@@ -1302,8 +1286,8 @@ export default function EditVideo() {
               <button
                 className={styles.element_action_btn}
                 type="button"
-                disabled={!hasEncodedSource}
-                onClick={() => setChaptersModalOpen(true)}
+                disabled={true}
+                style={{ cursor: "not-allowed" }}
               >
                 <BookmarksIcon fontSize="small" /> {t("videoEdit.chaptersTitle")}
               </button>
@@ -1361,167 +1345,186 @@ export default function EditVideo() {
 
     return (
       <>
-        <p style={{ fontSize: "0.875rem", color: "var(--text-color-muted, #94a3b8)", marginTop: 0 }}>
-          {t("videoEdit.visibilityHeaderSub")}
-        </p>
-
         {!hasSource && (
-          <div style={{ padding: "12px 16px", background: "rgba(239, 68, 68, 0.12)", border: "1.5px solid rgba(239, 68, 68, 0.4)", borderRadius: 10, color: "#fca5a5", fontSize: "0.875rem", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
-            <PriorityHighIcon style={{ fontSize: 20, flexShrink: 0 }} />
-            <span>{t("videoEdit.noSourceDraftNotice")}</span>
+          <div style={{ marginBottom: 16 }}>
+            <Alert type={VariantType.ERROR} canClose={false}>
+              {t("videoEdit.noSourceDraftNotice")}
+            </Alert>
           </div>
         )}
 
         {/* Restrictions section */}
-        <div className={styles.visibility_section}>
-          <button
-            type="button"
-            className={styles.visibility_section_header}
-            onClick={() => setRestrictionExpanded(!restrictionExpanded)}
-          >
-            <span>{t("videoEdit.restrictionsHeader")}</span>
-            <ExpandMoreIcon style={{ transform: restrictionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-          </button>
-          {restrictionExpanded && (
-            <div className={styles.visibility_section_content}>
-              <p style={{ fontSize: "0.8rem", color: "var(--text-color-muted, #94a3b8)", margin: "0 0 8px" }}>
-                {t("videoEdit.restrictionsSub")}
-              </p>
-              <Controller
-                name="status"
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup {...field}>
-                    <div className={styles.radio_option}>
-                      <Radio value="DR" size="small" sx={{ mt: "-3px" }} />
-                      <div className={styles.radio_option_content}>
-                        <h4>{t("videoEdit.draftPrivateTitle")}</h4>
-                        <p>{t("videoEdit.draftPrivateDesc")}</p>
-                      </div>
+        <Accordion
+          expanded={restrictionExpanded}
+          onChange={(_, isExpanded) => setRestrictionExpanded(isExpanded)}
+          sx={{
+            borderRadius: "10px !important",
+            border: "1.5px solid var(--c--globals--colors--gray-200, #e0e0e0)",
+            boxShadow: "none",
+            "&:before": { display: "none" },
+            mb: 2,
+            overflow: "hidden",
+            backgroundColor: "var(--c--theme--colors--card-bg, #ffffff)",
+            color: "inherit",
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <span style={{ fontWeight: 600, fontSize: "0.95rem" }}>{t("videoEdit.restrictionsHeader")}</span>
+              <span style={{ fontSize: "0.8rem", color: "var(--c--globals--colors--gray-600)" }}>{t("videoEdit.restrictionsSub")}</span>
+            </div>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup {...field}>
+                  <div className={styles.radio_option}>
+                    <Radio value="DR" size="small" sx={{ mt: "-3px" }} />
+                    <div className={styles.radio_option_content}>
+                      <h4>{t("videoEdit.draftPrivateTitle")}</h4>
+                      <p>{t("videoEdit.draftPrivateDesc")}</p>
                     </div>
-                    <Divider />
-                    <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
-                      <Radio value="RE" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
-                      <div className={styles.radio_option_content}>
-                        <h4>{t("videoEdit.restrictedTitle")}</h4>
-                        <p>{t("videoEdit.restrictedDesc")}</p>
-                      </div>
+                  </div>
+                  <Divider />
+                  <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
+                    <Radio value="RE" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
+                    <div className={styles.radio_option_content}>
+                      <h4>{t("videoEdit.restrictedTitle")}</h4>
+                      <p>{t("videoEdit.restrictedDesc")}</p>
                     </div>
-                    <Divider />
-                    <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
-                      <Radio value="PU" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
-                      <div className={styles.radio_option_content}>
-                        <h4>{t("videoEdit.publicTitle")}</h4>
-                        <p>{t("videoEdit.publicDesc")}</p>
-                      </div>
+                  </div>
+                  <Divider />
+                  <div className={styles.radio_option} style={!hasSource ? { opacity: 0.45, cursor: "not-allowed" } : undefined}>
+                    <Radio value="PU" size="small" disabled={!hasSource} sx={{ mt: "-3px" }} />
+                    <div className={styles.radio_option_content}>
+                      <h4>{t("videoEdit.publicTitle")}</h4>
+                      <p>{t("videoEdit.publicDesc")}</p>
                     </div>
-                  </RadioGroup>
-                )}
-              />
-              {selectedStatus === "RE" && hasSource && (
-                <div style={{ marginTop: 8, padding: "12px", background: "var(--c--theme--colors--card-bg, #0f172a)", borderRadius: 6, border: "1px solid var(--border-color, #334155)" }}>
-                  <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>{t("videoEdit.restrictionOptions")}</p>
-                  <Controller
-                    name="is_auth_required"
-                    control={control}
-                    render={({ field, fieldState }) => (
-                      <FormControl error={Boolean(fieldState.error)}>
-                        <FormControlLabel
-                          control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                          label={t("videoEdit.authRequiredLabel")}
-                        />
-                        <FormHelperText>{fieldState.error?.message ?? t("videoEdit.authRequiredHelper")}</FormHelperText>
-                      </FormControl>
-                    )}
-                  />
-                  <Controller
-                    name="is_password_required"
-                    control={control}
-                    render={({ field }) => (
-                      <FormControlLabel
-                        control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
-                        label={t("videoEdit.passwordRequiredLabel")}
-                      />
-                    )}
-                  />
-                  {isPasswordRequired && (
-                    <Controller
-                      name="password"
-                      control={control}
-                      rules={{ validate: (value) => value.trim().length === 0 || value.trim().length >= 4 || "Le mot de passe doit contenir au moins 4 caractères." }}
-                      render={({ field }) => (
-                        <TextField {...field} fullWidth type="password" autoComplete="new-password" label={t("videoEdit.passwordLabel")} error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
-                      )}
-                    />
-                  )}
-                </div>
+                  </div>
+                </RadioGroup>
               )}
-            </div>
-          )}
-        </div>
-
-        {/* Diffusion config */}
-        <div className={styles.visibility_section}>
-          <button type="button" className={styles.visibility_section_header} onClick={() => setDiffusionExpanded(!diffusionExpanded)}>
-            <div>
-              <span>{t("videoEdit.diffusionTitle")}</span>
-            </div>
-            <ExpandMoreIcon style={{ transform: diffusionExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-          </button>
-          {diffusionExpanded && (
-            <div className={styles.visibility_section_content}>
-              <Controller
-                name="allow_downloading"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <FormControl error={Boolean(fieldState.error)}>
-                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.allowDownloadLabel")} />
-                    <FormHelperText>{fieldState.error?.message ?? t("videoEdit.allowDownloadHelper")}</FormHelperText>
-                  </FormControl>
-                )}
-              />
-              {config?.video?.active_video_comment !== false && (
+            />
+            {selectedStatus === "RE" && hasSource && (
+              <div className={styles.sub_card} style={{ marginTop: 12 }}>
+                <p style={{ fontWeight: 600, margin: "0 0 8px", fontSize: "0.875rem" }}>{t("videoEdit.restrictionOptions")}</p>
                 <Controller
-                  name="disable_comment"
+                  name="is_auth_required"
                   control={control}
                   render={({ field, fieldState }) => (
                     <FormControl error={Boolean(fieldState.error)}>
-                      <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.disableCommentsLabel")} />
-                      <FormHelperText>{fieldState.error?.message ?? t("videoEdit.disableCommentsHelper")}</FormHelperText>
+                      <FormControlLabel
+                        control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
+                        label={t("videoEdit.authRequiredLabel")}
+                      />
+                      <FormHelperText>{fieldState.error?.message ?? t("videoEdit.authRequiredHelper")}</FormHelperText>
                     </FormControl>
                   )}
                 />
-              )}
-              {video && config?.video?.hide_share !== true && (
-                <VideoSocialNetworksForm video={video!} onNetworksUpdated={() => refetch()} />
-              )}
-            </div>
-          )}
-        </div>
+                <Controller
+                  name="is_password_required"
+                  control={control}
+                  render={({ field }) => (
+                    <FormControlLabel
+                      control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />}
+                      label={t("videoEdit.passwordRequiredLabel")}
+                    />
+                  )}
+                />
+                {isPasswordRequired && (
+                  <Controller
+                    name="password"
+                    control={control}
+                    rules={{ validate: (value) => value.trim().length === 0 || value.trim().length >= 4 || "Le mot de passe doit contenir au moins 4 caractères." }}
+                    render={({ field }) => (
+                      <TextField {...field} fullWidth type="password" autoComplete="new-password" label={t("videoEdit.passwordLabel")} error={Boolean(errors.password)} helperText={errors.password?.message ?? "Laissez vide pour ne pas modifier le mot de passe existant."} />
+                    )}
+                  />
+                )}
+              </div>
+            )}
+          </AccordionDetails>
+        </Accordion>
 
-        {/* Advanced */}
-        <div className={styles.visibility_section}>
-          <button type="button" className={styles.visibility_section_header} onClick={() => setAdvancedExpanded(!advancedExpanded)}>
-            <div>
-              <span>{t("videoEdit.advancedOptionsTitle")}</span>
-            </div>
-            <ExpandMoreIcon style={{ transform: advancedExpanded ? "rotate(180deg)" : "none", transition: "0.2s" }} />
-          </button>
-          {advancedExpanded && (
-            <div className={styles.visibility_section_content}>
+        {/* Diffusion config */}
+        <Accordion
+          expanded={diffusionExpanded}
+          onChange={(_, isExpanded) => setDiffusionExpanded(isExpanded)}
+          sx={{
+            borderRadius: "10px !important",
+            border: "1.5px solid var(--c--globals--colors--gray-200, #e0e0e0)",
+            boxShadow: "none",
+            "&:before": { display: "none" },
+            mb: 2,
+            overflow: "hidden",
+            backgroundColor: "var(--c--theme--colors--card-bg, #ffffff)",
+            color: "inherit",
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <span style={{ fontWeight: 600, fontSize: "0.95rem" }}>{t("videoEdit.diffusionTitle")}</span>
+          </AccordionSummary>
+          <AccordionDetails sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <Controller
+              name="allow_downloading"
+              control={control}
+              render={({ field, fieldState }) => (
+                <FormControl error={Boolean(fieldState.error)}>
+                  <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.allowDownloadLabel")} />
+                  <FormHelperText>{fieldState.error?.message ?? t("videoEdit.allowDownloadHelper")}</FormHelperText>
+                </FormControl>
+              )}
+            />
+            {config?.video?.active_video_comment !== false && (
               <Controller
-                name="is_360"
+                name="disable_comment"
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl error={Boolean(fieldState.error)}>
-                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.is360Label")} />
-                    <FormHelperText>{fieldState.error?.message ?? t("videoEdit.is360Helper")}</FormHelperText>
+                    <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.disableCommentsLabel")} />
+                    <FormHelperText>{fieldState.error?.message ?? t("videoEdit.disableCommentsHelper")}</FormHelperText>
                   </FormControl>
                 )}
               />
-            </div>
-          )}
-        </div>
+            )}
+            {video && config?.video?.hide_share !== true && (
+              <VideoSocialNetworksForm video={video!} onNetworksUpdated={() => refetch()} />
+            )}
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Advanced */}
+        <Accordion
+          expanded={advancedExpanded}
+          onChange={(_, isExpanded) => setAdvancedExpanded(isExpanded)}
+          sx={{
+            borderRadius: "10px !important",
+            border: "1.5px solid var(--c--globals--colors--gray-200, #e0e0e0)",
+            boxShadow: "none",
+            "&:before": { display: "none" },
+            mb: 2,
+            overflow: "hidden",
+            backgroundColor: "var(--c--theme--colors--card-bg, #ffffff)",
+            color: "inherit",
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <span style={{ fontWeight: 600, fontSize: "0.95rem" }}>{t("videoEdit.advancedOptionsTitle")}</span>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Controller
+              name="is_360"
+              control={control}
+              render={({ field, fieldState }) => (
+                <FormControl error={Boolean(fieldState.error)}>
+                  <FormControlLabel control={<Checkbox checked={Boolean(field.value)} onChange={(_, checked) => field.onChange(checked)} />} label={t("videoEdit.is360Label")} />
+                  <FormHelperText>{fieldState.error?.message ?? t("videoEdit.is360Helper")}</FormHelperText>
+                </FormControl>
+              )}
+            />
+          </AccordionDetails>
+        </Accordion>
       </>
     );
   };
@@ -1534,12 +1537,16 @@ export default function EditVideo() {
     const statusVal = watchedValues.status;
     const isAuthRequiredVal = watchedValues.is_auth_required;
     const isPasswordRequiredVal = watchedValues.is_password_required;
+    const hasServerSource = Boolean(video?.has_video_file || video?.video_url);
+    const hasSource = hasServerSource || Boolean(sourceFile);
 
     const ownerName = liveOwnerUser
       ? getUserDisplayName(liveOwnerUser, config?.authentication, false)
       : (video?.owner || "Propriétaire");
 
     const viewsCount = video?.views ?? 0;
+    const encodingStatus = video?.encoding_status;
+    const isEncodingActive = hasServerSource && Boolean(encodingStatus && encodingStatus !== "DO");
 
     return (
       <div className={styles.preview_card_wrapper}>
@@ -1553,24 +1560,46 @@ export default function EditVideo() {
                 className={styles.live_card_img}
               />
             ) : (
-              <div className={styles.live_card_media_placeholder}>
+              <div className={styles.live_card_media_placeholder} style={{ flexDirection: "column", gap: 6 }}>
                 <OndemandVideoIcon style={{ fontSize: 40, opacity: 0.3 }} />
+                {!hasSource && (
+                  <span style={{ fontSize: "0.75rem", opacity: 0.6, fontWeight: 500 }}>
+                    {t("videoEdit.noSourceFileBadge")}
+                  </span>
+                )}
               </div>
             )}
 
             {/* Duration bubble */}
-            {video?.duration && (
+            {typeof video?.duration === "number" && video.duration > 0 && (
               <div className={styles.live_card_duration}>
                 {formatTime(secondToMinute(video.duration))}
               </div>
             )}
 
-            {/* Encoding overlay if active */}
-            {video?.encoding_status && video.encoding_status !== "DO" && (
-              <div className={styles.live_card_encoding_overlay}>
-                <div className={styles.live_card_encoding_progress_bar} style={{ width: video.encoding_status === "PE" ? "30%" : "65%" }}></div>
-                <div className={styles.live_card_encoding_text}>
-                  {video.encoding_status_label || "Encodage..."}
+            {/* Encoding status overlay if active AND a source file exists */}
+            {isEncodingActive && (
+              <div
+                className={styles.live_card_encoding_overlay}
+                style={
+                  encodingStatus === "ER"
+                    ? { background: "rgba(220, 38, 38, 0.9)", color: "white" }
+                    : undefined
+                }
+              >
+                {encodingStatus === "ER" && (
+                  <PriorityHighIcon style={{ fontSize: 20, color: "white", marginBottom: 2 }} />
+                )}
+                <div
+                  className={styles.live_card_encoding_text}
+                  style={encodingStatus === "ER" ? { color: "white" } : undefined}
+                >
+                  {video?.encoding_status_label ||
+                    (encodingStatus === "PR"
+                      ? "Encodage en cours..."
+                      : encodingStatus === "ER"
+                      ? "Erreur d'encodage"
+                      : "En attente d'encodage...")}
                 </div>
               </div>
             )}
@@ -1765,12 +1794,12 @@ export default function EditVideo() {
                 <span style={{ fontWeight: 600, fontSize: "0.875rem" }}>Ajouter un sous-titre</span>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
                   <TextField select label="Langue" value={subtitleLanguage} onChange={(e) => setSubtitleLanguage(e.target.value as LanguageSubtitle)} size="small" sx={{ minWidth: 140 }} InputProps={{ style: { borderRadius: 10 } }}>
-                    {SUBTITLE_LANGUAGE_OPTIONS.map((opt) => (<MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>))}
+                    {SUBTITLE_LANGUAGE_OPTIONS.map((opt) => (<MenuItem key={opt.value} value={opt.value}>{t(`languages.${opt.value}`, opt.label)}</MenuItem>))}
                   </TextField>
                   <FormControlLabel control={<Checkbox checked={subtitleIsDefault} onChange={(e) => setSubtitleIsDefault(e.target.checked)} size="small" />} label="Par défaut" />
                 </div>
                 <FileUploader text="Sélectionner un fichier .vtt ou .srt" accept=".vtt,.srt" onChange={(e: any) => setSubtitleFile(e?.target?.files?.[0] || e || null)} />
-                {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📄 {subtitleFile?.name}</p>}
+                {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--c--globals--colors--gray-700)", display: "flex", alignItems: "center", gap: 4 }}><AttachFileIcon fontSize="small" /> {subtitleFile?.name}</p>}
                 <Button type="button" color="brand" disabled={!subtitleFile || useSubtitleLoading} onClick={async () => { await handleAddSubtitle(); await refetch(); }}>
                   {useSubtitleLoading ? "Ajout en cours…" : "Ajouter le sous-titre"}
                 </Button>
@@ -1818,9 +1847,9 @@ export default function EditVideo() {
           </DialogTitle>
           <DialogContent dividers>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "4px 0" }}>
-              <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>Remplacez le fichier source de cette vidéo. Un nouveau processus d&apos;encodage sera lancé.</p>
+              <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)" }}>Remplacez le fichier source de cette vidéo. Un nouveau processus d&apos;encodage sera lancé.</p>
               <FileUploader text="Sélectionner un nouveau fichier vidéo" accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"} onChange={(e: any) => setSourceFile(e?.target?.files?.[0] || e || null)} />
-              {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📹 {sourceFile?.name}</p>}
+              {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--c--globals--colors--gray-700)", display: "flex", alignItems: "center", gap: 4 }}><OndemandVideoIcon fontSize="small" color="primary" /> {sourceFile?.name}</p>}
             </div>
           </DialogContent>
           <DialogActions>
@@ -1907,7 +1936,7 @@ export default function EditVideo() {
 
               let stepDesc = "";
               if (isActive) {
-                stepDesc = `▶ ${t("videoEdit.stepInProgress")}`;
+                stepDesc = t("videoEdit.stepInProgress");
               } else if (index === 0) {
                 stepDesc = hasSource ? t("videoEdit.mediaAttached") : t("videoEdit.noSourceFileBadge");
               } else if (index === 1) {
@@ -1988,6 +2017,7 @@ export default function EditVideo() {
               <button
                 type="button"
                 className={styles.step_nav_btn}
+                disabled={activeStep === 0 && Boolean(sourceFile)}
                 onClick={handleNextStep}
               >
                 {t("videoEdit.next")}
@@ -2105,7 +2135,7 @@ export default function EditVideo() {
                   InputProps={{ style: { borderRadius: 10 } }}
                 >
                   {SUBTITLE_LANGUAGE_OPTIONS.map((opt) => (
-                    <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                    <MenuItem key={opt.value} value={opt.value}>{t(`languages.${opt.value}`, opt.label)}</MenuItem>
                   ))}
                 </TextField>
                 <FormControlLabel
@@ -2118,7 +2148,7 @@ export default function EditVideo() {
                 accept=".vtt,.srt"
                 onChange={(e: any) => setSubtitleFile(e?.target?.files?.[0] || e || null)}
               />
-              {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📄 {subtitleFile?.name}</p>}
+              {subtitleFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--c--globals--colors--gray-700)", display: "flex", alignItems: "center", gap: 4 }}><AttachFileIcon fontSize="small" /> {subtitleFile?.name}</p>}
               <Button
                 type="button"
                 color="brand"
@@ -2171,11 +2201,11 @@ export default function EditVideo() {
         </DialogTitle>
         <DialogContent dividers>
           <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "4px 0" }}>
-            <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
+            <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--c--globals--colors--gray-600)" }}>
               Remplacez le fichier source de cette vidéo. Un nouveau processus d&apos;encodage sera automatiquement lancé.
             </p>
             {video?.video_url && (
-              <div style={{ padding: "10px 14px", background: "#f9fafb", borderRadius: 10, border: "1.5px solid #e5e7eb", fontSize: "0.85rem", color: "#374151" }}>
+              <div className={styles.sub_card} style={{ fontSize: "0.85rem" }}>
                 <span style={{ fontWeight: 600 }}>Source actuelle :</span> {String(video?.video_url).split("/").pop()}
               </div>
             )}
@@ -2184,7 +2214,7 @@ export default function EditVideo() {
               accept={config?.encoding?.allowed_extensions?.map((ext: string) => `.${ext}`).join(", ") || ".mp4,.avi,.mkv"}
               onChange={(e: any) => setSourceFile(e?.target?.files?.[0] || e || null)}
             />
-            {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "#374151" }}>📹 {sourceFile?.name}</p>}
+            {sourceFile && <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--c--globals--colors--gray-700)", display: "flex", alignItems: "center", gap: 4 }}><OndemandVideoIcon fontSize="small" color="primary" /> {sourceFile?.name}</p>}
           </div>
         </DialogContent>
         <DialogActions>

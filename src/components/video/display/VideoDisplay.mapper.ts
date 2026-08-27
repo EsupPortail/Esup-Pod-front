@@ -15,13 +15,15 @@ export function mapVideoToDisplayRow(
   const isOwner = currentUserId != null && video.owner_id === currentUserId;
   const selected = selectedVideoIds?.includes(video.id) ?? false;
 
+  const hasSource = Boolean(video.has_video_file || video.video_url);
+
   return {
     id: String(video.id),
     video,
     slug: video.slug,
     title: video.title,
     thumbnailUrl: getThumbnailUrl(video.thumbnail_url),
-    durationLabel: formatTime(secondToMinute(video.duration || 0)),
+    durationLabel: video.duration && video.duration > 0 ? formatTime(secondToMinute(video.duration)) : "",
     createdAtLabel: timeAgo(video.created_at),
     createdAtValue: video.created_at,
     owner: video.owner,
@@ -30,6 +32,7 @@ export function mapVideoToDisplayRow(
     status: video.status,
     statusLabel: video.status_label || video.status,
     statusEncoding: video.encoding_status || "",
+    hasSource,
     hasPassword: video.has_password,
     isRestricted: video.status === "DR",
     href: `/video/${video.slug}`,

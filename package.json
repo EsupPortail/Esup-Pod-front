@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "yarn build-theme",
-    "prebuild": "yarn build-theme",
+    "predev": "npm run build-theme",
+    "prebuild": "npm run build-theme",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
-    "ci": "yarn lint && yarn typecheck && yarn test --run && yarn build",
+    "ci": "npm run lint && npm run typecheck && npm test --run && npm run build",
     "build-theme": "cunningham -g css -o src",
     "prepare": "husky"
   },
@@ -61,5 +61,6 @@
     "*.{ts,tsx}": [
       "eslint --fix"
     ]
-  }
+  },
+  "packageManager": "yarn@4.9.4+sha512.7b1cb0b62abba6a537b3a2ce00811a843bea02bcf53138581a6ae5b1bf563f734872bd47de49ce32a9ca9dcaff995aa789577ffb16811da7c603dcf69e73750b"
 }

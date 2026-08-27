@@ -4,10 +4,10 @@ import VideoActionMenu from "@/src/components/video/VideoActionMenu";
 import type { VideoDisplayRow } from "./types";
 import styles from "./styles.module.css";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import DownloadingIcon from "@mui/icons-material/Downloading";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import ErrorIcon from "@mui/icons-material/Error";
 import Tooltip from "@mui/material/Tooltip";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 
 /* Définit les colonnes du tableau de vidéos.*/
 export function getVideoGridColumns(
@@ -106,17 +106,22 @@ export function getVideoGridColumns(
       renderCell: ({ row }) =>
         row.isOwner ? (
           <>
-            {row.statusEncoding == "PE" && (
+            {!row.hasSource && (
+              <Tooltip title={tr("table.noSourceBadge", "Fiche vide (sans source)")}>
+                <InsertDriveFileOutlinedIcon sx={{ color: "var(--text-color-muted, #94a3b8)" }} />
+              </Tooltip>
+            )}
+            {row.hasSource && row.statusEncoding == "PE" && (
               <Tooltip title={tr("table.pendingEncoding", "Vidéo en attente d'encodage")}>
                 <PauseCircleFilledIcon color="warning" />
               </Tooltip>
             )}
-            {row.statusEncoding == "ER" && (
+            {row.hasSource && row.statusEncoding == "ER" && (
               <Tooltip title={tr("table.encodingError", "Erreur d'encodage")}>
                 <ErrorIcon color="error" />
               </Tooltip>
             )}
-            {row.statusEncoding == "DO" && (
+            {row.hasSource && row.statusEncoding == "DO" && (
               <Tooltip title={tr("table.encodingCompleted", "Encodage terminé")}>
                 <CheckCircleOutlinedIcon color="success" />
               </Tooltip>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import PlaylistSidebar from "@/src/components/collection/PlaylistSidebar/PlaylistSidebar";
 import FavoritesSidebar from "@/src/components/collection/FavoritesSidebar/FavoritesSidebar";
@@ -116,10 +116,18 @@ export default function Video() {
   const { data: video, isLoading: useVideoLoading, error } = useVideo(slug ?? "");
   const useVideoError = error?.message ?? null;
   const { mutateAsync: unlockVideoMutation } = useUnlockVideo();
-  const unlockVideo = async (videoSlug: string, payload?: { password?: string; hash?: string }) => {
-    await unlockVideoMutation({ slug: videoSlug, payload });
-    return true;
-  };
+  const unlockVideo = useCallback(async (videoSlug: string, payload?: { password?: string; hash?: string }) => {
+    try {
+      const res = await unlockVideoMutation({ slug: videoSlug, payload }).catch((err) => {
+        console.warn("Unlock video mutation caught:", err?.message || err);
+        return null;
+      });
+      return Boolean(res);
+    } catch (err: any) {
+      console.warn("Unlock video error:", err?.message || err);
+      return false;
+    }
+  }, [unlockVideoMutation]);
   const time = secondToMinute(video?.duration || 0);
   const { accessToken, refresh, user } = useAuth();
   const authRequired =
@@ -258,7 +266,7 @@ export default function Video() {
     if (!video || video.status !== "RE") return;
     if (video.is_auth_required) return;
     if (video.has_password) return;
-    unlockVideo(video.slug);
+    unlockVideo(video.slug).catch(() => {});
   }, [video, unlockVideo]);
 
   useEffect(() => {
@@ -484,6 +492,8 @@ export default function Video() {
 
 
 
+  const hasSource = Boolean(video?.has_video_file || video?.video_url);
+
   /* ------------------------------------------------------------------
    * Rendu principal
    * ------------------------------------------------------------------ */
@@ -496,7 +506,50 @@ export default function Video() {
          * ------------------------------------------------------------ */}
         <section className={styles.video_main_section}>
           <div className={styles.video_wrapper}>
-          {resolvedStreamUrl ? (
+          {!hasSource ? (
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "16 / 9",
+                backgroundColor: "var(--c--theme--colors--card-bg, #1e293b)",
+                borderRadius: 12,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "2rem",
+                textAlign: "center",
+                border: "1.5px dashed var(--c--globals--colors--gray-300, #cbd5e1)",
+                color: "var(--text-color, #ffffff)",
+                gap: "1rem",
+              }}
+            >
+              <InsertDriveFileIcon style={{ fontSize: 56, opacity: 0.4, color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                <h3 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 700 }}>
+                  Fiche vide (aucun fichier vidéo source)
+                </h3>
+                <p style={{ margin: 0, fontSize: "0.875rem", opacity: 0.7, maxWidth: 480 }}>
+                  Cette fiche ne contient pas encore de fichier vidéo source.
+                  {isOwnerOrCoOwner && canEdit
+                    ? " Vous pouvez téléverser une vidéo source en éditant la fiche."
+                    : ""}
+                </p>
+              </div>
+
+              {isOwnerOrCoOwner && canEdit && (
+                <Button
+                  onClick={() => router.push(`/video/edit/${video.slug}`)}
+                  color="brand"
+                  size="medium"
+                  icon={<EditIcon fontSize="small" />}
+                  style={{ marginTop: "0.5rem" }}
+                >
+                  {t("videoPage.editVideo", "Éditer la vidéo")}
+                </Button>
+              )}
+            </div>
+          ) : resolvedStreamUrl ? (
             <VideoPlayer
               video={video}
               streamUrl={resolvedStreamUrl}
@@ -540,12 +593,14 @@ export default function Video() {
                 </span>
                 {formatDateOnly(video.created_at, locale)}
               </div>
-              <div className={styles.video_infos_header_time}>
-                <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
-                  access_time
-                </span>
-                {formatTime(time)}
-              </div>
+              {Boolean(video?.duration && video.duration > 0) && (
+                <div className={styles.video_infos_header_time}>
+                  <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
+                    access_time
+                  </span>
+                  {formatTime(time)}
+                </div>
+              )}
 
               <div className={styles.video_actions_row}>
                 {config?.video?.hide_share !== true && (

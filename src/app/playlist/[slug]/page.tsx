@@ -153,7 +153,7 @@ export default function PlaylistPage() {
       <div className={styles.playlist_content}>
         {playlistJustCreated && (
           <Alert type={VariantType.SUCCESS} aria-live="polite">
-            Votre liste de lecture a été créée avec succès! 🥳
+            Votre liste de lecture a été créée avec succès !
           </Alert>
         )}
         <div className={styles.playlist_header_row}>

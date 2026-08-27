@@ -23,6 +23,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface VideosCardProps {
@@ -35,7 +36,8 @@ interface VideosCardProps {
 
 export default function VideoCard(props: VideosCardProps) {
   const { video, isOwner = false, selectable = false, selected = false, onSelectToggle } = props;
-  const { locale } = useTranslation();
+  const { locale, t } = useTranslation();
+  const hasSource = Boolean(video.has_video_file || video.video_url);
   const time = secondToMinute(video.duration || 0);
 
   // Détection du contexte : playlist ou favoris
@@ -140,9 +142,11 @@ export default function VideoCard(props: VideosCardProps) {
               objectFit: "cover",
             }}
           />
-          <time dateTime={`PT${video.duration}S`} className={styles.video_duration}>
-            {formatTime(time)}
-          </time>
+          {Boolean(video.duration && video.duration > 0) && (
+            <time dateTime={`PT${video.duration}S`} className={styles.video_duration}>
+              {formatTime(time)}
+            </time>
+          )}
         </div>
         <CardContent sx={{ flex: 1, width: "100%", padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
           <Avatar sx={{ width: 36, height: 36, mt: 0.5, flexShrink: 0 }}>{initial}</Avatar>
@@ -169,22 +173,27 @@ export default function VideoCard(props: VideosCardProps) {
               </Typography>
 
               <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "6px", alignItems: "center", marginTop: "2px" }}>
-                {video.encoding_status == "ER" && isOwner && (
+                {!hasSource && isOwner && (
+                  <Tooltip title={t("table.noSourceBadge", "Fiche vide (sans source)")}>
+                    <InsertDriveFileOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
+                  </Tooltip>
+                )}
+                {hasSource && video.encoding_status == "ER" && isOwner && (
                   <Tooltip title="Erreur d'encodage">
                     <ErrorIcon color="error" sx={{ fontSize: "1.1rem" }} />
                   </Tooltip>
                 )}
-                {video.encoding_status == "PE" && isOwner && (
+                {hasSource && video.encoding_status == "PE" && isOwner && (
                   <Tooltip title="Vidéo en attente d'encodage">
                     <PauseCircleFilledIcon color="warning" sx={{ fontSize: "1.1rem" }} />
                   </Tooltip>
                 )}
-                {video.encoding_status == "PR" && isOwner && (
+                {hasSource && video.encoding_status == "PR" && isOwner && (
                   <Tooltip title="Vidéo en cours d'encodage">
                     <DownloadingIcon sx={{ color: "var(--background-brand)", fontSize: "1.1rem" }} />
                   </Tooltip>
                 )}
-                {video.encoding_status == "DO" && isOwner && (
+                {hasSource && video.encoding_status == "DO" && isOwner && (
                   <Tooltip title="Encodage terminé">
                     <CheckCircleOutlinedIcon color="success" sx={{ fontSize: "1.1rem" }} />
                   </Tooltip>

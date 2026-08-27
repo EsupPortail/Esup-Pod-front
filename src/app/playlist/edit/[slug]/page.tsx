@@ -199,7 +199,7 @@ export default function EditPlaylist() {
 
     const updated = await updatePlaylist(slug, payload);
     if (updated) {
-      setSuccess("Liste de lecture mise à jour avec succès ! 🥳");
+      setSuccess("Liste de lecture mise à jour avec succès !");
     }
   };
 

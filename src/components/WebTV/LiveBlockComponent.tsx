@@ -22,6 +22,11 @@ interface LiveBlockProps {
   block?: BlockConfig;
 }
 
+import Card from "@mui/material/Card";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import Typography from "@mui/material/Typography";
 import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function LiveBlockComponent({ block }: LiveBlockProps) {
@@ -64,33 +69,91 @@ export default function LiveBlockComponent({ block }: LiveBlockProps) {
     fetchLives();
   }, [block]);
 
-  const title = block?.display_title || t("webtv.liveTitle");
+  const rawTitle = block?.display_title || "webtv.liveTitle";
+  const title = t(rawTitle, rawTitle);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", height: "100%" }}>
-      <div className={styles.liveContainer}>
-        <div className={styles.liveHeader}>{title}</div>
-        {loading ? (
-          <div className={styles.emptyMessage}>{t("common.loading")}</div>
-        ) : lives.length > 0 ? (
-          <ul className={styles.liveList}>
-            {lives.map((live) => (
-              <li key={live.id}>
-                <Link href={`/live/${live.slug}`} className={styles.liveItem}>
-                  <span className={styles.redDot} />
-                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {live.title}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className={styles.emptyMessage}>{t("webtv.noLive")}</div>
-        )}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+      <h2 style={{ 
+        color: "var(--c--contextuals--content--semantic--neutral--primary)",
+        borderBottom: "2px solid var(--c--globals--colors--gray-200)",
+        paddingBottom: "var(--c--globals--spacings--xs)",
+        marginBottom: "var(--c--globals--spacings--md)",
+        fontSize: "1.5rem"
+      }}>
+        {title}
+      </h2>
 
-      <div className={styles.accentBanner} />
+      <Card 
+        elevation={0}
+        sx={{
+          backgroundColor: "var(--c--globals--colors--gray-000)",
+          border: "1px solid var(--c--globals--colors--gray-200)",
+          borderRadius: "12px",
+          overflow: "hidden",
+          flex: 1,
+        }}
+      >
+        {loading ? (
+          <div style={{ padding: "1rem", color: "var(--c--globals--colors--gray-600)" }}>
+            {t("common.loading")}
+          </div>
+        ) : lives.length > 0 ? (
+          <List disablePadding>
+            {lives.map((live, index) => (
+              <ListItem 
+                key={live.id} 
+                disablePadding 
+                divider={index < lives.length - 1}
+              >
+                <ListItemButton 
+                  component={Link} 
+                  href={`/live/${live.slug}`}
+                  sx={{ padding: "12px 16px", display: "flex", gap: "12px", alignItems: "center" }}
+                >
+                  <span style={{
+                    width: "10px",
+                    height: "10px",
+                    backgroundColor: "var(--c--contextuals--background--semantic--danger--primary, #ef4444)",
+                    borderRadius: "50%",
+                    display: "inline-block",
+                    flexShrink: 0,
+                  }} />
+                  <Typography 
+                    sx={{ 
+                      overflow: "hidden", 
+                      textOverflow: "ellipsis", 
+                      whiteSpace: "nowrap", 
+                      flex: 1,
+                      fontWeight: 500,
+                      color: "var(--text-color)"
+                    }}
+                  >
+                    {live.title}
+                  </Typography>
+                  {live.is_draft && (
+                    <span style={{ 
+                      fontSize: "0.7rem", 
+                      background: "var(--c--contextuals--background--semantic--warning--primary, #f59e0b)", 
+                      color: "var(--c--contextuals--content--semantic--warning--primary, #fff)", 
+                      padding: "2px 8px", 
+                      borderRadius: "10px", 
+                      marginLeft: "auto", 
+                      fontWeight: "bold" 
+                    }}>
+                      {t("common.draft", "Brouillon")}
+                    </span>
+                  )}
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <div style={{ padding: "1rem", color: "var(--c--globals--colors--gray-500)", fontStyle: "italic" }}>
+            {t("webtv.noLive", "Aucun événement en direct.")}
+          </div>
+        )}
+      </Card>
     </div>
   );
 }

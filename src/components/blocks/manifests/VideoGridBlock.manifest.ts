@@ -2,7 +2,8 @@ export const VideoGridBlockManifest = {
   frontend_id: "video-grid-block",
   name: "Bloc Grille de Vidéos",
   description: "Affiche une rangée ou grille de cartes vidéos paramétrable.",
-  fields: {
+  version: "1.0.0",
+  fields_schema: {
     order_by: {
       type: "select",
       label: "Ordre de tri des vidéos",

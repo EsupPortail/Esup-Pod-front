@@ -2,7 +2,8 @@ export const CollectionBlockManifest = {
   frontend_id: "collection-block",
   name: "Bloc Générale de Collections",
   description: "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists).",
-  fields: {
+  version: "1.0.0",
+  fields_schema: {
     collection_type: {
       type: "select",
       label: "Type de collection à afficher",
@@ -31,3 +32,4 @@ export const CollectionBlockManifest = {
     },
   },
 };
+

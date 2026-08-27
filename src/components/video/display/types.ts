@@ -40,6 +40,7 @@ export interface VideoDisplayRow {
   status: string;
   statusLabel: string;
   statusEncoding: string;
+  hasSource: boolean;
   hasPassword: boolean;
   isRestricted: boolean;
   href: string;

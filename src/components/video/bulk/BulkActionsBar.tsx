@@ -285,7 +285,7 @@ export default function BulkActionsBar({
           "success"
         );
       } else {
-        let fieldsPayload: Record<string, any> = {};
+        const fieldsPayload: Record<string, any> = {};
 
         switch (selectedAction) {
           case "type":
@@ -625,7 +625,7 @@ export default function BulkActionsBar({
               Cette action est <strong>irréversible</strong>.
               {hasEncodingInProgress && (
                 <div style={{ marginTop: "8px" }}>
-                  ⚠️ Attention : certaines vidéos sont actuellement en cours d'encodage.
+                  Attention : certaines vidéos sont actuellement en cours d'encodage.
                 </div>
               )}
             </Alert>
@@ -676,33 +676,33 @@ export default function BulkActionsBar({
               {selectedAction === "status" && (
                 <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
                   <option value="" disabled>-- Choisir le statut --</option>
-                  <option value="PU">🌐 Publique — visible par tous</option>
-                  <option value="DR">🔒 Privée — brouillon, non visible</option>
-                  <option value="RE">🔗 Restreinte — lien requis</option>
+                  <option value="PU">Publique — visible par tous</option>
+                  <option value="DR">Privée — brouillon, non visible</option>
+                  <option value="RE">Restreinte — lien requis</option>
                 </select>
               )}
 
               {selectedAction === "is_auth_required" && (
                 <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
                   <option value="" disabled>-- Choisir --</option>
-                  <option value="true">✅ Oui — connexion requise pour accéder</option>
-                  <option value="false">🌐 Non — accessible sans connexion</option>
+                  <option value="true">Oui — connexion requise pour accéder</option>
+                  <option value="false">Non — accessible sans connexion</option>
                 </select>
               )}
 
               {selectedAction === "allow_downloading" && (
                 <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
                   <option value="" disabled>-- Choisir --</option>
-                  <option value="true">⬇️ Oui — autoriser le téléchargement</option>
-                  <option value="false">🚫 Non — désactiver le téléchargement</option>
+                  <option value="true">Oui — autoriser le téléchargement</option>
+                  <option value="false">Non — désactiver le téléchargement</option>
                 </select>
               )}
 
               {selectedAction === "disable_comment" && (
                 <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
                   <option value="" disabled>-- Choisir --</option>
-                  <option value="false">💬 Activer les commentaires</option>
-                  <option value="true">🚫 Désactiver les commentaires</option>
+                  <option value="false">Activer les commentaires</option>
+                  <option value="true">Désactiver les commentaires</option>
                 </select>
               )}
 
@@ -848,7 +848,7 @@ export default function BulkActionsBar({
                             whiteSpace: "nowrap",
                           }}
                         >
-                          ❌ Erreur
+                          Erreur
                         </span>
                       </Tooltip>
                     )}

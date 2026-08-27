@@ -139,7 +139,7 @@ export function VideoDocumentsForm({ videoId }: VideoDocumentsFormProps) {
             >
               <ListItemText
                 primary={doc.title}
-                secondary={`${doc.is_private ? "🔒 Privé" : "🌐 Public"} - Ajouté le ${new Date(doc.created_at).toLocaleDateString()}`}
+                secondary={`${doc.is_private ? "Privé" : "Public"} - Ajouté le ${new Date(doc.created_at).toLocaleDateString()}`}
               />
               <ListItemSecondaryAction>
                 <IconButton

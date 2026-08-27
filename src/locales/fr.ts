@@ -77,7 +77,10 @@ export const fr = {
     submitLogin: "Connexion",
   },
   webtv: {
-    liveTitle: "Direct",
+    featured: "À la Une",
+    liveTitle: "Événements en direct",
+    channelsAndThemes: "Nos Chaînes et Thématiques",
+    latestVideos: "Dernières Vidéos",
     noLive: "Aucun direct en cours",
     loadingContent: "Chargement des contenus WebTV...",
     noContent: "Aucun contenu disponible",
@@ -144,6 +147,7 @@ export const fr = {
     restricted: "Restreint",
     password: "Mot de passe",
     pendingEncoding: "Vidéo en attente d'encodage",
+    noSourceBadge: "Fiche vide (sans source)",
     encodingError: "Erreur d'encodage",
     encodingCompleted: "Encodage terminé",
     privateVideo: "Vidéo privée",
@@ -250,6 +254,8 @@ export const fr = {
     descriptionHelper: "Décrivez votre contenu, ajoutez toutes les informations nécessaires, et mettez en forme le résultat.",
     mainLanguageLabel: "Langue principale",
     mainLanguageHelper: "La langue principalement utilisée dans ce contenu.",
+    tagsLabel: "Mots-clés / Tags",
+    tagsHelper: "Appuyez sur Entrée ou séparez par des virgules pour ajouter des mots-clés.",
     thumbnailLabel: "Vignettes",
     uploadThumbnailBtn: "+ Importer une vignette",
     thumbnailDimensionsHint: "JPG ou PNG · Recommandé : 1280 × 720 px",
@@ -278,7 +284,7 @@ export const fr = {
     next: "Suivant",
 
     // Stepper & Badges
-    noSourceFileBadge: "ℹ️ Information : Fichier source non importé",
+    noSourceFileBadge: "Information : Fichier source non importé",
     incompleteBadge: "Incomplet",
     completedBadge: "Complété",
     stepInProgress: "Étape en cours",
@@ -376,8 +382,16 @@ export const fr = {
   },
   languages: {
     fr: "Français",
-    en: "English",
-    es: "Español",
+    en: "Anglais",
+    es: "Espagnol",
+    de: "Allemand",
+    it: "Italien",
+    pt: "Portugais",
+    ru: "Russe",
+    zh: "Chinois",
+    ja: "Japonais",
+    ar: "Arabe",
+    nl: "Néerlandais",
   },
 };
 

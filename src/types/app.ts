@@ -99,6 +99,9 @@ export interface AppConfig {
     restrict_to_staff: boolean;
     max_video_size_gb: number;
   };
+  layout?: {
+    enable_admin_shortcuts: boolean;
+  };
   [key: string]: unknown;
 }
 export interface AppInfo {

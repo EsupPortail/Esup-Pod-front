@@ -7,37 +7,21 @@ import { requestJson } from "@/src/utils/requestJson";
 import type { BlockConfig, Channel } from "@/src/types";
 import styles from "./CollectionBlockComponent.module.css";
 
-// Vibrant curated background color list matching the design mockups
-const cardColors = [
-  "#10b981", // Emerald green
-  "#f97316", // Vibrant orange
-  "#f472b6", // Soft pink
-  "#3b82f6", // Vibrant blue
-  "#64748b", // Slate gray
-  "#ef4444", // Red
-  "#eab308", // Yellow
-];
 
-interface CollectionItem {
-  id: number | string;
-  slug?: string;
-  title: string;
-  videos_count?: number;
-  banner?: string | null;
-  logo?: string | null;
-  color?: string;
-}
 
 interface CollectionBlockProps {
   block: BlockConfig;
 }
 
 import { useTranslation } from "@/src/hooks/useTranslation";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
+import CollectionsList from "@/src/components/collection/CollectionList";
 
 export default function CollectionBlockComponent({ block }: CollectionBlockProps) {
-  const [items, setItems] = useState<CollectionItem[]>([]);
+  const [items, setItems] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
+  const { config } = useAppConfig();
 
   useEffect(() => {
     const fetchCollections = async () => {
@@ -70,17 +54,7 @@ export default function CollectionBlockComponent({ block }: CollectionBlockProps
             .filter(Boolean) as Channel[];
         }
 
-        // Map items with color accents
-        const mappedItems: CollectionItem[] = filtered.slice(0, limit).map((c, index) => ({
-          id: c.id,
-          slug: c.slug,
-          title: c.title,
-          videos_count: c.videos_count,
-          banner: c.banner || c.logo,
-          color: cardColors[index % cardColors.length],
-        }));
-
-        setItems(mappedItems);
+        setItems(filtered.slice(0, limit));
       } catch (err) {
         console.error("Error loading collection block:", err);
       } finally {
@@ -91,42 +65,25 @@ export default function CollectionBlockComponent({ block }: CollectionBlockProps
     fetchCollections();
   }, [block]);
 
-  const displayTitle = block.display_title || block.subtitle_or_text || t("common.collections");
+  const rawTitle = block.display_title || block.subtitle_or_text || "webtv.channelsAndThemes";
+  const displayTitle = t(rawTitle, rawTitle);
 
   return (
     <section className={styles.blockWrapper}>
-      <div className={styles.sectionBadgeHeader}>{displayTitle}</div>
+      <h2 style={{ 
+        color: "var(--c--contextuals--content--semantic--neutral--primary)",
+        borderBottom: "2px solid var(--c--globals--colors--gray-200)",
+        paddingBottom: "var(--c--globals--spacings--xs)",
+        marginBottom: "var(--c--globals--spacings--md)",
+        fontSize: "1.5rem"
+      }}>
+        {displayTitle}
+      </h2>
 
-      {loading ? (
-        <div style={{ padding: "1rem", color: "#666" }}>{t("common.loading")}</div>
-      ) : items.length > 0 ? (
-        <div className={styles.cardsGrid}>
-          {items.map((item) => (
-            <Link
-              key={item.id}
-              href={`/channel/${item.slug || item.id}`}
-              className={styles.collectionCard}
-            >
-              <div
-                className={styles.cardBanner}
-                style={{
-                  backgroundColor: item.color,
-                  backgroundImage: item.banner ? `url(${item.banner})` : undefined,
-                }}
-              />
-              <div className={styles.cardBody}>
-                <h4 className={styles.cardTitle}>{item.title}</h4>
-                {item.videos_count !== undefined && (
-                  <span className={styles.cardMeta}>
-                    {item.videos_count} {item.videos_count > 1 ? t("common.videos") : t("common.video")}
-                  </span>
-                )}
-              </div>
-            </Link>
-          ))}
-        </div>
+      {loading || items.length > 0 ? (
+        <CollectionsList channels={items} loading={loading} />
       ) : (
-        <div style={{ padding: "1rem", color: "#888", fontStyle: "italic" }}>
+        <div style={{ padding: "1rem", color: "var(--c--globals--colors--gray-500)", fontStyle: "italic" }}>
           {t("webtv.noContent")}
         </div>
       )}
