@@ -23,7 +23,7 @@ export default function Accueil() {
     <div>
       {blocks.length > 0 ? (
         blocks.map((block) => (
-          <BlockRenderer key={block.id ?? block.frontend_id} block={block} />
+          <BlockRenderer key={block.frontend_id} block={block} />
         ))
       ) : (
         <div style={{ padding: "var(--c--globals--spacings--xl)", textAlign: "center", color: "var(--c--theme--colors--greyscale-500)" }}>

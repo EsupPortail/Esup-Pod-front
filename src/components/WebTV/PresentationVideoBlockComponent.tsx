@@ -28,9 +28,9 @@ export default function PresentationVideoBlockComponent({ block }: PresentationV
         // We can fetch a specific video by slug if configured, otherwise fetch the latest featured video
         let endpoint = `${getRoutes().video.list}?limit=1`;
         
-        if (block?.extra_config?.video_slug) {
-            endpoint = getRoutes().video.detail(block.extra_config.video_slug);
-        } else if (block?.extra_config?.channel_id) {
+          if (typeof block?.extra_config?.video_slug === "string") {
+            endpoint = getRoutes().video.get(block.extra_config.video_slug);
+          } else if (block?.extra_config?.channel_id) {
             endpoint += `&channel=${block.extra_config.channel_id}`;
         }
 

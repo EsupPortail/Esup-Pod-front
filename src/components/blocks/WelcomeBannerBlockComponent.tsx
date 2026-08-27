@@ -28,15 +28,18 @@ export default function WelcomeBannerBlockComponent({ block }: WelcomeBannerBloc
         </div>
 
         {/* Right Box (Using Cunningham Alert for consistency) */}
-        <div style={{ flex: "1" }}>
-          <Alert type={VariantType.INFO} title={<Link href="/pages/comment-faire" style={{ textDecoration: 'none' }}>{t("home.howToTitle")}</Link>}>
-            <p style={{ margin: 0 }}>
-              {t("home.howToDescPrefix")}
-              <Link href="/pages/utiliser-pod" style={{ margin: "0 4px", fontWeight: "bold" }}>{t("home.quickGuideLink")}</Link>
-              {t("home.howToDescSuffix")}
-            </p>
+          <Alert type={VariantType.INFO}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <div style={{ fontWeight: 700 }}>
+                <Link href="/pages/comment-faire" style={{ textDecoration: 'none', color: 'inherit' }}>{t("home.howToTitle")}</Link>
+              </div>
+              <p style={{ margin: 0 }}>
+                {t("home.howToDescPrefix")}
+                <Link href="/pages/utiliser-pod" style={{ margin: "0 4px", fontWeight: "bold" }}>{t("home.quickGuideLink")}</Link>
+                {t("home.howToDescSuffix")}
+              </p>
+            </div>
           </Alert>
-        </div>
       </div>
     </section>
   );
