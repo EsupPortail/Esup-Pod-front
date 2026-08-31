@@ -1,3 +1,4 @@
+import { getThumbnailUrl } from "@/src/utils/url";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -5,25 +6,36 @@ import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
+import { Checkbox } from "@openfun/cunningham-react";
 import styles from "./VideoCard.module.css";
 import Link from "next/link";
+import Avatar from "@mui/material/Avatar";
+import { setInitial, getVideoOwnerDisplayName } from "@/src/constants/user";
 import { usePathname, useParams } from "next/navigation";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import type { Video } from "@/src/types";
 import { formatTime, timeAgo, secondToMinute } from "@/src/constants/date";
-import { truncateVideoTitle } from "@/src/constants/string";
 import VideoActionMenu from "@/src/components/video/VideoActionMenu";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 import ErrorIcon from "@mui/icons-material/Error";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import ShieldOutlinedIcon from "@mui/icons-material/ShieldOutlined";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface VideosCardProps {
   video: Video;
   isOwner?: boolean;
+  selectable?: boolean;
+  selected?: boolean;
+  onSelectToggle?: (checked: boolean) => void;
 }
 
 export default function VideoCard(props: VideosCardProps) {
-  const { video, isOwner = false } = props;
+  const { video, isOwner = false, selectable = false, selected = false, onSelectToggle } = props;
+  const { locale } = useTranslation();
   const time = secondToMinute(video.duration || 0);
 
   // Détection du contexte : playlist ou favoris
@@ -47,112 +59,208 @@ export default function VideoCard(props: VideosCardProps) {
     href = `/video/${video.slug}?favorites=1`;
   }
 
+  const { config } = useAppConfig();
+  const displayName = getVideoOwnerDisplayName(video, config?.authentication, true);
+  const isAnonymous = displayName === "Anonyme";
+  const initial = isAnonymous ? "A" : setInitial(video.owner_last_name, video.owner_first_name);
+
   return (
     <Card
+      component="article"
+      elevation={0}
       sx={{
-        maxWidth: 345,
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
         position: "relative",
-        overflow: "visible",
-        mb: 4,
-        borderRadius: "8px",
-        transition: "transform 0.3s ease",
+        mb: 0,
+        backgroundColor: selected
+          ? "rgba(10, 89, 219, 0.04)"
+          : "var(--c--globals--colors--gray-000)",
+        border: selected
+          ? "2px solid var(--c--contextuals--background--semantic--brand--primary)"
+          : "1px solid var(--c--globals--colors--gray-200)",
+        borderRadius: "12px",
+        transition: "all 0.3s ease",
         "&:hover": {
-          transform: "translateY(-5px)",
-        },
+          borderColor: "var(--c--contextuals--background--semantic--brand--primary)",
+          boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+          transform: "translateY(-2px)",
+        }
       }}
     >
+      {selectable && (
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+            zIndex: 10,
+          }}
+        >
+          <Checkbox
+            label=""
+            checked={selected}
+            onChange={(e) => {
+              onSelectToggle?.((e.target as HTMLInputElement).checked);
+            }}
+            aria-label="Sélectionner cette vidéo"
+          />
+        </div>
+      )}
+
       <CardActionArea
         component={Link}
         href={href}
         sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          justifyContent: "flex-start",
+          height: "100%",
           textDecoration: "none",
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
         }}
+        disableRipple
       >
-        <CardMedia
-          component="img"
-          height="150px"
-          image={video.thumbnail_url || "/default_thumbnail.svg"}
-          alt={video.title}
-          sx={{
-            borderTopLeftRadius: "8px",
-            borderTopRightRadius: "8px",
-          }}
-        />
-        <div className={styles.video_duration}>
-          <span className="material-icons">access_time</span>
-          {formatTime(time)}
-        </div>
-        <CardContent sx={{ position: "relative" }}>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
+        <div style={{ position: "relative" }}>
+          <CardMedia
+            component="img"
+            image={video.thumbnail_url || video.thumbnail || "/default_thumbnail.svg"}
+            alt={video.title}
             sx={{
-              fontSize: "var(--c--globals--font--sizes--lg)",
-              fontWeight: "var(--c--globals--font--weights--bold)",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              borderTopLeftRadius: "11px",
+              borderTopRightRadius: "11px",
+              aspectRatio: "16/9",
+              objectFit: "cover",
             }}
-          >
-            {truncateVideoTitle(video.title, 20)}
-          </Typography>
-          <div className={styles.video_infos}>
+          />
+          <time dateTime={`PT${video.duration}S`} className={styles.video_duration}>
+            {formatTime(time)}
+          </time>
+        </div>
+        <CardContent sx={{ flex: 1, width: "100%", padding: "12px 16px", display: "flex", gap: "12px", alignItems: "flex-start", paddingBottom: "16px !important" }}>
+          <Avatar sx={{ width: 36, height: 36, mt: 0.5, flexShrink: 0 }}>{initial}</Avatar>
+
+          <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "2px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+              <Typography
+                component="div"
+                sx={{
+                  flex: 1,
+                  fontSize: "1rem",
+                  fontWeight: 600,
+                  lineHeight: 1.3,
+                  height: "2.6em",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  color: "var(--text-color)",
+                }}
+              >
+                {video.title}
+              </Typography>
+
+              <div className={styles.video_icons} style={{ display: "flex", flexShrink: 0, gap: "6px", alignItems: "center", marginTop: "2px" }}>
+                {video.encoding_status == "ER" && isOwner && (
+                  <Tooltip title="Erreur d'encodage">
+                    <ErrorIcon color="error" sx={{ fontSize: "1.1rem" }} />
+                  </Tooltip>
+                )}
+                {video.encoding_status == "PE" && isOwner && (
+                  <Tooltip title="Vidéo en attente d'encodage">
+                    <PauseCircleFilledIcon color="warning" sx={{ fontSize: "1.1rem" }} />
+                  </Tooltip>
+                )}
+                {video.encoding_status == "PR" && isOwner && (
+                  <Tooltip title="Vidéo en cours d'encodage">
+                    <DownloadingIcon sx={{ color: "var(--background-brand)", fontSize: "1.1rem" }} />
+                  </Tooltip>
+                )}
+                {video.encoding_status == "DO" && isOwner && (
+                  <Tooltip title="Encodage terminé">
+                    <CheckCircleOutlinedIcon color="success" sx={{ fontSize: "1.1rem" }} />
+                  </Tooltip>
+                )}
+                {video.status === "DR" && (
+                  <Tooltip title="Vidée privée / Brouillon">
+                    <VisibilityOffOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
+                  </Tooltip>
+                )}
+                {video.has_password && (
+                  <Tooltip title="Vidéo protégée par mot de passe">
+                    <LockOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
+                  </Tooltip>
+                )}
+                {video.is_auth_required && (
+                  <Tooltip title="Réservé aux utilisateurs authentifiés">
+                    <ShieldOutlinedIcon sx={{ fontSize: "1.1rem", color: "var(--text-color-muted, #94a3b8)" }} />
+                  </Tooltip>
+                )}
+                {isOwner && (
+                  <div
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    style={{ marginLeft: "2px" }}
+                  >
+                    <VideoActionMenu video={video} />
+                  </div>
+                )}
+              </div>
+            </div>
+
             <Typography
+              component="div"
               sx={{
-                fontSize: "var(--c--globals--font--sizes--xs)",
-                color: "text.secondary",
+                fontSize: "0.85rem",
+                color: "var(--text-color-muted, #94a3b8)",
+                mt: 0.5,
+                display: "flex",
+                flexDirection: "column",
+                gap: "2px",
+                lineHeight: 1.2,
               }}
             >
-              {timeAgo(video.created_at)}
+              <address 
+                style={{ 
+                  fontStyle: "normal", 
+                  color: "var(--text-color-muted, #94a3b8)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
+                }}
+                title={displayName}
+              >
+                {displayName}
+              </address>
+              <time 
+                dateTime={video.created_at} 
+                style={{ 
+                  color: "var(--text-color-muted, #94a3b8)", 
+                  fontWeight: 500,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  width: "100%",
+                }}
+              >
+                {timeAgo(video.created_at, locale)}
+              </time>
             </Typography>
-            <div className={styles.video_icons}>
-              {video.encoding_status == "ER" && isOwner && (
-                <Tooltip title="Erreur d'encodage">
-                  <ErrorIcon color="error" />
-                </Tooltip>
-              )}
-              {video.encoding_status == "PE" && isOwner && (
-                <Tooltip title="Vidéo en attente d'encodage">
-                  <PauseCircleFilledIcon color="warning" />
-                </Tooltip>
-              )}
-              {video.encoding_status == "PR" && isOwner && (
-                <Tooltip title="Vidéo en cours d'encodage">
-                  <DownloadingIcon sx={{ color: "var(--background-brand)" }} />
-                </Tooltip>
-              )}
-              {video.encoding_status == "DO" && isOwner && (
-                <Tooltip title="Encodage terminé">
-                  <CheckCircleOutlinedIcon color="success" />
-                </Tooltip>
-              )}
-              {video.status == "DR" && (
-                <Tooltip title="Vidéo privée">
-                  <span className="material-icons">visibility_off</span>
-                </Tooltip>
-              )}
-              {video.has_password && (
-                <Tooltip title="Vidéo protégée par un mot de passe">
-                  <span className="material-icons">key</span>
-                </Tooltip>
-              )}
-              {video.is_auth_required && (
-                <Tooltip title="Vidéo visible pour les utilisateurs authentifiés">
-                  <span className="material-icons">verified_user</span>
-                </Tooltip>
-              )}
-            </div>
           </div>
         </CardContent>
       </CardActionArea>
-      {isOwner && (
-        <CardActions
-          sx={{ position: "absolute", top: 8, left: 8, zIndex: 2, padding: 0 }}
-        >
-          <VideoActionMenu video={video} />
-        </CardActions>
-      )}
     </Card>
   );
 }

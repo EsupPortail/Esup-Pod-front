@@ -2,6 +2,7 @@
 
 import { useSidebar } from "../../context/SidebarProvider";
 import { useAuth } from "@/src/context/AuthProvider";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
 import styles from "./styles.module.css";
 import Divider from "@mui/material/Divider";
 import MenuItem from "./menuItem";
@@ -17,152 +18,160 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import CloseIcon from "@mui/icons-material/Close";
 
+import { useTranslation } from "@/src/hooks/useTranslation";
+
 const SideBar = () => {
   const { handleFixSidebar, handleViewSidebar, sidebarOpen } = useSidebar();
   const { accessToken, user } = useAuth();
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const { config } = useAppConfig();
+  const { t } = useTranslation();
 
   /* ----------------------------- *
    *  Menus – données statiques
    * -------------------------------- */
-  const menuPrincipalItems = [
-    {
-      name: "Consulter les vidéos",
+  const publicVideoItems = [
+    { name: t("common.allVideos"), link: "/video" },
+  ];
+  if (config?.collection?.use_channels !== false) {
+    publicVideoItems.push({ name: t("common.channels"), link: "/channel" });
+  }
+  if (config?.collection?.use_playlists !== false) {
+    publicVideoItems.push({ name: t("common.playlists"), link: "/playlist" });
+  }
+
+  const menuPrincipalItems = [];
+  if (publicVideoItems.length === 1) {
+    menuPrincipalItems.push({
+      name: t("sidebar.browseVideos"),
+      Icon: SlideshowIcon,
+      link: publicVideoItems[0].link,
+    });
+  } else if (publicVideoItems.length > 1) {
+    menuPrincipalItems.push({
+      name: t("sidebar.browseVideos"),
       Icon: SlideshowIcon,
       link: "",
-      items: [
-        { name: "Toutes les vidéos", link: "/video" },
-        { name: "Chaines", link: "/channel" },
-        { name: "Listes de lecture", link: "/playlist" },
-        { name: "Listes de lecture promues", link: "/" },
-      ],
-    },
-    {
-      name: "Diffusion en direct",
-      Icon: LiveTvIcon,
-      link: "",
-      items: [
-        { name: "Voir les directs", link: "/" },
-        { name: "Programmer un direct BBB", link: "/" },
-        { name: "Mes sessions BBB", link: "/" },
-        { name: "Revendiquer un enregistrement", link: "/" },
-      ],
-    },
+      items: publicVideoItems,
+    });
+  }
+
+  const mySpaceItems = [];
+  if (config?.collection?.use_favorites !== false) {
+    mySpaceItems.push({ name: t("sidebar.myFavorites"), link: "/favorites" });
+  }
+  if (config?.collection?.use_playlists !== false) {
+    mySpaceItems.push({ name: t("sidebar.myPlaylists"), link: "/playlist/me" });
+  }
+  if ((config as any)?.dressing?.use_dressing !== false) {
+    mySpaceItems.push({ name: t("sidebar.videoBranding"), link: "/dressing" });
+  }
+
+  const menuPodItems: any[] = [
+    { name: t("sidebar.dashboard"), Icon: DashboardRounded, link: "/dashboard" },
   ];
 
-  const menuPodItems = [
-    { name: "Mon tableau de bord", Icon: DashboardRounded, link: "/dashboard" },
-    {
-      name: "Déposer une vidéo",
+  const addVideoItems = [];
+  if ((config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff) {
+    addVideoItems.push({ name: t("common.addVideo"), link: "/video/add" });
+  }
+
+  if (addVideoItems.length === 1) {
+    menuPodItems.push({
+      name: t("common.addVideo"),
+      Icon: AddCircleOutlineIcon,
+      link: addVideoItems[0].link,
+    });
+  } else if (addVideoItems.length > 1) {
+    menuPodItems.push({
+      name: t("common.addVideo"),
       Icon: AddCircleOutlineIcon,
       link: "",
-      items: [
-        { name: "Ajouter une vidéo", link: "/video/add" },
-        { name: "Enregistrer une vidéo", link: "/" },
-        { name: "Importer une vidéo externe", link: "/" },
-      ],
-    },
-    {
-      name: "Mon espace",
+      items: addVideoItems,
+    });
+  }
+
+  if (mySpaceItems.length === 1) {
+    menuPodItems.push({
+      name: mySpaceItems[0].name,
+      Icon: AccountBoxIcon,
+      link: mySpaceItems[0].link,
+    });
+  } else if (mySpaceItems.length > 1) {
+    menuPodItems.push({
+      name: t("sidebar.mySpace"),
       Icon: AccountBoxIcon,
       link: "",
-      items: [
-        { name: "Mes vidéos favorites", link: "/favorites" },
-        { name: "Mes listes de lecture", link: "/playlist/me" },
-        { name: "Mes habillages", link: "/" },
-      ],
-    },
-    { name: "Mes réunions", Icon: GroupsIcon, link: "" },
-  ];
+      items: mySpaceItems,
+    });
+  }
 
   return (
     <nav
       id="sidebar-nav"
-      aria-label="Menu principal"
+      aria-label={t("sidebar.mainMenu")}
       aria-labelledby="sidebar-title"
-      className={`${styles.sidebar} ${
-        sidebarOpen ? styles.open : styles.closed
-      }`}
-      onMouseEnter={isMobile ? undefined : handleViewSidebar}
-      onMouseLeave={isMobile ? undefined : handleViewSidebar}
+      className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed
+        }`}
+      onMouseEnter={isMobile ? undefined : () => handleViewSidebar(true)}
+      onMouseLeave={isMobile ? undefined : () => handleViewSidebar(false)}
     >
       {/* ----- Bouton de fermeture (mobile) ----- */}
       {isMobile && (
         <Button
           className={styles.button_close}
           onClick={handleFixSidebar}
-          aria-label="Fermer le menu"
+          aria-label={t("sidebar.closeMenu")}
         >
           <CloseIcon aria-hidden="true" />
         </Button>
       )}
 
       <div className={styles.menu}>
-        <h3
-          id="sidebar-title"
-          className={styles.menu_title}
-          style={{
-            color: sidebarOpen
-              ? "var(--text-color-brand)"
-              : "var(--background)",
-          }}
-        >
-          Menu principal
-        </h3>
-
-        {/* ------------------------------------------------------ *
-         *  3️⃣ Liste principale – chaque item géré par MenuItem *
-         * ------------------------------------------------------ */}
-        <List component="nav" disablePadding>
-          {menuPrincipalItems.map((item, index) => (
-            <MenuItem {...item} key={index} />
-          ))}
-        </List>
-      </div>
-
-      {/* ====================================================== *
-       *  Partie « Mon menu » (visible quand l’utilisateur est *
-       *  authentifié)                                           *
-       * ====================================================== */}
-      {accessToken && (
-        <div className={styles.menu}>
-          <Divider />
-          <h3
-            id="sidebar-title-user"
-            className={styles.menu_title}
-            style={{
-              color: sidebarOpen
-                ? "var(--text-color-brand)"
-                : "var(--background)",
-            }}
-          >
-            Mon menu
-          </h3>
-          {user && (
+        {accessToken && user ? (
+          <>
             <Chip
-              label={`Bienvenue ${user?.first_name || user?.username} ! 👋`}
+              label={`${t("sidebar.welcome")} ${user?.first_name || user?.username || "admin"} 👋`}
               sx={{
-                backgroundColor: sidebarOpen
-                  ? "var(--background-brand-secondary)"
-                  : "var(--background)",
-                color: sidebarOpen
-                  ? "var(--background-brand)"
-                  : "var(--background)",
+                display: sidebarOpen ? "inline-flex" : "none",
+                backgroundColor: "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))",
+                color: "var(--background-brand, #3b82f6)",
+                fontWeight: 600,
+                fontSize: "0.85rem",
                 marginLeft: "14px",
-                fontSize: "var(--c--globals--font--sizes--md)",
-                fontWeight: "var(--c--globals--font--weights--bold)",
+                marginTop: "16px",
                 marginBottom: "var(--c--globals--spacings--xs)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             />
-          )}
-
-          <List component="nav" disablePadding>
-            {menuPodItems.map((item, index) => (
-              <MenuItem {...item} key={index} />
-            ))}
-          </List>
-        </div>
-      )}
+            <List component="nav" disablePadding sx={{ mt: sidebarOpen ? 2 : 1 }}>
+              {[...menuPodItems, ...menuPrincipalItems].map((item, index) => (
+                <MenuItem {...item} key={index} />
+              ))}
+            </List>
+          </>
+        ) : (
+          <>
+            <h3
+              id="sidebar-title"
+              className={styles.menu_title}
+              style={{
+                display: sidebarOpen ? "block" : "none",
+                color: "var(--text-color-brand)",
+              }}
+            >
+              {t("sidebar.mainMenu")}
+            </h3>
+            <List component="nav" disablePadding>
+              {menuPrincipalItems.map((item, index) => (
+                <MenuItem {...item} key={index} />
+              ))}
+            </List>
+          </>
+        )}
+      </div>
     </nav>
   );
 };

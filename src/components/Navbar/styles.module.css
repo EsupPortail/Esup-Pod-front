@@ -1,10 +1,10 @@
 .navbar {
-  background-color: var(--background);
+  background-color: var(--c--globals--colors--gray-000); /* Solid white background */
   color: var(--text-color);
   display: flex;
   align-items: center;
   padding: var(--c--globals--spacings--sm);
-  border-bottom: 1px solid var(--c--globals--colors--gray-500);
+  border-bottom: 1px solid var(--c--globals--colors--gray-200); /* Thin GitHub style border */
   position: fixed;
   top: 0;
   right: 0;
@@ -52,6 +52,10 @@
   height: 35px;
 }
 
+html[data-theme="dark"] .navbar_logo img {
+  filter: brightness(0) invert(1) drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+}
+
 .navbar_logo strong {
   font-size: var(--c--globals--font--sizes--h2);
 }
@@ -86,8 +90,8 @@
 
 /* Styles for small screens & tablets */
 @media (max-width: 1024px) {
-  .navbar {
-    flex-wrap: wrap;
+  .navbar_logo strong {
+    display: none;
   }
   .navbar_button_display {
     display: none;

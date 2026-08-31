@@ -66,9 +66,62 @@
   display: inline;
 }
 
+.thumbnailWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .thumbnail {
-  height: 35px;
-  width: 60px;
+  height: 34px;
+  width: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.thumbnailWrapper:hover .thumbnail {
+  transform: scale(1.08);
+}
+
+.tableTitleLink {
+  color: var(--text-color, #f8fafc);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.tableTitleLink:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+.typeBadge {
+  display: inline-block;
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.countBadge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-color, #e2e8f0);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.dateText {
+  color: #94a3b8;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 640px) {

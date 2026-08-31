@@ -436,10 +436,10 @@
 	--c--contextuals--background--palette--brand--primary: var(--c--globals--colors--brand-500);
 	--c--contextuals--background--palette--brand--secondary: var(--c--globals--colors--brand-350);
 	--c--contextuals--background--palette--brand--tertiary: var(--c--globals--colors--brand-150);
-	--c--contextuals--background--palette--red--primary: var(--c--globals--colors--red-500);
+	--c--contextuals--background--palette--red--primary: #B50801;
 	--c--contextuals--background--palette--red--secondary: var(--c--globals--colors--red-350);
 	--c--contextuals--background--palette--red--tertiary: var(--c--globals--colors--red-150);
-	--c--contextuals--background--palette--orange--primary: var(--c--globals--colors--orange-500);
+	--c--contextuals--background--palette--orange--primary: #9C3902;
 	--c--contextuals--background--palette--orange--secondary: var(--c--globals--colors--orange-350);
 	--c--contextuals--background--palette--orange--tertiary: var(--c--globals--colors--orange-150);
 	--c--contextuals--background--palette--brown--primary: var(--c--globals--colors--brown-500);
@@ -457,15 +457,16 @@
 	--c--contextuals--background--palette--blue-2--primary: var(--c--globals--colors--blue-2-500);
 	--c--contextuals--background--palette--blue-2--secondary: var(--c--globals--colors--blue-2-350);
 	--c--contextuals--background--palette--blue-2--tertiary: var(--c--globals--colors--blue-2-150);
-	--c--contextuals--background--palette--purple--primary: var(--c--globals--colors--purple-500);
+	--c--contextuals--background--palette--purple--primary: #7B06E5;
 	--c--contextuals--background--palette--purple--secondary: var(--c--globals--colors--purple-350);
 	--c--contextuals--background--palette--purple--tertiary: var(--c--globals--colors--purple-150);
-	--c--contextuals--background--palette--pink--primary: var(--c--globals--colors--pink-500);
+	--c--contextuals--background--palette--pink--primary: #B00358;
 	--c--contextuals--background--palette--pink--secondary: var(--c--globals--colors--pink-350);
 	--c--contextuals--background--palette--pink--tertiary: var(--c--globals--colors--pink-150);
 	--c--contextuals--background--palette--gray--primary: var(--c--globals--colors--gray-500);
 	--c--contextuals--background--palette--gray--secondary: var(--c--globals--colors--gray-350);
 	--c--contextuals--background--palette--gray--tertiary: var(--c--globals--colors--gray-150);
+	--c--contextuals--background--palette--blue--primary: #38569F;
 	--c--contextuals--background--text--primary: var(--c--globals--colors--black-050);
 	--c--contextuals--content--logo1: var(--c--globals--colors--logo-1);
 	--c--contextuals--content--logo2: var(--c--globals--colors--logo-2);
@@ -585,6 +586,7 @@
 	--c--contextuals--border--palette--gray--tertiary: var(--c--globals--colors--gray-150);
 	--c--components--forms-input--placeholder-color: #6A788A;
 	--c--components--forms-labelledbox--label-color--small: #6A788A;
+	--c--components--forms-checkbox--border-radius: 6px;
 }
 .cunningham-theme--dark{
 	--c--globals--colors--logo-1: #377FDB;

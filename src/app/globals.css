@@ -2,6 +2,7 @@
 @import "../cunningham-tokens.css";
 @import "@openfun/cunningham-react/fonts";
 @import "@openfun/cunningham-react/icons";
+@import "./themes.css";
 
 /*
 Small Screens: max-width: 600px (smartphones)
@@ -9,12 +10,11 @@ Medium Screens: 601px — 1024px (tablets)
 Large Screens: 1025px — 1440px (desktops)
 Extra Large Screens: min-width: 1441px
 */
-/* globals.css */
 
 :root {
   --navbar-height: 80px;
   --sidebar-open: 285px;
-  --background: var(--c--contextuals--background--surface--primary);
+  --background: var(--c--globals--colors--gray-025);
   --background-brand: var(
     --c--contextuals--background--semantic--brand--primary
   );
@@ -23,19 +23,28 @@ Extra Large Screens: min-width: 1441px
   );
   --text-color: var(--c--contextuals--content--semantic--neutral--primary);
   --text-color-brand: var(--c--contextuals--content--semantic--brand--primary);
+
+  /* Modern Design Tokens */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html,
 body,
 #__next,
 #root {
-  height: 100%;
+  min-height: 100vh;
 }
 
 body {
   background-color: var(--background);
   color: var(--text-color);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -44,6 +53,45 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+/* ========================================================================== */
+/* MODERN PILL BUTTONS & ROUNDED UI ELEMENTS                                  */
+/* ========================================================================== */
+
+button,
+.MuiButton-root,
+.c__button,
+input[type="button"],
+input[type="submit"],
+a[class*="btn"],
+button[class*="btn"] {
+  border-radius: 9999px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+button:hover,
+.MuiButton-root:hover,
+.c__button:hover {
+  transform: translateY(-1px);
+}
+
+button:active,
+.MuiButton-root:active {
+  transform: translateY(0);
+}
+
+/* Modern inputs & select boxes */
+.MuiOutlinedInput-root,
+.c__input__wrapper,
+.c__field {
+  border-radius: 12px !important;
+}
+
+/* Modern Cards & Papers */
+.MuiPaper-rounded,
+.MuiCard-root {
+  border-radius: 16px !important;
 }
 
 .c__app {
@@ -71,6 +119,8 @@ body {
 
 .content {
   padding: var(--c--globals--spacings--lg);
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 .cunningham-theme--dark .MuiBreadcrumbs-separator {
@@ -93,27 +143,327 @@ body {
   color: red;
 }
 
-/* Styles for small screens */
 @media (max-width: 1024px) {
   .main {
     margin-left: 0;
   }
 }
 
-@media (max-width: 600px) /*and (max-width: 1024px) */ {
+@media (max-width: 600px) {
   :root {
-    --navbar-height: 80px;
+    --navbar-height: 60px;
+  }
+  .content {
+    padding: var(--c--globals--spacings--xs);
   }
 }
+.c__app { overflow: visible !important; overflow-x: visible !important; }
 
-@media (max-width: 535px) /*and (max-width: 1024px) */ {
-  :root {
-    --navbar-height: 125px;
-  }
+/* Video.js Poster Fix */
+.video-js .vjs-poster img {
+  object-fit: cover !important;
+  object-position: left center !important;
 }
 
-@media (max-width: 295px) /*and (max-width: 1024px) */ {
-  :root {
-    --navbar-height: 160px;
-  }
+/* Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--background-brand, #000);
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 100000;
+  transition: top 0.2s;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Skeleton Loader */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.skeleton-block {
+  background-color: #e0e0e0;
+  animation: pulse 1.5s infinite;
+}
+
+html[data-theme="dark"] .skeleton-block {
+  background-color: #1e293b !important;
+}
+
+/* ========================================================================== */
+/* ACCESSIBLE HIGH-CONTRAST DARK MODE OVERRIDES (WCAG AA/AAA COMPLIANT)      */
+/* ========================================================================== */
+
+html[data-theme="dark"],
+body.dark-mode {
+  --background: #0f172a !important;
+  --text-color: #f8fafc !important;
+  --text-color-brand: #93c5fd !important;
+  --c--contextuals--content--semantic--neutral--primary: #f8fafc !important;
+  --c--contextuals--background--semantic--brand--primary: #2563eb !important;
+  --c--contextuals--background--semantic--brand--secondary: #1e293b !important;
+
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] body {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6 {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] span:not([class*="badge"]),
+html[data-theme="dark"] label,
+html[data-theme="dark"] dt,
+html[data-theme="dark"] dd {
+  color: #e2e8f0;
+}
+
+html[data-theme="dark"] a {
+  color: #60a5fa;
+}
+
+/* Cards & Containers in Dark Mode */
+html[data-theme="dark"] .MuiPaper-root,
+html[data-theme="dark"] .MuiCard-root {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+/* Flat layout for Settings & Preferences: no background boxes, no borders */
+html[data-theme="dark"] div[class*="settings_container"],
+html[data-theme="dark"] div[class*="settings_content"],
+html[data-theme="dark"] .flat-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="dark"] nav[class*="sidebar"] {
+  background-color: #1e293b !important;
+  border-right: 1px solid #334155;
+}
+
+/* Navbar in Dark Mode */
+html[data-theme="dark"] header,
+html[data-theme="dark"] nav[class*="navbar"] {
+  background-color: #0f172a !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+/* Form Inputs, Selects & Buttons in Dark Mode */
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] .c__input,
+html[data-theme="dark"] .c__input__wrapper,
+html[data-theme="dark"] .c__input__field,
+html[data-theme="dark"] .c__field,
+html[data-theme="dark"] .MuiInputBase-root {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .c__input__label,
+html[data-theme="dark"] .c__field__label,
+html[data-theme="dark"] .MuiInputLabel-root {
+  color: #94a3b8 !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] .MuiOutlinedInput-notchedOutline {
+  border-color: #475569 !important;
+}
+
+html[data-theme="dark"] .MuiSvgIcon-root {
+  color: #94a3b8;
+}
+
+/* Secondary & Muted Typography in Dark Mode */
+html[data-theme="dark"] .MuiTypography-colorTextSecondary,
+html[data-theme="dark"] .MuiTypography-root[class*="secondary"],
+html[data-theme="dark"] span[class*="cardMeta"],
+html[data-theme="dark"] div[class*="cardBody"] span {
+  color: #94a3b8 !important;
+}
+
+/* ========================================================================== */
+/* UNIVERSAL DARK MODE OVERRIDES FOR MODALS, DIALOGS, UPLOADERS & ACCORDIONS   */
+/* ========================================================================== */
+
+html[data-theme="dark"] .MuiPaper-root,
+html[data-theme="dark"] .MuiDialog-paper,
+html[data-theme="dark"] .MuiDialogTitle-root,
+html[data-theme="dark"] .MuiDialogContent-root,
+html[data-theme="dark"] .MuiDialogActions-root {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .MuiDialogContent-dividers {
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .MuiTypography-root,
+html[data-theme="dark"] .MuiFormLabel-root,
+html[data-theme="dark"] .MuiFormControlLabel-label,
+html[data-theme="dark"] .c__checkbox__label,
+html[data-theme="dark"] label {
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .MuiFormHelperText-root {
+  color: #94a3b8 !important;
+}
+
+/* File Uploaders & Drag-and-Drop Zones in Dark Mode */
+html[data-theme="dark"] .c__file_uploader,
+html[data-theme="dark"] div[class*="vignette_upload"],
+html[data-theme="dark"] div[class*="vignette_empty_zone"],
+html[data-theme="dark"] div[class*="dropzone"] {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+  border-color: #3b82f6 !important;
+  color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .c__file_uploader__label,
+html[data-theme="dark"] div[class*="vignette_empty_title"],
+html[data-theme="dark"] div[class*="vignette_empty_hint"] {
+  color: #60a5fa !important;
+}
+
+/* Container boxes inside edit form & modals in Dark Mode */
+html[data-theme="dark"] div[style*="background: white"],
+html[data-theme="dark"] div[style*="background: #f9fafb"],
+html[data-theme="dark"] div[style*="background: rgb(249, 250, 251)"],
+html[data-theme="dark"] div[style*="background: #fdfdfd"],
+html[data-theme="dark"] div[style*="background: var(--c--globals--colors--gray-050)"],
+html[data-theme="dark"] div[class*="restreint_fields"],
+html[data-theme="dark"] div[class*="element_card"] {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+/* ========================================================================== */
+/* MODERN DATAGRID / TABLE COMPONENT STYLING                                 */
+/* ========================================================================== */
+
+.c__datagrid,
+div[class*="dataGrid"] {
+  border-radius: 12px !important;
+  border: none !important;
+  overflow: hidden !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.c__datagrid table,
+div[class*="dataGrid"] table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+}
+
+.c__datagrid thead,
+.c__datagrid__header,
+div[class*="dataGrid"] thead {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.c__datagrid thead tr,
+.c__datagrid__header_row,
+div[class*="dataGrid"] thead tr {
+  border-bottom: 2px solid var(--c--globals--colors--gray-300, #cbd5e1) !important;
+}
+
+html[data-theme="dark"] .c__datagrid thead tr,
+html[data-theme="dark"] .c__datagrid__header_row,
+html[data-theme="dark"] div[class*="dataGrid"] thead tr {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.c__datagrid th,
+.c__datagrid__header_cell,
+div[class*="dataGrid"] th {
+  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.06em !important;
+  color: #475569 !important;
+  padding: 14px 16px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border-bottom: 2px solid var(--c--globals--colors--gray-300, #cbd5e1) !important;
+}
+
+html[data-theme="dark"] .c__datagrid th,
+html[data-theme="dark"] .c__datagrid__header_cell,
+html[data-theme="dark"] div[class*="dataGrid"] th {
+  color: #94a3b8 !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.c__datagrid tr,
+.c__datagrid__row,
+div[class*="dataGrid"] tr,
+div[class*="dataGrid"] tbody tr {
+  background: transparent !important;
+  background-color: transparent !important;
+  transition: background-color 0.2s ease !important;
+  border-bottom: 1px solid var(--c--globals--colors--gray-200, #e2e8f0) !important;
+}
+
+html[data-theme="dark"] .c__datagrid tr,
+html[data-theme="dark"] .c__datagrid__row,
+html[data-theme="dark"] div[class*="dataGrid"] tr,
+html[data-theme="dark"] div[class*="dataGrid"] tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.c__datagrid td,
+.c__datagrid__cell,
+div[class*="dataGrid"] td {
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 12px 16px !important;
+  vertical-align: middle !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="dark"] .c__datagrid td,
+html[data-theme="dark"] .c__datagrid__cell,
+html[data-theme="dark"] div[class*="dataGrid"] td {
+  color: #f8fafc !important;
+}
+
+.c__datagrid tbody tr:hover,
+.c__datagrid__row:hover,
+div[class*="dataGrid"] tbody tr:hover,
+div[class*="dataGrid"] tbody tr:hover td {
+  background-color: rgba(59, 130, 246, 0.08) !important;
 }

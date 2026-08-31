@@ -1,0 +1,40 @@
+.backButton {
+  min-height: 38px;
+  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
+  border-radius: 9999px;
+  background-color: var(--c--theme--colors--card-bg, #ffffff);
+  padding: 6px 16px;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: var(--c--globals--spacings--md);
+}
+
+.backButton:hover {
+  border-color: var(--c--globals--colors--brand--main);
+  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 4%, transparent);
+  color: var(--c--globals--colors--brand--main);
+}
+
+.backButton span.material-icons {
+  font-size: 1.1rem;
+}
+
+html[data-theme="dark"] .backButton {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .backButton:hover {
+  background-color: #334155 !important;
+  color: #60a5fa !important;
+  border-color: #60a5fa !important;
+}

@@ -30,6 +30,7 @@ export function useCollectionListFilters({
 
   const {
     channels,
+    channelsCount,
     fetchAll: fetchChannels,
     useChannelError,
     useChannelLoading,
@@ -37,6 +38,7 @@ export function useCollectionListFilters({
 
   const {
     playlists,
+    playlistsCount,
     fetchAll: fetchPlaylists,
     usePlaylistError,
     usePlaylistLoading,
@@ -44,6 +46,7 @@ export function useCollectionListFilters({
 
   const {
     themes,
+    themesCount,
     fetchAll: fetchThemes,
     useThemeError,
     useThemeLoading,
@@ -61,6 +64,7 @@ export function useCollectionListFilters({
       createdAtGte: filters.createdAtGte || undefined,
       createdAtLte: filters.createdAtLte || undefined,
       channel: filters.channel ?? undefined,
+      page: filters.page || 1,
     }),
     [
       filters.ordering,
@@ -69,6 +73,7 @@ export function useCollectionListFilters({
       filters.createdAtGte,
       filters.createdAtLte,
       filters.channel,
+      filters.page,
     ],
   );
 
@@ -90,9 +95,6 @@ export function useCollectionListFilters({
 
     if (mode === "themes") {
       fetchChannels();
-    }
-    if (mode === "channels") {
-      fetchThemes();
     }
 
     fetchedMetadataRef.current = true;
@@ -131,10 +133,23 @@ export function useCollectionListFilters({
     setFilters,
     users,
     channels,
+    channelsCount,
     playlists,
+    playlistsCount,
     themes,
+    themesCount,
 
-    error: useChannelError ?? usePlaylistError ?? useThemeError,
-    loading: useChannelLoading || usePlaylistLoading || useThemeLoading,
+    error:
+      mode === "channels"
+        ? useChannelError
+        : mode === "playlists"
+          ? usePlaylistError
+          : useThemeError,
+    loading:
+      mode === "channels"
+        ? useChannelLoading
+        : mode === "playlists"
+          ? usePlaylistLoading
+          : useThemeLoading,
   };
 }

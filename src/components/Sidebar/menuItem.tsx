@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useSidebar } from "../../context/SidebarProvider";
 import styles from "./styles.module.css";
 import type { MenuItemProps } from "@/src/types";
@@ -10,18 +11,29 @@ import {
   Collapse,
   Divider,
   ListItemButton,
+  Tooltip,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import IconExpandLess from "@mui/icons-material/ExpandLess";
 import IconExpandMore from "@mui/icons-material/ExpandMore";
 
 const MenuItem = (props: MenuItemProps) => {
+  const pathname = usePathname();
   const { sidebarOpen, handleFixSidebar } = useSidebar();
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
-  const [open, setOpen] = useState(false);
+
+  const isChildActive = isExpandable && items.some(item =>
+    Boolean(item.link) && (pathname === item.link || (Boolean(item.link) && item.link !== "/" && Boolean(pathname?.startsWith(item.link!))))
+  );
+
+  const [open, setOpen] = useState(isChildActive);
   const isNavigable = !isExpandable && Boolean(link);
   const isMobile = useMediaQuery("(max-width: 1024px)");
+
+  const isSelfActive = isNavigable && Boolean(link) && (
+    pathname === link || (Boolean(link) && link !== "/" && Boolean(pathname?.startsWith(link!)))
+  );
 
   function handleClick() {
     if (isExpandable && sidebarOpen) {
@@ -35,8 +47,14 @@ const MenuItem = (props: MenuItemProps) => {
   }
 
   useEffect(() => {
-    !sidebarOpen && setOpen(false);
-  }, [sidebarOpen]);
+    if (!sidebarOpen) {
+      setOpen(false);
+    } else if (isChildActive) {
+      setOpen(true);
+    }
+  }, [sidebarOpen, isChildActive]);
+
+  const isChildItem = !Icon;
 
   const MenuItemRoot = (
     <ListItemButton
@@ -45,57 +63,82 @@ const MenuItem = (props: MenuItemProps) => {
       onClick={handleClick}
       component={isNavigable ? Link : "div"}
       href={isNavigable ? link : undefined}
-      selected={isExpandable && open ? true : false}
+      selected={isSelfActive || (isExpandable && open)}
       sx={{
+        position: "relative",
+        transition: "all 0.2s ease",
+        borderRadius: "8px",
+        margin: sidebarOpen ? "2px 8px" : "4px auto",
+        width: sidebarOpen ? "auto" : "44px",
+        height: sidebarOpen ? "auto" : "44px",
+        padding: sidebarOpen ? "6px 12px !important" : "8px 0 !important",
+        justifyContent: sidebarOpen ? "flex-start" : "center",
+        backgroundColor: isSelfActive
+          ? "rgba(59, 130, 246, 0.15) !important"
+          : "transparent",
         "&.Mui-selected": {
-          backgroundColor:
-            "rgb(from var(--c--contextuals--background--semantic--brand--primary)  r g b / 30%)",
+          backgroundColor: isSelfActive
+            ? "rgba(59, 130, 246, 0.15) !important"
+            : "rgba(59, 130, 246, 0.08)",
+        },
+        "&:hover": {
+          backgroundColor: isSelfActive
+            ? "rgba(59, 130, 246, 0.22) !important"
+            : "rgba(0, 0, 0, 0.04)",
         },
       }}
     >
       {/* Display an icon if any */}
       {!!Icon && (
-        <ListItemIcon sx={{ paddingLeft: "6px" }}>
+        <ListItemIcon
+          sx={{
+            minWidth: sidebarOpen ? "36px" : "0",
+            paddingLeft: sidebarOpen ? "2px" : "0",
+            justifyContent: "center",
+          }}
+        >
           <Icon
             sx={{
-              color:
-                "var(--c--contextuals--content--semantic--neutral--secondary)",
+              color: isSelfActive
+                ? "#3b82f6 !important"
+                : "var(--c--contextuals--content--semantic--neutral--secondary)",
             }}
           />
         </ListItemIcon>
       )}
       <ListItemText
         sx={{
+          display: sidebarOpen ? "block" : "none",
           ".MuiTypography-root": {
-            fontSize: "0.825rem",
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            fontSize: isChildItem ? "0.8rem" : "0.85rem",
+            fontWeight: isSelfActive ? 600 : 500,
+            color: isSelfActive
+              ? "#3b82f6 !important"
+              : "var(--c--contextuals--content--semantic--neutral--primary)",
           },
         }}
         primary={name}
         inset={!Icon}
       />
       {/* Display the expand menu if the item has children */}
-      {isExpandable && !open && (
+      {isExpandable && sidebarOpen && !open && (
         <IconExpandMore
           style={{
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
-      {isExpandable && open && (
+      {isExpandable && sidebarOpen && open && (
         <IconExpandLess
           style={{
-            color:
-              "var(  --c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
     </ListItemButton>
   );
 
-  const MenuItemChildren = isExpandable ? (
+  const MenuItemChildren = isExpandable && sidebarOpen ? (
     <Collapse in={open} timeout="auto" unmountOnExit>
       <Divider />
       <List component="div" disablePadding>
@@ -108,7 +151,9 @@ const MenuItem = (props: MenuItemProps) => {
 
   return (
     <>
-      {MenuItemRoot}
+      <Tooltip title={!sidebarOpen ? name : ""} placement="right" arrow disableHoverListener={sidebarOpen}>
+        <div>{MenuItemRoot}</div>
+      </Tooltip>
       {MenuItemChildren}
     </>
   );

@@ -63,7 +63,7 @@ export default function Theme() {
     channels,
     useVideoError,
     useVideoLoading,
-  } = useVideoListFilters({ mode: "all" });
+  } = useVideoListFilters({ mode: "all", enabled: false });
 
   // Filtres collections (thèmes)
   const {
@@ -73,6 +73,7 @@ export default function Theme() {
     channels: collectionChannels,
   } = useCollectionListFilters({
     mode: "themes",
+    enabled: false,
   });
 
   const themeItems = theme?.items ?? [];
@@ -85,9 +86,35 @@ export default function Theme() {
       return [];
     }
 
-    const themeVideoIds = new Set(themeItemVideos.map((video) => video.id));
-    return videos.filter((video) => themeVideoIds.has(video.id));
-  }, [themeItemVideos, videos]);
+    let result = themeItemVideos;
+    const search = videoFilters.search?.trim().toLowerCase();
+    if (search) {
+      result = result.filter((video) =>
+        video.title.toLowerCase().includes(search),
+      );
+    }
+    
+    // Sort
+    const ordering = videoFilters.ordering;
+    if (ordering) {
+      result = [...result].sort((a, b) => {
+        switch (ordering) {
+          case "-created_at":
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          case "created_at":
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          case "-title":
+            return b.title.localeCompare(a.title);
+          case "title":
+            return a.title.localeCompare(b.title);
+          default:
+            return 0;
+        }
+      });
+    }
+
+    return result;
+  }, [themeItemVideos, videoFilters.search, videoFilters.ordering]);
 
   const visibleAndPublicThemeVideos = useMemo(
     () =>
@@ -95,7 +122,7 @@ export default function Theme() {
         (video) =>
           (!video.is_auth_required || !!user) &&
           video.status !== "DR" &&
-          video.encoding_status === "DO",
+          (video.encoding_status === "DO" || !!video.has_video_file),
       ),
     [filteredThemeVideos, user],
   );
@@ -302,19 +329,36 @@ export default function Theme() {
                     tags={tags}
                     channels={channels}
                     showUserFilter={!!user}
-                    onChange={setVideoFilters}
+                    onChange={(newFilters) => {
+                      if (
+                        newFilters.search !== videoFilters.search ||
+                        newFilters.channel !== videoFilters.channel ||
+                        newFilters.ordering !== videoFilters.ordering ||
+                        newFilters.ownerUsernames !== videoFilters.ownerUsernames ||
+                        newFilters.typeSlugs !== videoFilters.typeSlugs ||
+                        newFilters.disciplineIds !== videoFilters.disciplineIds ||
+                        newFilters.cursus !== videoFilters.cursus ||
+                        newFilters.tagSlugs !== videoFilters.tagSlugs
+                      ) {
+                        newFilters.page = 1;
+                      }
+                      setVideoFilters(newFilters);
+                    }}
                   />
 
-                  {useVideoLoading ? (
-                    <CenteredLoader />
-                  ) : visibleAndPublicThemeVideos.length === 0 ? (
+                  {visibleAndPublicThemeVideos.length === 0 && !useVideoLoading ? (
                     <Alert type={VariantType.INFO}>
                       {hasActiveVideoFilters
                         ? "Aucune vidéo ne correspond à vos filtres."
                         : "Aucune vidéo liée à ce thème."}
                     </Alert>
                   ) : (
-                    <VideosDisplay videos={visibleAndPublicThemeVideos} />
+                    <VideosDisplay
+                      videos={visibleAndPublicThemeVideos}
+                      page={videoFilters.page}
+                      onPageChange={(page) => setVideoFilters({ ...videoFilters, page })}
+                      loading={useVideoLoading}
+                    />
                   )}
                 </div>
               )}
@@ -338,7 +382,19 @@ export default function Theme() {
                         : collectionChannels
                     }
                     showUserFilter={!!user}
-                    onChange={setCollectionFilters}
+                    onChange={(newFilters) => {
+                      if (
+                        newFilters.search !== collectionFilters.search ||
+                        newFilters.ordering !== collectionFilters.ordering ||
+                        newFilters.channel !== collectionFilters.channel ||
+                        newFilters.ownerUsernames !== collectionFilters.ownerUsernames ||
+                        newFilters.createdAtGte !== collectionFilters.createdAtGte ||
+                        newFilters.createdAtLte !== collectionFilters.createdAtLte
+                      ) {
+                        newFilters.page = 1;
+                      }
+                      setCollectionFilters(newFilters);
+                    }}
                   />
 
                   {baseChildThemes.length === 0 ? (
@@ -356,11 +412,14 @@ export default function Theme() {
                       defaultView="cards"
                       storageKey="theme-subtheme-view"
                       channelSlug={channelSlug}
+                      page={collectionFilters.page}
+                      onPageChange={(page) => setCollectionFilters({ ...collectionFilters, page })}
                       basePath={
                         Array.isArray(params.themeSlug)
                           ? params.themeSlug.join("/")
                           : params.themeSlug
                       }
+                      loading={false} // theme is loaded at page level
                     />
                   )}
                 </div>

@@ -30,91 +30,57 @@ export default function PlaylistCard({
   const playlistThumbnail =
     playlist.items?.[0]?.video?.thumbnail_url ?? "/default_playlist_logo.png";
   return (
-    <Box
+    <Card
+      elevation={0}
       sx={{
-        minWidth: 345,
+        width: "100%",
         position: "relative",
-
-        "& .playlist-stack": {
-          transition: "transform .3s ease",
-        },
-
-        "& .playlist-menu": {
-          transition: "transform .3s ease",
-        },
-
-        "&:hover .playlist-stack": {
-          transform: "translateY(-5px)",
-        },
-
-        "&:hover .playlist-menu": {
-          transform: "translateY(-5px)",
-        },
+        mb: 4,
+        backgroundColor: "var(--c--globals--colors--gray-000)",
+        border: "1px solid var(--c--globals--colors--gray-200)",
+        borderRadius: "12px",
+        transition: "all 0.3s ease",
+        "&:hover": {
+          borderColor: "var(--c--contextuals--background--semantic--brand--primary)",
+          boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+          transform: "translateY(-2px)",
+        }
       }}
     >
-      {isOwner && (
-        <CardActions
-          className="playlist-menu"
-          sx={{
-            position: "absolute",
-            top: 25,
-            left: 8,
-            zIndex: 10,
-            p: 0,
-          }}
-        >
-          <PlaylistActionMenu slug={playlist.slug} />
-        </CardActions>
-      )}
       <CardActionArea
         component={Link}
         href={playlistHref}
-        disableRipple
-        disableTouchRipple
         sx={{
           "& .MuiCardActionArea-focusHighlight": {
             opacity: 0,
           },
-
           "&:hover .MuiCardActionArea-focusHighlight": {
             opacity: 0,
           },
-
           "&.Mui-focusVisible": {
             backgroundColor: "transparent",
           },
           textDecoration: "none",
-
-          "& .playlist-stack": {
-            transition: "transform 0.3s ease",
-          },
-
-          "&:hover .playlist-stack": {
-            transform: "translateY(-5px)",
+          "&:hover": {
+            backgroundColor: "transparent",
           },
 
           "& .playlist-back-1": {
             transform: "translate(12px, 10px)",
             transition: "transform 0.3s ease",
           },
-
           "& .playlist-back-2": {
             transform: "translate(6px, 5px)",
             transition: "transform 0.3s ease",
           },
-
-          "& .playlist-image": {
-            transition: "transform 0.3s ease",
-          },
-
           "&:hover .playlist-back-1": {
             transform: "translate(15px, 13px)",
           },
-
           "&:hover .playlist-back-2": {
             transform: "translate(8px, 7px)",
           },
         }}
+        disableRipple
       >
         <Box
           className="playlist-stack"
@@ -131,8 +97,8 @@ export default function PlaylistCard({
               top: 0,
               left: 22,
               right: 22,
-              height: 118,
-              borderRadius: 3,
+              aspectRatio: "16/9",
+              borderRadius: "12px",
               bgcolor: "grey.200",
               opacity: 0.25,
             }}
@@ -146,8 +112,8 @@ export default function PlaylistCard({
               top: 0,
               left: 12,
               right: 12,
-              height: 126,
-              borderRadius: 3,
+              aspectRatio: "16/9",
+              borderRadius: "12px",
               bgcolor: "grey.400",
               opacity: 0.35,
             }}
@@ -156,29 +122,30 @@ export default function PlaylistCard({
           {/* Thumbnail */}
           <Card
             className="playlist-front"
-            elevation={4}
+            elevation={0}
             sx={{
               position: "relative",
-              borderRadius: 3,
+              borderRadius: "12px",
               overflow: "hidden",
+              backgroundColor: "transparent",
             }}
           >
             <CardMedia
               component="img"
               image={playlistThumbnail}
               alt={playlist.title}
-              height="140"
               className="playlist-image"
               sx={{
-                height: 140,
+                borderTopLeftRadius: "11px",
+                borderTopRightRadius: "11px",
+                aspectRatio: "16/9",
                 objectFit: "cover",
-                filter: "brightness(.95)",
               }}
             />
           </Card>
         </Box>
 
-        <CardContent>
+        <CardContent sx={{ padding: "16px", paddingBottom: "16px !important" }}>
           <Box
             sx={{
               display: "flex",
@@ -217,6 +184,18 @@ export default function PlaylistCard({
                   <span className="material-icons">visibility_off</span>
                 </Tooltip>
               )}
+              {isOwner && (
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  style={{ marginLeft: "4px" }}
+                >
+                  <PlaylistActionMenu slug={playlist.slug} />
+                </div>
+              )}
             </Box>
           </Box>
           <div>
@@ -254,6 +233,6 @@ export default function PlaylistCard({
           </div>
         </CardContent>
       </CardActionArea>
-    </Box>
+    </Card>
   );
 }

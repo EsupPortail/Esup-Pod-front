@@ -1,8 +1,8 @@
-.wrapper {
-  flex-direction: column;
-  gap: 1rem;
-  margin: 1rem 0 1.5rem;
-  padding: 1rem;
+.filtersContent {
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  margin-bottom: 1.5rem;
 }
 
 .filtersContentHeader {
@@ -38,9 +38,6 @@
   flex-wrap: wrap;
   gap: 0.6rem;
   align-items: flex-start;
-}
-
-.row {
   --filters-field-width: 150px;
 }
 
@@ -50,27 +47,82 @@
 }
 
 .filterButton {
-  min-height: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.23);
-  border-radius: 4px;
-  background-color: #fff;
+  min-height: 38px;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 9999px !important;
+  background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
+  color: var(--text-color, #0f172a) !important;
+  padding: 6px 16px !important;
+  transition: all 0.2s ease-in-out !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
 }
 
 .filterButton:hover {
-  border-color: rgba(0, 0, 0, 0.87);
+  border-color: #2563eb !important;
+  background-color: rgba(37, 99, 235, 0.04) !important;
+}
+
+.filterButton.active {
+  border: 1.5px solid #2563eb !important;
+  background-color: #eff6ff !important;
+  color: #1d4ed8 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+html[data-theme="dark"] .filterButton {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterButton:hover {
+  background-color: #334155 !important;
+  border-color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .filterButton.active {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+  border: 1.5px solid #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
 }
 
 .filterMenu {
   padding: 0.75rem;
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
 }
 
 .filterOptions {
-  max-height: 260px;
+  max-height: 280px;
   overflow-y: auto;
+  overflow-x: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 2px;
 }
 
 .filterOption {
-  margin-right: 0;
+  margin: 0 !important;
+  width: 100% !important;
+  padding: 8px 12px !important;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.filterOption:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
 .row .field {
@@ -107,48 +159,82 @@
 }
 
 @media (max-width: 600px) {
-  .searchField {
-    width: 100%;
-    min-width: 0;
-  }
-
   .row {
-    gap: 1rem;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: touch !important;
   }
-  .filtersContentHeader {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
-    padding-top: var(--c--globals--spacings--md);
-  }
-
-  .filtersButtonRow {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
+  
+  .row::-webkit-scrollbar {
+    display: none;
   }
 
-  .searchRow,
-  .row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+  .filterItem {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
   }
 
-  .filterItem,
-  .row .field,
-  .row :global(.MuiAutocomplete-root),
-  .row :global(.MuiTextField-root) {
-    width: 100%;
-    min-width: 0;
-  }
   .filterButton {
-    width: 100%;
+    width: auto !important;
   }
+}
 
-  .searchRow .filterItem:first-child .filterButton {
-    border: 1px solid rgba(0, 0, 0, 0.23);
-    border-radius: 4px;
-    background-color: #fff;
-  }
+/* ========================================================================== */
+/* DARK MODE OVERRIDES FOR FILTERS                                            */
+/* ========================================================================== */
+
+html[data-theme="dark"] .filterButton {
+  background-color: #1e293b !important;
+  color: #94a3b8 !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterButton:hover {
+  background-color: #334155 !important;
+  border-color: #60a5fa !important;
+  color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .filterButton.active {
+  background-color: rgba(59, 130, 246, 0.25) !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
+}
+
+html[data-theme="dark"] .filterButton.active p,
+html[data-theme="dark"] .filterButton.active svg,
+html[data-theme="dark"] .filterButton.active span {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .filterMenu {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .filterOption:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.clearFiltersBtn {
+  color: #2563eb !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  transition: color 0.2s ease !important;
+}
+
+:global(html[data-theme="dark"]) .clearFiltersBtn {
+  color: #60a5fa !important;
+}
+
+.clearFiltersBtn:hover {
+  color: #ef4444 !important;
+  text-decoration: underline !important;
 }

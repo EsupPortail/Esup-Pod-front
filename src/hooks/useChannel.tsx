@@ -7,71 +7,76 @@ import {
   applyCollectionSearchParams,
   type CollectionListParams,
 } from "@/src/hooks/collectionListParams";
+import { useQuery } from "@tanstack/react-query";
 
 export function useChannel() {
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [useChannelLoading, setUseChannelLoading] = useState(false);
-  const [useChannelError, setUseChannelError] = useState<string | null>(null);
+  const [listParams, setListParams] = useState<CollectionListParams | undefined>(undefined);
+  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
 
-  const normalizeChannelList = (
-    data: Channel[] | { results?: Channel[] },
-  ): Channel[] => {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data.results)) return data.results;
-    return [];
-  };
-
-  const fetchAll = useCallback(async (params?: CollectionListParams) => {
-    setUseChannelLoading(true);
-    setUseChannelError(null);
-
-    try {
+  const listQuery = useQuery({
+    queryKey: ["channels", "list", listParams],
+    queryFn: async () => {
       const url = new URL(getRoutes().channel.list);
-      applyCollectionSearchParams(url, params);
+      applyCollectionSearchParams(url, listParams);
 
       const res = await authFetch(url.toString());
-      const data = await requestJson<Channel[] | { results?: Channel[] }>(res);
-      const normalizedChannels = normalizeChannelList(data);
+      if (!res.ok) throw new Error("Erreur de récupération des chaines.");
+      const data = await requestJson<Channel[] | { results?: Channel[]; count?: number }>(res);
+      
+      const normalizedChannels = Array.isArray(data)
+        ? data
+        : Array.isArray(data.results)
+          ? data.results
+          : [];
+      const count = !Array.isArray(data) && typeof data.count === "number"
+        ? data.count
+        : normalizedChannels.length;
 
-      setChannels(normalizedChannels);
-      return normalizedChannels;
-    } catch (e: unknown) {
-      setUseChannelError(
-        e instanceof Error ? e.message : "Erreur de récupération des chaines.",
-      );
-      return [];
-    } finally {
-      setUseChannelLoading(false);
-    }
-  }, []);
+      return { channels: normalizedChannels, count };
+    },
+    staleTime: 30000,
+    enabled: listParams !== undefined,
+  });
+
+  const detailQuery = useQuery({
+    queryKey: ["channels", "detail", currentSlug],
+    queryFn: async () => {
+      if (!currentSlug) return null;
+      const res = await authFetch(getRoutes().channel.get(currentSlug));
+      if (!res.ok) throw new Error("Erreur de récupération de la chaine.");
+      return requestJson<Channel>(res);
+    },
+    enabled: !!currentSlug,
+    staleTime: 30000,
+  });
+
+  const fetchAll = useCallback(async (params?: CollectionListParams) => {
+    setListParams(params);
+    return listQuery.data?.channels ?? [];
+  }, [listQuery.data]);
 
   const fetchOne = useCallback(async (slug: string) => {
-    setUseChannelLoading(true);
-    setUseChannelError(null);
-
+    setCurrentSlug(slug);
     try {
       const res = await authFetch(getRoutes().channel.get(slug));
       const data = await requestJson<Channel>(res);
-
-      setChannel(data);
       return data;
-    } catch (e: unknown) {
-      setUseChannelError(
-        e instanceof Error ? e.message : "Erreur de récupération de la chaine.",
-      );
+    } catch {
       return null;
-    } finally {
-      setUseChannelLoading(false);
     }
   }, []);
 
   return {
-    channels,
-    channel,
+    channels: listQuery.data?.channels ?? [],
+    channelsCount: listQuery.data?.count ?? 0,
+    channel: detailQuery.data ?? null,
     fetchAll,
     fetchOne,
-    useChannelLoading,
-    useChannelError,
+    useChannelLoading:
+      (listParams !== undefined && listQuery.isLoading) ||
+      (!!currentSlug && detailQuery.isLoading),
+    useChannelError:
+      (listParams !== undefined ? (listQuery.error?.message ?? null) : null) ||
+      (currentSlug ? (detailQuery.error?.message ?? null) : null),
   };
 }

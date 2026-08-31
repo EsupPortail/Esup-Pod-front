@@ -105,13 +105,16 @@ export function useComments(videoSlug: string) {
         }),
       ]);
 
-      const [commentsData, votesData] = await Promise.all([
-        requestJson<Comment[]>(commentsRes),
-        requestJson<Array<string | number>>(votesRes),
+      const [commentsDataRaw, votesDataRaw] = await Promise.all([
+        requestJson<any>(commentsRes),
+        requestJson<any>(votesRes),
       ]);
 
+      const commentsData = Array.isArray(commentsDataRaw) ? commentsDataRaw : commentsDataRaw?.results || [];
+      const votesData = Array.isArray(votesDataRaw) ? votesDataRaw : votesDataRaw?.results || [];
+
       setComments(normalizeComments(commentsData));
-      setVotedCommentIds(votesData.map((id) => String(id)));
+      setVotedCommentIds(votesData.map((id: any) => String(id)));
 
       return true;
     } catch (e: unknown) {

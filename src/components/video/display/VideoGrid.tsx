@@ -4,16 +4,20 @@ import { useMemo, useState } from "react";
 import { DataGrid } from "@openfun/cunningham-react";
 import type { SortModel } from "@openfun/cunningham-react";
 import type { VideoDisplayRow } from "./types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import { getVideoGridColumns } from "./VideoGridColumns";
 import styles from "./styles.module.css";
 
 interface VideoGridProps {
   rows: VideoDisplayRow[];
+  selectable?: boolean;
+  onSelectAll?: (checked: boolean) => void;
 }
 /* Renderer tableau.
 Passe les rows à DataGrid avec les colonnes et tri des données
 */
-export default function VideoGrid({ rows }: VideoGridProps) {
+export default function VideoGrid({ rows, selectable = false, onSelectAll }: VideoGridProps) {
+  const { t } = useTranslation();
   const [sortModel, setSortModel] = useState<SortModel>([]);
 
   const sortedRows = useMemo(() => {
@@ -57,11 +61,18 @@ export default function VideoGrid({ rows }: VideoGridProps) {
     });
   }, [rows, sortModel]);
 
+  const isAllSelected = useMemo(() => {
+    if (rows.length === 0) return false;
+    return rows.every((r) => r.selected);
+  }, [rows]);
+
+  const columns = useMemo(() => getVideoGridColumns(selectable, t, onSelectAll, isAllSelected), [selectable, t, onSelectAll, isAllSelected]);
+
   return (
     <DataGrid
       className={styles.dataGrid}
       rows={sortedRows}
-      columns={getVideoGridColumns()}
+      columns={columns}
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting

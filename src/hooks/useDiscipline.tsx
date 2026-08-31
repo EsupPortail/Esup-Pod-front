@@ -1,9 +1,8 @@
 import { useState, useCallback } from "react";
 import type { Discipline } from "@/src/types";
 import { useAuth } from "../context/AuthProvider";
-import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";
-import { requestJson } from "../utils/requestJson";
+import { fetchAllPages } from "../api/fetchAllPages";
 
 export function useDiscipline() {
   const { accessToken, refresh } = useAuth();
@@ -17,18 +16,13 @@ export function useDiscipline() {
     setUseDisciplineLoading(true);
     setUseDisciplineError(null);
     try {
-      const res = await authFetch(getRoutes().discipline.list, {
-        accessToken,
-        onRefresh: refresh,
-      });
-      const data = await requestJson<Discipline[] | { results?: Discipline[] }>(
-        res,
+      const normalizedDisciplines = await fetchAllPages<Discipline>(
+        getRoutes().discipline.list,
+        {
+          accessToken,
+          onRefresh: refresh,
+        },
       );
-      const normalizedDisciplines = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.results)
-          ? data.results
-          : [];
       setDiscipline(normalizedDisciplines);
       return normalizedDisciplines;
     } catch (e: unknown) {

@@ -6,6 +6,30 @@ import type {
   VideoStatus,
 } from "@/src/constants/video";
 
+export interface Chapter {
+  id: number;
+  video: number;
+  title: string;
+  time_start: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SocialNetwork {
+  id: number;
+  name: string;
+  icon_name: string;
+  share_url_template: string;
+  is_active: boolean;
+  order: number;
+}
+
+export interface DownloadOption {
+  label: string;
+  resolution: string;
+  url: string;
+}
+
 // Objet Video renvoye par l'API
 export interface Video {
   id: number;
@@ -21,7 +45,7 @@ export interface Video {
   owner_id: number;
   owner_first_name: string;
   owner_last_name: string;
-  channel: number | null;
+  channel: number | string | null;
   themes: number[];
   co_owners: number[] | null;
   status: VideoStatus;
@@ -31,10 +55,12 @@ export interface Video {
   is_auth_required: boolean;
   thumbnail_url: string | null;
   has_password: boolean;
+  has_video_file?: boolean;
   subtitles: Subtitle[] | null;
   allow_downloading: boolean;
   disable_comment: boolean;
   date_of_event: string | null;
+  publication_date?: string | null;
   license: VideoLicense;
   cursus: CursusCode | null;
   language: string | null;
@@ -46,6 +72,14 @@ export interface Video {
   discipline_details: Discipline[] | null;
   type_id?: number | null;
   type_name: string | null;
+  views?: number | null;
+  views_count?: number | null;
+  documents?: VideoDocument[] | null;
+  chapters?: Chapter[] | null;
+  dressing?: number | null;
+  social_networks?: number[] | null;
+  social_network_details?: SocialNetwork[] | null;
+  download_options?: DownloadOption[] | null;
 }
 
 // Objet Video pour le formulaire de creation et d'edition
@@ -103,4 +137,37 @@ export interface Type {
   slug: string;
   title: string;
   sites: Array<number> | null;
+}
+
+export interface VideoDocument {
+  id: number;
+  video: number;
+  title: string;
+  file: string;
+  is_private: boolean;
+  created_at: string;
+}
+
+export interface VideoStats {
+  video_slug: string;
+  total_views: number;
+  views_last_7_days: number;
+  views_last_30_days: number;
+  peak_day: string | null;
+  peak_count: number | null;
+  daily_breakdown: Array<{
+    date: string;
+    count: number;
+  }>;
+}
+
+export interface VideoAccessToken {
+  id: string;
+  video: number;
+  name: string;
+  description: string | null;
+  valid_until: string | null;
+  is_active: boolean;
+  created_at: string;
+  url: string;
 }

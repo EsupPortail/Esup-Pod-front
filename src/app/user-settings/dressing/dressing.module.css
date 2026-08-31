@@ -1,0 +1,72 @@
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--c--theme--colors--border);
+}
+
+.headerRow h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--c--theme--colors--primary-text);
+}
+
+.watermarkGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.watermarkCard {
+  border: 1px solid var(--c--theme--colors--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--c--theme--colors--card-bg, #ffffff);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.watermarkCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+}
+
+.watermarkPreview {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  background-image: linear-gradient(45deg, #eee 25%, transparent 25%),
+    linear-gradient(-45deg, #eee 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #eee 75%),
+    linear-gradient(-45deg, transparent 75%, #eee 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  background-color: #fff;
+  border-bottom: 1px solid var(--c--theme--colors--border);
+}
+
+.watermarkActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.dateLabel {
+  font-size: 0.85rem;
+  color: var(--c--globals--colors--gray-500);
+}
+
+/* Dark mode compatibility */
+[data-theme="dark"] .watermarkCard {
+  background-color: var(--c--theme--colors--card-bg, #1e1e1e);
+}
+[data-theme="dark"] .watermarkPreview {
+  background-image: linear-gradient(45deg, #333 25%, transparent 25%),
+    linear-gradient(-45deg, #333 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #333 75%),
+    linear-gradient(-45deg, transparent 75%, #333 75%);
+  background-color: #222;
+}

@@ -25,6 +25,18 @@ export const getRoutes = () => {
       delete: (slug: string) => url + `api/videos/${slug}/`,
       stream: (slug: string) => url + `api/videos/${slug}/stream/`,
       unlock: (slug: string) => url + `api/videos/${slug}/unlock/`,
+      registerView: (slug: string) => url + `api/videos/${slug}/register_view/`,
+      stats: (slug: string) => url + `api/videos/${slug}/stats/`,
+      duplicate: (slug: string) => url + `api/videos/${slug}/duplicate/`,
+      bulk: url + "api/videos/bulk/",
+      dublinCore: (slug: string) => url + `api/videos/${slug}/dublin-core/`,
+      tokens: url + "api/video-access-tokens/",
+      hyperlinks: url + "api/video-hyperlinks/",
+      markerTime: url + "api/user-marker-time/",
+      marker: (slug: string) => url + `api/marker/${slug}/`,
+      saveMarker: (slug: string) => url + `api/marker/${slug}/save/`,
+      resetMarker: (slug: string) => url + `api/marker/${slug}/reset/`,
+      videoCuts: url + "api/video-cuts/",
     },
     user: {
       list: url + "api/auth/users/",
@@ -41,6 +53,9 @@ export const getRoutes = () => {
     },
     types: {
       list: url + "api/types/",
+    },
+    channels: {
+      list: url + "api/channels/",
     },
     tags: {
       list: url + "api/tags/",
@@ -91,6 +106,37 @@ export const getRoutes = () => {
       add: url + "api/collections/favorites/",
       get: (id: number | string) => url + `api/collections/favorites/${id}/`,
       delete: (id: number | string) => url + `api/collections/favorites/${id}/`,
+    },
+    documents: {
+      list: (videoId?: number) => videoId ? url + `api/documents/?video=${videoId}` : url + "api/documents/",
+      add: url + "api/documents/",
+      delete: (id: number) => url + `api/documents/${id}/`,
+    },
+    contributions: {
+      list: (videoId?: number) => videoId ? url + `api/contributions/?video=${videoId}` : url + "api/contributions/",
+      add: url + "api/contributions/",
+      delete: (id: number) => url + `api/contributions/${id}/`,
+    },
+    contributors: {
+      search: (query: string) => url + `api/contributors/?search=${encodeURIComponent(query)}`,
+    },
+    chapters: {
+      list: url + "api/chapters/",
+      get: (id: number) => url + `api/chapters/${id}/`,
+    },
+    dressing: {
+      watermarks: url + "api/dressing/watermarks/",
+      watermark: (id: number) => url + `api/dressing/watermarks/${id}/`,
+      dressings: url + "api/dressing/dressing/",
+      dressing: (id: number) => url + `api/dressing/dressing/${id}/`,
+    },
+    layout: {
+      blocks: url + "api/layout/blocks/",
+      get: (frontend_id: string) => url + `api/layout/blocks/${frontend_id}/`,
+    },
+    live: {
+      events: url + "api/live/events/",
+      current: url + "api/live/events/?is_current=true",
     },
 
     administration: url + "admin",

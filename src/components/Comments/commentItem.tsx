@@ -9,6 +9,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import type { Comment } from "@/src/types";
 import { timeAgo } from "@/src/constants/date";
 import { getProfilePictureUrl, setInitial } from "@/src/constants/user";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import styles from "./styles.module.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -52,6 +53,7 @@ export default function CommentItem({
   pendingScrollToId,
   onScrollHandled,
 }: CommentItemProps) {
+  const { t, locale } = useTranslation();
   const { user, isAuthenticated } = useAuth();
   const [isRepliesOpen, setIsRepliesOpen] = useState(false);
   const [isReplyFormOpen, setIsReplyFormOpen] = useState(false);
@@ -68,8 +70,11 @@ export default function CommentItem({
     !!user && (user.is_staff || String(user.id) === String(comment.author));
 
   const initials = useMemo(() => {
-    return getInitialsFromAuthorName(comment.author_name);
-  }, [comment.author_name]);
+    const nameToUse = comment.author_name && comment.author_name.trim() 
+      ? comment.author_name 
+      : comment.author_username;
+    return getInitialsFromAuthorName(nameToUse || "");
+  }, [comment.author_name, comment.author_username]);
 
   const profilePictureUrl = getProfilePictureUrl(comment.author_picture);
 
@@ -138,11 +143,11 @@ export default function CommentItem({
         <div className={styles.body}>
           <div className={styles.meta}>
             <strong>
-              {comment.author_name
+              {comment.author_name && comment.author_name.trim()
                 ? getAuthorDisplayName(comment.author_name)
                 : comment.author_username}
             </strong>
-            <span>{timeAgo(comment.added)}</span>
+            <span>{timeAgo(comment.added, locale)}</span>
           </div>
 
           <p className={styles.content}>{comment.content}</p>
@@ -173,7 +178,7 @@ export default function CommentItem({
                 className={styles.actionButton}
                 onClick={() => setIsReplyFormOpen((prev) => !prev)}
               >
-                Répondre
+                {t("comments.reply")}
               </Button>
             )}
 
@@ -186,19 +191,19 @@ export default function CommentItem({
                 onClick={() => onDelete(comment.id)}
               >
                 <DeleteOutlineIcon fontSize="small" />
-                Supprimer
+                {t("comments.delete")}
               </Button>
             )}
           </div>
 
           {hasVoted && canVote && (
-            <span className={styles.voted}>Vous aimez ce commentaire</span>
+            <span className={styles.voted}>{t("comments.liked")}</span>
           )}
 
           {isReplyFormOpen && (
             <div className={styles.replyForm}>
               <TextArea
-                label="Votre réponse"
+                label={t("comments.yourReply")}
                 rows={3}
                 value={replyContent}
                 onChange={(event) => setReplyContent(event.target.value)}
@@ -212,7 +217,7 @@ export default function CommentItem({
                   onClick={handleReply}
                   disabled={!replyContent.trim() || isSubmittingReply}
                 >
-                  {isSubmittingReply ? "Publication..." : "Répondre"}
+                  {isSubmittingReply ? t("comments.submitting") : t("comments.reply")}
                 </Button>
               </div>
             </div>
@@ -226,8 +231,10 @@ export default function CommentItem({
               onClick={() => setIsRepliesOpen((prev) => !prev)}
             >
               {isRepliesOpen
-                ? "Masquer les réponses"
-                : `${children.length} réponse${children.length > 1 ? "s" : ""}`}
+                ? t("comments.hideReplies")
+                : children.length === 1
+                ? t("comments.showReplies", { count: children.length })
+                : t("comments.showRepliesPlural", { count: children.length })}
               {isRepliesOpen ? (
                 <KeyboardArrowUpIcon />
               ) : (
