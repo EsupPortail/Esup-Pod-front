@@ -10,6 +10,7 @@ import CollectionDisplay from "@/src/components/collection/display/CollectionDis
 import CollectionFilters from "@/src/components/collection/filters/CollectionFilters";
 import { useCollectionListFilters } from "@/src/hooks/useCollectionListFilters";
 import { useAuth } from "@/src/context/AuthProvider";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Mes listes de lecture";
@@ -17,7 +18,8 @@ export const breadcrumbLabel = "Mes listes de lecture";
 export default function MyPlaylistsPage() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { user } = useAuth();
-  const { filters, setFilters, playlists, users, error, loading } =
+  const { t } = useTranslation();
+  const { filters, setFilters, playlists, playlistsCount, users, error, loading } =
     useCollectionListFilters({ mode: "playlists" });
   const isInitialLoading = loading && playlists.length === 0;
 
@@ -50,12 +52,12 @@ export default function MyPlaylistsPage() {
 
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton label={t("common.back")} />
       <div className={styles.title_row}>
-        <h1>Mes listes de lecture</h1>
+        <h1>{t("playlists.myTitle")}</h1>
         <Link href="/playlist/add" className={styles.add_playlist_button}>
           <Button color="brand" variant="primary" size="small">
-            Ajouter une liste de lecture
+            {t("playlists.addPlaylist")}
           </Button>
         </Link>
       </div>
@@ -72,7 +74,16 @@ export default function MyPlaylistsPage() {
           value={filters}
           users={user ? users : []}
           showUserFilter={false}
-          onChange={setFilters}
+          onChange={(newFilters) => {
+          if (
+            newFilters.search !== filters.search ||
+            newFilters.createdAtGte !== filters.createdAtGte ||
+            newFilters.createdAtLte !== filters.createdAtLte
+          ) {
+            newFilters.page = 1;
+          }
+          setFilters(newFilters);
+        }}
         />
 
         {loading && playlists.length > 0 && <CenteredLoader />}
@@ -84,12 +95,15 @@ export default function MyPlaylistsPage() {
             {filters.search.trim().length > 0 ||
             filters.createdAtGte !== "" ||
             filters.createdAtLte !== ""
-              ? "Aucune liste de lecture ne correspond à vos filtres."
-              : "Vous n'avez encore aucune liste de lecture."}
+              ? t("playlists.noMatchingFilters")
+              : t("playlists.noPlaylists")}
           </Alert>
         ) : (
           <CollectionDisplay
             playlists={myPlaylists}
+            collectionsCount={playlistsCount}
+            page={filters.page}
+            onPageChange={(page) => setFilters({ ...filters, page })}
             defaultView="cards"
             storageKey="my-playlist-view"
             basePath="/playlist"

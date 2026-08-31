@@ -1,3 +1,4 @@
+import { getThumbnailUrl } from "@/src/utils/url";
 import { formatTime, secondToMinute, timeAgo } from "@/src/constants/date";
 import type { Video } from "@/src/types";
 import type { VideoDisplayRow } from "./types";
@@ -8,15 +9,18 @@ import type { VideoDisplayRow } from "./types";
 export function mapVideoToDisplayRow(
   video: Video,
   currentUserId?: number,
+  selectedVideoIds?: number[],
+  onSelectVideo?: (videoId: number, checked: boolean) => void,
 ): VideoDisplayRow {
   const isOwner = currentUserId != null && video.owner_id === currentUserId;
+  const selected = selectedVideoIds?.includes(video.id) ?? false;
 
   return {
     id: String(video.id),
     video,
     slug: video.slug,
     title: video.title,
-    thumbnailUrl: video.thumbnail_url || "/default_thumbnail.svg",
+    thumbnailUrl: getThumbnailUrl(video.thumbnail_url),
     durationLabel: formatTime(secondToMinute(video.duration || 0)),
     createdAtLabel: timeAgo(video.created_at),
     createdAtValue: video.created_at,
@@ -31,12 +35,18 @@ export function mapVideoToDisplayRow(
     href: `/video/${video.slug}`,
     editHref: `/video/edit/${video.slug}`,
     deleteHref: `/video/delete/${video.slug}`,
+    selected,
+    onSelectToggle: onSelectVideo ? (checked) => onSelectVideo(video.id, checked) : undefined,
   };
 }
 
 export function mapVideosToDisplayRows(
   videos: Video[],
   currentUserId?: number,
+  selectedVideoIds?: number[],
+  onSelectVideo?: (videoId: number, checked: boolean) => void,
 ): VideoDisplayRow[] {
-  return videos.map((video) => mapVideoToDisplayRow(video, currentUserId));
+  return videos.map((video) =>
+    mapVideoToDisplayRow(video, currentUserId, selectedVideoIds, onSelectVideo)
+  );
 }

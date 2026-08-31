@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: ../../
+      dockerfile: deployment/dev/Dockerfile
+      target: deps
+    container_name: pod-frontend
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+      - /app/.next
+    env_file:
+      - ../../.env
+    environment:
+      NEXT_PUBLIC_BACK_URL: ${NEXT_PUBLIC_BACK_URL:-http://localhost:8000/api/v1/}
+    command: yarn dev
+    restart: unless-stopped

@@ -9,7 +9,7 @@ import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import VideoPlayer from "@/src/components/video/player/VideoPlayer";
 import Comments from "@/src/components/Comments/Comments";
-import { useVideos } from "@/src/hooks/useVideos";
+import { useVideo, useUnlockVideo } from "@/src/hooks/useVideos";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { useAuth } from "@/src/context/AuthProvider";
 import Divider from "@mui/material/Divider";
@@ -18,26 +18,50 @@ import SchoolIcon from "@mui/icons-material/School";
 import MonitorIcon from "@mui/icons-material/Monitor";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import {
-  formatTime,
   formatDateWithTime,
+  formatDateOnly,
+  formatTime,
   timeAgo,
   secondToMinute,
 } from "@/src/constants/date";
+import PlaylistActionMenu from "./playlistActionMenu";
 import { Chip } from "@mui/material";
 import { getCursusLabel } from "@/src/constants/cursus";
 import { useUsers } from "@/src/hooks/useUsers";
-import { getUserDisplayName } from "@/src/constants/user";
+import { getUserDisplayName, getVideoOwnerDisplayName } from "@/src/constants/user";
 import { getLanguageLabel } from "@/src/constants/language";
 import { requestJson } from "@/src/utils/requestJson";
 import type { User, Video } from "@/src/types";
 import DownloadIcon from "@mui/icons-material/Download";
+import ShareIcon from "@mui/icons-material/Share";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+import FlagIcon from "@mui/icons-material/Flag";
+import EditIcon from "@mui/icons-material/Edit";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import styles from "./styles.module.css";
 import BackButton from "@/src/components/BackButton/BackButton";
+import VideoShareMenu from "@/src/components/video/VideoShareMenu";
+import VideoDownloadMenu from "@/src/components/video/VideoDownloadMenu";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
-import PlaylistActionMenu from "./playlistActionMenu";
+
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useFavorites } from "@/src/hooks/useFavorites";
+import { useAppConfig } from "@/src/hooks/useAppConfig";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Video";
 
@@ -56,23 +80,55 @@ const getDownloadFilename = (
   return `${videoSlug}.mp4`;
 };
 
+/** Squelette de chargement — défini au niveau module pour éviter la recréation à chaque rendu */
+function VideoPageSkeleton() {
+  return (
+    <div>
+      <div style={{ width: 100, height: 40, backgroundColor: "#e0e0e0", borderRadius: 4, marginBottom: 20 }} />
+      <div className={styles.main_video_content}>
+        <section style={{ display: "flex", flexDirection: "column", gap: "1.5rem", padding: "10px", minWidth: "70%" }}>
+          <div className="skeleton-block" style={{ width: "100%", aspectRatio: "16 / 9", borderRadius: 8 }} />
+          <div className="skeleton-block" style={{ width: "60%", height: 32, borderRadius: 4 }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div className="skeleton-block" style={{ width: "20%", height: 24, borderRadius: 4 }} />
+            <div className="skeleton-block" style={{ width: "30%", height: 32, borderRadius: 4 }} />
+          </div>
+        </section>
+        <aside className={styles.sidebar}>
+          <div className="skeleton-block" style={{ width: "100%", height: 300, borderRadius: 8 }} />
+        </aside>
+      </div>
+    </div>
+  );
+}
+
 export default function Video() {
   const router = useRouter();
   const params = useParams();
+  const { t, locale } = useTranslation();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const searchParams = useSearchParams();
   const playlistSlug = searchParams.get("playlist");
   const favoritesParam = searchParams.get("favorites");
   const showFavoritesSidebar = favoritesParam === "1";
-
-  const { fetchOne, video, useVideoLoading, useVideoError, unlockVideo } =
-    useVideos();
+  const { config } = useAppConfig();
+  
+  const { data: video, isLoading: useVideoLoading, error } = useVideo(slug ?? "");
+  const useVideoError = error?.message ?? null;
+  const { mutateAsync: unlockVideoMutation } = useUnlockVideo();
+  const unlockVideo = async (videoSlug: string, payload?: { password?: string; hash?: string }) => {
+    await unlockVideoMutation({ slug: videoSlug, payload });
+    return true;
+  };
   const time = secondToMinute(video?.duration || 0);
   const { accessToken, refresh, user } = useAuth();
   const authRequired =
     Boolean(video?.is_auth_required) || useVideoError === "AUTH_REQUIRED";
   const { isAuthenticated } = useRequireAuth("/login", authRequired);
-  const { isOwnerOrCoOwner } = useVideoPermissions(video);
+  const { isOwnerOrCoOwner } = useVideoPermissions(video ?? null);
+  
+  const restrictEditToStaff = config?.video?.restrict_edit_to_staff === true;
+  const canEdit = !restrictEditToStaff || user?.is_staff === true;
 
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -92,6 +148,24 @@ export default function Video() {
   const [unlockError, setUnlockError] = useState<string | null>(null);
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [streamToken, setStreamToken] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+  const [mobileTab, setMobileTab] = useState("description");
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const myPlaylists = useMemo(
     () =>
@@ -141,9 +215,18 @@ export default function Video() {
         return favoriteVideos[currentIndex + 1].slug;
       }
     }
-
     return null;
   }, [playlistSlug, playlist, favoriteVideos, showFavoritesSidebar, video]);
+
+  const resolvedStreamUrl = useMemo(() => {
+    if (!video) return "";
+    if (video.video_url) return video.video_url;
+    const baseStreamUrl = getRoutes().video.stream(video.slug);
+    if (streamToken) {
+      return `${baseStreamUrl}?token=${streamToken}`;
+    }
+    return "";
+  }, [video, streamToken]);
 
   const handleVideoEnded = () => {
     if (!nextVideoSlug) {
@@ -165,10 +248,6 @@ export default function Video() {
   /* ------------------------------------------------------------------
    *  Récuperation de la vidéo et des co owners
    * ------------------------------------------------------------------ */
-  useEffect(() => {
-    if (!slug) return;
-    fetchOne(slug);
-  }, [slug, fetchOne]);
 
   useEffect(() => {
     if (!playlistSlug) return;
@@ -181,6 +260,12 @@ export default function Video() {
     if (video.has_password) return;
     unlockVideo(video.slug);
   }, [video, unlockVideo]);
+
+  useEffect(() => {
+    if (video?.title) {
+      document.title = `${video.title} | Esup POD V5`;
+    }
+  }, [video?.title]);
 
   useEffect(() => {
     if (video && isAuthenticated) {
@@ -222,6 +307,35 @@ export default function Video() {
     }
   }, [video?.co_owners, isAuthenticated, accessToken, refresh]);
 
+  useEffect(() => {
+    if (!video) return;
+    if (video.video_url) {
+      setStreamToken(null);
+      return;
+    }
+
+    const fetchStreamToken = async () => {
+      try {
+        const response = await authFetch(
+          `${getRoutes().video.get(video.slug)}create-stream-token/`,
+          {
+            method: "POST",
+            accessToken,
+            onRefresh: refresh,
+          }
+        );
+        if (response.ok) {
+          const data = await requestJson<{ stream_token: string }>(response);
+          setStreamToken(data.stream_token);
+        }
+      } catch (err) {
+        console.error("Failed to fetch stream token", err);
+      }
+    };
+
+    fetchStreamToken();
+  }, [video, accessToken, refresh]);
+
   const handleUnlock = async () => {
     if (!video || isUnlocking) return;
     setUnlockError(null);
@@ -253,12 +367,13 @@ export default function Video() {
   /* ------------------------------------------------------------------
    * Gestion du téléchargement de la vidéo
    * ------------------------------------------------------------------ */
-  const handleDownload = async () => {
+  const handleDownload = async (targetUrl?: string, resolution?: string) => {
     if (!video || isDownloading) return;
     setDownloadError(null);
     setIsDownloading(true);
     try {
-      const response = await authFetch(getRoutes().video.stream(video.slug), {
+      const urlToFetch = targetUrl || getRoutes().video.stream(video.slug);
+      const response = await authFetch(urlToFetch, {
         accessToken,
         onRefresh: refresh,
       });
@@ -268,12 +383,17 @@ export default function Video() {
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
-      const filename = getDownloadFilename(
+      const ext = resolution && resolution !== "Original" ? `_${resolution}.mp4` : `.mp4`;
+      const baseFilename = getDownloadFilename(
         response.headers.get("content-disposition"),
         video.slug,
       );
+      const finalFilename = resolution && resolution !== "Original"
+        ? baseFilename.replace(/\.mp4$/i, "") + ext
+        : baseFilename;
+
       link.href = downloadUrl;
-      link.download = filename;
+      link.download = finalFilename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -300,16 +420,15 @@ export default function Video() {
     );
   }
 
-  if (useVideoLoading && !video) {
-    return <CenteredLoader />;
+  const needsPassword =
+    video ? video.status === "RE" && video.has_password && !isUnlocked : false;
+
+  if (useVideoLoading || (!video && !useVideoError)) {
+    return <VideoPageSkeleton />;
   }
 
   if (useVideoError === "AUTH_REQUIRED") {
-    return <CenteredLoader />;
-  }
-
-  if (!useVideoError && !video) {
-    return <CenteredLoader />;
+    return <VideoPageSkeleton />;
   }
 
   if (useVideoError || !video) {
@@ -321,9 +440,6 @@ export default function Video() {
       </div>
     );
   }
-
-  const needsPassword =
-    video.status === "RE" && video.has_password && !isUnlocked;
 
   if (needsPassword) {
     return (
@@ -349,6 +465,7 @@ export default function Video() {
             label="Mot de passe"
             required={true}
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
@@ -365,33 +482,48 @@ export default function Video() {
     );
   }
 
+
+
   /* ------------------------------------------------------------------
    * Rendu principal
    * ------------------------------------------------------------------ */
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton label={t("videoPage.back")} />
       <div className={styles.main_video_content}>
         {/* --------------------------------------------------------------
          *  Colonne principale
          * ------------------------------------------------------------ */}
-        <section
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.5rem",
-            padding: "10px",
-            minWidth: "70%",
-          }}
-        >
-          <VideoPlayer
-            video={video}
-            streamUrl={video.video_url ?? getRoutes().video.stream(video.slug)}
-            autoPlay={Boolean(playlistSlug || showFavoritesSidebar)}
-            onEnded={handleVideoEnded}
-          />
-
-          <h1>{video.title}</h1>
+        <section className={styles.video_main_section}>
+          <div className={styles.video_wrapper}>
+          {resolvedStreamUrl ? (
+            <VideoPlayer
+              video={video}
+              streamUrl={resolvedStreamUrl}
+              autoPlay={Boolean(playlistSlug || showFavoritesSidebar)}
+              onPlay={() => {
+                authFetch(getRoutes().video.registerView(video.slug), {
+                  method: "POST",
+                  accessToken,
+                  onRefresh: refresh,
+                }).catch(() => {
+                  console.error("Erreur d'enregistrement de vue");
+                });
+              }}
+              onEnded={handleVideoEnded}
+            />
+          ) : (
+            <div style={{ width: "100%", aspectRatio: "16 / 9", backgroundColor: "#000", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 8, overflow: "hidden" }}>
+              <CenteredLoader />
+            </div>
+          )}
+          </div>
+          <div className={styles.video_title_row}>
+            <h1>{video.title}</h1>
+            {config?.video?.show_views !== false && video.views != null && (
+              <span className={styles.video_views}>{video.views} {t("videoPage.views")}</span>
+            )}
+          </div>
 
           {downloadError && (
             <Alert canClose type={VariantType.ERROR}>
@@ -402,192 +534,344 @@ export default function Video() {
           {/* -------------------- Infos vidéo -------------------- */}
           <div className={styles.video_infos}>
             <div className={styles.video_infos_header}>
-              <p className={styles.video_infos_header_time}>
-                <span className="material-icons" aria-hidden="true">
+              <div className={styles.video_infos_header_time}>
+                <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
+                  calendar_today
+                </span>
+                {formatDateOnly(video.created_at, locale)}
+              </div>
+              <div className={styles.video_infos_header_time}>
+                <span className="material-icons" aria-hidden="true" style={{ fontSize: "18px" }}>
                   access_time
                 </span>
                 {formatTime(time)}
-              </p>
-              <p>{timeAgo(video.created_at)}</p>
-            </div>
+              </div>
 
-            <div className={styles.video_infos_header_buttons}>
-              {video.allow_downloading && (
-                <Button
-                  color="brand"
-                  size="small"
-                  variant="bordered"
-                  icon={<DownloadIcon aria-hidden="true" />}
-                  iconPosition="right"
-                  type="button"
-                  onClick={handleDownload}
-                  disabled={isDownloading}
-                >
-                  {isDownloading ? "Téléchargement…" : "Télécharger la vidéo"}
-                </Button>
-              )}
-              {isOwnerOrCoOwner && (
-                <Button
-                  onClick={() => router.push(`/video/edit/${video.slug}`)}
-                  size="small"
-                  color="brand"
-                  variant="primary"
-                  type="button"
-                >
-                  Éditer la vidéo
-                </Button>
-              )}
-              {myPlaylists && user && (
-                <PlaylistActionMenu
-                  playlists={myPlaylists}
-                  videoId={video.id}
-                />
-              )}
+              <div className={styles.video_actions_row}>
+                {config?.video?.hide_share !== true && (
+                  <VideoShareMenu video={video} className={styles.action_pill} />
+                )}
+                {video.allow_downloading && (
+                  <VideoDownloadMenu
+                    video={video}
+                    className={styles.action_pill}
+                    onDownloadStreamUrl={(url, res) => handleDownload(url, res)}
+                  />
+                )}
+                {user && config?.collection?.use_playlists !== false && (
+                  <PlaylistActionMenu playlists={myPlaylists} videoId={video.id} />
+                )}
+                <button className={`${styles.action_pill} ${styles.report_btn}`} disabled title="Fonctionnalité à venir">
+                  <FlagIcon fontSize="small" /> {t("videoPage.report")}
+                </button>
+                {isOwnerOrCoOwner && canEdit && (
+                  <Button
+                    onClick={() => router.push(`/video/edit/${video.slug}`)}
+                    size="small"
+                    color="brand"
+                    variant="primary"
+                    icon={<EditIcon fontSize="small" />}
+                  >
+                    {t("videoPage.editVideo")}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Description */}
-          {video.description && (
-            <div className={styles.video_infos_description}>
-              <p>{video.description}</p>
-            </div>
-          )}
-
-          <Divider />
-
-          <dl className={styles.video_infos_details}>
-            <div>
-              <dt>Chaîne :</dt>
-              <dd>{video.channel ? video.channel : "Aucune"}</dd>
-            </div>
-
-            <div>
-              <dt>Ajouté par :</dt>
-              <dd>
-                {video.owner_last_name && video.owner_first_name != ""
-                  ? video.owner_last_name + " " + video.owner_first_name
-                  : video.owner}
-              </dd>
-            </div>
-
-            {coOwnersUsers.length > 0 && (
-              <div>
-                <dt>Co‑propriétaire{coOwnersUsers.length > 1 ? "s" : ""} :</dt>
-                <dd>
-                  {coOwnersUsers.map((u) => getUserDisplayName(u)).join(", ")}
-                </dd>
-              </div>
-            )}
-
-            <div>
-              <dt>Langue principale :</dt>
-              <dd>{getLanguageLabel(video.language)}</dd>
-            </div>
-
-            {video.tags != null && video.tags?.length > 0 && (
-              <div className={styles.video_infos_details_tags}>
-                <dt>Mots‑clés :</dt>
-                <dd>
-                  {video.tags.map((label) => (
-                    <Chip key={label} label={label} sx={{ margin: "0 2px" }} />
-                  ))}
-                </dd>
-              </div>
-            )}
-
-            <div className={styles.video_infos_details_status}>
-              <dt>Statut de la vidéo:</dt>
-              <dd>{video.status_label}</dd>
-            </div>
-            <div className={styles.video_infos_details_update}>
-              <dt>Mis à jour le</dt>
-              <dd>{formatDateWithTime(video.updated_at)}</dd>
-            </div>
-          </dl>
-
-          {/* Commentaires */}
-          {video.disable_comment ? (
-            <Alert type={VariantType.INFO}>
-              Les commentaires sont désactivés
-            </Alert>
+{isMobile ? (
+            <Box sx={{ width: '100%', mt: 2 }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs value={mobileTab} onChange={(e, val) => setMobileTab(val)} variant="scrollable" scrollButtons="auto">
+                  <Tab label="Description" value="description" sx={{ textTransform: 'none' }} />
+                  {config?.video?.active_video_comment !== false && (
+                    <Tab label="Commentaires" value="commentaires" sx={{ textTransform: 'none' }} />
+                  )}
+                  <Tab label="À propos" value="apropos" sx={{ textTransform: 'none' }} />
+                  {video.documents && video.documents.length > 0 && (
+                    <Tab label="Ressources" value="ressources" sx={{ textTransform: 'none' }} />
+                  )}
+                </Tabs>
+              </Box>
+              <Box sx={{ py: 2 }}>
+                {mobileTab === 'description' && (
+                  <>
+                    {video.description && (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", marginBottom: "1rem" }}>
+                        <div className={`${styles.video_infos_description} ${!isDescriptionExpanded ? styles.collapsed : ""}`}>
+                          <p style={{ margin: 0 }}>{video.description}</p>
+                          <p style={{ margin: 0, marginTop: 8, color: "var(--c--globals--colors--gray-500)" }}>
+                            Mis à jour le : {formatDateWithTime(video.updated_at)}
+                          </p>
+                        </div>
+                        <button 
+                          className={styles.read_more_btn} 
+                          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                        >
+                          {isDescriptionExpanded ? "Voir moins " : "Voir plus "}
+                          {isDescriptionExpanded ? <KeyboardArrowUpIcon fontSize="inherit" style={{ verticalAlign: 'middle' }} /> : <KeyboardArrowDownIcon fontSize="inherit" style={{ verticalAlign: 'middle' }} />}
+                        </button>
+                      </div>
+                    )}
+                    <div className={styles.video_infos_details}>
+                      <div>
+                        <dt>Chaîne</dt>
+                        <dd>{video.channel ? video.channel : "Aucune"}</dd>
+                      </div>
+                      <div>
+                        <dt>Créateur</dt>
+                        <dd>
+                          {getVideoOwnerDisplayName(video, config?.authentication, true)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Langue principale</dt>
+                        <dd>{getLanguageLabel(video.language)}</dd>
+                      </div>
+                      {video.tags != null && video.tags?.length > 0 && (
+                        <div className={styles.video_infos_details_tags}>
+                          <dt>Mots clés</dt>
+                          <dd>
+                            {video.tags.map((label) => (
+                              <Chip key={label} label={label} size="small" />
+                            ))}
+                          </dd>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+                {mobileTab === 'commentaires' && config?.video?.active_video_comment !== false && (
+                  video.disable_comment ? (
+                    <Alert type={VariantType.INFO}>
+                      Les commentaires sont désactivés pour cette vidéo.
+                    </Alert>
+                  ) : (
+                    <Comments videoSlug={video.slug} />
+                  )
+                )}
+                {mobileTab === 'apropos' && (
+                  <section className={styles.sidebar_card}>
+                    <h2 className={styles.sidebar_card_title}>À propos</h2>
+                    <Divider sx={{ mb: 2 }} />
+                    <div className={styles.sidebar_list_item}>
+                      <h4><LibraryBooksIcon fontSize="small" /> Type</h4>
+                      <p className={styles.sidebar_blue_text}>{video.type_name || "Aucun"}</p>
+                    </div>
+                    <div className={styles.sidebar_list_item}>
+                      <h4><PieChartIcon fontSize="small" /> Discipline(s)</h4>
+                      <ul>
+                        {video.discipline_details?.length ? (
+                          video.discipline_details.map((d) => (
+                            <li key={d.id} className={styles.sidebar_blue_text}>{d.title}</li>
+                          ))
+                        ) : (
+                          <li className={styles.sidebar_blue_text}>Aucune</li>
+                        )}
+                      </ul>
+                    </div>
+                    <div className={styles.sidebar_list_item}>
+                      <h4><SchoolIcon fontSize="small" /> Intervenants</h4>
+                      <p className={styles.sidebar_blue_text}>
+                        {getVideoOwnerDisplayName(video, config?.authentication, true)}
+                        {coOwnersUsers.length > 0 && <br/>}
+                        {coOwnersUsers.length > 0 && coOwnersUsers.map((u) => getUserDisplayName(u, config?.authentication, true)).join(", ")}
+                      </p>
+                    </div>
+                  </section>
+                )}
+                {mobileTab === 'ressources' && video.documents && video.documents.length > 0 && (
+                  <section className={styles.sidebar_card}>
+                    <h2 className={styles.sidebar_card_title}>Ressources</h2>
+                    <div>
+                      {video.documents.map(doc => (
+                        <a key={doc.id} href={doc.file} target="_blank" rel="noopener noreferrer" className={styles.document_item}>
+                          <InsertDriveFileIcon className={styles.document_icon} />
+                          <div className={styles.document_info}>
+                            <span className={styles.document_title}>{doc.title}</span>
+                            <span className={styles.document_date}>{formatDateWithTime(doc.created_at)}</span>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </Box>
+            </Box>
           ) : (
-            <Comments videoSlug={video.slug} />
-          )}
-        </section>
-
-        {/* --------------------------------------------------------------
-         *  Colonne latérale
-         * ------------------------------------------------------------ */}
-        <aside
-          className={styles.sidebar}
-          aria-label="Informations complémentaires"
-        >
-          {/* Bloc playlist  */}
-          {playlistSlug && (
             <>
-              {usePlaylistLoading && !playlist && <CenteredLoader />}
+              <div className={styles.video_infos_details}>
+                <div>
+                  <dt>{t("videoPage.channel")}</dt>
+                  <dd>{video.channel ? video.channel : t("videoPage.none")}</dd>
+                </div>
+                <div>
+                  <dt>{t("videoPage.creator")}</dt>
+                  <dd>
+                    {getVideoOwnerDisplayName(video, config?.authentication, true)}
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t("videoPage.mainLanguage")}</dt>
+                  <dd>{getLanguageLabel(video.language)}</dd>
+                </div>
+                {video.tags != null && video.tags?.length > 0 && (
+                  <div className={styles.video_infos_details_tags}>
+                    <dt>{t("videoPage.keywords")}</dt>
+                    <dd>
+                      {video.tags.map((label) => (
+                        <Chip key={label} label={label} size="small" />
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </div>
 
-              {usePlaylistError && (
-                <Alert canClose type={VariantType.ERROR}>
-                  {usePlaylistError}
-                </Alert>
+              {/* Description */}
+              {video.description && (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                  <div className={`${styles.video_infos_description} ${!isDescriptionExpanded ? styles.collapsed : ""}`}>
+                    <p style={{ margin: 0 }}>{video.description}</p>
+                    <p style={{ margin: 0, marginTop: 8, color: "var(--c--globals--colors--gray-500)" }}>
+                      {t("videoPage.updatedAt")} {formatDateWithTime(video.updated_at, locale)}
+                    </p>
+                  </div>
+                  <button 
+                    className={styles.read_more_btn} 
+                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  >
+                    {isDescriptionExpanded ? t("videoPage.seeLess") : t("videoPage.seeMore")}
+                    {isDescriptionExpanded ? <KeyboardArrowUpIcon fontSize="inherit" style={{ verticalAlign: 'middle' }} /> : <KeyboardArrowDownIcon fontSize="inherit" style={{ verticalAlign: 'middle' }} />}
+                  </button>
+                </div>
               )}
 
-              {playlist && !usePlaylistError && (
+              {/* Commentaires */}
+              {config?.video?.active_video_comment !== false && (
+                video.disable_comment ? (
+                  <Alert type={VariantType.INFO}>
+                    {t("comments.disabled")}
+                  </Alert>
+                ) : (
+                  <Comments videoSlug={video.slug} />
+                )
+              )}
+            </>
+          )}
+        </section>
+        {!isMobile && (
+            <aside
+              className={styles.sidebar}
+              aria-label={t("videoPage.about")}
+            >
+              {/* Bloc playlist  */}
+              {playlistSlug && config?.collection?.use_playlists !== false && (
+                <>
+                  {usePlaylistLoading && !playlist && <CenteredLoader />}
+
+                  {usePlaylistError && (
+                    <Alert canClose type={VariantType.ERROR}>
+                      {usePlaylistError}
+                    </Alert>
+                  )}
+
+                  {playlist && !usePlaylistError && (
+                    <div style={{ marginBottom: "1.5rem" }}>
+                      <PlaylistSidebar
+                        playlist={playlist}
+                        currentVideoSlug={video.slug}
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+              {/* Bloc favoris  */}
+              {showFavoritesSidebar && favoriteVideos.length > 0 && config?.collection?.use_favorites !== false && (
                 <div style={{ marginBottom: "1.5rem" }}>
-                  <PlaylistSidebar
-                    playlist={playlist}
+                  <FavoritesSidebar
+                    videos={favoriteVideos}
                     currentVideoSlug={video.slug}
                   />
                 </div>
               )}
-            </>
-          )}
-          {/* Bloc favoris  */}
-          {showFavoritesSidebar && favoriteVideos.length > 0 && (
-            <div style={{ marginBottom: "1.5rem" }}>
-              <FavoritesSidebar
-                videos={favoriteVideos}
-                currentVideoSlug={video.slug}
-              />
-            </div>
-          )}
 
-          {/* Section "À propos"*/}
-          <section className={styles.video_infos_block_right}>
-            <h2 className={styles.video_infos_block_right_title}>À propos</h2>
-            <Divider />
+              {/* Section "À propos"*/}
+              <section className={styles.sidebar_card}>
+                <h2 className={styles.sidebar_card_title}>{t("videoPage.about")}</h2>
+                <Divider sx={{ mb: 2 }} />
+                
+                <div className={styles.sidebar_list_item}>
+                  <h3><LibraryBooksIcon fontSize="small" /> {t("videoPage.type")}</h3>
+                  <p className={styles.sidebar_blue_text}>{video.type_name || t("videoPage.none")}</p>
+                </div>
 
-            <h4>
-              <LibraryBooksIcon fontSize="small" aria-hidden="true" /> Type
-            </h4>
-            <p>{video.type_name}</p>
+                {video.date_of_event && (
+                  <div className={styles.sidebar_list_item}>
+                    <h3><PieChartIcon fontSize="small" aria-hidden="true" /> {t("videoPage.eventDate")}</h3>
+                    <p className={styles.sidebar_blue_text}>{formatDateOnly(video.date_of_event, locale)}</p>
+                  </div>
+                )}
 
-            <h4>
-              <SchoolIcon fontSize="small" aria-hidden="true" /> Discipline
-            </h4>
-            <ul>
-              {video.discipline_details?.length ? (
-                video.discipline_details.map((d) => (
-                  <li key={d.id}>{d.title}</li>
-                ))
-              ) : (
-                <li>Aucune</li>
+                <div className={styles.sidebar_list_item}>
+                  <h3><PieChartIcon fontSize="small" aria-hidden="true" /> {t("videoPage.discipline")}</h3>
+                  <ul>
+                    {video.discipline_details?.length ? (
+                      video.discipline_details.map((d) => (
+                        <li key={d.id} className={styles.sidebar_blue_text}>{d.title}</li>
+                      ))
+                    ) : (
+                      <li className={styles.sidebar_blue_text}>{t("videoPage.none")}</li>
+                    )}
+                  </ul>
+                </div>
+
+                <div className={styles.sidebar_list_item}>
+                  <h4><SchoolIcon fontSize="small" /> {t("videoPage.contributors")}</h4>
+                  <p className={styles.sidebar_blue_text}>
+                    {getVideoOwnerDisplayName(video, config?.authentication, true)}
+                    {coOwnersUsers.length > 0 && <br />}
+                    {coOwnersUsers.length > 0 && coOwnersUsers.map((u) => getUserDisplayName(u, config?.authentication, true)).join(", ")}
+                  </p>
+                </div>
+
+                <div className={styles.sidebar_list_item}>
+                  <h3><MonitorIcon fontSize="small" aria-hidden="true" /> {t("videoPage.license")}</h3>
+                  <p className={styles.sidebar_blue_text}>{video.license ?? t("videoPage.none")}</p>
+                </div>
+
+                <div className={styles.sidebar_list_item}>
+                  <h3><PieChartIcon fontSize="small" aria-hidden="true" /> {t("videoPage.cursus")}</h3>
+                  <p className={styles.sidebar_blue_text}>{getCursusLabel(video.cursus, t)}</p>
+                </div>
+              </section>
+
+              {/* Bloc Ressources */}
+              {video.documents && video.documents.length > 0 && (
+                <section className={styles.sidebar_card}>
+                  <h2 className={styles.sidebar_card_title}>{t("videoPage.resources")}</h2>
+                  <div>
+                    {video.documents.map(doc => (
+                      <a key={doc.id} href={doc.file} target="_blank" rel="noopener noreferrer" className={styles.document_item}>
+                        <InsertDriveFileIcon className={styles.document_icon} aria-hidden="true" />
+                        <div className={styles.document_info}>
+                          <span className={styles.document_title}>{doc.title}</span>
+                          <span className={styles.document_date}>{formatDateWithTime(doc.created_at, locale)}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </section>
               )}
-            </ul>
-
-            <h4>
-              <MonitorIcon fontSize="small" aria-hidden="true" /> Licence
-            </h4>
-            <p>{video.license ?? "Aucune"}</p>
-
-            <h4>
-              <PieChartIcon fontSize="small" aria-hidden="true" /> Cursus
-            </h4>
-            <p>{getCursusLabel(video.cursus)}</p>
-          </section>
-        </aside>
+            </aside>
+        )}
       </div>
+      <style>{`
+        @keyframes pulse {
+          0% { opacity: 1; }
+          50% { opacity: 0.5; }
+          100% { opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }

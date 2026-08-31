@@ -12,6 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import styles from "./styles.module.css";
 
 import type { Playlist } from "@/src/types";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
@@ -176,43 +177,25 @@ export default function PlaylistActionMenu({
   return (
     <>
       <div style={{ display: "flex", gap: "0.25rem" }}>
-        <Tooltip title="Ajouter la vidéo dans une liste de lecture">
-          <IconButton
-            aria-describedby={id}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              ":hover": {
-                backgroundColor:
-                  "var(--c--contextuals--background--semantic--brand--tertiary)",
-              },
-            }}
-            onClick={handlePlaylistButtonClick}
-          >
-            <PlaylistAddIcon />
-          </IconButton>
-        </Tooltip>
+        <button
+          className={styles.action_pill}
+          aria-describedby={id}
+          onClick={handlePlaylistButtonClick}
+        >
+          <PlaylistAddIcon fontSize="small" /> Playlist
+        </button>
 
-        <Tooltip title="Ajouter la vidéo en favoris">
-          <IconButton
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              border: "0px",
-              ":hover": {
-                backgroundColor:
-                  "var(--c--contextuals--background--semantic--brand--tertiary)",
-              },
-            }}
-            onClick={handleToggleFavorite}
-          >
-            {favorite ? (
-              <FavoriteIcon aria-hidden="true" sx={{ color: "red" }} />
-            ) : (
-              <FavoriteBorderIcon sx={{ color: "red" }} aria-hidden="true" />
-            )}
-          </IconButton>
-        </Tooltip>
+        <button
+          className={styles.action_pill}
+          onClick={handleToggleFavorite}
+        >
+          {favorite ? (
+            <FavoriteIcon fontSize="small" aria-hidden="true" sx={{ color: "red" }} />
+          ) : (
+            <FavoriteBorderIcon fontSize="small" sx={{ color: "red" }} aria-hidden="true" />
+          )}
+          Favori
+        </button>
       </div>
 
       {/* Liste des playlists */}

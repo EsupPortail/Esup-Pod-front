@@ -14,27 +14,15 @@ function formatDate(value?: string) {
 
 export function mapChannelToDisplayRow(
   channel: Channel,
-  allThemes: Theme[],
-  allVideos: Video[] = [],
 ): CollectionDisplayRow {
-  const channelThemes = allThemes.filter(
-    (theme) => theme.channel === channel.id,
-  );
-
-  const channelVideos = allVideos.filter(
-    (video) =>
-      video.channel === channel.id &&
-      video.status === "PU" &&
-      video.encoding_status === "DO",
-  );
   return {
     id: `channel-${channel.id}`,
     type: "channel",
     typeLabel: "Chaîne",
     title: channel.title,
-    thumbnailUrl: channel.logo || "/default_channel_logo.png",
-    videosCount: channelVideos.length,
-    themesCount: channelThemes.length,
+    thumbnailUrl: channel.logo || channel.banner || "/default_channel_logo.png",
+    videosCount: channel.videos_count ?? 0,
+    themesCount: channel.themes_count ?? 0,
     createdAtValue: channel.created_at,
     createdAtLabel: formatDate(channel.created_at),
     updatedAtValue: channel.updated_at,
@@ -63,7 +51,7 @@ export function mapThemeToDisplayRow(
     typeLabel: "Thème",
     title: theme.title,
     thumbnailUrl: theme.banner || "/default_theme_banner.png",
-    videosCount: theme.items?.length ?? 0,
+    videosCount: theme.videos_count ?? theme.items?.length ?? 0,
     subThemesCount: theme.children?.length ?? 0,
     createdAtValue: theme.created_at,
     createdAtLabel: formatDate(theme.created_at),
@@ -85,7 +73,7 @@ export function mapPlaylistToDisplayRow(
     typeLabel: "Playlist",
     title: playlist.title,
     thumbnailUrl: "/default_thumbnail.svg",
-    videosCount: playlist.items?.length ?? 0,
+    videosCount: playlist.videos_count ?? playlist.items?.length ?? 0,
     createdAtValue: playlist.created_at,
     createdAtLabel: formatDate(playlist.created_at),
     updatedAtValue: playlist.updated_at,
@@ -119,7 +107,7 @@ export function mapCollectionsToDisplayRows({
   if (channels.length > 0) {
     rows.push(
       ...channels.map((channel) =>
-        mapChannelToDisplayRow(channel, themes, videos),
+        mapChannelToDisplayRow(channel),
       ),
     );
   }

@@ -2,12 +2,13 @@
   position: fixed;
   left: 0;
   overflow-x: hidden;
-  background-color: var(--background);
+  background-color: var(--c--globals--colors--gray-000);
+  /* Solid white background */
   padding-top: 20px;
   color: var(--text-color);
   margin-top: var(--navbar-height);
-  border-right: 1px solid
-    var(--c--contextuals--background--semantic--brand--primary);
+  border-right: 1px solid var(--c--globals--colors--gray-200);
+  /* Thin GitHub style border */
   transition: all 0.3s ease;
   overflow-y: auto;
   top: 0;
@@ -31,6 +32,8 @@
   transition-property: color;
   transition-duration: 0.2s;
   padding: var(--c--globals--spacings--m) 0 var(--c--globals--spacings--m) 16px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .menu {
@@ -51,7 +54,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 6px 0px 6px 21px;
+  padding: 6px 12px;
   width: 100%;
   box-sizing: border-box;
   white-space: nowrap;
@@ -63,21 +66,18 @@
   font-size: var(--c--globals--font--sizes--h3);
   padding-right: var(--c--globals--spacings--base);
 }
+
 .menu_item a {
   padding-right: var(--c--globals--spacings--s);
 }
 
 .menu_item:hover {
-  background: rgb(
-    from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%
-  );
+  background: rgb(from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%);
 }
 
 .main_menu_dropdown {
   padding-left: var(--c--globals--spacings--l);
-  background: rgb(
-    from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%
-  );
+  background: rgb(from var(--c--contextuals--background--semantic--brand--primary) r g b / 20%);
 }
 
 /* For Mobile & Tablets screens */
@@ -91,9 +91,11 @@
     width: 0;
     overflow: hidden;
   }
+
   .sidebar {
     margin-top: 0px;
   }
+
   .menu {
     margin-left: 16px;
   }

@@ -4,86 +4,88 @@ import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
 import type { Theme } from "@/src/types";
 import { type CollectionListParams } from "@/src/hooks/collectionListParams";
+import { useQuery } from "@tanstack/react-query";
 
 export function useTheme() {
-  const [themes, setThemes] = useState<Theme[]>([]);
-  const [theme, setTheme] = useState<Theme | null>(null);
-  const [useThemeLoading, setUseThemeLoading] = useState(false);
-  const [useThemeError, setUseThemeError] = useState<string | null>(null);
+  const [listParams, setListParams] = useState<CollectionListParams | undefined>(undefined);
+  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
 
-  const normalizeThemeList = (
-    data: Theme[] | { results?: Theme[] },
-  ): Theme[] => {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data.results)) return data.results;
-    return [];
-  };
-
-  const fetchAll = useCallback(async (params?: CollectionListParams) => {
-    setUseThemeLoading(true);
-    setUseThemeError(null);
-
-    try {
+  const listQuery = useQuery({
+    queryKey: ["themes", "list", listParams],
+    queryFn: async () => {
       const url = new URL(getRoutes().theme.list);
 
-      if (params?.channel != null) {
-        url.searchParams.set("channel", String(params.channel));
+      if (listParams?.channel != null) {
+        url.searchParams.set("channel", String(listParams.channel));
       }
-
-      if (params?.search) {
-        url.searchParams.set("search", params.search);
+      if (listParams?.search) {
+        url.searchParams.set("search", listParams.search);
       }
-
-      if (params?.ordering) {
-        url.searchParams.set("ordering", params.ordering);
+      if (listParams?.ordering) {
+        url.searchParams.set("ordering", listParams.ordering);
       }
-
-      if (params?.page) {
-        url.searchParams.set("page", String(params.page));
+      if (listParams?.page) {
+        url.searchParams.set("page", String(listParams.page));
       }
 
       const res = await authFetch(url.toString());
-      const data = await requestJson<Theme[] | { results?: Theme[] }>(res);
-      const normalizedThemes = normalizeThemeList(data);
+      if (!res.ok) throw new Error("Erreur de récupération des thèmes.");
+      const data = await requestJson<Theme[] | { results?: Theme[]; count?: number }>(res);
 
-      setThemes(normalizedThemes);
-      return normalizedThemes;
-    } catch (e: unknown) {
-      setUseThemeError(
-        e instanceof Error ? e.message : "Erreur de récupération des thèmes.",
-      );
-      return [];
-    } finally {
-      setUseThemeLoading(false);
-    }
-  }, []);
+      const normalizedThemes = Array.isArray(data)
+        ? data
+        : Array.isArray(data.results)
+          ? data.results
+          : [];
+      const count = !Array.isArray(data) && typeof data.count === 'number'
+        ? data.count
+        : normalizedThemes.length;
+
+      return { themes: normalizedThemes, count };
+    },
+    staleTime: 30000,
+    enabled: listParams !== undefined,
+  });
+
+  const detailQuery = useQuery({
+    queryKey: ["themes", "detail", currentSlug],
+    queryFn: async () => {
+      if (!currentSlug) return null;
+      const res = await authFetch(getRoutes().theme.get(currentSlug));
+      if (!res.ok) throw new Error("Erreur de récupération du thème.");
+      return requestJson<Theme>(res);
+    },
+    enabled: !!currentSlug,
+    staleTime: 30000,
+  });
+
+  const fetchAll = useCallback(async (params?: CollectionListParams) => {
+    setListParams(params);
+    return listQuery.data?.themes ?? [];
+  }, [listQuery.data]);
 
   const fetchOne = useCallback(async (slug: string) => {
-    setUseThemeLoading(true);
-    setUseThemeError(null);
-
+    setCurrentSlug(slug);
     try {
       const res = await authFetch(getRoutes().theme.get(slug));
       const data = await requestJson<Theme>(res);
-
-      setTheme(data);
       return data;
-    } catch (e: unknown) {
-      setUseThemeError(
-        e instanceof Error ? e.message : "Erreur de récupération du thème.",
-      );
+    } catch {
       return null;
-    } finally {
-      setUseThemeLoading(false);
     }
   }, []);
 
   return {
-    themes,
-    theme,
+    themes: listQuery.data?.themes ?? [],
+    themesCount: listQuery.data?.count ?? 0,
+    theme: detailQuery.data ?? null,
     fetchOne,
     fetchAll,
-    useThemeLoading,
-    useThemeError,
+    useThemeLoading:
+      (listParams !== undefined && listQuery.isLoading) ||
+      (!!currentSlug && detailQuery.isLoading),
+    useThemeError:
+      (listParams !== undefined ? (listQuery.error?.message ?? null) : null) ||
+      (currentSlug ? (detailQuery.error?.message ?? null) : null),
   };
 }

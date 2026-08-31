@@ -10,7 +10,19 @@ export function setInitial(lastname: string, firstname: string) {
     .join("");
 }
 
-export function getUserDisplayName(user: User): string {
+export function getUserDisplayName(
+  user: User,
+  config?: { hide_username?: boolean; use_establishment_field?: boolean },
+  isPublicView = false
+): string {
+  if (config?.hide_username && isPublicView) {
+    return "Anonyme";
+  }
+
+  if (config?.use_establishment_field && user.establishment?.trim()) {
+    return user.establishment.trim();
+  }
+
   const lastName = user.last_name?.trim() ?? "";
   const firstName = user.first_name?.trim() ?? "";
 
@@ -19,6 +31,25 @@ export function getUserDisplayName(user: User): string {
   }
 
   return user.username;
+}
+
+export function getVideoOwnerDisplayName(
+  video: { owner_last_name?: string; owner_first_name?: string; owner?: string },
+  config?: { hide_username?: boolean; use_establishment_field?: boolean },
+  isPublicView = false
+): string {
+  if (config?.hide_username && isPublicView) {
+    return "Anonyme";
+  }
+
+  const lastName = video.owner_last_name?.trim() ?? "";
+  const firstName = video.owner_first_name?.trim() ?? "";
+
+  if (lastName || firstName) {
+    return `${lastName} ${firstName}`.trim();
+  }
+
+  return video.owner || "";
 }
 
 export function getProfilePictureUrl(

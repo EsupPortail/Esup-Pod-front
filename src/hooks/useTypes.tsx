@@ -1,9 +1,8 @@
 import { useState, useCallback } from "react";
 import type { Type } from "@/src/types";
 import { useAuth } from "../context/AuthProvider";
-import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";
-import { requestJson } from "../utils/requestJson";
+import { fetchAllPages } from "../api/fetchAllPages";
 
 export function useTypes() {
   const { accessToken, refresh } = useAuth();
@@ -15,16 +14,10 @@ export function useTypes() {
     setUseTypesLoading(true);
     setUseTypesError(null);
     try {
-      const res = await authFetch(getRoutes().types.list, {
+      const normalizedTypes = await fetchAllPages<Type>(getRoutes().types.list, {
         accessToken,
         onRefresh: refresh,
       });
-      const data = await requestJson<Type[] | { results?: Type[] }>(res);
-      const normalizedTypes = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.results)
-          ? data.results
-          : [];
       setTypes(normalizedTypes);
       return normalizedTypes;
     } catch (e: unknown) {

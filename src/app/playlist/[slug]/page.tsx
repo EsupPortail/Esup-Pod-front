@@ -55,7 +55,7 @@ export default function PlaylistPage() {
     channels,
     useVideoError,
     useVideoLoading,
-  } = useVideoListFilters({ mode: "all" });
+  } = useVideoListFilters({ mode: "all", enabled: false });
 
   // Applique le tri par défaut défini sur la playlist
   useEffect(() => {
@@ -72,22 +72,45 @@ export default function PlaylistPage() {
     .map((item) => item.video)
     .filter((video) => video != null);
 
-  // Vidéos de la playlist après application des filtres de useVideoListFilters
   const filteredPlaylistVideos = useMemo(() => {
     if (!playlistItemVideos.length) {
       return [];
     }
 
-    const playlistVideoIds = new Set(
-      playlistItemVideos.map((video) => video.id),
-    );
+    let result = playlistItemVideos;
+    const search = filters.search?.trim().toLowerCase();
+    if (search) {
+      result = result.filter((video) =>
+        video.title.toLowerCase().includes(search),
+      );
+    }
+    
+    const ordering = filters.ordering;
+    if (ordering) {
+      result = [...result].sort((a, b) => {
+        switch (ordering) {
+          case "-created_at":
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          case "created_at":
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          case "-title":
+            return b.title.localeCompare(a.title);
+          case "title":
+            return a.title.localeCompare(b.title);
+          default:
+            return 0;
+        }
+      });
+    }
 
-    return videos.filter((video) => playlistVideoIds.has(video.id));
-  }, [playlistItemVideos, videos]);
+    return result;
+  }, [playlistItemVideos, filters.search, filters.ordering]);
 
+  const userId = user?.id;
+  const ownerId = effectivePlaylist?.owner;
   const isOwner = useMemo(
-    () => user?.id != null && effectivePlaylist?.owner === user.id,
-    [effectivePlaylist?.owner, user?.id],
+    () => userId != null && ownerId === userId,
+    [ownerId, userId],
   );
 
   const handleStartPlaylist = () => {
@@ -223,7 +246,21 @@ export default function PlaylistPage() {
               tags={tags}
               channels={channels}
               showUserFilter={!!user}
-              onChange={setFilters}
+              onChange={(newFilters) => {
+                if (
+                  newFilters.search !== filters.search ||
+                  newFilters.channel !== filters.channel ||
+                  newFilters.ordering !== filters.ordering ||
+                  newFilters.ownerUsernames !== filters.ownerUsernames ||
+                  newFilters.typeSlugs !== filters.typeSlugs ||
+                  newFilters.disciplineIds !== filters.disciplineIds ||
+                  newFilters.cursus !== filters.cursus ||
+                  newFilters.tagSlugs !== filters.tagSlugs
+                ) {
+                  newFilters.page = 1;
+                }
+                setFilters(newFilters);
+              }}
             />
 
             {useVideoLoading ? (
@@ -231,6 +268,8 @@ export default function PlaylistPage() {
             ) : filteredPlaylistVideos.length > 0 ? (
               <VideosDisplay
                 videos={filteredPlaylistVideos}
+                page={filters.page}
+                onPageChange={(page) => setFilters({ ...filters, page })}
                 currentUserId={user?.id}
               />
             ) : (
