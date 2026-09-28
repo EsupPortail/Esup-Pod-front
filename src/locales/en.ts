@@ -490,7 +490,7 @@ export const en: TranslationKeys = {
     noTheme: "This channel has no associated themes.",
     noVideos: "This channel has no associated videos.",
     unclassified: "Unclassified videos",
-    noThemes: "Aucun thème ne correspond à vos critères de recherche.",
+    noThemes: "No theme matches your search criteria.",
   },
   dressingPage: {
     title: "Video Branding & Watermarks",
