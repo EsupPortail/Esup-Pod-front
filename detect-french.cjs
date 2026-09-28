@@ -2,7 +2,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * detect-french.cjs
- * Détecte les textes en français dans un projet React (JSX/TSX/JS/TS).
+ * Détecte les textes en français dans un projet React (JSX/TSX/JS/TS)
+ * et regroupe les textes identiques (même orthographe, mêmes majuscules).
+ * Affichage : texte, puis location(s).
  *
  * Installation :  npm i -D @babel/parser @babel/traverse
  * Utilisation  :  node detect-french.cjs [dossier=src] [--json rapport.json] [--jsx-only]
@@ -34,6 +36,8 @@ const IGNORED_ATTRS = new Set([
   "size", "color", "as", "method", "action", "viewBox", "d", "fill", "stroke",
 ]);
 
+const NO_TAG = "(hors JSX)";
+
 // ---------- Détection du français ----------
 const ACCENTS = /[àâäçéèêëîïôöûùüÿœæ]/i;
 
@@ -59,6 +63,26 @@ function isFrench(text) {
   return words.some((w) => FR_WORDS.has(w.replace(/^[ldjnmst]'/, "")));
 }
 
+// ---------- Noms de balises ----------
+function jsxName(n) {
+  if (!n) return "?";
+  if (n.type === "JSXIdentifier") return n.name;
+  if (n.type === "JSXMemberExpression") return `${jsxName(n.object)}.${jsxName(n.property)}`;
+  if (n.type === "JSXNamespacedName") return `${n.namespace.name}:${n.name.name}`;
+  return "?";
+}
+
+// Balise à laquelle appartient une chaîne/template (ex: {"Oui"} ou placeholder={"Nom"})
+function tagForExpression(p) {
+  const container = p.findParent((x) => x.isJSXExpressionContainer());
+  if (!container) return NO_TAG;
+  const owner = container.parent;
+  if (owner.type === "JSXElement") return `<${jsxName(owner.openingElement.name)}>`;
+  if (owner.type === "JSXFragment") return "<>";
+  if (owner.type === "JSXAttribute") return `<${jsxName(container.parentPath.parent.name)}>`;
+  return NO_TAG;
+}
+
 // ---------- Parcours des fichiers ----------
 function* walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -68,6 +92,20 @@ function* walk(dir) {
       yield path.join(dir, entry.name);
     }
   }
+}
+
+// Groupes : clé = texte exact (casse comprise)
+const groups = new Map();
+let totalOccurrences = 0;
+
+function record(file, line, text) {
+  let g = groups.get(text);
+  if (!g) {
+    g = { text, locations: [] };
+    groups.set(text, g);
+  }
+  g.locations.push({ file, line });
+  totalOccurrences++;
 }
 
 function analyze(file) {
@@ -81,48 +119,51 @@ function analyze(file) {
     });
   } catch (e) {
     console.warn(`⚠️  Impossible de parser ${file}: ${e.message}`);
-    return [];
+    return;
   }
 
-  const found = [];
   const seen = new Set();
-  const add = (node, text, kind) => {
+  const add = (node, text, kind, tag) => {
     const clean = text.replace(/\s+/g, " ").trim();
     if (!clean || !isFrench(clean)) return;
     const key = `${node.loc.start.line}:${node.loc.start.column}`;
     if (seen.has(key)) return;
     seen.add(key);
-    found.push({ file, line: node.loc.start.line, kind, text: clean });
+    record(file, node.loc.start.line, clean);
   };
 
   traverse(ast, {
     JSXText(p) {
-      add(p.node, p.node.value, "jsx-text");
+      const parent = p.parent;
+      const tag = parent.type === "JSXElement" ? `<${jsxName(parent.openingElement.name)}>` : "<>";
+      add(p.node, p.node.value, "jsx-text", tag);
     },
     JSXAttribute(p) {
       const name = p.node.name.name;
       if (IGNORED_ATTRS.has(name) || String(name).startsWith("on")) return;
       const v = p.node.value;
-      if (v && v.type === "StringLiteral") add(v, v.value, `attr:${name}`);
+      if (v && v.type === "StringLiteral") {
+        add(v, v.value, `attr:${name}`, `<${jsxName(p.parent.name)}>`);
+      }
     },
     StringLiteral(p) {
-      if (jsxOnly) return;
       const parent = p.parent;
-      // On ignore imports/exports, require(), clés d'objets, attributs JSX (déjà traités), types TS
       if (/^(Import|Export)/.test(parent.type)) return;
       if (parent.type === "JSXAttribute") return;
       if (parent.type === "ObjectProperty" && parent.key === p.node && !parent.computed) return;
       if (parent.type === "CallExpression" && parent.callee.name === "require") return;
       if (/^TS/.test(parent.type)) return;
-      add(p.node, p.node.value, "string");
+      const tag = tagForExpression(p);
+      if (jsxOnly && tag === NO_TAG) return;
+      add(p.node, p.node.value, "string", tag);
     },
     TemplateLiteral(p) {
-      if (jsxOnly && p.parent.type !== "JSXExpressionContainer") return;
+      const tag = tagForExpression(p);
+      if (jsxOnly && tag === NO_TAG) return;
       const text = p.node.quasis.map((q) => q.value.cooked).join("${…}");
-      add(p.node, text, "template");
+      add(p.node, text, "template", tag);
     },
   });
-  return found;
 }
 
 // ---------- Main ----------
@@ -131,24 +172,25 @@ if (!fs.existsSync(root)) {
   process.exit(1);
 }
 
-const results = [];
-for (const file of walk(root)) results.push(...analyze(file));
+for (const file of walk(root)) analyze(file);
 
-const byFile = results.reduce((acc, r) => {
-  (acc[r.file] ||= []).push(r);
-  return acc;
-}, {});
+// Tri : plus fréquents d'abord, puis ordre alphabétique
+const items = [...groups.values()].sort(
+  (a, b) => b.locations.length - a.locations.length || a.text.localeCompare(b.text)
+);
 
-for (const [file, items] of Object.entries(byFile)) {
-  console.log(`\n📄 ${file}`);
-  for (const r of items) {
-    console.log(`  L${String(r.line).padEnd(4)} [${r.kind}] ${r.text}`);
-  }
+for (const g of items) {
+  console.log(`\ntexte:    ${g.text}`);
+  console.log(`location: ${g.locations.map((l) => `${l.file}:${l.line}`).join(", ")}`);
 }
 
-console.log(`\n✅ ${results.length} texte(s) français dans ${Object.keys(byFile).length} fichier(s).`);
+console.log(`\n✅ ${totalOccurrences} occurrence(s), ${groups.size} texte(s) unique(s).`);
 
 if (jsonOut) {
-  fs.writeFileSync(jsonOut, JSON.stringify(results, null, 2), "utf8");
+  const report = items.map((g) => ({
+    text: g.text,
+    locations: g.locations.map((l) => `${l.file}:${l.line}`),
+  }));
+  fs.writeFileSync(jsonOut, JSON.stringify(report, null, 2), "utf8");
   console.log(`📝 Rapport écrit dans ${jsonOut}`);
 }

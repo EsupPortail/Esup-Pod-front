@@ -145,11 +145,15 @@ export default function VideosDisplay({
       {count > 0 && (
         <div className={styles.paginationWrapper}>
           <p className={styles.paginationInfo}>
-            Affichage de {startItem} à {endItem} sur {count} vidéo
-            {count > 1 ? "s" : ""}
-            {pagesCount && pagesCount > 1
-              ? ` (Page ${page} sur ${pagesCount})`
-              : ""}
+            {t("common.paginationInfo", {
+              start: startItem,
+              end: endItem,
+              count,
+              pageInfo:
+                pagesCount && pagesCount > 1
+                  ? t("common.paginationPage", { page, pagesCount })
+                  : "",
+            })}
           </p>
 
           {pagesCount && pagesCount > 1 && (

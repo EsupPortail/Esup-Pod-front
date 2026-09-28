@@ -1,3026 +1,2479 @@
 [
   {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 27,
-    "kind": "string",
-    "text": "Thème"
-  },
-  {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 241,
-    "kind": "string",
-    "text": "Impossible de charger ce thème."
-  },
-  {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 290,
-    "kind": "attr:aria-label",
-    "text": "Contenus de la chaine"
-  },
-  {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 294,
-    "kind": "template",
-    "text": "Videos non classées (${…})"
-  },
-  {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 300,
-    "kind": "template",
-    "text": "Sous-thèmes (${…})"
-  },
-  {
-    "file": "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx",
-    "line": 364,
-    "kind": "jsx-text",
-    "text": "Sous-thèmes"
-  },
-  {
-    "file": "src/app/dashboard/layout.tsx",
-    "line": 6,
-    "kind": "string",
-    "text": "Gérez vos vidéos et paramètres sur votre tableau de bord Esup-Pod."
-  },
-  {
-    "file": "src/app/dressing/page.tsx",
-    "line": 36,
-    "kind": "string",
-    "text": "Erreur lors de l'upload de l'image"
-  },
-  {
-    "file": "src/app/error.tsx",
-    "line": 34,
-    "kind": "jsx-text",
-    "text": "Une erreur inattendue est survenue."
-  },
-  {
-    "file": "src/app/error.tsx",
-    "line": 39,
-    "kind": "attr:label",
-    "text": "Retour en arrière"
-  },
-  {
-    "file": "src/app/error.tsx",
-    "line": 40,
-    "kind": "jsx-text",
-    "text": "Réessayer"
-  },
-  {
-    "file": "src/app/favorites/page.tsx",
-    "line": 21,
-    "kind": "string",
-    "text": "Mes vidéos favorites"
-  },
-  {
-    "file": "src/app/layout.tsx",
-    "line": 24,
-    "kind": "string",
-    "text": "Plateforme vidéo Esup-Pod"
-  },
-  {
-    "file": "src/app/layout.tsx",
-    "line": 62,
-    "kind": "jsx-text",
-    "text": "Aller au contenu principal"
-  },
-  {
-    "file": "src/app/login/LoginClientPage.tsx",
-    "line": 18,
-    "kind": "string",
-    "text": "Connexion à mon profil POD"
-  },
-  {
-    "file": "src/app/login/LoginClientPage.tsx",
-    "line": 100,
-    "kind": "jsx-text",
-    "text": "Connexion CAS"
-  },
-  {
-    "file": "src/app/login/LoginClientPage.tsx",
-    "line": 110,
-    "kind": "jsx-text",
-    "text": "Connexion"
-  },
-  {
-    "file": "src/app/login/LoginClientPage.tsx",
-    "line": 118,
-    "kind": "jsx-text",
-    "text": "Connexion"
-  },
-  {
-    "file": "src/app/login/layout.tsx",
-    "line": 4,
-    "kind": "string",
-    "text": "Connexion | Esup-Pod"
-  },
-  {
-    "file": "src/app/login/layout.tsx",
-    "line": 6,
-    "kind": "string",
-    "text": "Connectez-vous pour accéder à vos vidéos et votre espace personnel sur Esup-Pod."
-  },
-  {
-    "file": "src/app/login/page.tsx",
-    "line": 5,
-    "kind": "string",
-    "text": "Connexion - Esup-Pod"
-  },
-  {
-    "file": "src/app/login/page.tsx",
-    "line": 6,
-    "kind": "string",
-    "text": "Connectez-vous à la plateforme Esup-Pod pour gérer vos vidéos."
-  },
-  {
-    "file": "src/app/not-found.tsx",
-    "line": 14,
-    "kind": "jsx-text",
-    "text": "La page demandée n'existe pas."
-  },
-  {
-    "file": "src/app/not-found.tsx",
-    "line": 16,
-    "kind": "jsx-text",
-    "text": "Retour a l'accueil"
-  },
-  {
-    "file": "src/app/playlist/[slug]/page.tsx",
-    "line": 147,
-    "kind": "string",
-    "text": "Impossible de charger la playlist."
-  },
-  {
-    "file": "src/app/playlist/[slug]/page.tsx",
-    "line": 173,
-    "kind": "jsx-text",
-    "text": "Lancer la liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/[slug]/page.tsx",
-    "line": 214,
-    "kind": "string",
-    "text": "Utilisateur inconnu"
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 19,
-    "kind": "string",
-    "text": "Ajouter une liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 108,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 113,
-    "kind": "string",
-    "text": "La description est obligatoire."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 122,
-    "kind": "string",
-    "text": "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 138,
-    "kind": "string",
-    "text": "Une erreur est survenue lors de la création de la playlist."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 153,
-    "kind": "string",
-    "text": "Une erreur inattendue est survenue lors de la création de la playlist."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 169,
-    "kind": "template",
-    "text": "Veuillez corriger les ${…} champs suivants : ${…}."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 170,
-    "kind": "template",
-    "text": "Veuillez corriger le champ suivant : ${…}."
-  },
-  {
-    "file": "src/app/playlist/add/page.tsx",
-    "line": 205,
-    "kind": "attr:submitLabel",
-    "text": "Ajouter la playlist"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 12,
-    "kind": "string",
-    "text": "Supprimer la liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 48,
-    "kind": "jsx-text",
-    "text": "Supprimer la liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 64,
-    "kind": "jsx-text",
-    "text": "Annuler"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 70,
-    "kind": "jsx-text",
-    "text": "Êtes-vous sûr·e de vouloir supprimer la playlist"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 72,
-    "kind": "jsx-text",
-    "text": "Cette action est définitive."
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 83,
-    "kind": "jsx-text",
-    "text": "Annuler"
-  },
-  {
-    "file": "src/app/playlist/delete/[slug]/page.tsx",
-    "line": 93,
-    "kind": "jsx-text",
-    "text": "Supprimer la playlist"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 25,
-    "kind": "string",
-    "text": "Éditer la liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 38,
-    "kind": "string",
-    "text": "Titre"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 40,
-    "kind": "string",
-    "text": "Ajouter un mot de passe"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 42,
-    "kind": "string",
-    "text": "Mot de passe"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 43,
-    "kind": "string",
-    "text": "Tri par défault"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 162,
-    "kind": "string",
-    "text": "Erreur lors de l'enregistrement du formulaire"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 175,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 187,
-    "kind": "string",
-    "text": "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe."
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 199,
-    "kind": "string",
-    "text": "Liste de lecture mise à jour avec succès ! 🥳"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 215,
-    "kind": "template",
-    "text": "Veuillez corriger les ${…} champs suivants : ${…}."
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 216,
-    "kind": "template",
-    "text": "Veuillez corriger le champ suivant : ${…}."
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 236,
-    "kind": "jsx-text",
-    "text": "Retour à mes listes de lectures"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 246,
-    "kind": "jsx-text",
-    "text": "Vous n’avez pas les droits pour modifier cette liste de lecture."
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 257,
-    "kind": "jsx-text",
-    "text": "Éditer la liste de lecture"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 288,
-    "kind": "attr:submitLabel",
-    "text": "Enregistrer"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 302,
-    "kind": "jsx-text",
-    "text": "Voir la playlist"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 317,
-    "kind": "jsx-text",
-    "text": "Supprimer la playlist"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 326,
-    "kind": "jsx-text",
-    "text": "Modifications non enregistrées"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 327,
-    "kind": "jsx-text",
-    "text": "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 337,
-    "kind": "jsx-text",
-    "text": "Rester sur la page"
-  },
-  {
-    "file": "src/app/playlist/edit/[slug]/page.tsx",
-    "line": 345,
-    "kind": "jsx-text",
-    "text": "Quitter sans enregistrer"
-  },
-  {
-    "file": "src/app/playlist/me/page.tsx",
-    "line": 16,
-    "kind": "string",
-    "text": "Mes listes de lecture"
-  },
-  {
-    "file": "src/app/playlist/page.tsx",
-    "line": 7,
-    "kind": "string",
-    "text": "Découvrez et gérez les listes de lecture publiques de la plateforme Esup-Pod."
-  },
-  {
-    "file": "src/app/profile-picture/page.tsx",
-    "line": 17,
-    "kind": "string",
-    "text": "Changer ma photo de profil"
-  },
-  {
-    "file": "src/app/profile-picture/page.tsx",
-    "line": 137,
-    "kind": "jsx-text",
-    "text": "Changer mon image de profil"
-  },
-  {
-    "file": "src/app/profile-picture/page.tsx",
-    "line": 169,
-    "kind": "jsx-text",
-    "text": "Vous n'avez pas encore de photo de profil."
-  },
-  {
-    "file": "src/app/profile-picture/page.tsx",
-    "line": 188,
-    "kind": "string",
-    "text": "Formats supportés: jpg, jpeg, png, webp"
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 36,
-    "kind": "string",
-    "text": "Erreur lors de l'upload de l'image"
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 44,
-    "kind": "string",
-    "text": "Êtes-vous sûr de vouloir supprimer ce filigrane ?"
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 57,
-    "kind": "jsx-text",
-    "text": "Gérez vos filigranes (watermarks) pour les incruster directement dans vos vidéos."
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 64,
-    "kind": "jsx-text",
-    "text": "Erreur lors du chargement des filigranes."
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 71,
-    "kind": "jsx-text",
-    "text": "Mes Filigranes"
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 84,
-    "kind": "string",
-    "text": "Ajouter un filigrane"
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 89,
-    "kind": "jsx-text",
-    "text": "Chargement..."
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 91,
-    "kind": "jsx-text",
-    "text": "Vous n'avez pas encore envoyé de filigrane."
-  },
-  {
-    "file": "src/app/user-settings/dressing/page.tsx",
-    "line": 114,
-    "kind": "attr:aria-label",
-    "text": "Supprimer"
-  },
-  {
-    "file": "src/app/user-settings/preferences/page.tsx",
-    "line": 8,
-    "kind": "string",
-    "text": "Affichage et accessibilité"
-  },
-  {
-    "file": "src/app/video/VideosClientPage.tsx",
-    "line": 16,
-    "kind": "string",
-    "text": "Toutes les vidéos"
-  },
-  {
-    "file": "src/app/video/[slug]/layout.tsx",
-    "line": 22,
-    "kind": "string",
-    "text": "Regarder la vidéo sur Esup-Pod"
-  },
-  {
-    "file": "src/app/video/[slug]/layout.tsx",
-    "line": 30,
-    "kind": "string",
-    "text": "Vidéo | Esup-Pod"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 334,
-    "kind": "string",
-    "text": "Erreur lors du chargement des co‑propriétaires"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 383,
-    "kind": "string",
-    "text": "Impossible de déverrouiller cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 392,
-    "kind": "string",
-    "text": "Impossible de déverrouiller cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 414,
-    "kind": "string",
-    "text": "Impossible de télécharger cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 440,
-    "kind": "string",
-    "text": "Impossible de télécharger cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 452,
-    "kind": "jsx-text",
-    "text": "Vidéo introuvable."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 474,
-    "kind": "string",
-    "text": "Impossible de charger cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 491,
-    "kind": "jsx-text",
-    "text": "Cette vidéo est protégée par un mot de passe."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 501,
-    "kind": "attr:label",
-    "text": "Mot de passe"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 514,
-    "kind": "string",
-    "text": "Déverrouillage..."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 514,
-    "kind": "string",
-    "text": "Déverrouiller la vidéo"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 544,
-    "kind": "string",
-    "text": "Erreur d'enregistrement de vue"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 628,
-    "kind": "attr:title",
-    "text": "Fonctionnalité à venir"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 669,
-    "kind": "attr:label",
-    "text": "À propos"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 704,
-    "kind": "jsx-text",
-    "text": "Mis à jour le :"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 715,
-    "kind": "string",
-    "text": "Voir moins"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 715,
-    "kind": "string",
-    "text": "Voir plus"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 732,
-    "kind": "jsx-text",
-    "text": "Chaîne"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 733,
-    "kind": "string",
-    "text": "Aucune"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 736,
-    "kind": "jsx-text",
-    "text": "Créateur"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 751,
-    "kind": "jsx-text",
-    "text": "Mots clés"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 765,
-    "kind": "jsx-text",
-    "text": "Les commentaires sont désactivés pour cette vidéo."
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 773,
-    "kind": "jsx-text",
-    "text": "À propos"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 780,
-    "kind": "string",
-    "text": "Aucun"
-  },
-  {
-    "file": "src/app/video/[slug]/page.tsx",
-    "line": 798,
-    "kind": "jsx-text",
-    "text": "Aucune"
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 119,
-    "kind": "template",
-    "text": "Vidéo ajoutée à la playlist « ${…} »."
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 131,
-    "kind": "template",
-    "text": "Vidéo retirée de la playlist « ${…} »."
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 137,
-    "kind": "string",
-    "text": "Une erreur est survenue lors de la mise à jour de la playlist."
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 160,
-    "kind": "string",
-    "text": "Vidéo ajoutée à vos favoris."
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 166,
-    "kind": "string",
-    "text": "Vidéo retirée de vos favoris."
-  },
-  {
-    "file": "src/app/video/[slug]/playlistActionMenu.tsx",
-    "line": 173,
-    "kind": "string",
-    "text": "Une erreur est survenue lors de la mise à jour des favoris."
-  },
-  {
-    "file": "src/app/video/add/page.tsx",
-    "line": 31,
-    "kind": "string",
-    "text": "Ajouter une vidéo"
-  },
-  {
-    "file": "src/app/video/add/page.tsx",
-    "line": 75,
-    "kind": "string",
-    "text": "Veuillez sélectionner un fichier."
-  },
-  {
-    "file": "src/app/video/add/page.tsx",
-    "line": 77,
-    "kind": "string",
-    "text": "Veuillez sélectionner un fichier vidéo."
-  },
-  {
-    "file": "src/app/video/add/page.tsx",
-    "line": 101,
-    "kind": "string",
-    "text": "Une erreur est survenue."
-  },
+    "text": "Fermer",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2297",
+      "src/app/video/edit/[slug]/page.tsx:2338",
+      "src/app/video/edit/[slug]/page.tsx:2532",
+      "src/app/video/edit/[slug]/page.tsx:2568",
+      "src/app/video/edit/[slug]/page.tsx:2604",
+      "src/app/video/edit/[slug]/page.tsx:2987",
+      "src/app/video/edit/[slug]/page.tsx:3028",
+      "src/app/video/edit/[slug]/page.tsx:3222",
+      "src/app/video/edit/[slug]/page.tsx:3258",
+      "src/app/video/edit/[slug]/page.tsx:3294"
+    ]
+  },
+  {
+    "text": "Le titre est obligatoire.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:108",
+      "src/app/playlist/edit/[slug]/page.tsx:175",
+      "src/app/video/add/page.tsx:113",
+      "src/app/video/edit/[slug]/page.tsx:978",
+      "src/components/collection/PlaylistForm.tsx:75",
+      "src/components/video/edit/VideoDressingForm.tsx:61"
+    ]
+  },
+  {
+    "text": "Erreur de chargement.",
+    "locations": [
+      "src/hooks/useDiscipline.tsx:30",
+      "src/hooks/useTags.tsx:37",
+      "src/hooks/useTypes.tsx:28",
+      "src/hooks/useUsers.tsx:38",
+      "src/hooks/useUsers.tsx:62"
+    ]
+  },
+  {
+    "text": "Mot de passe",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:42",
+      "src/app/video/[slug]/page.tsx:501",
+      "src/app/video/edit/[slug]/page.tsx:170",
+      "src/components/video/display/VideoGridColumns.tsx:114"
+    ]
+  },
+  {
+    "text": "Par défaut",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2415",
+      "src/app/video/edit/[slug]/page.tsx:2493",
+      "src/app/video/edit/[slug]/page.tsx:3105",
+      "src/app/video/edit/[slug]/page.tsx:3185"
+    ]
+  },
+  {
+    "text": "-- Choisir --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:778",
+      "src/components/video/bulk/BulkActionsBar.tsx:796",
+      "src/components/video/bulk/BulkActionsBar.tsx:814"
+    ]
+  },
+  {
+    "text": "Aucune",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:733",
+      "src/app/video/[slug]/page.tsx:798",
+      "src/app/video/edit/[slug]/page.tsx:281"
+    ]
+  },
+  {
+    "text": "Éditer la liste de lecture",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:25",
+      "src/app/playlist/edit/[slug]/page.tsx:257",
+      "src/components/collection/PlaylistActionMenu.tsx:39"
+    ]
+  },
+  {
+    "text": "Habillage de la vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2321",
+      "src/app/video/edit/[slug]/page.tsx:3011",
+      "src/components/video/edit/VideoDressingForm.tsx:376"
+    ]
+  },
+  {
+    "text": "Modifications non enregistrées",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:326",
+      "src/app/video/edit/[slug]/page.tsx:2242",
+      "src/app/video/edit/[slug]/page.tsx:2932"
+    ]
+  },
+  {
+    "text": "Quitter sans enregistrer",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:345",
+      "src/app/video/edit/[slug]/page.tsx:2261",
+      "src/app/video/edit/[slug]/page.tsx:2951"
+    ]
+  },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 113,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
+    "text": "Rester sur la page",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:337",
+      "src/app/video/edit/[slug]/page.tsx:2253",
+      "src/app/video/edit/[slug]/page.tsx:2943"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 139,
-    "kind": "string",
-    "text": "Une erreur est survenue."
+    "text": "Supprimer",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:114",
+      "src/app/video/edit/[slug]/page.tsx:2427",
+      "src/app/video/edit/[slug]/page.tsx:3117"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 146,
-    "kind": "jsx-text",
-    "text": "Importer une vidéo"
+    "text": "Supprimer la liste de lecture",
+    "locations": [
+      "src/app/playlist/delete/[slug]/page.tsx:13",
+      "src/app/playlist/delete/[slug]/page.tsx:50",
+      "src/components/collection/PlaylistActionMenu.tsx:51"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 158,
-    "kind": "jsx-text",
-    "text": "Votre vidéo est en cours de traitement sur POD. Ne fermez pas la page..."
+    "text": "Supprimer la vidéo",
+    "locations": [
+      "src/app/video/delete/[slug]/page.tsx:14",
+      "src/app/video/delete/[slug]/page.tsx:51",
+      "src/app/video/delete/[slug]/page.tsx:97"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 176,
-    "kind": "jsx-text",
-    "text": "La taille du fichier doit être"
+    "text": "Titre",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:38",
+      "src/app/video/edit/[slug]/page.tsx:160",
+      "src/components/collection/PlaylistForm.tsx:81"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 178,
-    "kind": "jsx-text",
-    "text": "inférieure à"
+    "text": "Titre (A-Z)",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:29",
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:13",
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:12"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 182,
-    "kind": "jsx-text",
-    "text": "Le temps d'envoi dépend de la taille de votre fichier et de votre vitesse de téléchargement."
+    "text": "Une erreur est survenue.",
+    "locations": [
+      "src/app/video/add/page.tsx:101",
+      "src/app/video/add/page.tsx:139",
+      "src/app/video/edit/[slug]/page.tsx:787"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 186,
-    "kind": "jsx-text",
-    "text": "Pendant l'envoi, ne fermez pas votre navigateur avant d'avoir reçu un message de succès ou d'échec."
+    "text": "Veuillez corriger le champ suivant : ${…}.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:170",
+      "src/app/playlist/edit/[slug]/page.tsx:216",
+      "src/app/video/edit/[slug]/page.tsx:803"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 198,
-    "kind": "attr:bigText",
-    "text": "Choisissez un fichier audio ou vidéo"
+    "text": "Veuillez corriger les ${…} champs suivants : ${…}.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:169",
+      "src/app/playlist/edit/[slug]/page.tsx:215",
+      "src/app/video/edit/[slug]/page.tsx:802"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 211,
-    "kind": "attr:aria-label",
-    "text": "Sélectionner un fichier audio ou vidéo"
+    "text": "Vidéo introuvable.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:452",
+      "src/app/video/delete/[slug]/page.tsx:58",
+      "src/app/video/edit/[slug]/page.tsx:521"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 216,
-    "kind": "template",
-    "text": "Les formats suivants sont supportés : ${…}."
+    "text": "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:327",
+      "src/app/video/edit/[slug]/page.tsx:2243",
+      "src/app/video/edit/[slug]/page.tsx:2933"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 231,
-    "kind": "jsx-text",
-    "text": "Attention ! Assurez‑vous de respecter le code de la propriété intellectuelle avant de publier une vidéo :"
+    "text": "${…} vidéo${…} avec succès.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:293",
+      "src/components/video/bulk/BulkActionsBar.tsx:355"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 236,
-    "kind": "jsx-text",
-    "text": "Je confirme que je dispose des autorisations nécessaires signées par les parties concernées par la publication de ce média, en ce compris le consentement relatif au droit à l'image et au traitement des données personnelles. Je certifie que l'ensemble des personnes concernées ont bénéficié d'une information complète relative au traitement de leurs données personnelles, conformément aux dispositions des articles 13 et 14 du RGPD."
+    "text": "À propos",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:669",
+      "src/app/video/[slug]/page.tsx:773"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 248,
-    "kind": "attr:label",
-    "text": "J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo."
+    "text": "Ajouter",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:199",
+      "src/components/video/edit/VideoChaptersForm.tsx:648"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 254,
-    "kind": "string",
-    "text": "Veuillez accepter les conditions d'utilisation."
+    "text": "Ajouter le sous-titre",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2521",
+      "src/app/video/edit/[slug]/page.tsx:3211"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 257,
-    "kind": "string",
-    "text": "Veuillez accepter les conditions d'utilisation."
+    "text": "Ajouter un sous-titre",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2457",
+      "src/app/video/edit/[slug]/page.tsx:3149"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 283,
-    "kind": "jsx-text",
-    "text": "Importer la vidéo"
+    "text": "Ajoutez des sous-titres au format",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2380",
+      "src/app/video/edit/[slug]/page.tsx:3070"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 293,
-    "kind": "jsx-text",
-    "text": "Passer l'importation (Créer une fiche vide)"
+    "text": "Aucun sous-titre ajouté.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2441",
+      "src/app/video/edit/[slug]/page.tsx:3131"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 316,
-    "kind": "jsx-text",
-    "text": "Créer une fiche vide"
+    "text": "Capturer ce moment",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:322",
+      "src/components/video/edit/VideoChaptersForm.tsx:387"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 328,
-    "kind": "jsx-text",
-    "text": "Vous vous apprêtez à créer une fiche vidéo sans fichier média source. Vous pourrez ajouter la vidéo source ultérieurement depuis l'étape"
+    "text": "Cette action est définitive.",
+    "locations": [
+      "src/app/playlist/delete/[slug]/page.tsx:74",
+      "src/app/video/delete/[slug]/page.tsx:76"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 331,
-    "kind": "jsx-text",
-    "text": "de la page d'édition."
+    "text": "Chaîne",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:732",
+      "src/components/collection/display/CollectionDisplay.mapper.ts:19"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 335,
-    "kind": "attr:label",
-    "text": "Titre de la vidéo *"
+    "text": "Changer la source vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2631",
+      "src/app/video/edit/[slug]/page.tsx:3321"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 340,
-    "kind": "string",
-    "text": "Saisissez un titre clair et descriptif."
+    "text": "Chapitres de la vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2285",
+      "src/app/video/edit/[slug]/page.tsx:2975"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 353,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Connexion",
+    "locations": [
+      "src/app/login/LoginClientPage.tsx:110",
+      "src/app/login/LoginClientPage.tsx:118"
+    ]
   },
   {
-    "file": "src/app/video/add/page.tsx",
-    "line": 361,
-    "kind": "jsx-text",
-    "text": "Créer la fiche vide"
+    "text": "Déconnecté",
+    "locations": [
+      "src/context/AuthProvider.test.tsx:11",
+      "src/context/AuthProvider.test.tsx:35"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 13,
-    "kind": "string",
-    "text": "Supprimer la vidéo"
+    "text": "Éditer la vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:96",
+      "src/app/video/edit/[slug]/page.tsx:2142"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 49,
-    "kind": "jsx-text",
-    "text": "Supprimer la vidéo"
+    "text": "Erreur API.",
+    "locations": [
+      "src/utils/requestJson.test.ts:35",
+      "src/utils/requestJson.ts:12"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 56,
-    "kind": "string",
-    "text": "Vidéo introuvable."
+    "text": "Erreur d'encodage",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:996",
+      "src/components/video/display/VideoGridColumns.tsx:145"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 62,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Erreur lors de l'ajout du sous-titre.",
+    "locations": [
+      "src/hooks/useSubtitle.tsx:68",
+      "src/hooks/useSubtitle.tsx:76"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 67,
-    "kind": "jsx-text",
-    "text": "Vous ne pouvez pas accéder à cette page"
+    "text": "Erreur lors de l'upload de l'image",
+    "locations": [
+      "src/app/dressing/page.tsx:36",
+      "src/app/user-settings/dressing/page.tsx:36"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 72,
-    "kind": "jsx-text",
-    "text": "Etes-vous sûr.e de vouloir supprimer la vidéo"
+    "text": "Erreur lors de la suppression de la vidéo des favoris.",
+    "locations": [
+      "src/hooks/useFavorites.tsx:103",
+      "src/hooks/useFavorites.tsx:115"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 74,
-    "kind": "jsx-text",
-    "text": "Cette action est définitive."
+    "text": "Erreur lors de la suppression du commentaire.",
+    "locations": [
+      "src/hooks/useComments.tsx:246",
+      "src/hooks/useComments.tsx:259"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 85,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Erreur lors de la suppression du sous-titre.",
+    "locations": [
+      "src/hooks/useSubtitle.tsx:31",
+      "src/hooks/useSubtitle.tsx:39"
+    ]
   },
   {
-    "file": "src/app/video/delete/[slug]/page.tsx",
-    "line": 95,
-    "kind": "jsx-text",
-    "text": "Supprimer la vidéo"
+    "text": "Erreur lors du changement de source.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:674",
+      "src/app/video/edit/[slug]/page.tsx:684"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 96,
-    "kind": "string",
-    "text": "Éditer la vidéo"
+    "text": "Impossible de charger cette vidéo.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:474",
+      "src/app/video/edit/[slug]/page.tsx:532"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 128,
-    "kind": "string",
-    "text": "Détails"
+    "text": "Impossible de déverrouiller cette vidéo.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:383",
+      "src/app/video/[slug]/page.tsx:392"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 129,
-    "kind": "string",
-    "text": "Eléments Video"
+    "text": "Impossible de télécharger cette vidéo.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:414",
+      "src/app/video/[slug]/page.tsx:440"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 130,
-    "kind": "string",
-    "text": "Visibilité"
+    "text": "La description est obligatoire.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:113",
+      "src/components/collection/PlaylistForm.tsx:95"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 160,
-    "kind": "string",
-    "text": "Titre"
+    "text": "ou",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2381",
+      "src/app/video/edit/[slug]/page.tsx:3071"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 162,
-    "kind": "string",
-    "text": "Statut de la vidéo"
+    "text": "Propriétaire",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:166",
+      "src/app/video/edit/[slug]/page.tsx:1985"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 166,
-    "kind": "string",
-    "text": "Propriétaire"
+    "text": "Sélectionner un fichier .vtt ou .srt",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2497",
+      "src/app/video/edit/[slug]/page.tsx:3189"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 167,
-    "kind": "string",
-    "text": "Co-propriétaires"
+    "text": "Sélectionner un nouveau fichier vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2648",
+      "src/app/video/edit/[slug]/page.tsx:3353"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 169,
-    "kind": "string",
-    "text": "Mot de passe requis"
+    "text": "Supprimer la playlist",
+    "locations": [
+      "src/app/playlist/delete/[slug]/page.tsx:95",
+      "src/app/playlist/edit/[slug]/page.tsx:317"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 170,
-    "kind": "string",
-    "text": "Mot de passe"
+    "text": "Thème",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:27",
+      "src/components/collection/display/CollectionDisplay.mapper.ts:49"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 174,
-    "kind": "string",
-    "text": "Téléchargement"
+    "text": "Veuillez accepter les conditions d'utilisation.",
+    "locations": [
+      "src/app/video/add/page.tsx:254",
+      "src/app/video/add/page.tsx:257"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 176,
-    "kind": "string",
-    "text": "Vidéo 360"
+    "text": "vidéo",
+    "locations": [
+      "src/components/collection/PlaylistCard.tsx:223",
+      "src/components/video/bulk/BulkActionsBar.tsx:683"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 179,
-    "kind": "string",
-    "text": "Date de l'évènement"
+    "text": "Vidéo privée",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2056",
+      "src/components/video/display/VideoGridColumns.tsx:157"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 181,
-    "kind": "string",
-    "text": "Thèmes"
+    "text": "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:122",
+      "src/app/playlist/edit/[slug]/page.tsx:187"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 281,
-    "kind": "string",
-    "text": "Aucune"
+    "text": "-- Aucune chaîne (retirer de toute chaîne) --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:732"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 521,
-    "kind": "jsx-text",
-    "text": "Vidéo introuvable."
+    "text": "-- Choisir le niveau --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:907"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 532,
-    "kind": "string",
-    "text": "Impossible de charger cette vidéo."
+    "text": "-- Choisir le statut --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:763"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 541,
-    "kind": "jsx-text",
-    "text": "Vous n'avez pas les droits pour modifier cette vidéo."
+    "text": "-- Choisir un type --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:715"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 558,
-    "kind": "template",
-    "text": "Veuillez remplir le(s) champ(s) obligatoire(s) avant de continuer : ${…}."
+    "text": "-- Choisir une discipline --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:890"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 584,
-    "kind": "template",
-    "text": "Veuillez remplir le(s) champ(s) obligatoire(s) de l'étape \"${…}\" avant de continuer : ${…}."
+    "text": "-- Choisir une licence --",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:828"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 621,
-    "kind": "string",
-    "text": "Impossible d'ajouter un sous‑titre à cette vidéo."
+    "text": ", Opacité :",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:587"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 625,
-    "kind": "string",
-    "text": "Veuillez sélectionner un fichier de sous‑titre."
+    "text": "⏹️ Amorce de fin : vidéo #",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:597"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 657,
-    "kind": "string",
-    "text": "Erreur lors de la duplication."
+    "text": "▶️ Amorce de début : vidéo #",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:592"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 674,
-    "kind": "string",
-    "text": "Erreur lors du changement de source."
+    "text": "⚠️ Attention : certaines vidéos sont actuellement en cours d'encodage.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:687"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 676,
-    "kind": "string",
-    "text": "Source vidéo mise à jour. Re-encodage lancé."
+    "text": "✅ Oui — connexion requise pour accéder",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:781"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 684,
-    "kind": "string",
-    "text": "Erreur lors du changement de source."
+    "text": "❌ Erreur",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:1007"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 695,
-    "kind": "string",
-    "text": "Vous devez être connecté·e pour modifier cette vidéo."
+    "text": "⬇️ Oui — autoriser le téléchargement",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:799"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 705,
-    "kind": "string",
-    "text": "Aucun fichier source n'a été importé à l'étape Importation. La fiche ne peut pas être publiée en mode Public."
+    "text": "🌐 Non — accessible sans connexion",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:784"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 717,
-    "kind": "string",
-    "text": "Pour un statut restreint, choisissez au moins une restriction."
+    "text": "🌐 Publique — visible par tous",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:766"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 778,
-    "kind": "string",
-    "text": "Vidéo mise à jour avec succès ! 🥳"
+    "text": "💡 Pour ajouter un filigrane ou des amorces (vidéo d'ouverture / fermeture), créez d'abord l'habillage, puis éditez-le dans les paramètres.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:224"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 787,
-    "kind": "string",
-    "text": "Une erreur est survenue."
+    "text": "💬 Activer les commentaires",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:817"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 802,
-    "kind": "template",
-    "text": "Veuillez corriger les ${…} champs suivants : ${…}."
+    "text": "🔒 Privé",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:142"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 803,
-    "kind": "template",
-    "text": "Veuillez corriger le champ suivant : ${…}."
+    "text": "🔒 Privée — brouillon, non visible",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:767"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 978,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
+    "text": "🚫 Désactiver les commentaires",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:818"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 1390,
-    "kind": "jsx-text",
-    "text": "Sélectionnez un ou plusieurs thèmes"
+    "text": "🚫 Non — désactiver le téléchargement",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:802"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 1831,
-    "kind": "string",
-    "text": "Le mot de passe doit contenir au moins 4 caractères."
+    "text": "${…} - Ajouté le ${…}",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:142"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 1843,
-    "kind": "string",
-    "text": "Laissez vide pour ne pas modifier le mot de passe existant."
+    "text": "Accès non autorisé (401). Veuillez vous connecter.",
+    "locations": [
+      "src/hooks/useVideos.tsx:151"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 1978,
-    "kind": "string",
-    "text": "Titre de la vidéo"
+    "text": "Accès restreint",
+    "locations": [
+      "src/constants/video.ts:18"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 1985,
-    "kind": "string",
-    "text": "Propriétaire"
+    "text": "Actions vidéo",
+    "locations": [
+      "src/components/video/VideoActionMenu.tsx:70"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2056,
-    "kind": "attr:title",
-    "text": "Vidéo privée"
+    "text": "Actualité : Climat",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:49"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2069,
-    "kind": "attr:title",
-    "text": "Vidéo protégée par mot de passe"
+    "text": "Affichage et accessibilité",
+    "locations": [
+      "src/app/user-settings/preferences/page.tsx:8"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2107,
-    "kind": "string",
-    "text": "Récemment"
+    "text": "Affiche la liste des directs en cours avec un indicateur actif rouge.",
+    "locations": [
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:5"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2142,
-    "kind": "jsx-text",
-    "text": "Éditer la vidéo"
+    "text": "Affiche un paragraphe ou contenu personnalisé.",
+    "locations": [
+      "src/components/blocks/manifests/CustomTextBlock.manifest.ts:4"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2242,
-    "kind": "jsx-text",
-    "text": "Modifications non enregistrées"
+    "text": "Affiche une rangée ou grille de cartes vidéos paramétrable.",
+    "locations": [
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:4"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2243,
-    "kind": "jsx-text",
-    "text": "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?"
+    "text": "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists).",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:5"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2253,
-    "kind": "jsx-text",
-    "text": "Rester sur la page"
+    "text": "Ajouter la playlist",
+    "locations": [
+      "src/app/playlist/add/page.tsx:205"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2261,
-    "kind": "jsx-text",
-    "text": "Quitter sans enregistrer"
+    "text": "Ajouter le document",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:123"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2285,
-    "kind": "jsx-text",
-    "text": "Chapitres de la vidéo"
+    "text": "Ajouter un chapitre",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:524"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2297,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Ajouter un document",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:90"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2321,
-    "kind": "jsx-text",
-    "text": "Habillage de la vidéo"
+    "text": "Ajouter un filigrane",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:84"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2338,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Ajouter un mot de passe",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:40"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2380,
-    "kind": "jsx-text",
-    "text": "Ajoutez des sous-titres au format"
+    "text": "Ajouter un mot de passe pour accéder à la liste de lecture.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:172"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2381,
-    "kind": "jsx-text",
-    "text": "ou"
+    "text": "Ajouter une liste de lecture",
+    "locations": [
+      "src/app/playlist/add/page.tsx:19"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2415,
-    "kind": "jsx-text",
-    "text": "Par défaut"
+    "text": "Ajouter une vidéo",
+    "locations": [
+      "src/app/video/add/page.tsx:31"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2427,
-    "kind": "jsx-text",
-    "text": "Supprimer"
+    "text": "Aller au contenu principal",
+    "locations": [
+      "src/app/layout.tsx:62"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2441,
-    "kind": "jsx-text",
-    "text": "Aucun sous-titre ajouté."
+    "text": "Amorce début",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:547"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2457,
-    "kind": "jsx-text",
-    "text": "Ajouter un sous-titre"
+    "text": "Attention ! Assurez‑vous de respecter le code de la propriété intellectuelle avant de publier une vidéo :",
+    "locations": [
+      "src/app/video/add/page.tsx:231"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2493,
-    "kind": "attr:label",
-    "text": "Par défaut"
+    "text": "Aucun",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:780"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2497,
-    "kind": "attr:text",
-    "text": "Sélectionner un fichier .vtt ou .srt"
+    "text": "Aucun chapitre. Lisez la vidéo et cliquez sur",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:385"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2521,
-    "kind": "string",
-    "text": "Ajouter le sous-titre"
+    "text": "Aucun contributeur associé.",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:261"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2532,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Aucun document n'est rattaché à cette vidéo pour le moment.",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:158"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2568,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Aucun élément configuré",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:551"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2604,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Aucun fichier source n'a été importé à l'étape Importation. La fiche ne peut pas être publiée en mode Public.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:705"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2631,
-    "kind": "jsx-text",
-    "text": "Changer la source vidéo"
+    "text": "Aucun habillage",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:499"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2643,
-    "kind": "jsx-text",
-    "text": "Remplacez le fichier source de cette vidéo. Un nouveau processus d'encodage sera lancé."
+    "text": "Aucun habillage disponible",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:465"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2648,
-    "kind": "attr:text",
-    "text": "Sélectionner un nouveau fichier vidéo"
+    "text": "Aucun mot-clé disponible pour le moment.",
+    "locations": [
+      "src/components/Tags/ShowTags.tsx:99"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2674,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Aucune video trouvée.",
+    "locations": [
+      "src/components/video/display/VideoGrid.tsx:83"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2932,
-    "kind": "jsx-text",
-    "text": "Modifications non enregistrées"
+    "text": "Bloc Générale de Collections",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:3"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2933,
-    "kind": "jsx-text",
-    "text": "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?"
+    "text": "Bloc Grille de Vidéos",
+    "locations": [
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:3"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2943,
-    "kind": "jsx-text",
-    "text": "Rester sur la page"
+    "text": "CC BY-NC-SA — Partage à l'identique, pas d'usage commercial",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:190"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2951,
-    "kind": "jsx-text",
-    "text": "Quitter sans enregistrer"
+    "text": "CC BY-SA — Partage à l'identique",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:192"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2975,
-    "kind": "jsx-text",
-    "text": "Chapitres de la vidéo"
+    "text": "Certaines vidéos sont en cours d'encodage. Les actions nécessitant l'encodage complet sont désactivées.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:433"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 2987,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Cette vidéo est protégée par un mot de passe.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:491"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3011,
-    "kind": "jsx-text",
-    "text": "Habillage de la vidéo"
+    "text": "Chaîne #",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:736"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3028,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Chaînes (Channels)",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:11"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3070,
-    "kind": "jsx-text",
-    "text": "Ajoutez des sous-titres au format"
+    "text": "Changer ma photo de profil",
+    "locations": [
+      "src/app/profile-picture/page.tsx:17"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3071,
-    "kind": "jsx-text",
-    "text": "ou"
+    "text": "Changer mon image de profil",
+    "locations": [
+      "src/app/profile-picture/page.tsx:137"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3105,
-    "kind": "jsx-text",
-    "text": "Par défaut"
+    "text": "Chargement des contenus WebTV...",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:39"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3117,
-    "kind": "jsx-text",
-    "text": "Supprimer"
+    "text": "Chargement des documents...",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:128"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3131,
-    "kind": "jsx-text",
-    "text": "Aucun sous-titre ajouté."
+    "text": "Chargement des habillages…",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:449"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3149,
-    "kind": "jsx-text",
-    "text": "Ajouter un sous-titre"
+    "text": "Chargement des mots-clés...",
+    "locations": [
+      "src/components/Tags/ShowTags.tsx:84"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3185,
-    "kind": "attr:label",
-    "text": "Par défaut"
+    "text": "Chargement des réseaux sociaux...",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:97"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3189,
-    "kind": "attr:text",
-    "text": "Sélectionner un fichier .vtt ou .srt"
+    "text": "Chargement...",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:89"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3211,
-    "kind": "string",
-    "text": "Ajouter le sous-titre"
+    "text": "Choisir la qualité :",
+    "locations": [
+      "src/components/video/VideoDownloadMenu.tsx:82"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3222,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Choisissez l'ordre d'affichage des vidéos.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:201"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3258,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Choisissez les réseaux sociaux que vous rendez disponibles pour le partage de cette vidéo sur la page de visionnage.",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:80"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3294,
-    "kind": "jsx-text",
-    "text": "Fermer"
+    "text": "Choisissez un fichier audio ou vidéo",
+    "locations": [
+      "src/app/video/add/page.tsx:198"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3321,
-    "kind": "jsx-text",
-    "text": "Changer la source vidéo"
+    "text": "Cliquer pour aller à ce moment",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:422"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3333,
-    "kind": "jsx-text",
-    "text": "Remplacez le fichier source de cette vidéo. Un nouveau processus d'encodage sera automatiquement lancé."
+    "text": "Co-propriétaires",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:167"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3353,
-    "kind": "attr:text",
-    "text": "Sélectionner un nouveau fichier vidéo"
+    "text": "Configurez les paramètres de base ci-dessous.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:130"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3379,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Confirmer la modification",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:1053"
+    ]
   },
   {
-    "file": "src/app/video/edit/[slug]/page.tsx",
-    "line": 3388,
-    "kind": "string",
-    "text": "Remplacer la source"
+    "text": "Confirmer la suppression",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:665"
+    ]
   },
   {
-    "file": "src/app/video/page.tsx",
-    "line": 5,
-    "kind": "string",
-    "text": "Toutes les vidéos - Esup-Pod"
+    "text": "Connecté",
+    "locations": [
+      "src/context/AuthProvider.test.tsx:11"
+    ]
   },
   {
-    "file": "src/app/video/page.tsx",
-    "line": 7,
-    "kind": "string",
-    "text": "Découvrez toutes les vidéos publiques de la plateforme Esup-Pod."
+    "text": "Connectez-vous à la plateforme Esup-Pod pour gérer vos vidéos.",
+    "locations": [
+      "src/app/login/page.tsx:6"
+    ]
   },
   {
-    "file": "src/components/Comments/commentItem.tsx",
-    "line": 163,
-    "kind": "attr:aria-label",
-    "text": "Voter pour ce commentaire"
+    "text": "Connectez-vous pour accéder à vos vidéos et votre espace personnel sur Esup-Pod.",
+    "locations": [
+      "src/app/login/layout.tsx:6"
+    ]
   },
   {
-    "file": "src/components/Footer/Footer.tsx",
-    "line": 44,
-    "kind": "jsx-text",
-    "text": "La Maison des Universites"
+    "text": "Connexion - Esup-Pod",
+    "locations": [
+      "src/app/login/page.tsx:5"
+    ]
   },
   {
-    "file": "src/components/Navbar/Navbar.tsx",
-    "line": 220,
-    "kind": "attr:aria-label",
-    "text": "Ouvrir le menu du profil"
+    "text": "Connexion | Esup-Pod",
+    "locations": [
+      "src/app/login/layout.tsx:4"
+    ]
   },
   {
-    "file": "src/components/Navbar/Navbar.tsx",
-    "line": 320,
-    "kind": "attr:aria-label",
-    "text": "Fermer la recherche"
+    "text": "Connexion à mon profil POD",
+    "locations": [
+      "src/app/login/LoginClientPage.tsx:18"
+    ]
   },
   {
-    "file": "src/components/Navbar/Navbar.tsx",
-    "line": 379,
-    "kind": "attr:aria-label",
-    "text": "Ouvrir la recherche"
+    "text": "Connexion CAS",
+    "locations": [
+      "src/app/login/LoginClientPage.tsx:100"
+    ]
   },
   {
-    "file": "src/components/Navbar/ProfileMenuContent.tsx",
-    "line": 42,
-    "kind": "attr:aria-label",
-    "text": "Fermer le menu"
+    "text": "Contenu texte ou HTML",
+    "locations": [
+      "src/components/blocks/manifests/CustomTextBlock.manifest.ts:8"
+    ]
   },
   {
-    "file": "src/components/Navbar/ProfileMenuContent.tsx",
-    "line": 106,
-    "kind": "jsx-text",
-    "text": "Déconnexion"
+    "text": "Contenus de la chaine",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:290"
+    ]
   },
   {
-    "file": "src/components/Notifications/AuthStatusAlert.tsx",
-    "line": 10,
-    "kind": "string",
-    "text": "Vous êtes désormais connecté."
+    "text": "Copie le temps actuel dans le champ Temps",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:320"
+    ]
   },
   {
-    "file": "src/components/Notifications/AuthStatusAlert.tsx",
-    "line": 11,
-    "kind": "string",
-    "text": "Vous êtes désormais déconnecté."
+    "text": "Copyright / Droits réservés",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:181"
+    ]
   },
   {
-    "file": "src/components/Tags/ShowTags.tsx",
-    "line": 84,
-    "kind": "jsx-text",
-    "text": "Chargement des mots-clés..."
+    "text": "Créateur",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:736"
+    ]
   },
   {
-    "file": "src/components/Tags/ShowTags.tsx",
-    "line": 91,
-    "kind": "jsx-text",
-    "text": "Erreur lors du chargement des mots-clés :"
+    "text": "Création...",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:275"
+    ]
   },
   {
-    "file": "src/components/Tags/ShowTags.tsx",
-    "line": 99,
-    "kind": "jsx-text",
-    "text": "Aucun mot-clé disponible pour le moment."
+    "text": "Créer l'habillage",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:275"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVHeader.tsx",
-    "line": 111,
-    "kind": "jsx-text",
-    "text": "Rechercher des contenus"
+    "text": "Créer la fiche vide",
+    "locations": [
+      "src/app/video/add/page.tsx:361"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 39,
-    "kind": "jsx-text",
-    "text": "Chargement des contenus WebTV..."
+    "text": "Créer mon premier habillage",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:485"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 49,
-    "kind": "attr:title",
-    "text": "Actualité : Climat"
+    "text": "Créer un habillage",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:413"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 50,
-    "kind": "attr:title",
-    "text": "Série / Émission"
+    "text": "Créer une fiche vide",
+    "locations": [
+      "src/app/video/add/page.tsx:316"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 56,
-    "kind": "string",
-    "text": "Les Collections d'Actualité"
+    "text": "D MMMM YYYY [à] HH:mm",
+    "locations": [
+      "src/constants/date.ts:37"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 65,
-    "kind": "string",
-    "text": "Les dernières Collections"
+    "text": "Date de création (Récents)",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:30"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 70,
-    "kind": "attr:title",
-    "text": "Les vidéos les plus vues"
+    "text": "Date de début (Prochainement)",
+    "locations": [
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:11"
+    ]
   },
   {
-    "file": "src/components/WebTV/WebTVLayout.tsx",
-    "line": 83,
-    "kind": "jsx-text",
-    "text": "Université de Lille"
+    "text": "Date de début (Récents)",
+    "locations": [
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:12"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 3,
-    "kind": "string",
-    "text": "Bloc Générale de Collections"
+    "text": "Date de l'évènement",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:179"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 5,
-    "kind": "string",
-    "text": "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists)."
+    "text": "de la page d'édition.",
+    "locations": [
+      "src/app/video/add/page.tsx:331"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 9,
-    "kind": "string",
-    "text": "Type de collection à afficher"
+    "text": "Déconnexion",
+    "locations": [
+      "src/components/Navbar/ProfileMenuContent.tsx:106"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 11,
-    "kind": "string",
-    "text": "Chaînes (Channels)"
+    "text": "Découvrez et gérez les listes de lecture publiques de la plateforme Esup-Pod.",
+    "locations": [
+      "src/app/playlist/page.tsx:7"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 12,
-    "kind": "string",
-    "text": "Thèmes (Catégories)"
+    "text": "Découvrez toutes les vidéos publiques de la plateforme Esup-Pod.",
+    "locations": [
+      "src/app/video/page.tsx:7"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 14,
-    "kind": "string",
-    "text": "Toutes les collections"
+    "text": "Décrivez le contenu et/ou le contexte de votre liste de lecture.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:107"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 21,
-    "kind": "string",
-    "text": "Identifiants ou Slugs de collections à afficher (séparés par virgule)"
+    "text": "Dernières ajoutées",
+    "locations": [
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:10"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 29,
-    "kind": "string",
-    "text": "Titre (A-Z)"
+    "text": "Détails",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:128"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CollectionBlock.manifest.ts",
-    "line": 30,
-    "kind": "string",
-    "text": "Date de création (Récents)"
+    "text": "Déverrouillage...",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:514"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CustomTextBlock.manifest.ts",
-    "line": 4,
-    "kind": "string",
-    "text": "Affiche un paragraphe ou contenu personnalisé."
+    "text": "Déverrouiller la vidéo",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:514"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/CustomTextBlock.manifest.ts",
-    "line": 8,
-    "kind": "string",
-    "text": "Contenu texte ou HTML"
+    "text": "Document privé (visible uniquement par le propriétaire et les co-propriétaires)",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:115"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 5,
-    "kind": "string",
-    "text": "Affiche la liste des directs en cours avec un indicateur actif rouge."
+    "text": "Donnez un titre court et explicite à votre liste de lecture.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:85"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 9,
-    "kind": "string",
-    "text": "Ordre de tri des directs"
+    "text": "DURÉE",
+    "locations": [
+      "src/components/video/display/VideoGridColumns.tsx:82"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 11,
-    "kind": "string",
-    "text": "Date de début (Prochainement)"
+    "text": "Eléments Video",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:129"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 12,
-    "kind": "string",
-    "text": "Date de début (Récents)"
+    "text": "Encodage terminé",
+    "locations": [
+      "src/components/video/display/VideoGridColumns.tsx:151"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 13,
-    "kind": "string",
-    "text": "Titre (A-Z)"
+    "text": "Enregistrer",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:288"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/LiveBlock.manifest.ts",
-    "line": 14,
-    "kind": "string",
-    "text": "Popularité (Nombre de spectateurs)"
+    "text": "enregistrés",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:89"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 3,
-    "kind": "string",
-    "text": "Bloc Grille de Vidéos"
+    "text": "Erreur",
+    "locations": [
+      "src/constants/video.ts:28"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 4,
-    "kind": "string",
-    "text": "Affiche une rangée ou grille de cartes vidéos paramétrable."
+    "text": "Erreur ajout vidéo dans playlist",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:174"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 8,
-    "kind": "string",
-    "text": "Ordre de tri des vidéos"
+    "text": "Erreur d'enregistrement de vue",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:544"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 10,
-    "kind": "string",
-    "text": "Dernières ajoutées"
+    "text": "Erreur de chargement de la configuration.",
+    "locations": [
+      "src/context/AppConfigProvider.tsx:43"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 11,
-    "kind": "string",
-    "text": "Les plus vues"
+    "text": "Erreur de chargement de la page",
+    "locations": [
+      "src/hooks/usePage.ts:25"
+    ]
   },
   {
-    "file": "src/components/blocks/manifests/VideoGridBlock.manifest.ts",
-    "line": 12,
-    "kind": "string",
-    "text": "Titre (A-Z)"
+    "text": "Erreur de chargement de la playlist.",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:101"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistActionMenu.tsx",
-    "line": 39,
-    "kind": "jsx-text",
-    "text": "Éditer la liste de lecture"
+    "text": "Erreur de chargement de la vidéo.",
+    "locations": [
+      "src/hooks/useVideos.tsx:108"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistActionMenu.tsx",
-    "line": 51,
-    "kind": "jsx-text",
-    "text": "Supprimer la liste de lecture"
+    "text": "Erreur de chargement des favoris.",
+    "locations": [
+      "src/hooks/useFavorites.tsx:45"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistCard.tsx",
-    "line": 179,
-    "kind": "attr:title",
-    "text": "Playlist protégée par mot de passe"
+    "text": "Erreur de chargement des informations.",
+    "locations": [
+      "src/hooks/useAppInfo.ts:21"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistCard.tsx",
-    "line": 185,
-    "kind": "attr:title",
-    "text": "Playlist privée"
+    "text": "Erreur de chargement des playlists.",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:42"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistCard.tsx",
-    "line": 223,
-    "kind": "jsx-text",
-    "text": "vidéo"
+    "text": "Erreur de mise à jour.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:320"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 75,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
+    "text": "Erreur de récupération de la chaine.",
+    "locations": [
+      "src/hooks/useChannel.tsx:51"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 81,
-    "kind": "attr:label",
-    "text": "Titre"
+    "text": "Erreur de récupération des chaines.",
+    "locations": [
+      "src/hooks/useChannel.tsx:25"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 85,
-    "kind": "string",
-    "text": "Donnez un titre court et explicite à votre liste de lecture."
+    "text": "Erreur de récupération des thèmes.",
+    "locations": [
+      "src/hooks/useTheme.tsx:34"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 95,
-    "kind": "string",
-    "text": "La description est obligatoire."
+    "text": "Erreur de récupération du thème.",
+    "locations": [
+      "src/hooks/useTheme.tsx:60"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 107,
-    "kind": "string",
-    "text": "Décrivez le contenu et/ou le contexte de votre liste de lecture."
+    "text": "Erreur de sauvegarde.",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:53"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 115,
-    "kind": "jsx-text",
-    "text": "Restrictions d’accès"
+    "text": "Erreur lors de l'ajout de la vidéo aux favoris.",
+    "locations": [
+      "src/hooks/useFavorites.tsx:79"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 146,
-    "kind": "attr:label",
-    "text": "Protéger ma liste de lecture par un mot de passe"
+    "text": "Erreur lors de l'ajout du commentaire.",
+    "locations": [
+      "src/hooks/useComments.tsx:177"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 160,
-    "kind": "string",
-    "text": "Le mot de passe doit contenir au moins 8 caractères."
+    "text": "Erreur lors de l'ajout.",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:140"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 168,
-    "kind": "attr:label",
-    "text": "Mot de passe de la liste de lecture"
+    "text": "Erreur lors de l'enregistrement du formulaire",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:162"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 172,
-    "kind": "string",
-    "text": "Ajouter un mot de passe pour accéder à la liste de lecture."
+    "text": "Erreur lors de l'upload du document.",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:53"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 181,
-    "kind": "jsx-text",
-    "text": "Votre liste de lecture sera visible par tous les utilisateurs."
+    "text": "Erreur lors de la création.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:70"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 185,
-    "kind": "jsx-text",
-    "text": "Votre liste de lecture sera visible uniquement par vous."
+    "text": "Erreur lors de la duplication de la vidéo.",
+    "locations": [
+      "src/hooks/useVideos.tsx:281"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 200,
-    "kind": "attr:label",
-    "text": "Tri de l'affichage des vidéos par défault."
+    "text": "Erreur lors de la duplication.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:657"
+    ]
   },
   {
-    "file": "src/components/collection/PlaylistForm.tsx",
-    "line": 201,
-    "kind": "attr:helperText",
-    "text": "Choisissez l'ordre d'affichage des vidéos."
+    "text": "Erreur lors de la mise à jour de l'habillage.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:315"
+    ]
   },
   {
-    "file": "src/components/collection/display/CollectionDisplay.mapper.ts",
-    "line": 19,
-    "kind": "string",
-    "text": "Chaîne"
+    "text": "Erreur lors de la récupération des blocs de mise en page.",
+    "locations": [
+      "src/hooks/useLayoutBlocks.ts:26"
+    ]
   },
   {
-    "file": "src/components/collection/display/CollectionDisplay.mapper.ts",
-    "line": 49,
-    "kind": "string",
-    "text": "Thème"
+    "text": "Erreur lors de la sauvegarde des réseaux sociaux.",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:48"
+    ]
   },
   {
-    "file": "src/components/collection/display/CollectionViewToggle.tsx",
-    "line": 25,
-    "kind": "attr:aria-label",
-    "text": "Mode d'affichage des collections"
+    "text": "Erreur lors de la suppression de la vidéo.",
+    "locations": [
+      "src/hooks/useVideos.tsx:208"
+    ]
   },
   {
-    "file": "src/components/video/VideoActionMenu.tsx",
-    "line": 70,
-    "kind": "attr:aria-label",
-    "text": "Actions vidéo"
+    "text": "Erreur lors de la suppression.",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:62"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 57,
-    "kind": "string",
-    "text": "Réalisateur"
+    "text": "Erreur lors du chargement des co‑propriétaires",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:334"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 96,
-    "kind": "string",
-    "text": "Impossible d'ajouter ce contributeur (peut-être déjà ajouté avec ce rôle ?)"
+    "text": "Erreur lors du chargement des commentaires.",
+    "locations": [
+      "src/hooks/useComments.tsx:128"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 152,
-    "kind": "attr:label",
-    "text": "Rechercher un contributeur..."
+    "text": "Erreur lors du chargement des filigranes.",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:64"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 171,
-    "kind": "attr:label",
-    "text": "Rôle"
+    "text": "Erreur lors du chargement des mots-clés :",
+    "locations": [
+      "src/components/Tags/ShowTags.tsx:91"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 187,
-    "kind": "attr:label",
-    "text": "Fonction / Titre"
+    "text": "Erreur lors du chargement des vidéos (${…}).",
+    "locations": [
+      "src/hooks/useVideos.tsx:159"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 199,
-    "kind": "string",
-    "text": "Ajouter"
+    "text": "Erreur lors du vote.",
+    "locations": [
+      "src/hooks/useComments.tsx:222"
+    ]
   },
   {
-    "file": "src/components/video/VideoContributorsForm.tsx",
-    "line": 261,
-    "kind": "jsx-text",
-    "text": "Aucun contributeur associé."
+    "text": "Erreur modification playlist",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:140"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 43,
-    "kind": "string",
-    "text": "Veuillez renseigner un titre et sélectionner un fichier."
+    "text": "Erreur retrait vidéo de playlist",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:195"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 53,
-    "kind": "string",
-    "text": "Erreur lors de l'upload du document."
+    "text": "Erreur suppression playlist",
+    "locations": [
+      "src/hooks/usePlaylist.tsx:153"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 58,
-    "kind": "string",
-    "text": "Voulez-vous vraiment supprimer ce document ?"
+    "text": "Êtes-vous sûr de vouloir supprimer ce filigrane ?",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:44"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 62,
-    "kind": "string",
-    "text": "Erreur lors de la suppression."
+    "text": "Etes-vous sûr.e de vouloir supprimer la vidéo",
+    "locations": [
+      "src/app/video/delete/[slug]/page.tsx:74"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 75,
-    "kind": "string",
-    "text": "Impossible de charger les documents."
+    "text": "Êtes-vous sûr·e de vouloir supprimer la playlist",
+    "locations": [
+      "src/app/playlist/delete/[slug]/page.tsx:72"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 90,
-    "kind": "jsx-text",
-    "text": "Ajouter un document"
+    "text": "Ex : Introduction, Démo, Conclusion…",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:606"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 92,
-    "kind": "attr:label",
-    "text": "Titre du document"
+    "text": "Fermer la recherche",
+    "locations": [
+      "src/components/Navbar/Navbar.tsx:320"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 99,
-    "kind": "attr:text",
-    "text": "Glissez et déposez un fichier ici"
+    "text": "Fermer le menu",
+    "locations": [
+      "src/components/Navbar/ProfileMenuContent.tsx:42"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 104,
-    "kind": "jsx-text",
-    "text": "Fichier sélectionné :"
+    "text": "Fichier sélectionné :",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:104"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 115,
-    "kind": "attr:label",
-    "text": "Document privé (visible uniquement par le propriétaire et les co-propriétaires)"
+    "text": "Filtres avancés",
+    "locations": [
+      "src/components/video/filters/VideoFilters.tsx:392"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 123,
-    "kind": "string",
-    "text": "Ajouter le document"
+    "text": "Fonction / Titre",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:187"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 128,
-    "kind": "jsx-text",
-    "text": "Chargement des documents..."
+    "text": "Fonctionnalité à venir",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:628"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 142,
-    "kind": "template",
-    "text": "${…} - Ajouté le ${…}"
+    "text": "Formats supportés: jpg, jpeg, png, webp",
+    "locations": [
+      "src/app/profile-picture/page.tsx:188"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 142,
-    "kind": "string",
-    "text": "🔒 Privé"
+    "text": "Français",
+    "locations": [
+      "src/context/LanguageProvider.tsx:27"
+    ]
   },
   {
-    "file": "src/components/video/VideoDocumentsForm.tsx",
-    "line": 158,
-    "kind": "jsx-text",
-    "text": "Aucun document n'est rattaché à cette vidéo pour le moment."
+    "text": "Gérez vos filigranes (watermarks) pour les incruster directement dans vos vidéos.",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:57"
+    ]
   },
   {
-    "file": "src/components/video/VideoDownloadMenu.tsx",
-    "line": 65,
-    "kind": "jsx-text",
-    "text": "Télécharger"
+    "text": "Gérez vos vidéos et paramètres sur votre tableau de bord Esup-Pod.",
+    "locations": [
+      "src/app/dashboard/layout.tsx:6"
+    ]
   },
   {
-    "file": "src/components/video/VideoDownloadMenu.tsx",
-    "line": 82,
-    "kind": "jsx-text",
-    "text": "Choisir la qualité :"
+    "text": "Glissez et déposez un fichier ici",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:99"
+    ]
   },
   {
-    "file": "src/components/video/VideoShareMenu.tsx",
-    "line": 111,
-    "kind": "jsx-text",
-    "text": "Partager sur"
+    "text": "Habillage appliqué avec succès.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:316"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 138,
-    "kind": "string",
-    "text": "Impossible : une ou plusieurs vidéos sélectionnées ne sont pas encore encodées. Attendez la fin de l'encodage pour modifier le statut de publication."
+    "text": "Identifiants ou Slugs de collections à afficher (séparés par virgule)",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:21"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 146,
-    "kind": "string",
-    "text": "Impossible : la restriction d'accès ne peut être définie que sur des vidéos entièrement encodées."
+    "text": "Importer la vidéo",
+    "locations": [
+      "src/app/video/add/page.tsx:283"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 154,
-    "kind": "string",
-    "text": "Impossible : le téléchargement ne peut être configuré que sur des vidéos encodées."
+    "text": "Importer une vidéo",
+    "locations": [
+      "src/app/video/add/page.tsx:146"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 162,
-    "kind": "string",
-    "text": "Impossible : les paramètres de commentaires ne s'appliquent qu'aux vidéos encodées."
+    "text": "Impossible : la restriction d'accès ne peut être définie que sur des vidéos entièrement encodées.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:146"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 181,
-    "kind": "string",
-    "text": "Copyright / Droits réservés"
+    "text": "Impossible : le téléchargement ne peut être configuré que sur des vidéos encodées.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:154"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 190,
-    "kind": "string",
-    "text": "CC BY-NC-SA — Partage à l'identique, pas d'usage commercial"
+    "text": "Impossible : les paramètres de commentaires ne s'appliquent qu'aux vidéos encodées.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:162"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 192,
-    "kind": "string",
-    "text": "CC BY-SA — Partage à l'identique"
+    "text": "Impossible : une ou plusieurs vidéos sélectionnées ne sont pas encore encodées. Attendez la fin de l'encodage pour modifier le statut de publication.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:138"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 293,
-    "kind": "template",
-    "text": "${…} vidéo${…} avec succès."
+    "text": "Impossible d'ajouter ce contributeur (peut-être déjà ajouté avec ce rôle ?)",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:96"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 293,
-    "kind": "string",
-    "text": "s supprimées"
+    "text": "Impossible d'ajouter le chapitre.",
+    "locations": [
+      "src/hooks/useChapters.ts:51"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 293,
-    "kind": "string",
-    "text": "supprimée"
+    "text": "Impossible d'ajouter un sous‑titre à cette vidéo.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:621"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 355,
-    "kind": "template",
-    "text": "${…} vidéo${…} avec succès."
+    "text": "Impossible de charger ce thème.",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:241"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 355,
-    "kind": "string",
-    "text": "s mises à jour"
+    "text": "Impossible de charger la playlist.",
+    "locations": [
+      "src/app/playlist/[slug]/page.tsx:147"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 355,
-    "kind": "string",
-    "text": "mise à jour"
+    "text": "Impossible de charger les chapitres.",
+    "locations": [
+      "src/hooks/useChapters.ts:30"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 368,
-    "kind": "string",
-    "text": "Une erreur est survenue lors de l'exécution de l'action groupée."
+    "text": "Impossible de charger les documents.",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:75"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 433,
-    "kind": "attr:title",
-    "text": "Certaines vidéos sont en cours d'encodage. Les actions nécessitant l'encodage complet sont désactivées."
+    "text": "Impossible de charger les réseaux sociaux.",
+    "locations": [
+      "src/hooks/useSocialNetworks.ts:22"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 545,
-    "kind": "string",
-    "text": "Non disponible pour cette sélection"
+    "text": "Impossible de supprimer le chapitre.",
+    "locations": [
+      "src/hooks/useChapters.ts:68"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 665,
-    "kind": "string",
-    "text": "Confirmer la suppression"
+    "text": "inférieure à",
+    "locations": [
+      "src/app/video/add/page.tsx:178"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 666,
-    "kind": "template",
-    "text": "Modifier en lot : ${…}"
+    "text": "irréversible",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:685"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 680,
-    "kind": "jsx-text",
-    "text": "Vous allez supprimer définitivement"
+    "text": "J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo.",
+    "locations": [
+      "src/app/video/add/page.tsx:248"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 683,
-    "kind": "jsx-text",
-    "text": "vidéo"
+    "text": "Je confirme que je dispose des autorisations nécessaires signées par les parties concernées par la publication de ce média, en ce compris le consentement relatif au droit à l'image et au traitement des données personnelles. Je certifie que l'ensemble des personnes concernées ont bénéficié d'une information complète relative au traitement de leurs données personnelles, conformément aux dispositions des articles 13 et 14 du RGPD.",
+    "locations": [
+      "src/app/video/add/page.tsx:236"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 685,
-    "kind": "jsx-text",
-    "text": "irréversible"
+    "text": "La Maison des Universites",
+    "locations": [
+      "src/components/Footer/Footer.tsx:44"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 687,
-    "kind": "jsx-text",
-    "text": "⚠️ Attention : certaines vidéos sont actuellement en cours d'encodage."
+    "text": "La page demandée n'existe pas.",
+    "locations": [
+      "src/app/not-found.tsx:14"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 705,
-    "kind": "jsx-text",
-    "text": "Nouvelle valeur pour :"
+    "text": "La taille du fichier doit être",
+    "locations": [
+      "src/app/video/add/page.tsx:176"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 715,
-    "kind": "jsx-text",
-    "text": "-- Choisir un type --"
+    "text": "La vidéo sera automatiquement supprimée à la date choisie.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:850"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 732,
-    "kind": "jsx-text",
-    "text": "-- Aucune chaîne (retirer de toute chaîne) --"
+    "text": "Laissez vide pour ne pas modifier le mot de passe existant.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:1843"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 736,
-    "kind": "jsx-text",
-    "text": "Chaîne #"
+    "text": "Lancer la liste de lecture",
+    "locations": [
+      "src/app/playlist/[slug]/page.tsx:173"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 763,
-    "kind": "jsx-text",
-    "text": "-- Choisir le statut --"
+    "text": "Le lecteur sera disponible une fois l'encodage terminé. Vous pouvez saisir les timestamps manuellement.",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:348"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 766,
-    "kind": "jsx-text",
-    "text": "🌐 Publique — visible par tous"
+    "text": "Le mot de passe doit contenir au moins 4 caractères.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:1831"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 767,
-    "kind": "jsx-text",
-    "text": "🔒 Privée — brouillon, non visible"
+    "text": "Le mot de passe doit contenir au moins 8 caractères.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:160"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 778,
-    "kind": "jsx-text",
-    "text": "-- Choisir --"
+    "text": "Le serveur API est indisponible ou en erreur (500).",
+    "locations": [
+      "src/hooks/useVideos.tsx:156"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 781,
-    "kind": "jsx-text",
-    "text": "✅ Oui — connexion requise pour accéder"
+    "text": "Le temps d'envoi dépend de la taille de votre fichier et de votre vitesse de téléchargement.",
+    "locations": [
+      "src/app/video/add/page.tsx:182"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 784,
-    "kind": "jsx-text",
-    "text": "🌐 Non — accessible sans connexion"
+    "text": "Le timestamp dépasse la durée de la vidéo (${…}).",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:125"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 796,
-    "kind": "jsx-text",
-    "text": "-- Choisir --"
+    "text": "Les Collections d'Actualité",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:56"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 799,
-    "kind": "jsx-text",
-    "text": "⬇️ Oui — autoriser le téléchargement"
+    "text": "Les commentaires sont désactivés pour cette vidéo.",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:765"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 802,
-    "kind": "jsx-text",
-    "text": "🚫 Non — désactiver le téléchargement"
+    "text": "Les dernières Collections",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:65"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 814,
-    "kind": "jsx-text",
-    "text": "-- Choisir --"
+    "text": "Les formats suivants sont supportés : ${…}.",
+    "locations": [
+      "src/app/video/add/page.tsx:216"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 817,
-    "kind": "jsx-text",
-    "text": "💬 Activer les commentaires"
+    "text": "Les plus vues",
+    "locations": [
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:11"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 818,
-    "kind": "jsx-text",
-    "text": "🚫 Désactiver les commentaires"
+    "text": "Les vidéos les plus vues",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:70"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 828,
-    "kind": "jsx-text",
-    "text": "-- Choisir une licence --"
+    "text": "Liste de lecture mise à jour avec succès ! 🥳",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:199"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 850,
-    "kind": "jsx-text",
-    "text": "La vidéo sera automatiquement supprimée à la date choisie."
+    "text": "Mes Filigranes",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:71"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 877,
-    "kind": "jsx-text",
-    "text": "Séparez les mots-clés par des virgules. Ils remplaceront les mots-clés existants."
+    "text": "Mes listes de lecture",
+    "locations": [
+      "src/app/playlist/me/page.tsx:16"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 890,
-    "kind": "jsx-text",
-    "text": "-- Choisir une discipline --"
+    "text": "Mes vidéos favorites",
+    "locations": [
+      "src/app/favorites/page.tsx:21"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 907,
-    "kind": "jsx-text",
-    "text": "-- Choisir le niveau --"
+    "text": "Mis à jour le :",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:704"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 928,
-    "kind": "jsx-text",
-    "text": "Vidéos concernées ("
+    "text": "mise à jour",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:355"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 996,
-    "kind": "attr:title",
-    "text": "Erreur d'encodage"
+    "text": "Mode d'affichage des collections",
+    "locations": [
+      "src/components/collection/display/CollectionViewToggle.tsx:25"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 1007,
-    "kind": "jsx-text",
-    "text": "❌ Erreur"
+    "text": "Mode d'affichage des vidéos",
+    "locations": [
+      "src/components/video/display/VideoViewToggle.tsx:24"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 1033,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Modifier en lot : ${…}",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:666"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 1051,
-    "kind": "string",
-    "text": "Supprimer définitivement"
+    "text": "Mot de passe de la liste de lecture",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:168"
+    ]
   },
   {
-    "file": "src/components/video/bulk/BulkActionsBar.tsx",
-    "line": 1053,
-    "kind": "string",
-    "text": "Confirmer la modification"
+    "text": "Mot de passe requis",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:169"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoDisplay.tsx",
-    "line": 148,
-    "kind": "jsx-text",
-    "text": "sur"
+    "text": "Mots clés",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:751"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoDisplay.tsx",
-    "line": 148,
-    "kind": "jsx-text",
-    "text": "vidéo"
+    "text": "Nom unique permettant de retrouver cet habillage facilement.",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:159"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoDisplay.tsx",
-    "line": 151,
-    "kind": "template",
-    "text": "(Page ${…} sur ${…})"
+    "text": "Non disponible pour cette sélection",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:545"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGrid.tsx",
-    "line": 83,
-    "kind": "attr:emptyPlaceholderLabel",
-    "text": "Aucune video trouvée."
+    "text": "Nouvelle valeur pour :",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:705"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 73,
-    "kind": "string",
-    "text": "TITRE"
+    "text": "Ordre de tri des directs",
+    "locations": [
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:9"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 82,
-    "kind": "string",
-    "text": "DURÉE"
+    "text": "Ordre de tri des vidéos",
+    "locations": [
+      "src/components/blocks/manifests/VideoGridBlock.manifest.ts:8"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 114,
-    "kind": "string",
-    "text": "Mot de passe"
+    "text": "Ouvrir la recherche",
+    "locations": [
+      "src/components/Navbar/Navbar.tsx:379"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 138,
-    "kind": "string",
-    "text": "Vidéo en attente d'encodage"
+    "text": "Ouvrir le menu du profil",
+    "locations": [
+      "src/components/Navbar/Navbar.tsx:220"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 145,
-    "kind": "string",
-    "text": "Erreur d'encodage"
+    "text": "Partager sur",
+    "locations": [
+      "src/components/video/VideoShareMenu.tsx:111"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 151,
-    "kind": "string",
-    "text": "Encodage terminé"
+    "text": "Passer l'importation (Créer une fiche vide)",
+    "locations": [
+      "src/app/video/add/page.tsx:293"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoGridColumns.tsx",
-    "line": 157,
-    "kind": "string",
-    "text": "Vidéo privée"
+    "text": "Pendant l'envoi, ne fermez pas votre navigateur avant d'avoir reçu un message de succès ou d'échec.",
+    "locations": [
+      "src/app/video/add/page.tsx:186"
+    ]
   },
   {
-    "file": "src/components/video/display/VideoViewToggle.tsx",
-    "line": 24,
-    "kind": "attr:aria-label",
-    "text": "Mode d'affichage des vidéos"
+    "text": "Plateforme vidéo Esup-Pod",
+    "locations": [
+      "src/app/layout.tsx:24"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 119,
-    "kind": "string",
-    "text": "Veuillez saisir un titre."
+    "text": "Playlist privée",
+    "locations": [
+      "src/components/collection/PlaylistCard.tsx:185"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 125,
-    "kind": "template",
-    "text": "Le timestamp dépasse la durée de la vidéo (${…})."
+    "text": "Playlist protégée par mot de passe",
+    "locations": [
+      "src/components/collection/PlaylistCard.tsx:179"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 140,
-    "kind": "string",
-    "text": "Erreur lors de l'ajout."
+    "text": "Plus récentes",
+    "locations": [
+      "src/constants/collection.ts:4"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 320,
-    "kind": "attr:title",
-    "text": "Copie le temps actuel dans le champ Temps"
+    "text": "Popularité (Nombre de spectateurs)",
+    "locations": [
+      "src/components/blocks/manifests/LiveBlock.manifest.ts:14"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 322,
-    "kind": "jsx-text",
-    "text": "Capturer ce moment"
+    "text": "pour ajouter une entrée.",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:387"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 345,
-    "kind": "jsx-text",
-    "text": "Vidéo en cours d'encodage"
+    "text": "Pour un statut restreint, choisissez au moins une restriction.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:717"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 348,
-    "kind": "jsx-text",
-    "text": "Le lecteur sera disponible une fois l'encodage terminé. Vous pouvez saisir les timestamps manuellement."
+    "text": "Privée",
+    "locations": [
+      "src/constants/video.ts:16"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 385,
-    "kind": "jsx-text",
-    "text": "Aucun chapitre. Lisez la vidéo et cliquez sur"
+    "text": "Protéger ma liste de lecture par un mot de passe",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:146"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 387,
-    "kind": "jsx-text",
-    "text": "Capturer ce moment"
+    "text": "Réalisateur",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:57"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 387,
-    "kind": "jsx-text",
-    "text": "pour ajouter une entrée."
+    "text": "Récemment",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2107"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 422,
-    "kind": "string",
-    "text": "Cliquer pour aller à ce moment"
+    "text": "Rechercher des contenus",
+    "locations": [
+      "src/components/WebTV/WebTVHeader.tsx:111"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 494,
-    "kind": "attr:title",
-    "text": "Supprimer ce chapitre"
+    "text": "Rechercher un contributeur...",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:152"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 524,
-    "kind": "jsx-text",
-    "text": "Ajouter un chapitre"
+    "text": "Réessayer",
+    "locations": [
+      "src/app/error.tsx:40"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 599,
-    "kind": "jsx-text",
-    "text": "Titre du chapitre"
+    "text": "Regarder la vidéo sur Esup-Pod",
+    "locations": [
+      "src/app/video/[slug]/layout.tsx:22"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 606,
-    "kind": "attr:placeholder",
-    "text": "Ex : Introduction, Démo, Conclusion…"
+    "text": "Remplacer la source",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:3388"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoChaptersForm.tsx",
-    "line": 648,
-    "kind": "jsx-text",
-    "text": "Ajouter"
+    "text": "Remplacez le fichier source de cette vidéo. Un nouveau processus d'encodage sera automatiquement lancé.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:3333"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 61,
-    "kind": "string",
-    "text": "Le titre est obligatoire."
+    "text": "Remplacez le fichier source de cette vidéo. Un nouveau processus d'encodage sera lancé.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2643"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 70,
-    "kind": "string",
-    "text": "Erreur lors de la création."
+    "text": "Réseaux sociaux autorisés au partage",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:75"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 95,
-    "kind": "jsx-text",
-    "text": "Retour à la sélection"
+    "text": "Réseaux sociaux enregistrés.",
+    "locations": [
+      "src/components/video/edit/VideoSocialNetworksForm.tsx:50"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 130,
-    "kind": "jsx-text",
-    "text": "Configurez les paramètres de base ci-dessous."
+    "text": "Restrictions d’accès",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:115"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 153,
-    "kind": "attr:label",
-    "text": "Titre de l'habillage *"
+    "text": "Retour a l'accueil",
+    "locations": [
+      "src/app/not-found.tsx:16"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 159,
-    "kind": "attr:helperText",
-    "text": "Nom unique permettant de retrouver cet habillage facilement."
+    "text": "Retour à la sélection",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:95"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 224,
-    "kind": "jsx-text",
-    "text": "💡 Pour ajouter un filigrane ou des amorces (vidéo d'ouverture / fermeture), créez d'abord l'habillage, puis éditez-le dans les paramètres."
+    "text": "Retour à mes listes de lectures",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:236"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 248,
-    "kind": "jsx-text",
-    "text": "Annuler"
+    "text": "Retour en arrière",
+    "locations": [
+      "src/app/error.tsx:39"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 275,
-    "kind": "string",
-    "text": "Création..."
+    "text": "Rôle",
+    "locations": [
+      "src/components/video/VideoContributorsForm.tsx:171"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 275,
-    "kind": "string",
-    "text": "Créer l'habillage"
+    "text": "s mises à jour",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:355"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 315,
-    "kind": "string",
-    "text": "Erreur lors de la mise à jour de l'habillage."
+    "text": "s supprimées",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:293"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 316,
-    "kind": "string",
-    "text": "Habillage appliqué avec succès."
+    "text": "Saisissez un titre clair et descriptif.",
+    "locations": [
+      "src/app/video/add/page.tsx:340"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 320,
-    "kind": "string",
-    "text": "Erreur de mise à jour."
+    "text": "Sélectionner un fichier audio ou vidéo",
+    "locations": [
+      "src/app/video/add/page.tsx:211"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 376,
-    "kind": "jsx-text",
-    "text": "Habillage de la vidéo"
+    "text": "Sélectionnez un ou plusieurs thèmes",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:1390"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 413,
-    "kind": "jsx-text",
-    "text": "Créer un habillage"
+    "text": "Séparez les mots-clés par des virgules. Ils remplaceront les mots-clés existants.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:877"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 449,
-    "kind": "jsx-text",
-    "text": "Chargement des habillages…"
+    "text": "Série / Émission",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:50"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 465,
-    "kind": "jsx-text",
-    "text": "Aucun habillage disponible"
+    "text": "Source vidéo mise à jour. Re-encodage lancé.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:676"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 485,
-    "kind": "jsx-text",
-    "text": "Créer mon premier habillage"
+    "text": "Sous-thèmes",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:364"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 499,
-    "kind": "jsx-text",
-    "text": "Aucun habillage"
+    "text": "Sous-thèmes (${…})",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:300"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 547,
-    "kind": "string",
-    "text": "Amorce début"
+    "text": "Statut de la vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:162"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 551,
-    "kind": "string",
-    "text": "Aucun élément configuré"
+    "text": "supprimée",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:293"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 587,
-    "kind": "jsx-text",
-    "text": ", Opacité :"
+    "text": "Supprimer ce chapitre",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:494"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 592,
-    "kind": "jsx-text",
-    "text": "▶️ Amorce de début : vidéo #"
+    "text": "Supprimer définitivement",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:1051"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 597,
-    "kind": "jsx-text",
-    "text": "⏹️ Amorce de fin : vidéo #"
+    "text": "Téléchargement",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:174"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 48,
-    "kind": "string",
-    "text": "Erreur lors de la sauvegarde des réseaux sociaux."
+    "text": "Télécharger",
+    "locations": [
+      "src/components/video/VideoDownloadMenu.tsx:65"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 50,
-    "kind": "string",
-    "text": "Réseaux sociaux enregistrés."
+    "text": "Terminé",
+    "locations": [
+      "src/constants/video.ts:27"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 53,
-    "kind": "string",
-    "text": "Erreur de sauvegarde."
+    "text": "Thèmes",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:181"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 75,
-    "kind": "jsx-text",
-    "text": "Réseaux sociaux autorisés au partage"
+    "text": "Thèmes (Catégories)",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:12"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 80,
-    "kind": "jsx-text",
-    "text": "Choisissez les réseaux sociaux que vous rendez disponibles pour le partage de cette vidéo sur la page de visionnage."
+    "text": "TITRE",
+    "locations": [
+      "src/components/video/display/VideoGridColumns.tsx:73"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 89,
-    "kind": "string",
-    "text": "enregistrés"
+    "text": "Titre de l'habillage *",
+    "locations": [
+      "src/components/video/edit/VideoDressingForm.tsx:153"
+    ]
   },
   {
-    "file": "src/components/video/edit/VideoSocialNetworksForm.tsx",
-    "line": 97,
-    "kind": "jsx-text",
-    "text": "Chargement des réseaux sociaux..."
+    "text": "Titre de la vidéo",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:1978"
+    ]
   },
   {
-    "file": "src/components/video/filters/VideoFilters.tsx",
-    "line": 392,
-    "kind": "jsx-text",
-    "text": "Filtres avancés"
+    "text": "Titre de la vidéo *",
+    "locations": [
+      "src/app/video/add/page.tsx:335"
+    ]
   },
   {
-    "file": "src/constants/collection.ts",
-    "line": 4,
-    "kind": "string",
-    "text": "Plus récentes"
+    "text": "Titre du chapitre",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:599"
+    ]
   },
   {
-    "file": "src/constants/date.ts",
-    "line": 37,
-    "kind": "string",
-    "text": "D MMMM YYYY [à] HH:mm"
+    "text": "Titre du document",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:92"
+    ]
   },
   {
-    "file": "src/constants/video.ts",
-    "line": 16,
-    "kind": "string",
-    "text": "Privée"
+    "text": "Toutes les collections",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:14"
+    ]
   },
   {
-    "file": "src/constants/video.ts",
-    "line": 18,
-    "kind": "string",
-    "text": "Accès restreint"
+    "text": "Toutes les vidéos",
+    "locations": [
+      "src/app/video/VideosClientPage.tsx:16"
+    ]
   },
   {
-    "file": "src/constants/video.ts",
-    "line": 27,
-    "kind": "string",
-    "text": "Terminé"
+    "text": "Toutes les vidéos - Esup-Pod",
+    "locations": [
+      "src/app/video/page.tsx:5"
+    ]
   },
   {
-    "file": "src/constants/video.ts",
-    "line": 28,
-    "kind": "string",
-    "text": "Erreur"
+    "text": "Tri de l'affichage des vidéos par défault.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:200"
+    ]
   },
   {
-    "file": "src/context/AppConfigProvider.tsx",
-    "line": 43,
-    "kind": "string",
-    "text": "Erreur de chargement de la configuration."
+    "text": "Tri par défault",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:43"
+    ]
   },
   {
-    "file": "src/context/AuthProvider.test.tsx",
-    "line": 11,
-    "kind": "string",
-    "text": "Connecté"
+    "text": "Type de collection à afficher",
+    "locations": [
+      "src/components/blocks/manifests/CollectionBlock.manifest.ts:9"
+    ]
   },
   {
-    "file": "src/context/AuthProvider.test.tsx",
-    "line": 11,
-    "kind": "string",
-    "text": "Déconnecté"
+    "text": "Une erreur est survenue lors de l'exécution de l'action groupée.",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:368"
+    ]
   },
   {
-    "file": "src/context/AuthProvider.test.tsx",
-    "line": 35,
-    "kind": "string",
-    "text": "Déconnecté"
+    "text": "Une erreur est survenue lors de la création de la playlist.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:138"
+    ]
   },
   {
-    "file": "src/context/AuthProvider.tsx",
-    "line": 356,
-    "kind": "string",
-    "text": "useAuth doit etre utilise dans AuthProvider."
+    "text": "Une erreur est survenue lors de la mise à jour de la playlist.",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:137"
+    ]
   },
   {
-    "file": "src/context/CunninghamProvider.tsx",
-    "line": 73,
-    "kind": "string",
-    "text": "useCunninghamTheme doit etre utilise dans CunninghamStyleProvider."
+    "text": "Une erreur est survenue lors de la mise à jour des favoris.",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:173"
+    ]
   },
   {
-    "file": "src/context/LanguageProvider.tsx",
-    "line": 27,
-    "kind": "string",
-    "text": "Français"
+    "text": "Une erreur inattendue est survenue lors de la création de la playlist.",
+    "locations": [
+      "src/app/playlist/add/page.tsx:153"
+    ]
   },
   {
-    "file": "src/context/PlaylistCreationContext.tsx",
-    "line": 38,
-    "kind": "string",
-    "text": "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider."
+    "text": "Une erreur inattendue est survenue.",
+    "locations": [
+      "src/app/error.tsx:34"
+    ]
   },
   {
-    "file": "src/context/SidebarProvider.tsx",
-    "line": 99,
-    "kind": "string",
-    "text": "useSidebar doit etre utilise dans SidebarProvider."
+    "text": "Université de Lille",
+    "locations": [
+      "src/components/WebTV/WebTVLayout.tsx:83"
+    ]
   },
   {
-    "file": "src/hooks/useAppInfo.ts",
-    "line": 21,
-    "kind": "string",
-    "text": "Erreur de chargement des informations."
+    "text": "useAuth doit etre utilise dans AuthProvider.",
+    "locations": [
+      "src/context/AuthProvider.tsx:356"
+    ]
   },
   {
-    "file": "src/hooks/useChannel.tsx",
-    "line": 25,
-    "kind": "string",
-    "text": "Erreur de récupération des chaines."
+    "text": "useCunninghamTheme doit etre utilise dans CunninghamStyleProvider.",
+    "locations": [
+      "src/context/CunninghamProvider.tsx:73"
+    ]
   },
   {
-    "file": "src/hooks/useChannel.tsx",
-    "line": 51,
-    "kind": "string",
-    "text": "Erreur de récupération de la chaine."
+    "text": "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
+    "locations": [
+      "src/context/PlaylistCreationContext.tsx:38"
+    ]
   },
   {
-    "file": "src/hooks/useChapters.ts",
-    "line": 30,
-    "kind": "string",
-    "text": "Impossible de charger les chapitres."
+    "text": "useSidebar doit etre utilise dans SidebarProvider.",
+    "locations": [
+      "src/context/SidebarProvider.tsx:99"
+    ]
   },
   {
-    "file": "src/hooks/useChapters.ts",
-    "line": 51,
-    "kind": "string",
-    "text": "Impossible d'ajouter le chapitre."
+    "text": "Utilisateur inconnu",
+    "locations": [
+      "src/app/playlist/[slug]/page.tsx:214"
+    ]
   },
   {
-    "file": "src/hooks/useChapters.ts",
-    "line": 68,
-    "kind": "string",
-    "text": "Impossible de supprimer le chapitre."
+    "text": "Veuillez remplir le(s) champ(s) obligatoire(s) avant de continuer : ${…}.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:558"
+    ]
   },
   {
-    "file": "src/hooks/useComments.tsx",
-    "line": 128,
-    "kind": "string",
-    "text": "Erreur lors du chargement des commentaires."
+    "text": "Veuillez remplir le(s) champ(s) obligatoire(s) de l'étape \"${…}\" avant de continuer : ${…}.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:584"
+    ]
   },
   {
-    "file": "src/hooks/useComments.tsx",
-    "line": 177,
-    "kind": "string",
-    "text": "Erreur lors de l'ajout du commentaire."
+    "text": "Veuillez renseigner un titre et sélectionner un fichier.",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:43"
+    ]
   },
   {
-    "file": "src/hooks/useComments.tsx",
-    "line": 222,
-    "kind": "string",
-    "text": "Erreur lors du vote."
+    "text": "Veuillez saisir un titre.",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:119"
+    ]
   },
   {
-    "file": "src/hooks/useComments.tsx",
-    "line": 246,
-    "kind": "string",
-    "text": "Erreur lors de la suppression du commentaire."
+    "text": "Veuillez sélectionner un fichier de sous‑titre.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:625"
+    ]
   },
   {
-    "file": "src/hooks/useComments.tsx",
-    "line": 259,
-    "kind": "string",
-    "text": "Erreur lors de la suppression du commentaire."
+    "text": "Veuillez sélectionner un fichier vidéo.",
+    "locations": [
+      "src/app/video/add/page.tsx:77"
+    ]
   },
   {
-    "file": "src/hooks/useDiscipline.tsx",
-    "line": 30,
-    "kind": "string",
-    "text": "Erreur de chargement."
+    "text": "Veuillez sélectionner un fichier.",
+    "locations": [
+      "src/app/video/add/page.tsx:75"
+    ]
   },
   {
-    "file": "src/hooks/useFavorites.tsx",
-    "line": 45,
-    "kind": "string",
-    "text": "Erreur de chargement des favoris."
+    "text": "Vidéo | Esup-Pod",
+    "locations": [
+      "src/app/video/[slug]/layout.tsx:30"
+    ]
   },
   {
-    "file": "src/hooks/useFavorites.tsx",
-    "line": 79,
-    "kind": "string",
-    "text": "Erreur lors de l'ajout de la vidéo aux favoris."
+    "text": "Vidéo 360",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:176"
+    ]
   },
   {
-    "file": "src/hooks/useFavorites.tsx",
-    "line": 103,
-    "kind": "string",
-    "text": "Erreur lors de la suppression de la vidéo des favoris."
+    "text": "Vidéo ajoutée à la playlist « ${…} ».",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:119"
+    ]
   },
   {
-    "file": "src/hooks/useFavorites.tsx",
-    "line": 115,
-    "kind": "string",
-    "text": "Erreur lors de la suppression de la vidéo des favoris."
+    "text": "Vidéo ajoutée à vos favoris.",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:160"
+    ]
   },
   {
-    "file": "src/hooks/useLayoutBlocks.ts",
-    "line": 26,
-    "kind": "string",
-    "text": "Erreur lors de la récupération des blocs de mise en page."
+    "text": "Vidéo en attente d'encodage",
+    "locations": [
+      "src/components/video/display/VideoGridColumns.tsx:138"
+    ]
   },
   {
-    "file": "src/hooks/usePage.ts",
-    "line": 25,
-    "kind": "string",
-    "text": "Erreur de chargement de la page"
+    "text": "Vidéo en cours d'encodage",
+    "locations": [
+      "src/components/video/edit/VideoChaptersForm.tsx:345"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 42,
-    "kind": "string",
-    "text": "Erreur de chargement des playlists."
+    "text": "Vidéo mise à jour avec succès ! 🥳",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:778"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 101,
-    "kind": "string",
-    "text": "Erreur de chargement de la playlist."
+    "text": "Vidéo protégée par mot de passe",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:2069"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 140,
-    "kind": "string",
-    "text": "Erreur modification playlist"
+    "text": "Vidéo retirée de la playlist « ${…} ».",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:131"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 153,
-    "kind": "string",
-    "text": "Erreur suppression playlist"
+    "text": "Vidéo retirée de vos favoris.",
+    "locations": [
+      "src/app/video/[slug]/playlistActionMenu.tsx:166"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 174,
-    "kind": "string",
-    "text": "Erreur ajout vidéo dans playlist"
+    "text": "Vidéos concernées (",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:928"
+    ]
   },
   {
-    "file": "src/hooks/usePlaylist.tsx",
-    "line": 195,
-    "kind": "string",
-    "text": "Erreur retrait vidéo de playlist"
+    "text": "Videos non classées (${…})",
+    "locations": [
+      "src/app/channel/[channelSlug]/[...themeSlug]/page.tsx:294"
+    ]
   },
   {
-    "file": "src/hooks/useSocialNetworks.ts",
-    "line": 22,
-    "kind": "string",
-    "text": "Impossible de charger les réseaux sociaux."
+    "text": "Visibilité",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:130"
+    ]
   },
   {
-    "file": "src/hooks/useSubtitle.tsx",
-    "line": 31,
-    "kind": "string",
-    "text": "Erreur lors de la suppression du sous-titre."
+    "text": "Voir la playlist",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:302"
+    ]
   },
   {
-    "file": "src/hooks/useSubtitle.tsx",
-    "line": 39,
-    "kind": "string",
-    "text": "Erreur lors de la suppression du sous-titre."
+    "text": "Voir moins",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:715"
+    ]
   },
   {
-    "file": "src/hooks/useSubtitle.tsx",
-    "line": 68,
-    "kind": "string",
-    "text": "Erreur lors de l'ajout du sous-titre."
+    "text": "Voir plus",
+    "locations": [
+      "src/app/video/[slug]/page.tsx:715"
+    ]
   },
   {
-    "file": "src/hooks/useSubtitle.tsx",
-    "line": 76,
-    "kind": "string",
-    "text": "Erreur lors de l'ajout du sous-titre."
+    "text": "Voter pour ce commentaire",
+    "locations": [
+      "src/components/Comments/commentItem.tsx:163"
+    ]
   },
   {
-    "file": "src/hooks/useTags.tsx",
-    "line": 37,
-    "kind": "string",
-    "text": "Erreur de chargement."
+    "text": "Votre liste de lecture sera visible par tous les utilisateurs.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:181"
+    ]
   },
   {
-    "file": "src/hooks/useTheme.tsx",
-    "line": 34,
-    "kind": "string",
-    "text": "Erreur de récupération des thèmes."
+    "text": "Votre liste de lecture sera visible uniquement par vous.",
+    "locations": [
+      "src/components/collection/PlaylistForm.tsx:185"
+    ]
   },
   {
-    "file": "src/hooks/useTheme.tsx",
-    "line": 60,
-    "kind": "string",
-    "text": "Erreur de récupération du thème."
+    "text": "Votre vidéo est en cours de traitement sur POD. Ne fermez pas la page...",
+    "locations": [
+      "src/app/video/add/page.tsx:158"
+    ]
   },
   {
-    "file": "src/hooks/useTypes.tsx",
-    "line": 28,
-    "kind": "string",
-    "text": "Erreur de chargement."
+    "text": "Voulez-vous vraiment supprimer ce document ?",
+    "locations": [
+      "src/components/video/VideoDocumentsForm.tsx:58"
+    ]
   },
   {
-    "file": "src/hooks/useUsers.tsx",
-    "line": 38,
-    "kind": "string",
-    "text": "Erreur de chargement."
+    "text": "Vous allez supprimer définitivement",
+    "locations": [
+      "src/components/video/bulk/BulkActionsBar.tsx:680"
+    ]
   },
   {
-    "file": "src/hooks/useUsers.tsx",
-    "line": 62,
-    "kind": "string",
-    "text": "Erreur de chargement."
+    "text": "Vous devez être connecté·e pour modifier cette vidéo.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:695"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 108,
-    "kind": "string",
-    "text": "Erreur de chargement de la vidéo."
+    "text": "Vous êtes désormais connecté.",
+    "locations": [
+      "src/components/Notifications/AuthStatusAlert.tsx:10"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 151,
-    "kind": "string",
-    "text": "Accès non autorisé (401). Veuillez vous connecter."
+    "text": "Vous êtes désormais déconnecté.",
+    "locations": [
+      "src/components/Notifications/AuthStatusAlert.tsx:11"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 156,
-    "kind": "string",
-    "text": "Le serveur API est indisponible ou en erreur (500)."
+    "text": "Vous n'avez pas encore de photo de profil.",
+    "locations": [
+      "src/app/profile-picture/page.tsx:169"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 159,
-    "kind": "template",
-    "text": "Erreur lors du chargement des vidéos (${…})."
+    "text": "Vous n'avez pas encore envoyé de filigrane.",
+    "locations": [
+      "src/app/user-settings/dressing/page.tsx:91"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 208,
-    "kind": "string",
-    "text": "Erreur lors de la suppression de la vidéo."
+    "text": "Vous n’avez pas les droits pour modifier cette liste de lecture.",
+    "locations": [
+      "src/app/playlist/edit/[slug]/page.tsx:246"
+    ]
   },
   {
-    "file": "src/hooks/useVideos.tsx",
-    "line": 281,
-    "kind": "string",
-    "text": "Erreur lors de la duplication de la vidéo."
+    "text": "Vous n'avez pas les droits pour modifier cette vidéo.",
+    "locations": [
+      "src/app/video/edit/[slug]/page.tsx:541"
+    ]
   },
   {
-    "file": "src/utils/requestJson.test.ts",
-    "line": 35,
-    "kind": "string",
-    "text": "Erreur API."
+    "text": "Vous ne pouvez pas accéder à cette page",
+    "locations": [
+      "src/app/video/delete/[slug]/page.tsx:69"
+    ]
   },
   {
-    "file": "src/utils/requestJson.ts",
-    "line": 12,
-    "kind": "string",
-    "text": "Erreur API."
+    "text": "Vous vous apprêtez à créer une fiche vidéo sans fichier média source. Vous pourrez ajouter la vidéo source ultérieurement depuis l'étape",
+    "locations": [
+      "src/app/video/add/page.tsx:328"
+    ]
   }
 ]

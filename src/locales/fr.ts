@@ -49,6 +49,11 @@ export const fr = {
     public: "Publique",
     private: "Privée",
     passwordProtected: "Protégée par mot de passe",
+    paginationInfo: {
+      one: "Affichage de {start} à {end} sur {count} vidéo{pageInfo}",
+      other: "Affichage de {start} à {end} sur {count} vidéos{pageInfo}",
+    },
+    paginationPage: " (Page {page} sur {pagesCount})",
     found: {
       // Pluralization
       one: "Trouvé",

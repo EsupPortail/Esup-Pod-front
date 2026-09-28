@@ -50,6 +50,11 @@ export const en: TranslationKeys = {
     public: "Public",
     private: "Private",
     passwordProtected: "Password protected",
+    paginationInfo: {
+      one: "Showing {start} to {end} of {count} video{pageInfo}",
+      other: "Showing {start} to {end} of {count} videos{pageInfo}",
+    },
+    paginationPage: " (Page {page} of {pagesCount})",
     found: {
       // Pluralization
       one: "Found",
