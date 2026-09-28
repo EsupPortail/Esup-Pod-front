@@ -2,10 +2,11 @@ name: Code Formatting
 
 on:
   push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
+    branches: 
+      - main
+      - dev
+    pull_request:
+      branches:
       - dev
       - main
   workflow_dispatch:
@@ -19,6 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
         with:
+          ref: ${{ github.ref_name }}
           persist-credentials: false
 
       - name: set git config
@@ -50,7 +52,7 @@ jobs:
         if: steps.prettier-git-check.outputs.modified == 'true'
         run: |
           git commit -am "Fixup. Format code with Prettier"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
 
       # Lint/fix js code with ESLint (utilise eslint.config.mjs du repo, ESLint 9 flat config)
       - name: Running ESLint
@@ -65,4 +67,4 @@ jobs:
         if: steps.eslint-git-check.outputs.modified == 'true'
         run: |
           git commit -am "Fixup. Format code with ESLint"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
