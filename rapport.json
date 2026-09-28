@@ -2017,7 +2017,7 @@
   },
   {
     "file": "src/components/video/VideoShareMenu.tsx",
-    "line": 110,
+    "line": 111,
     "kind": "jsx-text",
     "text": "Partager sur"
   },
@@ -2485,163 +2485,145 @@
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 59,
+    "line": 61,
     "kind": "string",
     "text": "Le titre est obligatoire."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 68,
+    "line": 70,
     "kind": "string",
     "text": "Erreur lors de la création."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 93,
+    "line": 95,
     "kind": "jsx-text",
     "text": "Retour à la sélection"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 128,
+    "line": 130,
     "kind": "jsx-text",
     "text": "Configurez les paramètres de base ci-dessous."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 151,
+    "line": 153,
     "kind": "attr:label",
     "text": "Titre de l'habillage *"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 157,
+    "line": 159,
     "kind": "attr:helperText",
     "text": "Nom unique permettant de retrouver cet habillage facilement."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 162,
-    "kind": "jsx-text",
-    "text": "Position du filigrane"
-  },
-  {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 165,
-    "kind": "attr:label",
-    "text": "Position du filigrane"
-  },
-  {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 189,
-    "kind": "jsx-text",
-    "text": "Opacité du filigrane"
-  },
-  {
-    "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 222,
+    "line": 224,
     "kind": "jsx-text",
     "text": "💡 Pour ajouter un filigrane ou des amorces (vidéo d'ouverture / fermeture), créez d'abord l'habillage, puis éditez-le dans les paramètres."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 246,
+    "line": 248,
     "kind": "jsx-text",
     "text": "Annuler"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 273,
+    "line": 275,
     "kind": "string",
     "text": "Création..."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 273,
+    "line": 275,
     "kind": "string",
     "text": "Créer l'habillage"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 313,
+    "line": 315,
     "kind": "string",
     "text": "Erreur lors de la mise à jour de l'habillage."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 314,
+    "line": 316,
     "kind": "string",
     "text": "Habillage appliqué avec succès."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 318,
+    "line": 320,
     "kind": "string",
     "text": "Erreur de mise à jour."
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 374,
+    "line": 376,
     "kind": "jsx-text",
     "text": "Habillage de la vidéo"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 411,
+    "line": 413,
     "kind": "jsx-text",
     "text": "Créer un habillage"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 447,
+    "line": 449,
     "kind": "jsx-text",
     "text": "Chargement des habillages…"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 463,
+    "line": 465,
     "kind": "jsx-text",
     "text": "Aucun habillage disponible"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 483,
+    "line": 485,
     "kind": "jsx-text",
     "text": "Créer mon premier habillage"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 497,
+    "line": 499,
     "kind": "jsx-text",
     "text": "Aucun habillage"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 545,
+    "line": 547,
     "kind": "string",
     "text": "Amorce début"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 549,
+    "line": 551,
     "kind": "string",
     "text": "Aucun élément configuré"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 585,
+    "line": 587,
     "kind": "jsx-text",
     "text": ", Opacité :"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 590,
+    "line": 592,
     "kind": "jsx-text",
     "text": "▶️ Amorce de début : vidéo #"
   },
   {
     "file": "src/components/video/edit/VideoDressingForm.tsx",
-    "line": 595,
+    "line": 597,
     "kind": "jsx-text",
     "text": "⏹️ Amorce de fin : vidéo #"
   },

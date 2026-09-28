@@ -328,6 +328,8 @@ export const es: TranslationKeys = {
     stepElements: "Elementos del vídeo",
     stepVisibility: "Visibilidad",
     requiredFieldsPrompt: "Los campos marcados con * son obligatorios.",
+    position: "Posición de la marca de agua",
+    oppacity: "Opacidad de la marca de agua",
 
     // Form fields in Details
     titleLabel: "Título",

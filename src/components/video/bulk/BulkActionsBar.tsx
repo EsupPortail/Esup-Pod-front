@@ -1031,7 +1031,7 @@ export default function BulkActionsBar({
               onClick={handleCloseModal}
               disabled={isLoading}
             >
-              Annuler
+              t("common.cancel")
             </Button>
             <Button
               type="button"

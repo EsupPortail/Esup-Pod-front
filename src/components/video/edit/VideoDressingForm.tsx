@@ -21,6 +21,7 @@ import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
 import type { Video } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 /* ------------------------------------------------------------------
  * Design tokens – shared across this component
@@ -53,6 +54,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
   const [opacity, setOpacity] = useState(100);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const handleCreate = async () => {
     if (!title.trim()) {
@@ -159,10 +161,10 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
 
         {/* Position */}
         <FormControl fullWidth size="small">
-          <InputLabel>Position du filigrane</InputLabel>
+          <InputLabel>{t("videoEdit.position")}</InputLabel>
           <Select
             value={position}
-            label="Position du filigrane"
+            label={t("videoEdit.position")}
             onChange={(e) => setPosition(e.target.value)}
             style={{ borderRadius: BORDER_RADIUS }}
           >
@@ -186,7 +188,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
               fontWeight: 500,
             }}
           >
-            <span>Opacité du filigrane</span>
+            <span>{t("videoEdit.oppacity")}</span>
             <span
               style={{
                 background: PRIMARY_LIGHT,
@@ -244,7 +246,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
             opacity: saving ? 0.5 : 1,
           }}
         >
-          Annuler
+          {t("common.cancel")}
         </button>
         <button
           type="button"

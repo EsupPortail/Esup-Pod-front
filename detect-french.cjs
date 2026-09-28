@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * detect-french.cjs
  * Détecte les textes en français dans un projet React (JSX/TSX/JS/TS).

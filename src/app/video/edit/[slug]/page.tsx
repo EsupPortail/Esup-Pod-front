@@ -2672,7 +2672,7 @@ export default function EditVideo() {
                 setSourceFile(null);
               }}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
@@ -3377,7 +3377,7 @@ export default function EditVideo() {
               setSourceFile(null);
             }}
           >
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button
             type="button"

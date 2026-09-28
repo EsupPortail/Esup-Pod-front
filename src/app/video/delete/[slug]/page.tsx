@@ -9,12 +9,14 @@ import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Supprimer la vidéo";
 
 export default function DeleteVideoPage() {
   const router = useRouter();
   const params = useParams();
+  const { t } = useTranslation();
   const getVideoSlug = Array.isArray(params.slug)
     ? params.slug[0]
     : params.slug;
@@ -60,7 +62,7 @@ export default function DeleteVideoPage() {
               onClick={() => router.back()}
               disabled={useVideoLoading}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
           </div>
         ) : !isOwnerOrCoOwner ? (
@@ -83,7 +85,7 @@ export default function DeleteVideoPage() {
                 onClick={() => router.back()}
                 disabled={useVideoLoading}
               >
-                Annuler
+                {t("common.cancel")}
               </Button>
 
               <Button

@@ -328,6 +328,8 @@ export const en: TranslationKeys = {
     stepElements: "Video Elements",
     stepVisibility: "Visibility",
     requiredFieldsPrompt: "Fields marked with * are required.",
+    position: "Position of the watermark",
+    oppacity: "Opacity of the watermark",
 
     // Form fields in Details
     titleLabel: "Title",

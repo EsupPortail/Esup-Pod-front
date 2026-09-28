@@ -332,6 +332,8 @@ export const fr = {
     stepElements: "Éléments Vidéo",
     stepVisibility: "Visibilité",
     requiredFieldsPrompt: "Les champs marqués d’un * sont obligatoires.",
+    position: "Position du filigrane",
+    oppacity: "Opacité du filigrane",
 
     // Form fields in Details
     titleLabel: "Titre",

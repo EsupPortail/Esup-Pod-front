@@ -351,7 +351,7 @@ export default function AddVideo() {
             color="neutral"
             onClick={() => setIsEmptyModalOpen(false)}
           >
-            Annuler
+            {t("common.cancel")}
           </Button>
           <Button
             type="button"

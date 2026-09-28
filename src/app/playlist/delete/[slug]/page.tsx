@@ -8,6 +8,7 @@ import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import styles from "./styles.module.css";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Supprimer la liste de lecture";
 
@@ -16,6 +17,7 @@ export default function DeletePlaylistPage() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
+  const { t } = useTranslation();
   const {
     playlist,
     usePlaylistLoading,
@@ -62,7 +64,7 @@ export default function DeletePlaylistPage() {
               onClick={() => router.back()}
               disabled={usePlaylistLoading}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
           </div>
         ) : playlist ? (
@@ -81,7 +83,7 @@ export default function DeletePlaylistPage() {
                 onClick={() => router.back()}
                 disabled={usePlaylistLoading}
               >
-                Annuler
+                {t("common.cancel")}
               </Button>
 
               <Button
