@@ -3,8 +3,9 @@
 /**
  * detect-french.cjs
  * Détecte les textes en français dans un projet React (JSX/TSX/JS/TS)
- * et regroupe les textes identiques (même orthographe, mêmes majuscules).
- * Affichage : texte, puis location(s).
+ * Résultats regroupés par fichier ; dans un fichier, les textes identiques
+ * (même orthographe, mêmes majuscules) sont regroupés avec leurs lignes.
+ * Affichage : fichier, puis texte et location(s).
  *
  * Installation :  npm i -D @babel/parser @babel/traverse
  * Utilisation  :  node detect-french.cjs [dossier=src] [--json rapport.json] [--jsx-only]
@@ -27,7 +28,7 @@ const EXTENSIONS = new Set([".js", ".jsx", ".ts", ".tsx"]);
 const IGNORED_DIRS = new Set(["node_modules", "dist", "build", ".git", ".next", "coverage"]);
 
 // Fichiers de traduction déjà en place : ignorés quel que soit leur dossier
-const IGNORED_FILES = new Set(["fr.ts", "en.ts", "es.ts", "language.ts"]);
+const IGNORED_FILES = new Set(["fr.ts"]);
 
 // Attributs JSX qui contiennent du code/technique, pas du texte affiché
 const IGNORED_ATTRS = new Set([
@@ -35,6 +36,9 @@ const IGNORED_ATTRS = new Set([
   "style", "target", "rel", "role", "value", "data-testid", "to", "path", "variant",
   "size", "color", "as", "method", "action", "viewBox", "d", "fill", "stroke",
 ]);
+
+// Textes entourés de "--" (ou <!-- ... -->) : considérés comme des commentaires
+const COMMENT_LIKE = /^(<!)?--[\s\S]*--(>)?$/;
 
 const NO_TAG = "(hors JSX)";
 
@@ -94,17 +98,19 @@ function* walk(dir) {
   }
 }
 
-// Groupes : clé = texte exact (casse comprise)
-const groups = new Map();
+// fichier -> (texte exact, casse comprise -> lignes)
+const byFile = new Map();
 let totalOccurrences = 0;
+let uniqueEntries = 0;
 
 function record(file, line, text) {
-  let g = groups.get(text);
-  if (!g) {
-    g = { text, locations: [] };
-    groups.set(text, g);
+  if (!byFile.has(file)) byFile.set(file, new Map());
+  const texts = byFile.get(file);
+  if (!texts.has(text)) {
+    texts.set(text, []);
+    uniqueEntries++;
   }
-  g.locations.push({ file, line });
+  texts.get(text).push(line);
   totalOccurrences++;
 }
 
@@ -126,6 +132,7 @@ function analyze(file) {
   const add = (node, text, kind, tag) => {
     const clean = text.replace(/\s+/g, " ").trim();
     if (!clean || !isFrench(clean)) return;
+    if (COMMENT_LIKE.test(clean)) return; // "-- commentaire --" ignoré
     const key = `${node.loc.start.line}:${node.loc.start.column}`;
     if (seen.has(key)) return;
     seen.add(key);
@@ -174,22 +181,28 @@ if (!fs.existsSync(root)) {
 
 for (const file of walk(root)) analyze(file);
 
-// Tri : plus fréquents d'abord, puis ordre alphabétique
-const items = [...groups.values()].sort(
-  (a, b) => b.locations.length - a.locations.length || a.text.localeCompare(b.text)
-);
+// Fichiers triés par ordre alphabétique, textes par première ligne d'apparition
+const files = [...byFile.keys()].sort();
 
-for (const g of items) {
-  console.log(`\ntexte:    ${g.text}`);
-  console.log(`location: ${g.locations.map((l) => `${l.file}:${l.line}`).join(", ")}`);
+for (const file of files) {
+  console.log(`\n📄 ${file}`);
+  const entries = [...byFile.get(file).entries()].sort((a, b) => a[1][0] - b[1][0]);
+  for (const [text, lines] of entries) {
+    console.log(`  texte:    ${text}`);
+    console.log(`  location: ${lines.map((l) => `${file}:${l}`).join(", ")}`);
+  }
 }
 
-console.log(`\n✅ ${totalOccurrences} occurrence(s), ${groups.size} texte(s) unique(s).`);
+console.log(
+  `\n✅ ${totalOccurrences} occurrence(s), ${uniqueEntries} texte(s) unique(s) dans ${files.length} fichier(s).`
+);
 
 if (jsonOut) {
-  const report = items.map((g) => ({
-    text: g.text,
-    locations: g.locations.map((l) => `${l.file}:${l.line}`),
+  const report = files.map((file) => ({
+    file,
+    texts: [...byFile.get(file).entries()]
+      .sort((a, b) => a[1][0] - b[1][0])
+      .map(([text, lines]) => ({ text, locations: lines.map((l) => `${file}:${l}`) })),
   }));
   fs.writeFileSync(jsonOut, JSON.stringify(report, null, 2), "utf8");
   console.log(`📝 Rapport écrit dans ${jsonOut}`);
