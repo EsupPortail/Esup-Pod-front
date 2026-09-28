@@ -16,7 +16,7 @@ import styles from "./styles.module.css";
 import type { Playlist } from "@/src/types";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useFavorites } from "@/src/hooks/useFavorites";
-import {useTranslation} from "@/src/hooks/useTranslation";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface PlaylistActionMenuProps {
   playlists: Playlist[];
@@ -38,7 +38,7 @@ export default function PlaylistActionMenu({
     isFavorite,
   } = useFavorites();
 
-  const {t} = useTranslation()
+  const { t } = useTranslation();
 
   // Ancre Popover (null = fermé)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

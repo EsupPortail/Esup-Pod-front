@@ -140,13 +140,13 @@ export const fr = {
     dashboard: "Mon tableau de bord",
     myFavorites: "Mes vidéos favorites",
     playlists: "Lecture de la liste",
-    favorites : "Vidéos favorites",
+    favorites: "Vidéos favorites",
     myPlaylists: "Mes listes de lecture",
     videoBranding: "Habillages & Filigranes",
     welcome: "Bienvenue",
     welcomeUser: "Bienvenue {name} !",
     closeMenu: "Fermer le menu",
-    nowPlaying: "Lecture en cours"
+    nowPlaying: "Lecture en cours",
   },
   auth: {
     loginTitle: "Connexion à mon profil POD",

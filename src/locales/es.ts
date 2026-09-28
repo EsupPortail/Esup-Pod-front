@@ -143,7 +143,7 @@ export const es: TranslationKeys = {
     welcome: "Bienvenido",
     welcomeUser: "¡Bienvenido {name}!",
     closeMenu: "Cerrar menú",
-    nowPlaying: "Reproduciendo"
+    nowPlaying: "Reproduciendo",
   },
   auth: {
     loginTitle: "Iniciar sesión en mi perfil POD",
