@@ -58,7 +58,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
 
   const handleCreate = async () => {
     if (!title.trim()) {
-      setError("Le titre est obligatoire.");
+      setError(t("common.titleRequired"));
       return;
     }
     setError(null);

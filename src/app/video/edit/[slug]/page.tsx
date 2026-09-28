@@ -975,7 +975,7 @@ export default function EditVideo() {
       <Controller
         name="title"
         control={control}
-        rules={{ required: "Le titre est obligatoire." }}
+        rules={{ required: t("common.titleRequired") }}
         render={({ field }) => (
           <div className={styles["input-group"]}>
             <label className={styles["input-label"]}>
@@ -2295,7 +2295,7 @@ export default function EditVideo() {
               color="neutral"
               onClick={() => setChaptersModalOpen(false)}
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -2336,7 +2336,7 @@ export default function EditVideo() {
               color="neutral"
               onClick={() => setDressingModalOpen(false)}
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -2530,7 +2530,7 @@ export default function EditVideo() {
               color="neutral"
               onClick={() => setSubtitlesModalOpen(false)}
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -2566,7 +2566,7 @@ export default function EditVideo() {
               color="neutral"
               onClick={() => setDocumentsModalOpen(false)}
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -2602,7 +2602,7 @@ export default function EditVideo() {
               color="neutral"
               onClick={() => setContributorsModalOpen(false)}
             >
-              Fermer
+              {t("common.close")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -2985,7 +2985,7 @@ export default function EditVideo() {
             color="neutral"
             onClick={() => setChaptersModalOpen(false)}
           >
-            Fermer
+            {t("common.close")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -3026,7 +3026,7 @@ export default function EditVideo() {
             color="neutral"
             onClick={() => setDressingModalOpen(false)}
           >
-            Fermer
+            {t("common.close")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -3220,7 +3220,7 @@ export default function EditVideo() {
             color="neutral"
             onClick={() => setSubtitlesModalOpen(false)}
           >
-            Fermer
+            {t("common.close")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -3256,7 +3256,7 @@ export default function EditVideo() {
             color="neutral"
             onClick={() => setDocumentsModalOpen(false)}
           >
-            Fermer
+            {t("common.close")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -3292,7 +3292,7 @@ export default function EditVideo() {
             color="neutral"
             onClick={() => setContributorsModalOpen(false)}
           >
-            Fermer
+            {t("common.close")}
           </Button>
         </DialogActions>
       </Dialog>

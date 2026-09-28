@@ -110,7 +110,7 @@ export default function AddVideo() {
     if (!data.emptyTitle.trim()) {
       setFieldError("emptyTitle", {
         type: "required",
-        message: "Le titre est obligatoire.",
+        message: t("common.titleRequired"),
       });
       return;
     }

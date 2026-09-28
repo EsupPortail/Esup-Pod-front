@@ -172,7 +172,7 @@ export default function EditPlaylist() {
     };
 
     if (!payload.title) {
-      setError("Le titre est obligatoire.");
+      setError(t("common.titleRequired"));
       return;
     }
 

@@ -2,6 +2,7 @@ import type { TranslationKeys } from "./fr";
 
 export const en: TranslationKeys = {
   common: {
+    close: "Close",
     loading: "Loading…",
     search: "Search",
     login: "Login",
@@ -60,6 +61,7 @@ export const en: TranslationKeys = {
       one: "Found",
       other: "Found",
     },
+    titleRequired: "Title is required",
   },
   errors: {
     error: "An error occurred",

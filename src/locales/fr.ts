@@ -1,5 +1,6 @@
 export const fr = {
   common: {
+    close: "Fermer",
     loading: "Chargement…",
     search: "Rechercher",
     login: "Connexion",
@@ -59,6 +60,7 @@ export const fr = {
       one: "Trouvé",
       other: "Trouvés",
     },
+    titleRequired: "Le titre est obligatoire",
   },
   errors: {
     error: "Une erreur est survenue",

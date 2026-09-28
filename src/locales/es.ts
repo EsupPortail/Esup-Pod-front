@@ -2,6 +2,7 @@ import type { TranslationKeys } from "./fr";
 
 export const es: TranslationKeys = {
   common: {
+    close: "Cerrar",
     loading: "Cargando…",
     search: "Buscar",
     login: "Iniciar sesión",
@@ -60,6 +61,7 @@ export const es: TranslationKeys = {
       one: "Encontrada",
       other: "Encontradas",
     },
+    titleRequired: "El título es obligatorio",
   },
   errors: {
     error: "Ocurrió un error",

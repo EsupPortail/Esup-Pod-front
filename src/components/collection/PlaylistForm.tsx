@@ -14,6 +14,7 @@ import {
   type CollectionOrder,
 } from "@/src/constants/collection";
 import styles from "@/src/app/playlist/edit/[slug]/styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export type PlaylistFormValues = {
   title: string;
@@ -48,6 +49,7 @@ export function PlaylistForm({
     control,
     name: "is_password_required",
   });
+  const {t} = useTranslation();
 
   return (
     <>
@@ -72,7 +74,7 @@ export function PlaylistForm({
       <Controller
         name="title"
         control={control}
-        rules={{ required: "Le titre est obligatoire." }}
+        rules={{ required: t("common.titleRequired") }}
         render={({ field }) => (
           <TextField
             {...field}

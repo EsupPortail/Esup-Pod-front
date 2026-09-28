@@ -105,7 +105,7 @@ export default function AddPlaylist() {
     };
 
     if (!payload.title) {
-      setError("Le titre est obligatoire.");
+      setError(t("common.titleRequired"));
       return;
     }
 
