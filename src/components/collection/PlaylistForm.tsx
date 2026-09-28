@@ -80,7 +80,7 @@ export function PlaylistForm({
             {...field}
             required
             fullWidth
-            label="Titre"
+            label={t("table.title")}
             error={Boolean(errors.title)}
             helperText={
               errors.title?.message ??

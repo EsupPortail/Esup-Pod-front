@@ -662,7 +662,7 @@ export default function BulkActionsBar({
         onClose={handleCloseModal}
         title={
           selectedAction === "delete"
-            ? "Confirmer la suppression"
+            ? t("bulk.confirmDelete")
             : `Modifier en lot : ${getActionLabel(selectedAction)}`
         }
         size={ModalSize.MEDIUM}

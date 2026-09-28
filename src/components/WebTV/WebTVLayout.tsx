@@ -9,9 +9,11 @@ import { useLayoutBlocks } from "@/src/hooks/useLayoutBlocks";
 import styles from "./WebTVLayout.module.css";
 
 import BlockRenderer from "../blocks/BlockRenderer";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function WebTVLayout() {
   const { blocks, loading } = useLayoutBlocks();
+  const { t } = useTranslation();
 
   // Find live block configuration if explicitly present in backend blocks
   const liveBlock = blocks.find(
@@ -47,7 +49,7 @@ export default function WebTVLayout() {
           /* Default reference sections matching design if no custom backend blocks defined */
           <>
             <VideoGridBlockComponent title="Actualité : Climat" itemLimit={5} />
-            <VideoGridBlockComponent title="Série / Émission" itemLimit={5} />
+            <VideoGridBlockComponent title={t("common.series")} itemLimit={5} />
             <CollectionBlockComponent
               block={{
                 frontend_id: "default-collections-actu",

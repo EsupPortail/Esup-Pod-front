@@ -666,7 +666,7 @@ export default function Video() {
                     />
                   )}
                   <Tab
-                    label="À propos"
+                    label={t("videoPage.about")}
                     value="apropos"
                     sx={{ textTransform: "none" }}
                   />
@@ -702,7 +702,7 @@ export default function Video() {
                               color: "var(--c--globals--colors--gray-500)",
                             }}
                           >
-                            Mis à jour le :{" "}
+                            {t("videoPage.updatedAt")}{" "}
                             {formatDateWithTime(video.updated_at)}
                           </p>
                         </div>
@@ -712,7 +712,7 @@ export default function Video() {
                             setIsDescriptionExpanded(!isDescriptionExpanded)
                           }
                         >
-                          {isDescriptionExpanded ? "Voir moins " : "Voir plus "}
+                          {isDescriptionExpanded ? t("videoPage.seeLess") : t("videoPage.seeMore")}
                           {isDescriptionExpanded ? (
                             <KeyboardArrowUpIcon
                               fontSize="inherit"
@@ -729,11 +729,11 @@ export default function Video() {
                     )}
                     <div className={styles["video-infos-details"]}>
                       <div>
-                        <dt>Chaîne</dt>
-                        <dd>{video.channel ? video.channel : "Aucune"}</dd>
+                        <dt>{t("common.channel")}</dt>
+                        <dd>{video.channel ? video.channel : t("videoPage.none")}</dd>
                       </div>
                       <div>
-                        <dt>Créateur</dt>
+                        <dt>{t("videoPage.creator")}</dt>
                         <dd>
                           {getVideoOwnerDisplayName(
                             video,
@@ -748,7 +748,7 @@ export default function Video() {
                       </div>
                       {video.tags != null && video.tags?.length > 0 && (
                         <div className={styles["video-infos-details-tags"]}>
-                          <dt>Mots clés</dt>
+                          <dt>{t("videoPage.keywords")}</dt>
                           <dd>
                             {video.tags.map((label) => (
                               <Chip key={label} label={label} size="small" />
@@ -763,14 +763,14 @@ export default function Video() {
                   config?.video?.active_video_comment !== false &&
                   (video.disable_comment ? (
                     <Alert type={VariantType.INFO}>
-                      Les commentaires sont désactivés pour cette vidéo.
+                      {t("comments.disabled")}
                     </Alert>
                   ) : (
                     <Comments videoSlug={video.slug} />
                   ))}
                 {mobileTab === "apropos" && (
                   <section className={styles["sidebar-card"]}>
-                    <h2 className={styles["sidebar-card-title"]}>À propos</h2>
+                    <h2 className={styles["sidebar-card-title"]}>{t("videoPage.about")}</h2>
                     <Divider sx={{ mb: 2 }} />
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
@@ -796,7 +796,7 @@ export default function Video() {
                           ))
                         ) : (
                           <li className={styles["sidebar-blue-text"]}>
-                            Aucune
+                            {t("videoPage.none")}
                           </li>
                         )}
                       </ul>

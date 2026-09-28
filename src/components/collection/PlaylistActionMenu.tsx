@@ -9,6 +9,7 @@ import DeleteForever from "@mui/icons-material/DeleteForever";
 import MenuButton from "@mui/joy/MenuButton";
 import Dropdown from "@mui/joy/Dropdown";
 import Link from "next/link";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface PlaylistCardActionMenuProps {
   slug: string | null;
@@ -17,6 +18,7 @@ interface PlaylistCardActionMenuProps {
 export default function PlaylistCardActionMenu({
   slug,
 }: PlaylistCardActionMenuProps) {
+  const { t } = useTranslation();
   return (
     <Dropdown>
       <MenuButton
@@ -49,7 +51,7 @@ export default function PlaylistCardActionMenu({
           <ListItemDecorator sx={{ color: "inherit" }}>
             <DeleteForever />
           </ListItemDecorator>
-          Supprimer la liste de lecture
+          {t("playlists.delete")}
         </MenuItem>
       </Menu>
     </Dropdown>

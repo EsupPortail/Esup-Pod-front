@@ -41,7 +41,7 @@ export default function DressingSettings() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce filigrane ?")) {
+    if (confirm(t("dressingPage.deleteConfirm"))) {
       await deleteWatermark(id);
     }
   };
@@ -62,13 +62,13 @@ export default function DressingSettings() {
       {error && (
         <div style={{ marginBottom: "1rem" }}>
           <Alert type={VariantType.ERROR}>
-            Erreur lors du chargement des filigranes.
+            {t("dressingPage.loadError")}
           </Alert>
         </div>
       )}
 
       <div className={styles["header-row"]}>
-        <h3>Mes Filigranes</h3>
+        <h3>{t("dressingPage.myWatermarks")}</h3>
         <input
           type="file"
           accept="image/png, image/jpeg"
@@ -81,7 +81,7 @@ export default function DressingSettings() {
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          {isUploading ? "Envoi en cours..." : "Ajouter un filigrane"}
+          {isUploading ? "Envoi en cours..." : t("dressingPage.addWatermark")}
         </Button>
       </div>
 
@@ -111,7 +111,7 @@ export default function DressingSettings() {
                   color="error"
                   icon={<DeleteIcon />}
                   onClick={() => handleDelete(wm.id)}
-                  aria-label="Supprimer"
+                  aria-label={t("common.delete")}
                 />
               </div>
             </div>

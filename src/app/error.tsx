@@ -38,7 +38,7 @@ export default function ErrorBoundary({
       <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
         <BackButton label="Retour en arrière" />
         <Button variant="primary" color="brand" onClick={() => reset()}>
-          Réessayer
+          {t("videoPlayer.retry")}
         </Button>
       </div>
     </div>

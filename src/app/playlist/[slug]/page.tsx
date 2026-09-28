@@ -171,7 +171,7 @@ export default function PlaylistPage() {
                 onClick={handleStartPlaylist}
               >
                 <PlayArrowIcon />
-                Lancer la liste de lecture
+                {t("favorites.startPlaylist")}
               </Button>
               {isOwner && (
                 <>

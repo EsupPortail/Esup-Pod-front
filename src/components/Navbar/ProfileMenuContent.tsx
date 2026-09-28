@@ -39,7 +39,7 @@ export function ProfileMenuContent({
         <Button
           className={styles["button-close"]}
           onClick={onClose}
-          aria-label="Fermer le menu"
+          aria-label={t("sidebar.closeMenu")}
         >
           <CloseIcon aria-hidden="true" />
         </Button>
@@ -104,7 +104,7 @@ export function ProfileMenuContent({
             className={styles["menu-item-icon"]}
             aria-hidden="true"
           />
-          Déconnexion
+          {t("common.logout")}
         </MenuItem>
       </div>
     </div>

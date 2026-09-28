@@ -196,7 +196,7 @@ export default function VideoContributorsForm({
               onClick={handleAdd}
               disabled={!selectedContributor || addContribution.isPending}
             >
-              {addContribution.isPending ? "Ajout..." : "Ajouter"}
+              {addContribution.isPending ? "Ajout..." : t("common.add")}
             </Button>
           </div>
 
