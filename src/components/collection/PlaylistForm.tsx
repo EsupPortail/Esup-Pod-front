@@ -49,7 +49,7 @@ export function PlaylistForm({
     control,
     name: "is_password_required",
   });
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>

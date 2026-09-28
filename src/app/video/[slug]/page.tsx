@@ -498,7 +498,7 @@ export default function Video() {
         )}
         <div className={styles["unlock-form"]}>
           <Input
-            label= {t("videoPage.password")}
+            label={t("videoPage.password")}
             required={true}
             type="password"
             autoComplete="current-password"
