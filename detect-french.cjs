@@ -23,9 +23,12 @@ const jsonIdx = args.indexOf("--json");
 
 const jsonOut =
   jsonIdx !== -1
-    ? (args[jsonIdx + 1] && !args[jsonIdx + 1].startsWith("--")
-        ? args[jsonIdx + 1]
-        : "detect-french-report.json")
+    ? (
+        args[jsonIdx + 1] &&
+        !args[jsonIdx + 1].startsWith("--")
+          ? `${args[jsonIdx + 1]}-fr-report.json`
+          : "detect-fr-report.json"
+      )
     : null;
 
 const jsxOnly = args.includes("--jsx-only");
