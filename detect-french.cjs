@@ -20,15 +20,25 @@ const traverse = require("@babel/traverse").default;
 // ---------- Arguments ----------
 const args = process.argv.slice(2);
 const jsonIdx = args.indexOf("--json");
-const jsonOut = jsonIdx !== -1 ? args[jsonIdx + 1] : null;
+
+const jsonOut =
+  jsonIdx !== -1
+    ? (args[jsonIdx + 1] && !args[jsonIdx + 1].startsWith("--")
+        ? args[jsonIdx + 1]
+        : "detect-french-report.json")
+    : null;
+
 const jsxOnly = args.includes("--jsx-only");
+const includeLocales = args.includes("--include-locales");
+const onlyLocales = args.includes("--only-locales");
 const root = args.find((a, i) => !a.startsWith("--") && i !== jsonIdx + 1) || "src";
 
 const EXTENSIONS = new Set([".js", ".jsx", ".ts", ".tsx"]);
 const IGNORED_DIRS = new Set(["node_modules", "dist", "build", ".git", ".next", "coverage"]);
 
-// Fichiers de traduction déjà en place : ignorés quel que soit leur dossier
-const IGNORED_FILES = new Set(["fr.ts"]);
+// Fichiers de traduction déjà en place : ignorés sauf si l'argument --include-locales est utilisés
+const ALWAYS_IGNORED_FILES = new Set(["fr.ts"]);
+const LOCALES_DIR = "locales";
 
 // Attributs JSX qui contiennent du code/technique, pas du texte affiché
 const IGNORED_ATTRS = new Set([
@@ -88,12 +98,33 @@ function tagForExpression(p) {
 }
 
 // ---------- Parcours des fichiers ----------
-function* walk(dir) {
+function* walk(dir, insideLocales = false) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+
     if (entry.isDirectory()) {
-      if (!IGNORED_DIRS.has(entry.name)) yield* walk(path.join(dir, entry.name));
-    } else if (EXTENSIONS.has(path.extname(entry.name)) && !IGNORED_FILES.has(entry.name)) {
-      yield path.join(dir, entry.name);
+      if (IGNORED_DIRS.has(entry.name)) continue;
+
+      const isLocalesDir = entry.name === LOCALES_DIR;
+
+      // --only-locales : on ne descend que dans locales
+      if (onlyLocales) {
+        if (isLocalesDir) {
+          yield* walk(fullPath, true);
+        } else if (insideLocales) {
+          yield* walk(fullPath, true);
+        }
+        continue;
+      }
+
+      // Mode normal : locales est ignoré
+      if (isLocalesDir && !includeLocales) continue;
+
+      yield* walk(fullPath, insideLocales || isLocalesDir);
+    } else if (EXTENSIONS.has(path.extname(entry.name))) {
+      if (ALWAYS_IGNORED_FILES.has(entry.name)) continue;
+
+      yield fullPath;
     }
   }
 }
@@ -176,6 +207,11 @@ function analyze(file) {
 // ---------- Main ----------
 if (!fs.existsSync(root)) {
   console.error(`Dossier introuvable : ${root}`);
+  process.exit(1);
+}
+
+if (includeLocales && onlyLocales) {
+  console.error("❌ --include-locales et --only-locales ne peuvent pas être utilisés ensemble.");
   process.exit(1);
 }
 
