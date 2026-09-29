@@ -11,6 +11,7 @@ export function mapVideoToDisplayRow(
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
+  locale?: string,
 ): VideoDisplayRow {
   const isOwner = currentUserId != null && video.owner_id === currentUserId;
   const selected = selectedVideoIds?.includes(video.id) ?? false;
@@ -22,7 +23,7 @@ export function mapVideoToDisplayRow(
     title: video.title,
     thumbnailUrl: getThumbnailUrl(video.thumbnail_url),
     durationLabel: formatTime(secondToMinute(video.duration || 0)),
-    createdAtLabel: timeAgo(video.created_at),
+    createdAtLabel: timeAgo(video.created_at, locale),
     createdAtValue: video.created_at,
     owner: video.owner,
     ownerId: video.owner_id,
@@ -47,8 +48,15 @@ export function mapVideosToDisplayRows(
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
+  locale?: string,
 ): VideoDisplayRow[] {
   return videos.map((video) =>
-    mapVideoToDisplayRow(video, currentUserId, selectedVideoIds, onSelectVideo),
+    mapVideoToDisplayRow(
+      video,
+      currentUserId,
+      selectedVideoIds,
+      onSelectVideo,
+      locale,
+    ),
   );
 }
