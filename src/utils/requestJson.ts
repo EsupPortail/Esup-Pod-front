@@ -1,3 +1,5 @@
+import { getClientLocale } from "@/src/i18n/client";
+
 //Renvoie une Promise
 //input : url/object/response
 //Init : options du fetch
@@ -6,8 +8,15 @@ export const requestJson = async <T>(
   init?: RequestInit | null,
 ): Promise<T> => {
   //Si input est déjà un Response, on l’utilise directement.
-  const res =
-    input instanceof Response ? input : await fetch(input, init ?? undefined);
+  const requestInit = input instanceof Response
+    ? undefined
+    : { ...init, headers: new Headers(init?.headers) };
+
+  if (requestInit) {
+    requestInit.headers.set("Accept-Language", getClientLocale());
+  }
+
+  const res = input instanceof Response ? input : await fetch(input, requestInit);
   if (!res.ok) {
     let message = "Erreur API.";
     try {

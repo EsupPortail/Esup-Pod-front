@@ -43,10 +43,8 @@ describe("requestJson", () => {
     );
 
     const result = await requestJson<{ data: string }>("http://localhost/api");
-    expect(global.fetch).toHaveBeenCalledWith(
-      "http://localhost/api",
-      undefined,
-    );
+    const [, requestInit] = vi.mocked(global.fetch).mock.calls[0];
+    expect(new Headers(requestInit?.headers).get("Accept-Language")).toBe("fr");
     expect(result.data).toBe("fetched");
   });
 });

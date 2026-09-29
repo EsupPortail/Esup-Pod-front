@@ -1,5 +1,7 @@
 "use client";
 
+import { getClientLocale } from "@/src/i18n/client";
+
 type AuthFetchOptions = RequestInit & {
   accessToken?: string | null;
   onRefresh?: () => Promise<string | null>;
@@ -13,6 +15,7 @@ export async function authFetch(
 ) {
   const makeRequest = (token?: string | null) => {
     const mergedHeaders = new Headers(headers);
+    mergedHeaders.set("Accept-Language", getClientLocale());
     if (token) {
       mergedHeaders.set("Authorization", `Bearer ${token}`);
     }
