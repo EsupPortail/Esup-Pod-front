@@ -9,9 +9,16 @@ export const requestJson = async <T>(
   init?: RequestInit | null,
 ): Promise<T> => {
   //Si input est déjà un Response, on l’utilise directement.
-  const requestInit = input instanceof Response
-    ? undefined
-    : { ...init, headers: new Headers(init?.headers) };
+  const requestInit =
+    input instanceof Response
+      ? undefined
+      : {
+          ...init,
+          headers: new Headers(
+            init?.headers ??
+              (input instanceof Request ? input.headers : undefined),
+          ),
+        };
 
   if (requestInit) {
     requestInit.headers.set("Accept-Language", getClientLocale());
