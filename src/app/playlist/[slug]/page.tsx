@@ -217,7 +217,7 @@ export default function PlaylistPage() {
 
               <div>
                 <dt>{t("common.latestUpdate")}</dt>
-                <dd>{formatDateWithTime(effectivePlaylist?.updated_at)}</dd>
+                <dd>{formatDateWithTime(effectivePlaylist?.updated_at, locale)}</dd>
               </div>
 
               <div>

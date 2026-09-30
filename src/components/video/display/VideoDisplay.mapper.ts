@@ -8,10 +8,10 @@ import type { VideoDisplayRow } from "./types";
  */
 export function mapVideoToDisplayRow(
   video: Video,
+  locale: string,
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
-  locale?: string,
 ): VideoDisplayRow {
   const isOwner = currentUserId != null && video.owner_id === currentUserId;
   const selected = selectedVideoIds?.includes(video.id) ?? false;
@@ -45,18 +45,18 @@ export function mapVideoToDisplayRow(
 
 export function mapVideosToDisplayRows(
   videos: Video[],
+  locale: string,
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
-  locale?: string,
 ): VideoDisplayRow[] {
   return videos.map((video) =>
     mapVideoToDisplayRow(
       video,
+      locale,
       currentUserId,
       selectedVideoIds,
       onSelectVideo,
-      locale,
     ),
   );
 }

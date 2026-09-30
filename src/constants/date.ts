@@ -31,7 +31,7 @@ export function formatTime(time: TimeParts): string {
 
 export function formatDateWithTime(
   dateString: string,
-  locale: string = dayjs.locale(),
+  locale: string,
 ): string {
   const date = dayjs(dateString).locale(locale);
   return date.format("D MMMM YYYY [à] HH:mm");
@@ -39,13 +39,13 @@ export function formatDateWithTime(
 
 export function formatDateOnly(
   dateString: string,
-  locale: string = dayjs.locale(),
+  locale: string,
 ): string {
   const date = dayjs(dateString).locale(locale);
   return date.format("D MMMM YYYY");
 }
 
-export function timeAgo(dateString: string, locale: string = dayjs.locale()): string {
+export function timeAgo(dateString: string, locale: string): string {
   if (!dateString) return "";
   return dayjs(dateString).locale(locale).fromNow();
 }

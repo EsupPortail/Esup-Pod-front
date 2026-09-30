@@ -83,10 +83,10 @@ export default function VideosDisplay({
   const gridRows = useMemo(() => {
     return mapVideosToDisplayRows(
       paginatedVideos,
+      locale,
       currentUserId,
       selectedVideoIds,
       onSelectVideo,
-      locale,
     );
   }, [
     paginatedVideos,
