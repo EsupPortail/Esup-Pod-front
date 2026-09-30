@@ -129,7 +129,7 @@ export function mapCollectionsToDisplayRows({
     );
   }
 
-  // "Theme" lines are only created when no strings are being displayed.
+  // "Theme" rows are only created when no channels are being displayed.
   if (channels.length === 0 && themes.length > 0) {
     rows.push(
       ...themes.map((theme) =>
