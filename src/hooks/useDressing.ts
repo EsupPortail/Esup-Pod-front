@@ -27,6 +27,7 @@ export interface Dressing {
   y_position?: number;
 }
 
+/** Provides watermark queries and mutations. */
 export const useWatermarks = () => {
   const queryClient = useQueryClient();
   const { accessToken, refresh: refreshAuthToken } = useAuth();
@@ -85,6 +86,7 @@ export const useWatermarks = () => {
   };
 };
 
+/** Provides dressing queries and mutations. */
 export const useDressings = () => {
   const queryClient = useQueryClient();
   const { accessToken, refresh: refreshAuthToken } = useAuth();

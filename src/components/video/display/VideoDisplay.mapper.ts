@@ -43,6 +43,7 @@ export function mapVideoToDisplayRow(
   };
 }
 
+/** Maps videos to rows ready for display. */
 export function mapVideosToDisplayRows(
   videos: Video[],
   locale: string,

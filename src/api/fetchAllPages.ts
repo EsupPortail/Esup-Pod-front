@@ -13,6 +13,7 @@ type FetchOptions = RequestInit & {
   onRefresh?: () => Promise<string | null>;
 };
 
+/** Fetches and combines all pages from a paginated API endpoint. */
 export async function fetchAllPages<T>(
   initialUrl: string,
   options?: FetchOptions,

@@ -3,6 +3,7 @@ import { getClientLocale } from "@/src/i18n/client";
 //Renvoie une Promise
 //input : url/object/response
 //Init : options du fetch
+/** Fetches a JSON response and raises an error for unsuccessful responses. */
 export const requestJson = async <T>(
   input: RequestInfo | Response,
   init?: RequestInit | null,

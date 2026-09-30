@@ -9,10 +9,12 @@ type AuthFetchOptions = RequestInit & {
 
 // Injecte automatiquement le header Authorization Bearer <token> dans chaque appel API protégé.
 
+/** Fetches an API resource with authentication and refresh support. */
 export async function authFetch(
   input: RequestInfo,
   { accessToken, onRefresh, headers, ...init }: AuthFetchOptions = {},
 ) {
+  /** Sends the request with the provided access token. */
   const makeRequest = (token?: string | null) => {
     const mergedHeaders = new Headers(headers);
     mergedHeaders.set("Accept-Language", getClientLocale());

@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthProvider";
 import { VideoDocument } from "../types/video";
 import { getRoutes } from "../api/routes";
 
+/** Provides document queries and mutations for a video. */
 export function useDocuments(videoId: number | undefined) {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();

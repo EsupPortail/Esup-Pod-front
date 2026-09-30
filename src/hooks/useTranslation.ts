@@ -13,11 +13,13 @@ const supportedLocales: { code: SupportedLocale; label: string }[] = [
   { code: "es", label: "Español" },
 ];
 
+/** Provides translations and locale selection for client components. */
 export function useTranslation() {
   const locale = useLocale() as SupportedLocale;
   const t = useTranslations();
   const router = useRouter();
 
+  /** Persists a new locale and refreshes server-rendered messages. */
   const setLocale = (newLocale: SupportedLocale) => {
     document.cookie = `${LANGUAGE_COOKIE}=${newLocale}; path=/; max-age=31536000`;
     dayjs.locale(newLocale);

@@ -11,6 +11,7 @@ export const VIDEO_LANGUAGE_OPTIONS = [
   { label: "Anglais", value: "en" },
 ] as const;
 
+/** Returns the display label for a video language code. */
 export const getLanguageLabel = (code: string | null | undefined) => {
   if (!code) {
     return LANGUAGE_LABELS["fr"];

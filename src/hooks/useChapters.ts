@@ -7,6 +7,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { requestJson } from "@/src/utils/requestJson";
 import type { Chapter } from "@/src/types";
 
+/** Provides chapter queries and mutations for a video. */
 export const useChapters = (videoSlug?: string, videoId?: number) => {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();

@@ -8,6 +8,7 @@ export interface FlatPage {
   content: string;
 }
 
+/** Loads a configured flat page by slug. */
 export const usePage = (slug: string) => {
   return useQuery({
     queryKey: ["page", slug],

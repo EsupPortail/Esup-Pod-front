@@ -12,6 +12,7 @@ export type TimeParts = {
   seconds: number;
 };
 
+/** Converts a number of seconds into hour, minute, and second parts. */
 export function secondToMinute(totalSeconds: number): TimeParts {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -20,6 +21,7 @@ export function secondToMinute(totalSeconds: number): TimeParts {
   return { hours, minutes, seconds };
 }
 
+/** Formats time parts as a fixed-width duration. */
 export function formatTime(time: TimeParts): string {
   const { hours, minutes, seconds } = time;
   const hh = String(hours).padStart(2, "0");
@@ -29,6 +31,7 @@ export function formatTime(time: TimeParts): string {
   return `${hh}:${mm}:${ss}`;
 }
 
+/** Formats a date with its time in the requested locale. */
 export function formatDateWithTime(
   dateString: string,
   locale: string,
@@ -37,6 +40,7 @@ export function formatDateWithTime(
   return date.format("D MMMM YYYY [à] HH:mm");
 }
 
+/** Formats a date without its time in the requested locale. */
 export function formatDateOnly(
   dateString: string,
   locale: string,
@@ -45,6 +49,7 @@ export function formatDateOnly(
   return date.format("D MMMM YYYY");
 }
 
+/** Formats a date as relative time in the requested locale. */
 export function timeAgo(dateString: string, locale: string): string {
   if (!dateString) return "";
   return dayjs(dateString).locale(locale).fromNow();

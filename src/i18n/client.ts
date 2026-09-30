@@ -2,6 +2,7 @@ const LANGUAGE_COOKIE = "pod_language";
 const DEFAULT_LOCALE = "fr";
 const SUPPORTED_LOCALES = new Set(["fr", "en", "es"]);
 
+/** Reads and validates the interface locale from the browser cookie. */
 export function getClientLocale(): string {
   if (typeof document === "undefined") {
     return DEFAULT_LOCALE;
