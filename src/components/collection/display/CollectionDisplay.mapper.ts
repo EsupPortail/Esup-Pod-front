@@ -3,6 +3,7 @@ import type { CollectionDisplayRow } from "./types";
 
 const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
+/** Returns the cached date formatter for a locale. */
 function getDateFormatter(locale: string): Intl.DateTimeFormat {
   const cachedFormatter = dateFormatters.get(locale);
   if (cachedFormatter) return cachedFormatter;
@@ -16,11 +17,13 @@ function getDateFormatter(locale: string): Intl.DateTimeFormat {
   return formatter;
 }
 
+/** Formats a date for display in the requested locale. */
 function formatDate(value: string | undefined, locale: string) {
   if (!value) return "";
   return getDateFormatter(locale).format(new Date(value));
 }
 
+/** Maps a channel to a collection display row. */
 export function mapChannelToDisplayRow(
   channel: Channel,
   locale: string,
@@ -41,6 +44,7 @@ export function mapChannelToDisplayRow(
   };
 }
 
+/** Maps a theme to a collection display row. */
 export function mapThemeToDisplayRow(
   theme: Theme,
   locale: string,
@@ -72,6 +76,7 @@ export function mapThemeToDisplayRow(
   };
 }
 
+/** Maps a playlist to a collection display row. */
 export function mapPlaylistToDisplayRow(
   playlist: Playlist,
   locale: string,
@@ -96,6 +101,7 @@ export function mapPlaylistToDisplayRow(
   };
 }
 
+/** Maps available collections to display rows. */
 export function mapCollectionsToDisplayRows({
   channels = [],
   themes = [],
