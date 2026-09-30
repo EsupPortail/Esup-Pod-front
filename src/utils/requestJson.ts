@@ -26,7 +26,7 @@ export const requestJson = async <T>(
 
   const res = input instanceof Response ? input : await fetch(input, requestInit);
   if (!res.ok) {
-    let message = "Erreur API.";
+    let message = "API Error.";
     try {
       const data = await res.json();
       if (typeof data?.detail === "string") {
