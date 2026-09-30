@@ -355,7 +355,7 @@ if (jsonOut) {
   const report = files.map((file) => ({
     file,
     texts: [...byFile.get(file).entries()]
-      .sort((a, b) => a[1][0] - b[1][0])
+      .sort((a, b) => a[1].lines[0] - b[1].lines[0])
       .map(([text, entry]) => ({
         text,
         locations: entry.lines.map((line) => `${file}:${line}`),
