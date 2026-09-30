@@ -190,19 +190,21 @@ function* walk(dir, insideLocales = false) {
   }
 }
 
-// file -> (exact text, including case -> line numbers)
+// file -> (exact text, including case -> locations and detection contexts)
 const byFile = new Map();
 let totalOccurrences = 0;
 let uniqueEntries = 0;
 
-function record(file, line, text) {
+function record(file, line, text, kind, tag) {
   if (!byFile.has(file)) byFile.set(file, new Map());
   const texts = byFile.get(file);
   if (!texts.has(text)) {
-    texts.set(text, []);
+    texts.set(text, { lines: [], occurrences: [] });
     uniqueEntries++;
   }
-  texts.get(text).push(line);
+  const entry = texts.get(text);
+  entry.lines.push(line);
+  entry.occurrences.push({ line, kind, tag });
   totalOccurrences++;
 }
 
@@ -234,7 +236,7 @@ function analyze(file) {
     if (seen.has(key)) return;
 
     seen.add(key);
-    record(file, node.loc.start.line, clean);
+    record(file, node.loc.start.line, clean, kind, tag);
   };
 
   traverse(ast, {
@@ -328,13 +330,19 @@ for (const file of files) {
   console.log(`\n📄 ${"\x1b[1m"}${file}${"\x1b[0m"}`);
 
   const entries = [...byFile.get(file).entries()].sort(
-    (a, b) => a[1][0] - b[1][0]
+    (a, b) => a[1].lines[0] - b[1].lines[0]
   );
 
   for (const [text, lines] of entries) {
+    const { lines: lineNumbers, occurrences } = lines;
     console.log(`  text:     ${text}`);
     console.log(
-      `  location: ${"\x1b[36m"}${lines.map((l) => `${file}:${l}`).join(", ")}${"\x1b[0m"}`
+      `  location: ${"\x1b[36m"}${lineNumbers.map((line) => `${file}:${line}`).join(", ")}${"\x1b[0m"}`
+    );
+    console.log(
+      `  context:  ${occurrences
+        .map(({ kind, tag }) => `[${kind}] ${tag}`)
+        .join(", ")}`
     );
   }
 }
@@ -348,9 +356,10 @@ if (jsonOut) {
     file,
     texts: [...byFile.get(file).entries()]
       .sort((a, b) => a[1][0] - b[1][0])
-      .map(([text, lines]) => ({
+      .map(([text, entry]) => ({
         text,
-        locations: lines.map((l) => `${file}:${l}`),
+        locations: entry.lines.map((line) => `${file}:${line}`),
+        occurrences: entry.occurrences,
       })),
   }));
 
