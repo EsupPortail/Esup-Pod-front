@@ -214,9 +214,7 @@ export default function AuthProvider(props: AuthProviderProps) {
         persistTokens(newAccess, tokenToRefresh);
         return newAccess;
       } catch {
-        // Si le refresh échoue (401 typiquement), on considère que la
-        // session est expirée : on force la déconnexion et on redirige
-        // l'utilisateur vers la page de login.
+        // If the refresh fails (typically 401), we consider the session to be expired: we force logout and redirect the user to the login page.
         forceLogoutAndRedirectToLogin();
         return null;
       }
