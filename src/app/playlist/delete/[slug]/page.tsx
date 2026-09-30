@@ -46,7 +46,7 @@ export default function DeletePlaylistPage() {
 
   return (
     <div className={styles["delete-container"]}>
-      <Paper sx={{ p: 4, maxWidth: 520, width: "100%" }}>
+      <Paper className={styles["paper"]}>
         <h2>Supprimer la liste de lecture</h2>
 
         {usePlaylistLoading && !playlist && <CenteredLoader />}

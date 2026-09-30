@@ -84,15 +84,7 @@ function LoginContent() {
       <h1>{t("common.login")}</h1>
 
       {/* ==== SSO Buttons ==== */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "10px",
-          marginBottom: "20px",
-          width: "100%",
-        }}
-      >
+      <div className={styles["sso-button"]}>
         {config?.authentication?.use_cas && (
           <Button
             onClick={() => (window.location.href = `${backUrl}/login/cas/`)}
@@ -141,10 +133,7 @@ function LoginContent() {
             })}
           />
           {errors.username && (
-            <p
-              id="username-error"
-              style={{ color: "red", marginTop: "0.25rem" }}
-            >
+            <p id="username-error" className={styles["error"]}>
               {errors.username.message}
             </p>
           )}
@@ -166,7 +155,7 @@ function LoginContent() {
           {errors.password && (
             <p
               id="password-error"
-              style={{ color: "red", marginTop: "0.25rem" }}
+              className={styles["error"]}
             >
               {errors.password.message}
             </p>

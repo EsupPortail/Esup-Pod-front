@@ -81,6 +81,26 @@ html[data-theme="dark"] .welcome-link {
   font-weight: var(--c--globals--font--weights--bold);
 }
 
+.error-title{
+   margin-top: 1rem;
+}
+
+.title{
+  margin-top: 1rem;
+  color: var(--c--globals--colors--primary-600);
+}
+
+.pages-box{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.content-box{
+  margin-top: 2rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 1024px) {
   .welcome-text p {
     display: none;

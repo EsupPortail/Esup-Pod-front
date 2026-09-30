@@ -47,24 +47,12 @@ export default function DressingPage() {
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "1.5rem" }}>
-      <h1
-        style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.5rem" }}
-      >
-        {t("dressingPage.title")}
-      </h1>
-      <p
-        style={{
-          color: "var(--text-color-muted, #94a3b8)",
-          marginBottom: "2rem",
-          lineHeight: 1.5,
-        }}
-      >
-        {t("dressingPage.pageDescription")}
-      </p>
+    <div className={styles["content-box"]}>
+      <h1 className={styles["title"]}>{t("dressingPage.title")}</h1>
+      <p className={styles["desc"]}>{t("dressingPage.pageDescription")}</p>
 
       {error && (
-        <div style={{ marginBottom: "1rem" }}>
+        <div className={styles["error"]}>
           <Alert type={VariantType.ERROR}>{t("dressingPage.loadError")}</Alert>
         </div>
       )}
@@ -75,7 +63,7 @@ export default function DressingPage() {
           type="file"
           accept="image/png, image/jpeg"
           ref={fileInputRef}
-          style={{ display: "none" }}
+          className={styles["image"]}
           onChange={handleFileChange}
         />
         <Button
@@ -102,7 +90,7 @@ export default function DressingPage() {
                   src={wm.image}
                   alt={t("a11y.watermark")}
                   fill
-                  style={{ objectFit: "contain" }}
+                  className={styles["watermark-preview-image"]}
                 />
               </div>
               <div className={styles["watermark-actions"]}>

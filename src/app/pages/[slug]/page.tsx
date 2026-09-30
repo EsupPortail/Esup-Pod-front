@@ -23,7 +23,7 @@ export default function FlatPage() {
     return (
       <div className={styles.main}>
         <BackButton label={t("common.back")} />
-        <h1 style={{ marginTop: "1rem" }}>Page introuvable</h1>
+        <h1 className={styles["error-title"]}>Page introuvable</h1>
         <Alert type={VariantType.ERROR}>
           {error?.message || t("errors  .notConfigured")}
         </Alert>
@@ -32,21 +32,11 @@ export default function FlatPage() {
   }
 
   return (
-    <div
-      className={styles.main}
-      style={{ maxWidth: "800px", margin: "0 auto", padding: "2rem" }}
-    >
+    <div className={styles["pages-box"]}>
       <BackButton label={t("common.back")} />
-      <h1
-        style={{
-          marginTop: "1rem",
-          color: "var(--c--globals--colors--primary-600)",
-        }}
-      >
-        {page.title}
-      </h1>
+      <h1 className={styles["title"]}>{page.title}</h1>
       <div
-        style={{ marginTop: "2rem", lineHeight: "1.6" }}
+        className={styles["content-box"]}
         dangerouslySetInnerHTML={{ __html: page.content }}
       />
     </div>

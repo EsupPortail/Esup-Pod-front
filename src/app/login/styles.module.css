@@ -19,3 +19,16 @@
   padding-top: var(--c--globals--spacings--md);
   align-items: center;
 }
+
+.sso-button{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.error{
+  color: red;
+  margin-top: 0.25rem;
+}

@@ -78,3 +78,33 @@
     linear-gradient(-45deg, transparent 75%, #333 75%);
   background-color: #222;
 }
+
+.title{
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.content-box{
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.desc{
+  color: var(--c--globals--colors--gray-500);
+  margin-bottom: 2rem;
+  line-height: 2;
+}
+
+.error{
+  margin-bottom: 1rem;
+}
+
+.image{
+  display: none;
+}
+
+.watermark-preview-image{
+  object-fit: contain;
+}

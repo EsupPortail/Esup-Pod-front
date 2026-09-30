@@ -18,3 +18,9 @@
   display: flex;
   gap: var(--c--globals--spacings--xs);
 }
+
+.paper {
+  padding: 2rem;
+  max-width: 520px;
+  width: 100%;
+}

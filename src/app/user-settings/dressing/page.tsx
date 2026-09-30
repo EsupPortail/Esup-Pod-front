@@ -49,21 +49,14 @@ export default function DressingSettings() {
   return (
     <div>
       <h2>Habillages (Dressing)</h2>
-      <p
-        style={{
-          color: "var(--c--globals--colors--gray-500)",
-          marginBottom: "2rem",
-        }}
-      >
+      <p className={styles["desc"]}>
         Gérez vos filigranes (watermarks) pour les incruster directement dans
         vos vidéos.
       </p>
 
       {error && (
-        <div style={{ marginBottom: "1rem" }}>
-          <Alert type={VariantType.ERROR}>
-            {t("dressingPage.loadError")}
-          </Alert>
+        <div className={styles["error"]}>
+          <Alert type={VariantType.ERROR}>{t("dressingPage.loadError")}</Alert>
         </div>
       )}
 
@@ -73,7 +66,7 @@ export default function DressingSettings() {
           type="file"
           accept="image/png, image/jpeg"
           ref={fileInputRef}
-          style={{ display: "none" }}
+          hidden={true}
           onChange={handleFileChange}
         />
         <Button
@@ -100,7 +93,7 @@ export default function DressingSettings() {
                   src={wm.image}
                   alt={t("a11y.watermark")}
                   fill
-                  style={{ objectFit: "contain" }}
+                  className={styles["watermark-preview-image"]}
                 />
               </div>
               <div className={styles["watermark-actions"]}>

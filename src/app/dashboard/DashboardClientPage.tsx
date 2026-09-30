@@ -11,6 +11,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import { useVideoListFilters } from "@/src/hooks/useVideoListFilters";
 import { Alert, VariantType } from "@openfun/cunningham-react";
+import styles from "./styles.module.css";
 
 import { useTranslation } from "@/src/hooks/useTranslation";
 
@@ -88,7 +89,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 style={{ marginTop: "16px", marginBottom: "28px" }}>
+      <h1 className={styles["title"]}>
         {t("sidebar.dashboard")}
       </h1>
 
