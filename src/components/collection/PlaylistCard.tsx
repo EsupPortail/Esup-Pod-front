@@ -25,7 +25,7 @@ export default function PlaylistCard({
   href,
   isOwner,
 }: PlaylistCardProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const playlistHref = href ?? `/playlist/${playlist.slug}`;
   const videosCount = playlist.items?.length ?? 0;
   const playlistThumbnail =
@@ -229,7 +229,7 @@ export default function PlaylistCard({
                   color: "text.secondary",
                 }}
               >
-                {timeAgo(playlist.created_at)}
+                {timeAgo(playlist.created_at, locale)}
               </Typography>
             </Box>
           </div>

@@ -24,7 +24,7 @@ export default function FavoritesPlaylistPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { isInitializing, mounted } = useRequireAuth();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { favorites, fetchAll, useFavoritesError } = useFavorites();
 
   const { filters, setFilters, users, types, disciplines, tags } =
@@ -160,16 +160,16 @@ export default function FavoritesPlaylistPage() {
       );
     } else if (filters.ordering === "title") {
       result = [...result].sort((a, b) =>
-        a.title.localeCompare(b.title, "fr", { sensitivity: "base" }),
+        a.title.localeCompare(b.title, locale, { sensitivity: "base" }),
       );
     } else if (filters.ordering === "-title") {
       result = [...result].sort((a, b) =>
-        b.title.localeCompare(a.title, "fr", { sensitivity: "base" }),
+        b.title.localeCompare(a.title, locale, { sensitivity: "base" }),
       );
     }
 
     return result;
-  }, [favoriteVideos, filters, users]);
+  }, [favoriteVideos, filters, users, locale]);
 
   const hasActiveVideoFilters = useMemo(() => {
     const base: VideoFiltersValue = filters;

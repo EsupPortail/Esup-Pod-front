@@ -1,18 +1,23 @@
 "use client";
 
+import { getClientLocale } from "@/src/i18n/client";
+
 type AuthFetchOptions = RequestInit & {
   accessToken?: string | null;
   onRefresh?: () => Promise<string | null>;
 };
 
-// Injecte automatiquement le header Authorization Bearer <token> dans chaque appel API protégé.
+// Automatically injects the Authorization Bearer <token> header into every protected API call.
 
+/** Fetches an API resource with authentication and refresh support. */
 export async function authFetch(
   input: RequestInfo,
   { accessToken, onRefresh, headers, ...init }: AuthFetchOptions = {},
 ) {
+  /** Sends the request with the provided access token. */
   const makeRequest = (token?: string | null) => {
     const mergedHeaders = new Headers(headers);
+    mergedHeaders.set("Accept-Language", getClientLocale());
     if (token) {
       mergedHeaders.set("Authorization", `Bearer ${token}`);
     }

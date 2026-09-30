@@ -5,12 +5,14 @@ import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
 import type { BlockConfig } from "@/src/types";
 
+/** Loads the active layout blocks. */
 export function useLayoutBlocks() {
   const [blocks, setBlocks] = useState<BlockConfig[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    /** Fetches active layout blocks from the backend. */
     const fetchBlocks = async () => {
       try {
         setLoading(true);

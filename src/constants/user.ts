@@ -1,5 +1,6 @@
 import type { User } from "@/src/types";
 
+/** Builds initials from a user's last and first names. */
 export function setInitial(lastname: string, firstname: string) {
   return lastname
     .concat(" ", firstname)
@@ -10,6 +11,7 @@ export function setInitial(lastname: string, firstname: string) {
     .join("");
 }
 
+/** Returns the display name for a user according to the configuration. */
 export function getUserDisplayName(
   user: User,
   config?: { hide_username?: boolean; use_establishment_field?: boolean },
@@ -33,6 +35,7 @@ export function getUserDisplayName(
   return user.username;
 }
 
+/** Returns the display name for a video's owner. */
 export function getVideoOwnerDisplayName(
   video: {
     owner_last_name?: string;
@@ -56,6 +59,7 @@ export function getVideoOwnerDisplayName(
   return video.owner || "";
 }
 
+/** Resolves a profile picture path against the backend URL. */
 export function getProfilePictureUrl(
   picture?: string | null,
 ): string | undefined {

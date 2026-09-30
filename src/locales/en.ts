@@ -51,16 +51,10 @@ export const en: TranslationKeys = {
     public: "Public",
     private: "Private",
     passwordProtected: "Password protected",
-    paginationInfo: {
-      one: "Showing {start} to {end} of {count} video{pageInfo}",
-      other: "Showing {start} to {end} of {count} videos{pageInfo}",
-    },
+    paginationInfo:
+      "Showing {start} to {end} of {count, plural, one {# video{pageInfo}} other {# videos{pageInfo}}}",
     paginationPage: " (Page {page} of {pagesCount})",
-    found: {
-      // Pluralization
-      one: "Found",
-      other: "Found",
-    },
+    found: "{count, plural, one {Found} other {Found}}",
     titleRequired: "Title is required",
   },
   errors: {
@@ -156,7 +150,9 @@ export const en: TranslationKeys = {
     loginTitle: "Login to my POD profile",
     loginRequired: "You must be logged in to access this page.",
     username: "Username",
+    usernameRequired: "Username is required",
     password: "Password",
+    passwordRequired: "Password is required",
     submitLogin: "Login",
   },
   webtv: {

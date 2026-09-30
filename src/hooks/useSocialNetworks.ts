@@ -6,6 +6,7 @@ import { useAuth } from "@/src/context/AuthProvider";
 import { requestJson } from "@/src/utils/requestJson";
 import type { SocialNetwork } from "@/src/types";
 
+/** Loads the configured social networks. */
 export const useSocialNetworks = () => {
   const { accessToken, refresh } = useAuth();
   const authOpts = { accessToken, onRefresh: refresh };

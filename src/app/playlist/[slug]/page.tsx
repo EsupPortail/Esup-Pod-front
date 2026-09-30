@@ -19,7 +19,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function PlaylistPage() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const params = useParams();
   const router = useRouter();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
@@ -206,7 +206,7 @@ export default function PlaylistPage() {
 
             <dl className={styles["playlist-infos-details"]}>
               <div>
-                <dt>{timeAgo(effectivePlaylist?.created_at)}</dt>
+                <dt>{timeAgo(effectivePlaylist?.created_at, locale)}</dt>
               </div>
               <div>
                 <dt>{t("common.createdBy")}</dt>
@@ -217,7 +217,7 @@ export default function PlaylistPage() {
 
               <div>
                 <dt>{t("common.latestUpdate")}</dt>
-                <dd>{formatDateWithTime(effectivePlaylist?.updated_at)}</dd>
+                <dd>{formatDateWithTime(effectivePlaylist?.updated_at, locale)}</dd>
               </div>
 
               <div>

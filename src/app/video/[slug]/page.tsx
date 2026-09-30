@@ -703,7 +703,7 @@ export default function Video() {
                             }}
                           >
                             {t("videoPage.updatedAt")}{" "}
-                            {formatDateWithTime(video.updated_at)}
+                            {formatDateWithTime(video.updated_at, locale)}
                           </p>
                         </div>
                         <button
@@ -850,7 +850,7 @@ export default function Video() {
                                 {doc.title}
                               </span>
                               <span className={styles["document-date"]}>
-                                {formatDateWithTime(doc.created_at)}
+                                {formatDateWithTime(doc.created_at, locale)}
                               </span>
                             </div>
                           </a>

@@ -1,5 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import { dictionaries } from "@/src/locales";
 import VideoPlayer from "./VideoPlayer";
 
 vi.mock("video.js", () => {
@@ -33,9 +35,11 @@ describe("VideoPlayer", () => {
       subtitles: [],
     } as any;
     const { container } = render(
-      <QueryClientProvider client={queryClient}>
-        <VideoPlayer video={videoMock} streamUrl="http://test/stream.mp4" />
-      </QueryClientProvider>,
+      <NextIntlClientProvider locale="fr" messages={dictionaries.fr}>
+        <QueryClientProvider client={queryClient}>
+          <VideoPlayer video={videoMock} streamUrl="http://test/stream.mp4" />
+        </QueryClientProvider>
+      </NextIntlClientProvider>,
     );
     expect(container.querySelector("div")).not.toBeNull();
   });

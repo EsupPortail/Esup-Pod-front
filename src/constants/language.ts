@@ -2,15 +2,16 @@
 export type LanguageCode = "en" | "fr";
 
 export const LANGUAGE_LABELS: Record<LanguageCode, string> = {
-  en: "Anglais",
+  en: "English",
   fr: "Français",
 };
 
 export const VIDEO_LANGUAGE_OPTIONS = [
   { label: "Français", value: "fr" },
-  { label: "Anglais", value: "en" },
+  { label: "English", value: "en" },
 ] as const;
 
+/** Returns the display label for a video language code. */
 export const getLanguageLabel = (code: string | null | undefined) => {
   if (!code) {
     return LANGUAGE_LABELS["fr"];
@@ -26,7 +27,7 @@ export const SUBTITLE_LANGUAGE_OPTIONS: Array<{
   value: LanguageSubtitle;
 }> = [
   { label: "Français", value: "fr" },
-  { label: "Anglais", value: "en" },
-  { label: "Espagnol", value: "es" },
-  { label: "Allemand", value: "de" },
+  { label: "English", value: "en" },
+  { label: "Español", value: "es" },
+  { label: "Deutsch", value: "de" },
 ];

@@ -50,16 +50,10 @@ export const fr = {
     public: "Publique",
     private: "Privée",
     passwordProtected: "Protégée par mot de passe",
-    paginationInfo: {
-      one: "Affichage de {start} à {end} sur {count} vidéo{pageInfo}",
-      other: "Affichage de {start} à {end} sur {count} vidéos{pageInfo}",
-    },
+    paginationInfo:
+      "Affichage de {start} à {end} sur {count, plural, one {# vidéo{pageInfo}} other {# vidéos{pageInfo}}}",
     paginationPage: " (Page {page} sur {pagesCount})",
-    found: {
-      // Pluralization
-      one: "Trouvé",
-      other: "Trouvés",
-    },
+    found: "{count, plural, one {Trouvé} other {Trouvés}}",
     titleRequired: "Le titre est obligatoire",
   },
   errors: {
@@ -159,7 +153,9 @@ export const fr = {
     loginTitle: "Connexion à mon profil POD",
     loginRequired: "Vous devez être connecté pour accéder à cette page.",
     username: "Nom d’utilisateur",
+    usernameRequired: "Le nom d’utilisateur est obligatoire",
     password: "Mot de passe",
+    passwordRequired: "Le mot de passe est obligatoire",
     submitLogin: "Connexion",
   },
   webtv: {
