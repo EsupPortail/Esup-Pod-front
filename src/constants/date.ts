@@ -36,8 +36,10 @@ export function formatDateWithTime(
   dateString: string,
   locale: string,
 ): string {
-  const date = dayjs(dateString).locale(locale);
-  return date.format("D MMMM YYYY [à] HH:mm");
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "long",
+    timeStyle: "short",
+  }).format(new Date(dateString));
 }
 
 /** Formats a date without its time in the requested locale. */
