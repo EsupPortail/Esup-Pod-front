@@ -24,7 +24,7 @@ export default function UserSettings() {
         {t("preferences.title")}
       </h1>
 
-      {/* Section 1: Langue de l'application */}
+      {/* Section 1: Application language */}
       <div>
         <h2
           style={{
@@ -42,7 +42,7 @@ export default function UserSettings() {
         <LanguageSelector />
       </div>
 
-      {/* Section 2: Thème visuel */}
+      {/* Section 2: Visual theme */}
       <div>
         <h2
           style={{

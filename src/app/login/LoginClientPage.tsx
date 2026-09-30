@@ -49,7 +49,7 @@ function LoginContent() {
     setError(null);
     try {
       await logIn(data.username.trim(), data.password.trim());
-      // Ne pas laisser cette page de login forcée dans l'historique du BackButton
+      // Prevent this forced login page from remaining in the BackButton history
       if (authRequired) {
         router.replace(safeRedirect);
       } else {
@@ -63,7 +63,7 @@ function LoginContent() {
 
   return (
     <div className={styles["login-content"]}>
-      {/* ==== Avertissement ==== */}
+      {/* ==== Warning ==== */}
       {authRequired && (
         <div role="alert" aria-live="polite">
           <Alert canClose type={VariantType.WARNING}>
@@ -72,7 +72,7 @@ function LoginContent() {
         </div>
       )}
 
-      {/* ==== Erreur serveur ==== */}
+      {/* ==== Server Error ==== */}
       {error && (
         <div role="alert" aria-live="assertive">
           <Alert canClose type={VariantType.ERROR}>
@@ -126,7 +126,7 @@ function LoginContent() {
           className={styles["login-form"]}
           onSubmit={handleSubmit(onSubmit)}
         >
-          {/* ==== Formulaire ==== */}
+          {/* ==== Form ==== */}
           <Input
             id="login-username"
             label={`${t("auth.username")} *`}
@@ -149,7 +149,7 @@ function LoginContent() {
             </p>
           )}
 
-          {/* ==== Mot de passe ==== */}
+          {/* ==== Password ==== */}
           <InputPassword
             id="login-password"
             label={`${t("auth.password")} *`}
@@ -172,7 +172,7 @@ function LoginContent() {
             </p>
           )}
 
-          {/* ==== Bouton de soumission ==== */}
+          {/* ==== Submit button ==== */}
           <Button variant="primary" type="submit" disabled={isSubmitting}>
             {isSubmitting ? t("common.loading") : t("auth.submitLogin")}
           </Button>

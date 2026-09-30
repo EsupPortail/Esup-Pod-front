@@ -71,7 +71,7 @@ const getDownloadFilename = (
   return `${videoSlug}.mp4`;
 };
 
-/** Squelette de chargement — défini au niveau module pour éviter la recréation à chaque rendu */
+/** Loading skeleton — defined at module level to avoid recreation on every render */
 function VideoPageSkeleton() {
   return (
     <div>
@@ -331,7 +331,7 @@ export default function Video() {
           setCoOwnersUsers(coOwners);
         } catch (error) {
           console.error(
-            "Erreur lors du chargement des co‑propriétaires",
+            "Error loading co-owners",
             error,
           );
           setCoOwnersUsers([]);
@@ -375,12 +375,13 @@ export default function Video() {
     setIsUnlocking(true);
 
     try {
+      const unlockError = "Unable to unlock this video."
       const payload = password.trim()
         ? { password: password.trim() }
         : undefined;
       const unlocked = await unlockVideo(video.slug, payload);
       if (!unlocked) {
-        setUnlockError("Impossible de déverrouiller cette vidéo.");
+        setUnlockError(unlockError);
         setIsUnlocked(false);
       } else {
         setIsUnlocked(true);
@@ -389,7 +390,7 @@ export default function Video() {
       setUnlockError(
         error instanceof Error
           ? error.message
-          : "Impossible de déverrouiller cette vidéo.",
+          : unlockError,
       );
       setIsUnlocked(false);
     } finally {
@@ -437,7 +438,7 @@ export default function Video() {
       setDownloadError(
         error instanceof Error
           ? error.message
-          : "Impossible de télécharger cette vidéo.",
+          : "Unable to download this video.",
       );
     } finally {
       setIsDownloading(false);
@@ -541,7 +542,7 @@ export default function Video() {
                     accessToken,
                     onRefresh: refresh,
                   }).catch(() => {
-                    console.error("Erreur d'enregistrement de vue");
+                    console.error("Error recording view");
                   });
                 }}
                 onEnded={handleVideoEnded}
