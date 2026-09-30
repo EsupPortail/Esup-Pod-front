@@ -1,13 +1,24 @@
 import type { Channel, Theme, Playlist, Video } from "@/src/types";
 import type { CollectionDisplayRow } from "./types";
 
-function formatDate(value: string | undefined, locale: string) {
-  if (!value) return "";
-  return new Intl.DateTimeFormat(locale, {
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
+
+function getDateFormatter(locale: string): Intl.DateTimeFormat {
+  const cachedFormatter = dateFormatters.get(locale);
+  if (cachedFormatter) return cachedFormatter;
+
+  const formatter = new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-  }).format(new Date(value));
+  });
+  dateFormatters.set(locale, formatter);
+  return formatter;
+}
+
+function formatDate(value: string | undefined, locale: string) {
+  if (!value) return "";
+  return getDateFormatter(locale).format(new Date(value));
 }
 
 export function mapChannelToDisplayRow(
