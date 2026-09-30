@@ -32,7 +32,7 @@ describe("requestJson", () => {
       headers: { "Content-Type": "text/plain" },
     });
 
-    await expect(requestJson(mockResponse)).rejects.toThrow("Erreur API.");
+    await expect(requestJson(mockResponse)).rejects.toThrow("API Error.");
   });
 
   it("should fetch and parse when given a url string", async () => {
