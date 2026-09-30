@@ -8,6 +8,7 @@ import type { VideoDisplayRow } from "./types";
  */
 export function mapVideoToDisplayRow(
   video: Video,
+  locale: string,
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
@@ -22,7 +23,7 @@ export function mapVideoToDisplayRow(
     title: video.title,
     thumbnailUrl: getThumbnailUrl(video.thumbnail_url),
     durationLabel: formatTime(secondToMinute(video.duration || 0)),
-    createdAtLabel: timeAgo(video.created_at),
+    createdAtLabel: timeAgo(video.created_at, locale),
     createdAtValue: video.created_at,
     owner: video.owner,
     ownerId: video.owner_id,
@@ -42,13 +43,21 @@ export function mapVideoToDisplayRow(
   };
 }
 
+/** Maps videos to rows ready for display. */
 export function mapVideosToDisplayRows(
   videos: Video[],
+  locale: string,
   currentUserId?: number,
   selectedVideoIds?: number[],
   onSelectVideo?: (videoId: number, checked: boolean) => void,
 ): VideoDisplayRow[] {
   return videos.map((video) =>
-    mapVideoToDisplayRow(video, currentUserId, selectedVideoIds, onSelectVideo),
+    mapVideoToDisplayRow(
+      video,
+      locale,
+      currentUserId,
+      selectedVideoIds,
+      onSelectVideo,
+    ),
   );
 }

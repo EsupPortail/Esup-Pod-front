@@ -1,8 +1,28 @@
 "use client";
 
-import { useLanguage } from "@/src/context/LanguageProvider";
+import { useLocale, useTranslations } from "next-intl";
+import dayjs from "dayjs";
+import type { SupportedLocale } from "@/src/locales";
 
+const LANGUAGE_COOKIE = "pod_language";
+
+const supportedLocales: { code: SupportedLocale; label: string }[] = [
+  { code: "fr", label: "Français" },
+  { code: "en", label: "English" },
+  { code: "es", label: "Español" },
+];
+
+/** Provides translations and locale selection for client components. */
 export function useTranslation() {
-  const { locale, setLocale, t, supportedLocales } = useLanguage();
+  const locale = useLocale() as SupportedLocale;
+  const t = useTranslations();
+
+  /** Persists a new locale and refreshes server-rendered messages. */
+  const setLocale = (newLocale: SupportedLocale) => {
+    document.cookie = `${LANGUAGE_COOKIE}=${newLocale}; path=/; max-age=31536000`;
+    dayjs.locale(newLocale);
+    window.location.reload();
+  };
+
   return { locale, setLocale, t, supportedLocales };
 }

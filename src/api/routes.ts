@@ -1,3 +1,4 @@
+/** Builds the API route map from the configured backend URL. */
 export const getRoutes = () => {
   const baseUrl =
     process.env.NEXT_PUBLIC_BACK_URL ?? "http://pod.localhost:8000/";

@@ -51,16 +51,10 @@ export const es: TranslationKeys = {
     public: "Público",
     private: "Privado",
     passwordProtected: "Protegido con contraseña",
-    paginationInfo: {
-      one: "Mostrando de {start} a {end} de {count} vídeo{pageInfo}",
-      other: "Mostrando de {start} a {end} de {count} vídeos{pageInfo}",
-    },
+    paginationInfo:
+      "Mostrando de {start} a {end} de {count, plural, one {# vídeo{pageInfo}} other {# vídeos{pageInfo}}}",
     paginationPage: " (Página {page} de {pagesCount})",
-    found: {
-      // Pluralization
-      one: "Encontrada",
-      other: "Encontradas",
-    },
+    found: "{count, plural, one {Encontrada} other {Encontradas}}",
     titleRequired: "El título es obligatorio",
   },
   errors: {
@@ -156,7 +150,9 @@ export const es: TranslationKeys = {
     loginTitle: "Iniciar sesión en mi perfil POD",
     loginRequired: "Debe iniciar sesión para acceder a esta página.",
     username: "Nombre de usuario",
+    usernameRequired: "El nombre de usuario es obligatorio",
     password: "Contraseña",
+    passwordRequired: "La contraseña es obligatoria",
     submitLogin: "Iniciar sesión",
   },
   webtv: {

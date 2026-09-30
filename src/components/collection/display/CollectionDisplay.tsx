@@ -51,7 +51,7 @@ export default function CollectionDisplay({
   onPageChange,
   loading = false,
 }: CollectionDisplayProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const [view, setView] = useState<CollectionViewMode>(() => {
     if (typeof window === "undefined" || !storageKey) {
@@ -81,8 +81,18 @@ export default function CollectionDisplay({
         channelSlug,
         basePath,
         currentUserId,
+        locale,
       }),
-    [channels, themes, playlists, videos, channelSlug, basePath, currentUserId],
+    [
+      channels,
+      themes,
+      playlists,
+      videos,
+      channelSlug,
+      basePath,
+      currentUserId,
+      locale,
+    ],
   );
 
   const pagination = usePagination({

@@ -14,7 +14,8 @@ import { PlaylistCreationProvider } from "../context/PlaylistCreationContext";
 import { QueryProvider } from "../context/QueryProvider";
 
 import { AppConfigProvider } from "../context/AppConfigProvider";
-import { LanguageProvider } from "../context/LanguageProvider";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: {
@@ -30,13 +31,16 @@ export const viewport: Viewport = {
   /*maximumScale: 1,*/
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -65,7 +69,7 @@ export default function RootLayout({
         <div className="layout">
           <CunninghamStyleProvider>
             <AppConfigProvider>
-              <LanguageProvider>
+              <NextIntlClientProvider locale={locale} messages={messages}>
                 <DatePickerProvider>
                   <QueryProvider>
                     <AuthProvider>
@@ -88,7 +92,7 @@ export default function RootLayout({
                     </AuthProvider>
                   </QueryProvider>
                 </DatePickerProvider>
-              </LanguageProvider>
+              </NextIntlClientProvider>
             </AppConfigProvider>
           </CunninghamStyleProvider>
         </div>

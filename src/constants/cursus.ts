@@ -20,6 +20,7 @@ export const CURSUS_LABELS: Record<CursusCode, string> = {
   0: "Other",
 };
 
+/** Returns the available cursus options with translated labels when provided. */
 export const getCursusOptions = (t?: (key: string) => string) => {
   return CURSUS_CODES.map((code) => ({
     value: code,
@@ -29,6 +30,7 @@ export const getCursusOptions = (t?: (key: string) => string) => {
 
 export const CURSUS_OPTIONS = getCursusOptions();
 
+/** Returns the display label for a cursus code. */
 export const getCursusLabel = (
   code: string | null | undefined,
   t?: (key: string) => string,

@@ -1,18 +1,33 @@
 import type { Channel, Theme, Playlist, Video } from "@/src/types";
 import type { CollectionDisplayRow } from "./types";
 
-const dateFormatter = new Intl.DateTimeFormat("fr-FR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
+const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
-function formatDate(value?: string) {
-  if (!value) return "";
-  return dateFormatter.format(new Date(value));
+/** Returns the cached date formatter for a locale. */
+function getDateFormatter(locale: string): Intl.DateTimeFormat {
+  const cachedFormatter = dateFormatters.get(locale);
+  if (cachedFormatter) return cachedFormatter;
+
+  const formatter = new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  dateFormatters.set(locale, formatter);
+  return formatter;
 }
 
-export function mapChannelToDisplayRow(channel: Channel): CollectionDisplayRow {
+/** Formats a date for display in the requested locale. */
+function formatDate(value: string | undefined, locale: string) {
+  if (!value) return "";
+  return getDateFormatter(locale).format(new Date(value));
+}
+
+/** Maps a channel to a collection display row. */
+export function mapChannelToDisplayRow(
+  channel: Channel,
+  locale: string,
+): CollectionDisplayRow {
   return {
     id: `channel-${channel.id}`,
     type: "channel",
@@ -22,15 +37,17 @@ export function mapChannelToDisplayRow(channel: Channel): CollectionDisplayRow {
     videosCount: channel.videos_count ?? 0,
     themesCount: channel.themes_count ?? 0,
     createdAtValue: channel.created_at,
-    createdAtLabel: formatDate(channel.created_at),
+    createdAtLabel: formatDate(channel.created_at, locale),
     updatedAtValue: channel.updated_at,
-    updatedAtLabel: formatDate(channel.updated_at),
+    updatedAtLabel: formatDate(channel.updated_at, locale),
     href: `/channel/${channel.slug}`,
   };
 }
 
+/** Maps a theme to a collection display row. */
 export function mapThemeToDisplayRow(
   theme: Theme,
+  locale: string,
   options?: { channelSlug?: string; basePath?: string },
 ): CollectionDisplayRow {
   const { channelSlug, basePath } = options ?? {};
@@ -52,15 +69,17 @@ export function mapThemeToDisplayRow(
     videosCount: theme.videos_count ?? theme.items?.length ?? 0,
     subThemesCount: theme.children?.length ?? 0,
     createdAtValue: theme.created_at,
-    createdAtLabel: formatDate(theme.created_at),
+    createdAtLabel: formatDate(theme.created_at, locale),
     updatedAtValue: theme.updated_at,
-    updatedAtLabel: formatDate(theme.updated_at),
+    updatedAtLabel: formatDate(theme.updated_at, locale),
     href,
   };
 }
 
+/** Maps a playlist to a collection display row. */
 export function mapPlaylistToDisplayRow(
   playlist: Playlist,
+  locale: string,
   currentUserId?: number,
 ): CollectionDisplayRow {
   const isOwner = currentUserId != null && playlist.owner === currentUserId;
@@ -73,15 +92,16 @@ export function mapPlaylistToDisplayRow(
     thumbnailUrl: "/default_thumbnail.svg",
     videosCount: playlist.videos_count ?? playlist.items?.length ?? 0,
     createdAtValue: playlist.created_at,
-    createdAtLabel: formatDate(playlist.created_at),
+    createdAtLabel: formatDate(playlist.created_at, locale),
     updatedAtValue: playlist.updated_at,
-    updatedAtLabel: formatDate(playlist.updated_at),
+    updatedAtLabel: formatDate(playlist.updated_at, locale),
     href: `/playlist/${playlist.slug}`,
     isOwner,
     playlistSlug: playlist.slug,
   };
 }
 
+/** Maps available collections to display rows. */
 export function mapCollectionsToDisplayRows({
   channels = [],
   themes = [],
@@ -89,6 +109,7 @@ export function mapCollectionsToDisplayRows({
   channelSlug,
   basePath,
   currentUserId,
+  locale,
 }: {
   channels?: Channel[];
   themes?: Theme[];
@@ -97,19 +118,22 @@ export function mapCollectionsToDisplayRows({
   channelSlug?: string;
   basePath?: string;
   currentUserId?: number;
+  locale: string;
 }): CollectionDisplayRow[] {
   const rows: CollectionDisplayRow[] = [];
 
-  // calculer le nombre de thèmes par chaîne.
+  // Calculate the number of themes per channel.
   if (channels.length > 0) {
-    rows.push(...channels.map((channel) => mapChannelToDisplayRow(channel)));
+    rows.push(
+      ...channels.map((channel) => mapChannelToDisplayRow(channel, locale)),
+    );
   }
 
-  // On ne crée des lignes "thème" que lorsqu'on n'affiche pas de chaînes.
+  // "Theme" rows are only created when no channels are being displayed.
   if (channels.length === 0 && themes.length > 0) {
     rows.push(
       ...themes.map((theme) =>
-        mapThemeToDisplayRow(theme, { channelSlug, basePath }),
+        mapThemeToDisplayRow(theme, locale, { channelSlug, basePath }),
       ),
     );
   }
@@ -117,7 +141,7 @@ export function mapCollectionsToDisplayRows({
   if (playlists.length > 0) {
     rows.push(
       ...playlists.map((playlist) =>
-        mapPlaylistToDisplayRow(playlist, currentUserId),
+        mapPlaylistToDisplayRow(playlist, locale, currentUserId),
       ),
     );
   }

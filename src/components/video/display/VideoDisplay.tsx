@@ -28,7 +28,7 @@ export default function VideosDisplay({
   onSelectVideo,
   onSelectAll,
 }: VideosDisplayProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [view, setView] = useState<VideoViewMode>(() => {
     if (typeof window !== "undefined" && storageKey) {
       const storedView = window.localStorage.getItem(storageKey);
@@ -83,11 +83,18 @@ export default function VideosDisplay({
   const gridRows = useMemo(() => {
     return mapVideosToDisplayRows(
       paginatedVideos,
+      locale,
       currentUserId,
       selectedVideoIds,
       onSelectVideo,
     );
-  }, [paginatedVideos, currentUserId, selectedVideoIds, onSelectVideo]);
+  }, [
+    paginatedVideos,
+    currentUserId,
+    selectedVideoIds,
+    onSelectVideo,
+    locale,
+  ]);
 
   const isAllSelected = useMemo(() => {
     if (paginatedVideos.length === 0) return false;
