@@ -7,7 +7,7 @@ type AuthFetchOptions = RequestInit & {
   onRefresh?: () => Promise<string | null>;
 };
 
-// Injecte automatiquement le header Authorization Bearer <token> dans chaque appel API protégé.
+// Automatically injects the Authorization Bearer <token> header into every protected API call.
 
 /** Fetches an API resource with authentication and refresh support. */
 export async function authFetch(

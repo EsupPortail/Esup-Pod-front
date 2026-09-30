@@ -122,14 +122,14 @@ export function mapCollectionsToDisplayRows({
 }): CollectionDisplayRow[] {
   const rows: CollectionDisplayRow[] = [];
 
-  // calculer le nombre de thèmes par chaîne.
+  // Calculate the number of themes per channel.
   if (channels.length > 0) {
     rows.push(
       ...channels.map((channel) => mapChannelToDisplayRow(channel, locale)),
     );
   }
 
-  // On ne crée des lignes "thème" que lorsqu'on n'affiche pas de chaînes.
+  // "Theme" lines are only created when no strings are being displayed.
   if (channels.length === 0 && themes.length > 0) {
     rows.push(
       ...themes.map((theme) =>
