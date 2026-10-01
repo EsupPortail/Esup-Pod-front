@@ -66,6 +66,8 @@ export const fr = {
     leaveWithoutSaving:"Quitter sans enregistrer",
   },
   errors: {
+    deleteErrorVideo: "Une erreur est survenue lors de la suppression de la vidéo",
+    dupErrorVideo: "Une erreur est survenue lors de la duplication de la vidéo",
     error: "Une erreur est survenue",
     notFound: "Page introuvable",
     notFoundDesc:
@@ -84,6 +86,9 @@ export const fr = {
     formFieldsError:
       "{count, plural, =1 {Veuillez corriger le champ suivant : {fields}.} other {Veuillez corriger les # champs suivants : {fields}.}}",
     savingFormError: "Erreur lors de l'enregistrement du formulaire",
+    loadErrorVideo: "Erreur lors du chargement de la vidéo",
+    error401: "Accès non autorisé (401). Veuillez vous connecter.",
+    loadErrorVideos: "Erreur lors du chargement des vidéos {status}.",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",

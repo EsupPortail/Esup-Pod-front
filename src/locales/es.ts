@@ -69,6 +69,9 @@ export const es: TranslationKeys = {
   },
 
   errors: {
+    deleteErrorVideo: "Error al eliminar el vídeo",
+    dupErrorVideo: "Error al duplicar el vídeo",
+    loadErrorVideo: "Error al cargar el vídeo",
     error: "Se ha producido un error",
     notFound: "Página no encontrada",
     notFoundDesc: "La página que busca no existe o ha sido eliminada.",
@@ -86,6 +89,8 @@ export const es: TranslationKeys = {
     formFieldsError:
       "{count, plural, =1 {Corrija el siguiente campo: {fields}.} other {Corrija los siguientes # campos: {fields}.}}",
     savingFormError: "Error al guardar el formulario",
+    error401: "Acceso no autorizado (401). Por favor, inicie sesión.",
+    loadErrorVideos: "Error al cargar las videos {status}.",
   },
 
   a11y: {

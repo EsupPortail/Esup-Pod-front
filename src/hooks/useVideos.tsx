@@ -11,6 +11,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useTranslation } from "./useTranslation";
 
 type UnlockPayload = {
   password?: string;
@@ -95,6 +96,7 @@ const normalizeVideoList = (data: VideoListResponse): Video[] => {
 
 export function useVideo(slug: string, enabled = true) {
   const { accessToken, refresh } = useAuth();
+  const { t } = useTranslation();
 
   return useQuery<Video, Error>({
     queryKey: ["video", slug],
@@ -105,7 +107,7 @@ export function useVideo(slug: string, enabled = true) {
       });
 
       if (res.status === 404 && !accessToken) throw new Error("AUTH_REQUIRED");
-      if (!res.ok) throw new Error("Erreur de chargement de la vidéo.");
+      if (!res.ok) throw new Error(t("errors.loadErrorVideo"));
 
       return requestJson<Video>(res);
     },
@@ -130,6 +132,7 @@ export function useVideosList(
 ) {
   const { accessToken, refresh } = useAuth();
 
+  const { t } = useTranslation();
   const query = useInfiniteQuery<VideoListResponse, Error>({
     queryKey: ["videos", fetchType, params],
     queryFn: async ({ pageParam = 1 }) => {
@@ -148,15 +151,15 @@ export function useVideosList(
       );
       if (!response.ok) {
         if (response.status === 401)
-          throw new Error("Accès non autorisé (401). Veuillez vous connecter.");
+          throw new Error(t("errors.error401"));
         if (response.status === 404)
-          throw new Error("Ressource introuvable (404).");
+          throw new Error(t("errors.notFound"));
         if (response.status >= 500)
           throw new Error(
-            "Le serveur API est indisponible ou en erreur (500).",
+            t("errors.serverError"),
           );
         throw new Error(
-          `Erreur lors du chargement des vidéos (${response.status}).`,
+          t("errors.loadErrorVideos", { status: response.status })
         );
       }
       return requestJson<VideoListResponse>(response);
@@ -195,6 +198,7 @@ export function useVideosList(
 export function useDeleteVideo() {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (slug: string) => {
@@ -205,7 +209,7 @@ export function useDeleteVideo() {
       });
 
       if (!res.ok)
-        throw new Error("Erreur lors de la suppression de la vidéo.");
+        throw new Error(t("errors.deleteErrorVideo"));
       return slug;
     },
     onSuccess: (deletedSlug) => {
@@ -269,6 +273,7 @@ export function useUnlockVideo() {
 export function useDuplicateVideo() {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (slug: string) => {
@@ -278,7 +283,7 @@ export function useDuplicateVideo() {
         onRefresh: refresh,
       });
       if (!response.ok) {
-        throw new Error("Erreur lors de la duplication de la vidéo.");
+        throw new Error(t("errors.dupErrorVideo"));
       }
       return requestJson<Video>(response);
     },

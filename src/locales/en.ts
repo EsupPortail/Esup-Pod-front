@@ -68,6 +68,9 @@ export const en: TranslationKeys = {
   },
 
   errors: {
+    deleteErrorVideo: "An error occurred while deleting the video",
+    dupErrorVideo: "An error occurred while duplicating the video",
+    loadErrorVideo: "An error occurred while loading the video",
     error: "An error occurred",
     notFound: "Page not found",
     notFoundDesc:
@@ -85,6 +88,8 @@ export const en: TranslationKeys = {
     formFieldsError:
       "{count, plural, =1 {Please correct the following field: {fields}.} other {Please correct the following # fields: {fields}.}}",
     savingFormError: "Error while saving the form",
+    error401: "Unauthorized access (401). Please log in.",
+    loadErrorVideos: "Error while loading videos {status}.",
   },
 
   a11y: {
