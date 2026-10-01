@@ -65,7 +65,7 @@ export default function Theme() {
     useVideoLoading,
   } = useVideoListFilters({ mode: "all", enabled: false });
 
-  // Filtres collections (thèmes)
+  // Filters collections (themes)
   const {
     filters: collectionFilters,
     setFilters: setCollectionFilters,
@@ -146,7 +146,7 @@ export default function Theme() {
     ? (allThemes.find((item) => item.id === theme.parent) ?? null)
     : null;
 
-  // True si l'utilisateur a réellement appliqué au moins un filtre vidéo
+  // True if the user has actually applied at least one video filter
   const hasActiveVideoFilters = useMemo(() => {
     const base: VideoFiltersValue = videoFilters;
 
@@ -161,7 +161,7 @@ export default function Theme() {
     );
   }, [videoFilters]);
 
-  // Sous-thèmes après application des filtres
+  // Child themes after applying filters
   const filteredChildThemes = useMemo<Theme[]>(() => {
     if (!baseChildThemes.length) return [];
 
@@ -238,7 +238,7 @@ export default function Theme() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Alert canClose type={VariantType.ERROR}>
-          {useThemeError ?? "Impossible de charger ce thème."}
+          {useThemeError ?? `${t("errors.unableToTheme")}`}
         </Alert>
         <BackButton label={t("common.back")} />
       </div>
@@ -287,17 +287,17 @@ export default function Theme() {
             <Tabs
               value={selectedTab}
               onChange={handleChange}
-              aria-label="Contenus de la chaine"
+              aria-label={t("channels.content")}
             >
               <Tab
                 disabled={themeItemVideos.length === 0}
-                label={`Videos non classées (${themeItemVideos.length})`}
+                label={`${t("channels.unclassified")} (${themeItemVideos.length})`}
                 value="unclassified"
               />
 
               <Tab
                 disabled={baseChildThemes.length === 0}
-                label={`Sous-thèmes (${baseChildThemes.length})`}
+                label={`${t("common.subtopics")} (${baseChildThemes.length})`}
                 value="childThemes"
               />
             </Tabs>
@@ -361,7 +361,7 @@ export default function Theme() {
 
               {selectedTab === "childThemes" && (
                 <div>
-                  <h2>Sous-thèmes</h2>
+                  <h2>{t("common.subtopics")}</h2>
 
                   <CollectionFilters
                     mode="themes"

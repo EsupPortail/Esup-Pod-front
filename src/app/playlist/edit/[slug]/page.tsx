@@ -99,7 +99,7 @@ export default function EditPlaylist() {
   const watchedValues = useWatch({ control });
   const isPublic = watchedValues.is_public ?? true;
 
-  // Si playlist privée, on désactive le mdp
+  // If the playlist is private, disable the password
   useEffect(() => {
     if (!isPublic) {
       setValue("is_password_required", false);
@@ -122,7 +122,7 @@ export default function EditPlaylist() {
     return JSON.stringify(initialValues) !== JSON.stringify(watchedValues);
   })();
 
-  /* Alert si le user quitte la page sans enregistrer */
+  /* Alert if the user leaves the page without saving */
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!hasUnsavedChanges) return;
@@ -159,7 +159,7 @@ export default function EditPlaylist() {
     const passwordValue = data.password.trim();
 
     if (!slug) {
-      setError("Erreur lors de l'enregistrement du formulaire");
+      setError(`${t("errors.savingFormError")}`);
       return;
     }
 
@@ -176,16 +176,14 @@ export default function EditPlaylist() {
       return;
     }
 
-    // Playlist privée : jamais de mot de passe
+    // Private playlist: never use a password
     if (!data.is_public) {
       payload.password = "";
     } else {
-      // Playlist publique : mot de passe optionnel,
-      // mais obligatoire si la case \"protéger par un mot de passe\" est cochée
+      // Public playlist: password is optional,
+      // but required if the "protect with a password" checkbox is checked
       if (data.is_password_required && !passwordValue) {
-        setError(
-          "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
-        );
+        setError(`${t("common.passwordProtected")}`);
         return;
       }
 
@@ -196,7 +194,7 @@ export default function EditPlaylist() {
 
     const updated = await updatePlaylist(slug, payload);
     if (updated) {
-      setSuccess("Liste de lecture mise à jour avec succès ! 🥳");
+      setSuccess(`${t("playlists.playlistUpdated")} 🥳`);
     }
   };
 
@@ -211,9 +209,10 @@ export default function EditPlaylist() {
 
     setSuccess(null);
     setformError(
-      labels.length > 1
-        ? `Veuillez corriger les ${labels.length} champs suivants : ${labels.join(", ")}.`
-        : `Veuillez corriger le champ suivant : ${labels[0]}.`,
+      t("errors.formFieldsError", {
+        count: labels.length,
+        fields: labels.join(", "),
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -226,15 +225,15 @@ export default function EditPlaylist() {
     return <CenteredLoader />;
   }
   if (!slug) {
-    return <Alert canClose>Liste de lecture introuvable.</Alert>;
+    return <Alert canClose>{t("playlists.notFound")}</Alert>;
   }
   if (usePlaylistError || !slug) {
     return (
       <div>
-        <Alert canClose>Liste de lecture introuvable.</Alert>
+        <Alert canClose>{t("playlists.notFound")}</Alert>
         <Link href="/playlist/me">
           <Button color="brand" variant="secondary" type="reset">
-            Retour à mes listes de lectures
+            {t("playlists.backToMyPlaylists")}
           </Button>
         </Link>
       </div>
@@ -244,7 +243,7 @@ export default function EditPlaylist() {
     return (
       <div>
         <Alert>
-          Vous n’avez pas les droits pour modifier cette liste de lecture.
+          {t("playlists.noPermissionToEditPlaylist")}
         </Alert>
         <BackButton label={t("common.back")} />
       </div>
@@ -254,9 +253,11 @@ export default function EditPlaylist() {
   return (
     <div>
       <BackButton label={t("common.back")} />
-      <h1>Éditer la liste de lecture {playlist?.title}</h1>
+      <h1>
+        {t("playlists.editPlaylist")} {playlist?.title}
+      </h1>
 
-      {/* ---------- Alertes globales ---------- */}
+      {/* ---------- Global alerts ---------- */}
       {formError && (
         <Alert type={VariantType.ERROR} canClose>
           {formError}
@@ -285,7 +286,7 @@ export default function EditPlaylist() {
           isSubmitting={isSubmitting}
           isMobile={isMobile}
           isLoading={usePlaylistLoading}
-          submitLabel="Enregistrer"
+          submitLabel={t("common.save")}
           secondaryActions={
             <>
               <Button
@@ -300,7 +301,7 @@ export default function EditPlaylist() {
                   openConfirmLeave(() => router.push(`/playlist/${slug}`))
                 }
               >
-                Voir la playlist
+                {t("playlists.seePlaylist")}
               </Button>
 
               <Button
@@ -315,7 +316,7 @@ export default function EditPlaylist() {
                   )
                 }
               >
-                Supprimer la playlist
+                {t("playlists.delete")}
               </Button>
             </>
           }
@@ -325,8 +326,7 @@ export default function EditPlaylist() {
       <Dialog open={confirmLeaveOpen} onClose={handleCancelLeave}>
         <DialogTitle>Modifications non enregistrées</DialogTitle>
         <DialogContent>
-          Vous avez des modifications non enregistrées. Voulez-vous vraiment
-          quitter cette page ?
+          {t("common.unsavedChangesLeaveConfirmation")}
         </DialogContent>
         <DialogActions>
           <Button
@@ -335,7 +335,7 @@ export default function EditPlaylist() {
             color="neutral"
             onClick={handleCancelLeave}
           >
-            Rester sur la page
+            {t("common.stayOnPage")}
           </Button>
           <Button
             type="button"
@@ -343,7 +343,7 @@ export default function EditPlaylist() {
             color="brand"
             onClick={handleConfirmLeave}
           >
-            Quitter sans enregistrer
+            {t("common.leaveWithoutSaving")}
           </Button>
         </DialogActions>
       </Dialog>

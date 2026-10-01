@@ -33,7 +33,7 @@ export default function MyPlaylistsPage() {
   useEffect(() => {
     if (!user) return;
 
-    // Vérifier si le filtre est activé sur l'utilisateur courant
+    // Check if the filter is enabled for the current user
     if (
       filters.ownerUsernames.length === 1 &&
       filters.ownerUsernames[0] === user.username

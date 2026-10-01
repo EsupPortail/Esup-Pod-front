@@ -16,6 +16,7 @@ import { QueryProvider } from "../context/QueryProvider";
 import { AppConfigProvider } from "../context/AppConfigProvider";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: {
@@ -38,6 +39,8 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+
+  const t = await getTranslations();
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -64,7 +67,7 @@ export default async function RootLayout({
       </head>
       <body>
         <a href="#main" className="skip-link">
-          Aller au contenu principal
+          {t("common.goToMainContent")}
         </a>
         <div className="layout">
           <CunninghamStyleProvider>

@@ -47,7 +47,7 @@ export default function DeletePlaylistPage() {
   return (
     <div className={styles["delete-container"]}>
       <Paper className={styles["paper"]}>
-        <h2>Supprimer la liste de lecture</h2>
+        <h2>{t("playlists.delete")}</h2>
 
         {usePlaylistLoading && !playlist && <CenteredLoader />}
 
@@ -57,7 +57,7 @@ export default function DeletePlaylistPage() {
               type={VariantType.ERROR}
               className={styles["delete-error-alert"]}
             >
-              {usePlaylistError ?? "Playlist introuvable."}
+              {usePlaylistError ?? `${t("playlists.notFound")}`}
             </Alert>
             <Button
               variant="secondary"
@@ -70,9 +70,9 @@ export default function DeletePlaylistPage() {
         ) : playlist ? (
           <>
             <p>
-              Êtes-vous sûr·e de vouloir supprimer la playlist{" "}
+              {t("playlists.deleteConfirmation")}{" "}
               <strong>{playlist.title}</strong> ? <br />
-              Cette action est définitive.
+              {t("common.permanentAction")}
             </p>
 
             <div className={styles["buttons-action"]}>
@@ -93,7 +93,7 @@ export default function DeletePlaylistPage() {
                 onClick={handleDelete}
                 disabled={usePlaylistLoading}
               >
-                Supprimer la playlist
+                {t("common.delete")}
               </Button>
             </div>
           </>

@@ -49,12 +49,21 @@ export const fr = {
       "Ajoutez des auteurs, réalisateurs ou intervenants à votre vidéo.",
     public: "Publique",
     private: "Privée",
-    passwordProtected: "Protégée par mot de passe",
+    passwordProtected:
+      "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
     paginationInfo:
       "Affichage de {start} à {end} sur {count, plural, one {# vidéo{pageInfo}} other {# vidéos{pageInfo}}}",
     paginationPage: " (Page {page} sur {pagesCount})",
     found: "{count, plural, one {Trouvé} other {Trouvés}}",
     titleRequired: "Le titre est obligatoire",
+    descRequired: "La description est obligatoire.",
+    goToMainContent: "Aller au contenu principal",
+    backToHomepage: "Retour à l'accueil",
+    permanentAction: "Cette action est définitive.",
+    unsavedChangesLeaveConfirmation:
+      "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?",
+    stayOnPage: "Rester sur la page",
+    leaveWithoutSaving:"Quitter sans enregistrer",
   },
   errors: {
     error: "Une erreur est survenue",
@@ -69,8 +78,12 @@ export const fr = {
     notConnected: "Utilisateur non connecté",
     chooseImage: "Veuillez choisir une image",
     unableToSection: "Impossible de charger cette section de lapplication",
+    unableToTheme: "Impossible de charger ce thème.",
     notConfigured:
       "La page demandée n’existe pas ou n’a pas encore été configurée pour cette établissement.",
+    formFieldsError:
+      "{count, plural, =1 {Veuillez corriger le champ suivant : {fields}.} other {Veuillez corriger les # champs suivants : {fields}.}}",
+    savingFormError: "Erreur lors de l'enregistrement du formulaire",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",
@@ -157,6 +170,7 @@ export const fr = {
     password: "Mot de passe",
     passwordRequired: "Le mot de passe est obligatoire",
     submitLogin: "Connexion",
+    unknownUser: "Utilisateur inconnu",
   },
   webtv: {
     webtv: "WebTV",
@@ -478,18 +492,30 @@ export const fr = {
     myTitle: "Mes listes de lecture",
     playlists: "Listes de lecture",
     playlist: "Liste de lecture",
+    playlistUpdated: "Liste de lecture mise à jour avec succès !",
     delete: "Supprimer la liste de lecture",
+    deleteConfirm:
+      "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
+    deleteSuccess: "La liste de lecture a été supprimée avec succès.",
+    deleteError:
+      "Une erreur est survenue lors de la suppression de la liste de lecture.",
     noVideos: "Aucune vidéo dans cette playlist",
-    notFound: "Playlist introuvable",
+    notFound: "Playlist introuvable.",
     addPlaylist: "Ajouter une liste de lecture",
+    addThePlaylist: "Ajouter la liste de lecture",
     nowPlaying: "Lecture en cours",
-    editPlaylist: "Éditer la liste de lecture.",
-    deletePlaylist: "Supprimer la liste de lecture",
+    editPlaylist: "Éditer la liste de lecture",
     noPlaylists: "Vous n’avez encore aucune liste de lecture.",
-    noResults: "Playlist introuvable.",
     noMatchingFilters: "Aucune liste de lecture ne correspond à vos filtres.",
     noPublicPlaylists: "Aucune liste de lecture disponible pour le moment.",
     playlistCreated: "La liste de lecture a été créée avec succès.",
+    unableToLoad: "Impossible de charger la playlist",
+    creationError:
+      "Une erreur est survenue lors de la création de la liste de lecture.",
+    backToMyPlaylists: "Retour à mes listes de lecture",
+    noPermissionToEditPlaylist:
+      "Vous n’avez pas les droits pour modifier cette liste de lecture.",
+    seePlaylist: "Voir la liste de lecture",
   },
   channels: {
     title: "Chaînes",
@@ -512,6 +538,7 @@ export const fr = {
     noWatermarks: "Vous n’avez pas encore envoyé de filigrane.",
     deleteConfirm: "Êtes-vous sûr de vouloir supprimer ce filigrane ?",
     loadError: "Erreur lors du chargement des filigranes.",
+    uploadError: "Erreur lors de l'upload de l'image",
   },
   languages: {
     fr: "Français",

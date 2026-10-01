@@ -33,7 +33,7 @@ export default function DressingPage() {
       await uploadWatermark(file);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'upload de l'image");
+      alert(t("dressingPage.uploadError"));
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";

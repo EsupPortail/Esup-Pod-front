@@ -50,7 +50,7 @@ export default function Channel() {
     useChannelLoading,
   } = useChannel();
 
-  // Thèmes filtrés pour la chaîne de la page
+  // Filtered themes for channel pages
   const {
     filters,
     setFilters,
@@ -62,7 +62,7 @@ export default function Channel() {
     loading,
   } = useCollectionListFilters({ mode: "themes", enabled: !!channel?.id });
 
-  // Thèmes bruts pour la chaîne de la page
+  // Raw themes for the page channel
   const { fetchAll: fetchAllThemes } = useTheme();
   const {
     filters: videoFilters,
@@ -113,13 +113,13 @@ export default function Channel() {
     );
   }, [videoFilters]);
 
-  // Thèmes de la chaine avec les filtres
+  // Channel's themes with filters applied
   const channelThemes = useMemo(
     () => themes.filter((theme) => theme.channel === channel?.id),
     [themes, channel?.id],
   );
 
-  // Charge une fois tous les thèmes de la chaîne de la page, indépendamment des filtres
+  // Load once all themes of the page channel, regardless of filters
   useEffect(() => {
     if (!channel?.id) return;
 
@@ -132,7 +132,7 @@ export default function Channel() {
     void loadBaseThemes();
   }, [channel?.id, fetchAllThemes]);
 
-  // Thèmes de base pour cette chaîne
+  // Base themes for this channel
   const channelAllThemes = baseChannelThemes;
 
   const handleTabValue = useCallback(() => {

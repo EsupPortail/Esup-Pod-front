@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import BackButton from "@/src/components/BackButton/BackButton";
 import { useTranslation } from "../hooks/useTranslation";
+import styles from "./page.module.css";
 
 export default function ErrorBoundary({
   error,
@@ -14,29 +15,21 @@ export default function ErrorBoundary({
 }) {
   const { t } = useTranslation();
   useEffect(() => {
-    // On pourrait logger l'erreur vers un service externe ici (Sentry, etc.)
+    // We could log the error to an external service here (Sentry, etc.)
     console.error("ErrorBoundary caught an error:", error);
   }, [error]);
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "2rem",
-        height: "100%",
-      }}
+      className={styles["error-div"]}
     >
       <Alert canClose={false} type={VariantType.ERROR}>
-        <strong>Une erreur inattendue est survenue.</strong>
+        <strong>{t("common.error")}</strong>
         <br />
         {error.message || t("errors.unableToSection")}
       </Alert>
-      <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-        <BackButton label="Retour en arrière" />
+      <div className={styles["error-button"]}>
+        <BackButton label={t("common.back")} />
         <Button variant="primary" color="brand" onClick={() => reset()}>
           {t("videoPlayer.retry")}
         </Button>

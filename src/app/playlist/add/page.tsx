@@ -110,7 +110,7 @@ export default function AddPlaylist() {
     }
 
     if (!payload.description) {
-      setError("La description est obligatoire.");
+      setError(`${t("common.descRequired")}`);
       return;
     }
 
@@ -118,9 +118,7 @@ export default function AddPlaylist() {
       payload.password = "";
     } else {
       if (isPasswordRequired && !passwordValue) {
-        setError(
-          "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
-        );
+        setError(`${t("common.passwordProtected")}`);
         return;
       }
 
@@ -133,14 +131,11 @@ export default function AddPlaylist() {
       const created = await createPlaylist(payload);
 
       if (!created) {
-        setError(
-          usePlaylistError ??
-            "Une erreur est survenue lors de la création de la playlist.",
-        );
+        setError(usePlaylistError ?? `${t("playlists.creationError")}`);
         return;
       }
 
-      // On stocke la playlist créée dans le contexte global
+      // Store the created playlist in the global context
       setLastCreatedPlaylist(created);
 
       reset();
@@ -150,7 +145,7 @@ export default function AddPlaylist() {
       const message =
         e instanceof Error
           ? e.message
-          : "Une erreur inattendue est survenue lors de la création de la playlist.";
+          : `${t("playlists.creationError")}`;
       setError(message);
     }
   };
@@ -165,9 +160,10 @@ export default function AddPlaylist() {
     });
 
     setformError(
-      labels.length > 1
-        ? `Veuillez corriger les ${labels.length} champs suivants : ${labels.join(", ")}.`
-        : `Veuillez corriger le champ suivant : ${labels[0]}.`,
+      t("errors.formFieldsError", {
+        count: labels.length,
+        fields: labels.join(", "),
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -202,7 +198,7 @@ export default function AddPlaylist() {
           isSubmitting={isSubmitting}
           isMobile={isMobile}
           isLoading={usePlaylistLoading}
-          submitLabel="Ajouter la playlist"
+          submitLabel={t("playlist.addThePlaylist")}
         />
       </form>
     </div>

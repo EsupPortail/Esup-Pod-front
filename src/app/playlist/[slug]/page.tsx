@@ -37,7 +37,7 @@ export default function PlaylistPage() {
     void fetchOne(slug);
   }, [fetchOne, slug]);
 
-  // Si on vient juste de créer la playlist, on réutilise celle du contexte
+  // If the playlist was just created, reuse the one from the context
   const effectivePlaylist =
     playlist ?? (playlistJustCreated ? lastCreatedPlaylist : null);
 
@@ -55,7 +55,7 @@ export default function PlaylistPage() {
     useVideoLoading,
   } = useVideoListFilters({ mode: "all", enabled: false });
 
-  // Applique le tri par défaut défini sur la playlist
+  // Apply the default sorting defined for the playlist
   useEffect(() => {
     if (!effectivePlaylist?.default_order) return;
 
@@ -65,7 +65,7 @@ export default function PlaylistPage() {
     });
   }, [effectivePlaylist?.default_order, setFilters]);
 
-  // Vidéos brutes de la playlist (sans filtres)
+  // Raw videos from the playlist (without filters)
   const playlistItemVideos = playlistItems
     .map((item) => item.video)
     .filter((video) => video != null);
@@ -144,7 +144,7 @@ export default function PlaylistPage() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Alert type={VariantType.ERROR} canClose>
-          {usePlaylistError ?? "Impossible de charger la playlist."}
+          {usePlaylistError ?? `${t("playlists.unableToLoad")} ${slug}`}
         </Alert>
         <BackButton label={t("common.back")} />
       </div>
@@ -193,7 +193,7 @@ export default function PlaylistPage() {
                       router.push(`/playlist/delete/${effectivePlaylist?.slug}`)
                     }
                   >
-                    {t("playlists.deletePlaylist")}
+                    {t("playlists.delete")}
                   </Button>
                 </>
               )}
@@ -211,13 +211,15 @@ export default function PlaylistPage() {
               <div>
                 <dt>{t("common.createdBy")}</dt>
                 <dd>
-                  {effectivePlaylist?.owner_username ?? "Utilisateur inconnu"}
+                  {effectivePlaylist?.owner_username ?? `${t("common.unknown")}`}
                 </dd>
               </div>
 
               <div>
                 <dt>{t("common.latestUpdate")}</dt>
-                <dd>{formatDateWithTime(effectivePlaylist?.updated_at, locale)}</dd>
+                <dd>
+                  {formatDateWithTime(effectivePlaylist?.updated_at, locale)}
+                </dd>
               </div>
 
               <div>
