@@ -35,7 +35,7 @@ import Tooltip from "@mui/material/Tooltip";
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
 /* ------------------------------------------------------------------ */
-/*  Recherche (chargement dynamique)                                  */
+/*  Search Form (Dynamically Loaded)                                   */
 /* ------------------------------------------------------------------ */
 const SearchForm = dynamic(
   () => import("../SearchForm/SearchForm").then((mod) => mod.SearchForm),
@@ -46,7 +46,7 @@ import { useTranslation } from "@/src/hooks/useTranslation";
 import Image from "next/image";
 
 /* ------------------------------------------------------------------ */
-/*  Menu Préférences Unifié (Thème, Langue, Paramètres)               */
+/*  Preferences Menu (Unified Preferences Menu - Theme, Language, Settings) */
 /* ------------------------------------------------------------------ */
 export function PreferencesMenu() {
   const { theme, handleTheme } = useCunninghamTheme();
@@ -151,7 +151,7 @@ export function PreferencesMenu() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Bouton de connexion                                               */
+/*  Login Button                                                        */
 /* ------------------------------------------------------------------ */
 export function LoginButton() {
   const { t } = useTranslation();
@@ -178,7 +178,7 @@ export function LoginButton() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Menu utilisateur authentifié                                      */
+/*  Authenticated User Menu                                             */
 /* ------------------------------------------------------------------ */
 export function AuthMenu({
   isMobile,
@@ -191,6 +191,7 @@ export function AuthMenu({
   const { logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const { t } = useTranslation();
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -217,7 +218,7 @@ export function AuthMenu({
             size="small"
             aria-controls={openMenu ? "account-menu" : undefined}
             aria-expanded={openMenu ? "true" : undefined}
-            aria-label="Ouvrir le menu du profil"
+            aria-label={t("navbar.openProfileMenu")}
             sx={{
               p: "2px",
               border: user.is_staff
@@ -234,7 +235,7 @@ export function AuthMenu({
       </div>
 
       {isMobile ? (
-        /* ---- Version mobile : dialogue plein écran ---- */
+        /* ---- Mobile version: full-screen dialog ---- */
         <Dialog fullScreen open={openMenu} onClose={handleCloseMenu}>
           <ProfileMenuContent
             user={user}
@@ -243,7 +244,7 @@ export function AuthMenu({
           />
         </Dialog>
       ) : (
-        /* ---- Version desktop : menu ancré ---- */
+        /* ---- Desktop version: anchored menu ---- */
         <Menu
           anchorEl={anchorEl}
           id="account-menu"
@@ -291,7 +292,7 @@ export function AuthMenu({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Composant principal Navbar                                        */
+/*  Main Navbar Component                                              */
 /* ------------------------------------------------------------------ */
 export default function Navbar() {
   const { handleFixSidebar, sidebarOpen } = useSidebar();
@@ -317,7 +318,7 @@ export default function Navbar() {
             }}
           >
             <IconButton
-              aria-label="Fermer la recherche"
+              aria-label={t("navbar.closeSearch")}
               onClick={() => setIsSearchOpen(false)}
             >
               <span className="material-icons" aria-hidden="true">
@@ -330,11 +331,11 @@ export default function Navbar() {
           </div>
         ) : (
           <>
-            {/* ------- Bouton d’ouverture/fermeture du menu principal ------- */}
+            {/* ------- Main menu open/close button ------- */}
             <div className={styles["navbar-item"]}>
               <button
                 type="button"
-                aria-label="Menu principal"
+                aria-label={t("sidebar.mainMenu")}
                 onClick={handleFixSidebar}
                 className={styles["navbar-button-menu"]}
               >
@@ -365,18 +366,18 @@ export default function Navbar() {
               </Link>
             </div>
 
-            {/* ------------------- Recherche (desktop) ------------------- */}
+            {/* ------------------- Search (desktop) ------------------- */}
             {!isMobile && (
               <div className={styles["navbar-search"]}>
                 <SearchForm />
               </div>
             )}
 
-            {/* ------------------- Recherche (mobile) ------------------- */}
+            {/* ------------------- Search (mobile) ------------------- */}
             {isMobile && (
               <div className={styles["navbar-search-mobile"]}>
                 <IconButton
-                  aria-label="Ouvrir la recherche"
+                  aria-label={t("navbar.openSearch")}
                   onClick={() => setIsSearchOpen(true)}
                 >
                   <span className="material-icons" aria-hidden="true">
@@ -386,7 +387,7 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* ------------------- Bouton “Ajouter une vidéo” ------------------- */}
+            {/* ------------------- "Add a video" button ------------------- */}
             {accessToken && user && !isInitializing && canUpload && (
               <div className={styles["navbar-add-video"]}>
                 <Button
@@ -404,7 +405,7 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* ------------------- Utilitaires (Menu Préférences Unifié) ------------------- */}
+            {/* ------------------- Utilities (Unified Preferences Menu) ------------------- */}
             <div
               style={{
                 display: "flex",
@@ -417,7 +418,7 @@ export default function Navbar() {
               <PreferencesMenu />
             </div>
 
-            {/* ------------------- Auth / connexion ------------------- */}
+            {/* ------------------- Auth / login ------------------- */}
             {accessToken && user ? (
               <AuthMenu isMobile={isMobile} user={user} />
             ) : !isInitializing ? (

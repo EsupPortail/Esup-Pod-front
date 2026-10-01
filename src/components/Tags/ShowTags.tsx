@@ -8,6 +8,7 @@ import { Alert, VariantType } from "@openfun/cunningham-react";
 import { useRouter } from "next/navigation";
 import type { Tags, Video } from "@/src/types";
 import { useTags } from "@/src/hooks/useTags";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export type ShowTagsProps = {
   onTagClick?: (tag: Tags) => void;
@@ -32,6 +33,8 @@ export default function ShowTags({ onTagClick, limit, videos }: ShowTagsProps) {
   const { tags, fetchAll, useTagsLoading, useTagsError } = useTags();
   const router = useRouter();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     void fetchAll();
   }, [fetchAll]);
@@ -44,7 +47,7 @@ export default function ShowTags({ onTagClick, limit, videos }: ShowTagsProps) {
   let tagEntries: TagWithCount[];
 
   if (videos && videos.length > 0) {
-    //  exclure les vidéos statut "DR".
+    // Exclude videos with "DR" status.
     const tagCountBySlug = new Map<string, number>();
 
     videos
@@ -81,7 +84,7 @@ export default function ShowTags({ onTagClick, limit, videos }: ShowTagsProps) {
         }}
       >
         <CircularProgress size={20} />
-        <p>Chargement des mots-clés...</p>
+        <p>{t("videoPage.keywordsloading")}</p>
       </Box>
     );
   }
@@ -89,7 +92,9 @@ export default function ShowTags({ onTagClick, limit, videos }: ShowTagsProps) {
   if (useTagsError) {
     return (
       <Alert type={VariantType.ERROR} canClose>
-        Erreur lors du chargement des mots-clés : {useTagsError}
+        {t("errors.tagsLoadError", {
+          error: useTagsError,
+        })}
       </Alert>
     );
   }
@@ -97,7 +102,7 @@ export default function ShowTags({ onTagClick, limit, videos }: ShowTagsProps) {
   if (!displayedTags.length) {
     return (
       <Alert type={VariantType.INFO}>
-        Aucun mot-clé disponible pour le moment.
+        {t("videoPage.noKeywords")}
       </Alert>
     );
   }

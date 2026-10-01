@@ -160,7 +160,7 @@ export default function CommentItem({
                 size="small"
                 className={styles["action-button"]}
                 onClick={() => onVote(comment.id)}
-                aria-label="Voter pour ce commentaire"
+                aria-label={t("comments.voteForComment")}
               >
                 <ThumbUpOffAltIcon fontSize="small" />
                 <span>{comment.nbr_vote}</span>

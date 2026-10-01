@@ -33,7 +33,7 @@ export default function DressingSettings() {
       await uploadWatermark(file);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'upload de l'image");
+      alert(t("dressingPage.uploadError"));
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -48,11 +48,8 @@ export default function DressingSettings() {
 
   return (
     <div>
-      <h2>Habillages (Dressing)</h2>
-      <p className={styles["desc"]}>
-        Gérez vos filigranes (watermarks) pour les incruster directement dans
-        vos vidéos.
-      </p>
+      <h2>{t("sidebar.videoBranding")}</h2>
+      <p className={styles["desc"]}>{t("dressingPage.pageDescription")}</p>
 
       {error && (
         <div className={styles["error"]}>
@@ -74,16 +71,16 @@ export default function DressingSettings() {
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          {isUploading ? "Envoi en cours..." : t("dressingPage.addWatermark")}
+          {isUploading
+            ? `${t("dressingPage.uploading")}`
+            : t("dressingPage.addWatermark")}
         </Button>
       </div>
 
       {isLoading ? (
-        <p>Chargement...</p>
+        <p>{t("common.loading")}</p>
       ) : watermarks.length === 0 ? (
-        <Alert type={VariantType.INFO}>
-          Vous n'avez pas encore envoyé de filigrane.
-        </Alert>
+        <Alert type={VariantType.INFO}>{t("dressingPage.noWatermarks")}</Alert>
       ) : (
         <div className={styles["watermark-grid"]}>
           {watermarks.map((wm) => (

@@ -53,7 +53,7 @@ export const en: TranslationKeys = {
     passwordProtected:
       "You have enabled password protection. Please enter a password.",
     paginationInfo:
-      "Showing {start} to {end} of {count, plural, one {# video{pageInfo}} other {# videos{pageInfo}}}",
+      "Displaying {start} to {end} of {count, plural, one {# video{pageInfo}} other {# videos{pageInfo}}}",
     paginationPage: " (Page {page} of {pagesCount})",
     found: "{count, plural, one {Found} other {Found}}",
     titleRequired: "Title is required",
@@ -65,39 +65,41 @@ export const en: TranslationKeys = {
       "You have unsaved changes. Are you sure you want to leave this page?",
     stayOnPage: "Stay on page",
     leaveWithoutSaving: "Leave without saving",
+    commingSoon: "Coming soon",
   },
 
   errors: {
     deleteErrorVideo: "An error occurred while deleting the video",
     dupErrorVideo: "An error occurred while duplicating the video",
-    loadErrorVideo: "An error occurred while loading the video",
     error: "An error occurred",
     notFound: "Page not found",
     notFoundDesc:
       "The page you are looking for does not exist or has been deleted.",
     serverError: "Server error",
-    serverErrorDesc: "An error occurred on the server. Please try again later.",
+    serverErrorDesc: "A server-side error occurred. Please try again later.",
     imageSendError: "Failed to upload the image",
     imageDeleteError: "Failed to delete the image",
     notConnected: "User not logged in",
     chooseImage: "Please choose an image",
-    unableToSection: "Unable to load this section of the application",
+    unableToSection: "Unable to load this application section",
     unableToTheme: "Unable to load this theme.",
     notConfigured:
       "The requested page does not exist or has not yet been configured for this institution.",
     formFieldsError:
       "{count, plural, =1 {Please correct the following field: {fields}.} other {Please correct the following # fields: {fields}.}}",
     savingFormError: "Error while saving the form",
+    loadErrorVideo: "Error while loading the video",
     error401: "Unauthorized access (401). Please log in.",
     loadErrorVideos: "Error while loading videos {status}.",
     loadError: "Loading error",
-    getThemeError: "Error while retrieving {count, plural, one {the theme} other {the themes}}",
+    tagsLoadError: "Error while loading keywords: {error}",
+    noKeywords: "No keywords available at the moment.",
+    getThemeError:
+      "Error while retrieving {count, plural, one {the theme} other {the themes}}",
     deleteSubtitleError: "Error while deleting the subtitle",
     addSubtitleError: "Error while adding the subtitle",
   },
-  socialNetworks: {
-    unableToLoad: "Unable to load social networks.",
-  },
+
   a11y: {
     institutionLogo: "Institution logo",
     facebookLogo: "Facebook logo",
@@ -119,9 +121,12 @@ export const en: TranslationKeys = {
     deleteProfilePictureSuccess: "Profile picture deleted successfully",
     deleteProfilePicture: "Delete current profile picture",
     chooseImage: "Please select an image",
+    changeProfilePicture: "Change my profile picture",
+    noProfilePicture: "You don't have a profile picture yet.",
     thumbnail: "Thumbnail",
     preview: "Preview",
     chooseVideo: "Select this video",
+    supportedFormats: "Supported formats: ",
   },
 
   pending: {
@@ -138,14 +143,14 @@ export const en: TranslationKeys = {
   home: {
     welcomeSubtitle: "Welcome to your POD platform!",
     welcomeIntro:
-      "Video is an excellent medium for communicating, teaching, and learning. Here are some uses that might interest you.",
+      "Video is an excellent medium for communicating, teaching, and learning. Here are some uses that may interest you.",
     howToTitle: "How to?",
     howToDescPrefix: "Would you like to upload your own content? This ",
     quickGuideLink: "quick start guide",
-    howToDescSuffix: " will introduce you to the basic features of Pod.",
+    howToDescSuffix: " will introduce you to Pod's basic features.",
     btnUsePod: "Use Pod",
     btnHowTo: "How to",
-    btnCopyright: "Copyright",
+    btnCopyright: "About copyright",
     latestVideos: "Latest published videos",
     btnAllVideos: "View all videos",
     videoServiceError: "The video service is temporarily unavailable",
@@ -157,8 +162,10 @@ export const en: TranslationKeys = {
     addVideo: "Add a video",
     settings: "Display and accessibility",
     login: "Log in",
-    myProfileImage: "Edit my profile picture",
+    myProfileImage: "Change my profile picture",
     administration: "Administration",
+    openProfileMenu: "Open profile menu",
+    closeSearch: "Close search",
   },
 
   sidebar: {
@@ -167,7 +174,7 @@ export const en: TranslationKeys = {
     mySpace: "My space",
     dashboard: "My dashboard",
     myFavorites: "My favorite videos",
-    playlists: "Playlist playback",
+    playlists: "Playlist",
     favorites: "Favorite videos",
     myPlaylists: "My playlists",
     videoBranding: "Branding & Watermarks",
@@ -191,7 +198,7 @@ export const en: TranslationKeys = {
   webtv: {
     webtv: "WebTV",
     liveTitle: "Live",
-    noLive: "No live stream currently in progress",
+    noLive: "No live stream currently",
     loadingContent: "Loading WebTV content…",
     noContent: "No content available",
     climateActu: "News: Climate",
@@ -251,7 +258,7 @@ export const en: TranslationKeys = {
     changeDiscipline: "Change discipline",
     changeCursus: "Change study level",
     publishUnpublish: "Publish / Unpublish",
-    restrictAuth: "Restrict to logged-in users",
+    restrictAuth: "Restrict to logged-in members",
     allowDownloading: "Allow / Disable downloading",
     disableComments: "Enable / Disable comments",
     scheduleDeletion: "Schedule automatic deletion",
@@ -282,6 +289,7 @@ export const en: TranslationKeys = {
 
   videoPlayer: {
     unableToLoad: "Unable to load the video.",
+    unableToDownload: "Unable to download the video.",
     encodingInProgress: "Video is being encoded…",
     retry: "Retry",
   },
@@ -293,6 +301,7 @@ export const en: TranslationKeys = {
     favorite: "Favorite",
     report: "Report",
     editVideo: "Edit video",
+    notFound: "Video not found.",
     channel: "Channel",
     channelWithId: "Channel {id}",
     creator: "Creator",
@@ -315,14 +324,22 @@ export const en: TranslationKeys = {
     noPlaylistsAvailable: "No playlists available",
     linkCopied: "Link copied!",
     copyLink: "Copy link",
+    protectedByPassword: "This video is protected by a password.",
+    unlocking: "Unlocking…",
+    unlock: "Unlock video",
+    videoAddedToPlaylist: "Video added to playlist “{title}”.",
+    videoRemovedFromPlaylist: "Video removed from playlist “{title}”.",
+    videoAddedToFavorites: "Video added to your favorites.",
+    videoRemovedFromFavorites: "Video removed from your favorites.",
+    keywordsloading: "Loading keywords…",
   },
 
   cursus: {
-    L1: "Bachelor's year 1",
-    L2: "Bachelor's year 2",
-    L3: "Bachelor's year 3",
-    M1: "Master's year 1",
-    M2: "Master's year 2",
+    L1: "Bachelor's Year 1",
+    L2: "Bachelor's Year 2",
+    L3: "Bachelor's Year 3",
+    M1: "Master's Year 1",
+    M2: "Master's Year 2",
     D: "PhD",
     "0": "Other",
   },
@@ -352,7 +369,7 @@ export const en: TranslationKeys = {
     countPlural: "{count} comments",
     addPlaceholder: "Add a comment",
     submit: "Comment",
-    submitting: "Posting…",
+    submitting: "Publishing…",
     reply: "Reply",
     delete: "Delete",
     disabled: "Comments are disabled for this video.",
@@ -363,6 +380,11 @@ export const en: TranslationKeys = {
     hideReplies: "Hide replies",
     showReplies: "{count} reply",
     showRepliesPlural: "{count} replies",
+    voteForComment: "Vote for this comment",
+  },
+
+  socialNetworks: {
+    unableToLoad: "Unable to load social networks.",
   },
 
   videoEdit: {
@@ -373,23 +395,22 @@ export const en: TranslationKeys = {
     quit: "Leave page",
     stepImport: "Import",
     stepDetails: "Details",
-    stepElements: "Video Elements",
+    stepElements: "Video elements",
     stepVisibility: "Visibility",
     requiredFieldsPrompt: "Fields marked with * are required.",
     position: "Watermark position",
     oppacity: "Watermark opacity",
 
-    // Form fields in Details
     titleLabel: "Title",
-    titlePlaceholder: "Video title in French",
+    titlePlaceholder: "Video title in English",
     titleHelper:
       "A title that is as short and precise as possible, reflecting the main subject / context of this content.",
     descriptionLabel: "Description",
-    descriptionPlaceholder: "Video description in French",
+    descriptionPlaceholder: "Video description in English",
     descriptionHelper:
       "Describe your content, add all necessary information, and format the result.",
     mainLanguageLabel: "Main language",
-    mainLanguageHelper: "The language primarily used in this content.",
+    mainLanguageHelper: "The main language used in this content.",
     thumbnailLabel: "Thumbnails",
     uploadThumbnailBtn: "+ Upload a thumbnail",
     thumbnailDimensionsHint: "JPG or PNG · Recommended: 1280 × 720 px",
@@ -421,7 +442,6 @@ export const en: TranslationKeys = {
     previous: "Previous",
     next: "Next",
 
-    // Stepper & Badges
     noSourceFileBadge: "Information: Source file not imported",
     incompleteBadge: "Incomplete",
     completedBadge: "Completed",
@@ -430,39 +450,35 @@ export const en: TranslationKeys = {
     titleFilled: "Title provided",
     titleRequired: "Title required",
     subtitlesAndDocs: "Subtitles & enrichments",
-    draftOrPublic: "Draft, restricted, or public",
+    draftOrPublic: "Draft, restricted or public",
 
-    // Import Step
     importHeaderTitle: "Add a video file",
-    importHeaderSub: "Manage the source video and encoding of your media.",
-    noSourceWarningTitle: "Empty record without a video source",
+    importHeaderSub: "Manage the source video and media encoding.",
+    noSourceWarningTitle: "Empty record without video source",
     noSourceWarningDesc:
       "This video does not yet have an associated source file. You can complete the metadata (title, description, etc.), but you must add a video below before you can publish it.",
     publicNoSourceAlert:
-      "You have selected the Public status, but no source file has been imported. Importing a source is required for public publication.",
+      "You selected the Public status, but no source file has been imported. Importing a source is required for public publishing.",
     selectVideoFile:
-      "Select a video file from your computer. A new encoding process will be automatically started.",
+      "Select a video file from your computer. A new encoding process will be started automatically.",
     addVideoFileBtn: "Add video",
 
-    // Elements Step
     elementsHeaderSub:
       "Enrich your video with subtitles, documents, and contributors.",
     subtitlesTitle: "Manual subtitles",
     subtitlesDesc: "Add subtitle files (.vtt, .srt) in one or more languages.",
     documentsTitle: "Attached documents",
     documentsDesc:
-      "Attach PDF files, slide presentations, or other downloadable documents.",
+      "Attach PDF files, slideshows, or other downloadable documents.",
     contributorsTitle: "Contributors & Speakers",
     contributorsDesc: "Add authors, directors, or speakers to your video.",
     chaptersTitle: "Add chapters",
-    chaptersDesc: "Divide your video into chapters with time markers.",
+    chaptersDesc: "Divide your video into chapters using time markers.",
     dressingTitle: "Video branding",
-    dressingDesc:
-      "Apply branding elements (watermark, opening / closing sequence).",
+    dressingDesc: "Apply branding elements (watermark, intro / outro).",
     trimTitle: "Trim video",
-    trimDesc: "Set a start and end point to shorten the video.",
+    trimDesc: "Define a start and end point to shorten the video.",
 
-    // Visibility Step
     visibilityHeaderSub:
       "Choose when to publish your video and who can see it.",
     restrictionsHeader: "Restrictions",
@@ -484,9 +500,9 @@ export const en: TranslationKeys = {
     authUserOnly: "For authenticated users only.",
     passwordRequiredLabel: "Password required",
     passwordLabel: "Video password",
-    diffusionTitle: "Playback settings",
-    allowDownloadLabel: "Allow downloading",
-    allowDownloadHelper: "Allow downloading your video.",
+    diffusionTitle: "Streaming configuration",
+    allowDownloadLabel: "Allow downloads",
+    allowDownloadHelper: "Allow your video to be downloaded.",
     disableCommentsLabel: "Disable comments",
     disableCommentsHelper: "Disable adding comments below your video.",
     advancedOptionsTitle: "Advanced options",
@@ -498,8 +514,8 @@ export const en: TranslationKeys = {
     legalNotice: "Legal notice",
     accessibilityPartially: "Accessibility: Partially compliant",
     siteMap: "Sitemap",
-    esupProject: "Esup-Pod project",
-    esupPortal: "Esup portal",
+    esupProject: "Esup-Pod Project",
+    esupPortal: "Esup Portal",
     videoPlatform: "Video platform",
   },
 
@@ -508,6 +524,7 @@ export const en: TranslationKeys = {
     startPlaylist: "Start playlist",
     noFavorites: "No favorite videos yet.",
     noMatchingFilters: "No videos match your filters.",
+    favoriteUpdateError: "An error occurred while updating favorites.",
   },
 
   playlists: {
@@ -522,7 +539,7 @@ export const en: TranslationKeys = {
     noVideos: "No videos in this playlist",
     notFound: "Playlist not found.",
     addPlaylist: "Add a playlist",
-    addThePlaylist: "Add playlist",
+    addThePlaylist: "Add the playlist",
     nowPlaying: "Now playing",
     editPlaylist: "Edit playlist",
     noPlaylists: "You don't have any playlists yet.",
@@ -533,8 +550,9 @@ export const en: TranslationKeys = {
     creationError: "An error occurred while creating the playlist.",
     backToMyPlaylists: "Back to my playlists",
     noPermissionToEditPlaylist:
-      "You do not have permission to edit this playlist.",
+      "You don't have permission to edit this playlist.",
     seePlaylist: "View playlist",
+    playlistUpdateError: "An error occurred while updating the playlist.",
   },
 
   channels: {
@@ -556,7 +574,7 @@ export const en: TranslationKeys = {
     myWatermarks: "My Watermarks",
     addWatermark: "Add a watermark",
     uploading: "Uploading…",
-    noWatermarks: "You have not uploaded any watermarks yet.",
+    noWatermarks: "You haven't uploaded a watermark yet.",
     deleteConfirm: "Are you sure you want to delete this watermark?",
     loadError: "Error while loading watermarks.",
     uploadError: "Error while uploading the image",
