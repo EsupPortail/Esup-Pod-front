@@ -33,7 +33,7 @@ export function useTypes() {
     } finally {
       setUseTypesLoading(false);
     }
-  }, [accessToken, refresh]);
+  }, [accessToken, refresh, t]);
 
   return { types, fetchAll, useTypesLoading, useTypesError };
 }

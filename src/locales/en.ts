@@ -91,8 +91,13 @@ export const en: TranslationKeys = {
     error401: "Unauthorized access (401). Please log in.",
     loadErrorVideos: "Error while loading videos {status}.",
     loadError: "Loading error",
+    getThemeError: "Error while retrieving {count, plural, one {the theme} other {the themes}}",
+    deleteSubtitleError: "Error while deleting the subtitle",
+    addSubtitleError: "Error while adding the subtitle",
   },
-
+  socialNetworks: {
+    unableToLoad: "Unable to load social networks.",
+  },
   a11y: {
     institutionLogo: "Institution logo",
     facebookLogo: "Facebook logo",

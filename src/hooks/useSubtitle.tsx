@@ -3,6 +3,7 @@ import { LanguageSubtitle } from "@/src/constants/language";
 import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";
+import { useTranslation } from "./useTranslation";
 
 type AddSubtitlePayload = {
   video: number;
@@ -15,6 +16,7 @@ export function useSubtitle() {
   const { accessToken, refresh } = useAuth();
   const [useSubtitleLoading, setUseSubtitleLoading] = useState(false);
   const [useSubtitleError, setUseSubtitleError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const deleteSubtitle = useCallback(
     async (id: number) => {
@@ -28,7 +30,7 @@ export function useSubtitle() {
         });
 
         if (!res.ok) {
-          throw new Error("Erreur lors de la suppression du sous-titre.");
+          throw new Error(t("errors.deleteSubtitleError"));
         }
 
         return true;
@@ -36,14 +38,14 @@ export function useSubtitle() {
         setUseSubtitleError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de la suppression du sous-titre.",
+            : t("errors.deleteSubtitleError"),
         );
         return false;
       } finally {
         setUseSubtitleLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   const addSubtitle = useCallback(
@@ -65,7 +67,7 @@ export function useSubtitle() {
         });
 
         if (!res.ok) {
-          throw new Error("Erreur lors de l'ajout du sous-titre.");
+          throw new Error(t("errors.addSubtitleError"));
         }
 
         return true;
@@ -73,14 +75,14 @@ export function useSubtitle() {
         setUseSubtitleError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de l'ajout du sous-titre.",
+            : t("errors.addSubtitleError"),
         );
         return false;
       } finally {
         setUseSubtitleLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   return { deleteSubtitle, addSubtitle, useSubtitleLoading, useSubtitleError };

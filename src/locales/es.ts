@@ -92,8 +92,13 @@ export const es: TranslationKeys = {
     error401: "Acceso no autorizado (401). Por favor, inicie sesión.",
     loadErrorVideos: "Error al cargar las videos {status}.",
     loadError: "Error de carga",
+    getThemeError: "Error al recuperar {count, plural, one {el tema} other {los temas}}",
+    deleteSubtitleError: "Error al eliminar el subtítulo",
+    addSubtitleError: "Error al añadir el subtítulo",
   },
-
+  socialNetworks: {
+    unableToLoad: "No se pueden cargar las redes sociales.",
+  },
   a11y: {
     institutionLogo: "Logotipo de la institución",
     facebookLogo: "Logotipo de Facebook",

@@ -5,11 +5,13 @@ import { authFetch } from "@/src/api/authFetch";
 import { useAuth } from "@/src/context/AuthProvider";
 import { requestJson } from "@/src/utils/requestJson";
 import type { SocialNetwork } from "@/src/types";
+import { useTranslation } from "./useTranslation";
 
 /** Loads the configured social networks. */
 export const useSocialNetworks = () => {
   const { accessToken, refresh } = useAuth();
   const authOpts = { accessToken, onRefresh: refresh };
+  const { t } = useTranslation();
 
   const {
     data: socialNetworks,
@@ -20,7 +22,7 @@ export const useSocialNetworks = () => {
     queryFn: async () => {
       const res = await authFetch("/api/social-networks/", authOpts);
       if (!res.ok) {
-        throw new Error("Impossible de charger les réseaux sociaux.");
+        throw new Error(t("socialNetworks.unableToLoad"));
       }
       const data = await requestJson<
         SocialNetwork[] | { results: SocialNetwork[] }

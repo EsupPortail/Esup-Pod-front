@@ -5,8 +5,10 @@ import { requestJson } from "@/src/utils/requestJson";
 import type { Theme } from "@/src/types";
 import { type CollectionListParams } from "@/src/hooks/collectionListParams";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "./useTranslation";
 
 export function useTheme() {
+  const { t } = useTranslation();
   const [listParams, setListParams] = useState<
     CollectionListParams | undefined
   >(undefined);
@@ -31,7 +33,7 @@ export function useTheme() {
       }
 
       const res = await authFetch(url.toString());
-      if (!res.ok) throw new Error("Erreur de récupération des thèmes.");
+      if (!res.ok) throw new Error(t("errors.getThemeError", { count: 2 }));
       const data = await requestJson<
         Theme[] | { results?: Theme[]; count?: number }
       >(res);
@@ -57,7 +59,7 @@ export function useTheme() {
     queryFn: async () => {
       if (!currentSlug) return null;
       const res = await authFetch(getRoutes().theme.get(currentSlug));
-      if (!res.ok) throw new Error("Erreur de récupération du thème.");
+      if (!res.ok) throw new Error(t("errors.getThemeError", { count: 1 }));
       return requestJson<Theme>(res);
     },
     enabled: !!currentSlug,

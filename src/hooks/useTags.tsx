@@ -43,7 +43,7 @@ export function useTags() {
         setUseTagsLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   return { tags, fetchAll, useTagsLoading, useTagsError };

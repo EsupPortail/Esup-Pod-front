@@ -90,6 +90,9 @@ export const fr = {
     error401: "Accès non autorisé (401). Veuillez vous connecter.",
     loadErrorVideos: "Erreur lors du chargement des vidéos {status}.",
     loadError: "Erreur de chargement",
+    getThemeError: "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
+    deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
+    addSubtitleError: "Erreur lors de l'ajout du sous-titre",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",
@@ -343,6 +346,9 @@ export const fr = {
     hideReplies: "Masquer les réponses",
     showReplies: "{count} réponse",
     showRepliesPlural: "{count} réponses",
+  },
+  socialNetworks: {
+    unableToLoad: "Impossible de charger les réseau social.",
   },
   videoEdit: {
     pageTitle: "Éditer la vidéo « {title} »",
