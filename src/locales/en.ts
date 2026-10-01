@@ -90,6 +90,7 @@ export const en: TranslationKeys = {
     savingFormError: "Error while saving the form",
     error401: "Unauthorized access (401). Please log in.",
     loadErrorVideos: "Error while loading videos {status}.",
+    loadError: "Loading error",
   },
 
   a11y: {

@@ -4,12 +4,14 @@ import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";
 import { requestJson } from "../utils/requestJson";
+import { useTranslation } from "./useTranslation";
 
 export function useTags() {
   const { accessToken, refresh } = useAuth();
   const [tags, setTags] = useState<Tags[]>([]);
   const [useTagsLoading, setUseTagsLoading] = useState(false);
   const [useTagsError, setUseTagsError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const fetchAll = useCallback(
     async (search?: string) => {
@@ -34,7 +36,7 @@ export function useTags() {
         return normalizedTags;
       } catch (e: unknown) {
         setUseTagsError(
-          e instanceof Error ? e.message : "Erreur de chargement.",
+          e instanceof Error ? e.message : t("errors.loadError"),
         );
         return [];
       } finally {

@@ -91,6 +91,7 @@ export const es: TranslationKeys = {
     savingFormError: "Error al guardar el formulario",
     error401: "Acceso no autorizado (401). Por favor, inicie sesión.",
     loadErrorVideos: "Error al cargar las videos {status}.",
+    loadError: "Error de carga",
   },
 
   a11y: {

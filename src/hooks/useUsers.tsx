@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthProvider";
 import { authFetch } from "../api/authFetch";
 import { getRoutes } from "../api/routes";
 import { requestJson } from "../utils/requestJson";
+import { useTranslation } from "./useTranslation";
 
 export function useUsers() {
   const { accessToken, refresh } = useAuth();
@@ -11,6 +12,7 @@ export function useUsers() {
   const [user, setUser] = useState<User>();
   const [useUserLoading, setUseUserLoading] = useState(false);
   const [useUserError, setUseUserError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const fetchAll = useCallback(
     async (search?: string) => {
@@ -35,14 +37,14 @@ export function useUsers() {
         return normalizedUsers;
       } catch (e: unknown) {
         setUseUserError(
-          e instanceof Error ? e.message : "Erreur de chargement.",
+          e instanceof Error ? e.message : t("errors.loadError"),
         );
         return [];
       } finally {
         setUseUserLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   const fetchUser = useCallback(
@@ -59,14 +61,14 @@ export function useUsers() {
         return data;
       } catch (e: unknown) {
         setUseUserError(
-          e instanceof Error ? e.message : "Erreur de chargement.",
+          e instanceof Error ? e.message : t("errors.loadError"),
         );
         return null;
       } finally {
         setUseUserLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   return { users, user, fetchAll, fetchUser, useUserLoading, useUserError };

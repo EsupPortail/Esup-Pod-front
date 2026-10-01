@@ -89,6 +89,7 @@ export const fr = {
     loadErrorVideo: "Erreur lors du chargement de la vidéo",
     error401: "Accès non autorisé (401). Veuillez vous connecter.",
     loadErrorVideos: "Erreur lors du chargement des vidéos {status}.",
+    loadError: "Erreur de chargement",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",
