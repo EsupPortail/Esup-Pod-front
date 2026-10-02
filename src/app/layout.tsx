@@ -71,8 +71,8 @@ export default async function RootLayout({
         </a>
         <div className="layout">
           <CunninghamStyleProvider>
-            <AppConfigProvider>
-              <NextIntlClientProvider locale={locale} messages={messages}>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <AppConfigProvider>
                 <DatePickerProvider>
                   <QueryProvider>
                     <AuthProvider>
@@ -95,8 +95,8 @@ export default async function RootLayout({
                     </AuthProvider>
                   </QueryProvider>
                 </DatePickerProvider>
-              </NextIntlClientProvider>
-            </AppConfigProvider>
+              </AppConfigProvider>
+            </NextIntlClientProvider>
           </CunninghamStyleProvider>
         </div>
       </body>
