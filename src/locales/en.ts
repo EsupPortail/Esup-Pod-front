@@ -118,7 +118,12 @@ export const en: TranslationKeys = {
     loadInfo: "Error while loading the information",
     getChannels: "Error while retrieving {count, plural, one {the channel} other {the channels}}",
   },
-
+  providers: {
+    auth: "useAuth must be used within an AuthProvider.",
+    sidebar: "useSidebar must be used within a SidebarProvider.",
+    playlistCreation: "usePlaylistCreationContext must be used within a PlaylistCreationProvider.",
+    cunninghamTheme: "useCunninghamTheme must be used within a CunninghamStyleProvider.",
+  },
   a11y: {
     institutionLogo: "Institution logo",
     facebookLogo: "Facebook logo",

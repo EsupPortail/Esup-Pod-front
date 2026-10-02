@@ -30,7 +30,7 @@ export function useAppInfo() {
     };
 
     fetchInfo();
-  }, []);
+  }, [t]);
 
   return { info, loading, error };
 }

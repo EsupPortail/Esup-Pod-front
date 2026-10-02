@@ -16,6 +16,7 @@ import { getRoutes } from "../api/routes";
 import { useAppConfig } from "../hooks/useAppConfig";
 
 import { useRouter } from "next/navigation";
+import { useTranslation } from "../hooks/useTranslation";
 type AuthConfig = {
   use_local: boolean;
   use_cas: boolean;
@@ -349,9 +350,10 @@ export default function AuthProvider(props: AuthProviderProps) {
 }
 
 export const useAuth = () => {
+  const { t } = useTranslation();
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth doit etre utilise dans AuthProvider.");
+    throw new Error(t("providers.auth"));
   }
   return ctx;
 };

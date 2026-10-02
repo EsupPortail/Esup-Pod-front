@@ -9,6 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useTranslation } from "../hooks/useTranslation";
 
 type CunninghamThemeContextValue = {
   theme: string;
@@ -68,9 +69,10 @@ export default function CunninghamStyleProvider({
 
 export const useCunninghamTheme = () => {
   const ctx = useContext(CunninghamThemeContext);
+  const { t } = useTranslation();
   if (!ctx) {
     throw new Error(
-      "useCunninghamTheme doit etre utilise dans CunninghamStyleProvider.",
+      t("providers.cunninghamTheme"),
     );
   }
   return ctx;

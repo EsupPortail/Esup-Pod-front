@@ -1,6 +1,7 @@
 "use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTranslation } from "../hooks/useTranslation";
 
 const SIDEBAR_FIXED_STORAGE_KEY = "sidebar-fixed";
 
@@ -95,8 +96,9 @@ export default function SidebarProvider({
 
 export const useSidebar = () => {
   const ctx = useContext(SidebarContext);
+  const { t } = useTranslation();
   if (!ctx) {
-    throw new Error("useSidebar doit etre utilise dans SidebarProvider.");
+    throw new Error(t("providers.sidebar"));
   }
   return ctx;
 };

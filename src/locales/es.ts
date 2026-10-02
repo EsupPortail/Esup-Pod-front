@@ -118,7 +118,12 @@ export const es: TranslationKeys = {
     loadInfo: "Error al cargar la información",
     getChannels: "Error al obtener {count, plural, one {el canal} other {los canales}}",
   },
-
+  providers: {
+    auth: "useAuth debe estar envuelto en un proveedor AuthProvider",
+    sidebar: "useSidebar debe estar envuelto en un proveedor SidebarProvider",
+    playlistCreation: "usePlaylistCreationContext debe estar envuelto en un proveedor PlaylistCreationProvider",
+    cunninghamTheme: "useCunninghamTheme debe estar envuelto en un proveedor CunninghamStyleProvider",
+  },
   a11y: {
     institutionLogo: "Logotipo de la institución",
     facebookLogo: "Logotipo de Facebook",

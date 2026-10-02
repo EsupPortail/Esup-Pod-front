@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from "react";
 import type { Playlist } from "@/src/types";
+import { useTranslation } from "../hooks/useTranslation";
 
 type PlaylistCreationContextValue = {
   lastCreatedPlaylist: Playlist | null;
@@ -33,9 +34,10 @@ export function PlaylistCreationProvider({
 
 export function usePlaylistCreationContext() {
   const ctx = useContext(PlaylistCreationContext);
+  const { t } = useTranslation();
   if (!ctx) {
     throw new Error(
-      "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
+      t("providers.playlistCreation"),
     );
   }
   return ctx;

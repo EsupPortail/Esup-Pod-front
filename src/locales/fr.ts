@@ -117,6 +117,12 @@ export const fr = {
     loadInfo: "Erreur lors du chargement des informations",
     getChannels: "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
   },
+  providers: {
+    auth: "useAuth doit etre utilise dans AuthProvider.",
+    sidebar: "useSidebar doit etre utilise dans SidebarProvider.",
+    playlistCreation: "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
+    cunninghamTheme: "useCunninghamTheme doit être utilisé dans CunninghamStyleProvider.",
+  },
   a11y: {
     institutionLogo: "Logo de l’établissement",
     facebookLogo: "Logo Facebook",
