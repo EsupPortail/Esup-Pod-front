@@ -12,6 +12,7 @@ export type TimeParts = {
   seconds: number;
 };
 
+/** Converts a number of seconds into hour, minute, and second parts. */
 export function secondToMinute(totalSeconds: number): TimeParts {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -20,6 +21,7 @@ export function secondToMinute(totalSeconds: number): TimeParts {
   return { hours, minutes, seconds };
 }
 
+/** Formats time parts as a fixed-width duration. */
 export function formatTime(time: TimeParts): string {
   const { hours, minutes, seconds } = time;
   const hh = String(hours).padStart(2, "0");
@@ -29,17 +31,22 @@ export function formatTime(time: TimeParts): string {
   return `${hh}:${mm}:${ss}`;
 }
 
-export function formatDateWithTime(dateString: string, locale: string = "fr"): string {
-  const date = dayjs(dateString).locale(locale);
-  return date.format("D MMMM YYYY [à] HH:mm");
+/** Formats a date with its time in the requested locale. */
+export function formatDateWithTime(dateString: string, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "long",
+    timeStyle: "short",
+  }).format(new Date(dateString));
 }
 
-export function formatDateOnly(dateString: string, locale: string = "fr"): string {
+/** Formats a date without its time in the requested locale. */
+export function formatDateOnly(dateString: string, locale: string): string {
   const date = dayjs(dateString).locale(locale);
   return date.format("D MMMM YYYY");
 }
 
-export function timeAgo(dateString: string, locale: string = "fr"): string {
+/** Formats a date as relative time in the requested locale. */
+export function timeAgo(dateString: string, locale: string): string {
   if (!dateString) return "";
   return dayjs(dateString).locale(locale).fromNow();
 }

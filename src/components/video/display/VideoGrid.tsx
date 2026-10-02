@@ -16,7 +16,10 @@ interface VideoGridProps {
 /* Renderer tableau.
 Passe les rows à DataGrid avec les colonnes et tri des données
 */
-export default function VideoGrid({ rows, selectable = false, onSelectAll }: VideoGridProps) {
+export default function VideoGrid({
+  rows,
+  selectable = false,
+}: VideoGridProps) {
   const { t } = useTranslation();
   const [sortModel, setSortModel] = useState<SortModel>([]);
 
@@ -60,23 +63,24 @@ export default function VideoGrid({ rows, selectable = false, onSelectAll }: Vid
       return String(leftValue).localeCompare(String(rightValue)) * direction;
     });
   }, [rows, sortModel]);
-
-  const isAllSelected = useMemo(() => {
+  useMemo(() => {
     if (rows.length === 0) return false;
     return rows.every((r) => r.selected);
   }, [rows]);
-
-  const columns = useMemo(() => getVideoGridColumns(selectable, t, onSelectAll, isAllSelected), [selectable, t, onSelectAll, isAllSelected]);
+  const columns = useMemo(
+    () => getVideoGridColumns(selectable, t),
+    [selectable, t],
+  );
 
   return (
     <DataGrid
-      className={styles.dataGrid}
+      className={styles["data-grid"]}
       rows={sortedRows}
       columns={columns}
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting
-      emptyPlaceholderLabel="Aucune video trouvée."
+      emptyPlaceholderLabel={t("table.noVideosFound")}
     />
   );
 }

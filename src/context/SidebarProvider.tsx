@@ -1,6 +1,7 @@
 "use client";
 import { useContext, createContext, useState, useEffect } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTranslation } from "../hooks/useTranslation";
 
 const SIDEBAR_FIXED_STORAGE_KEY = "sidebar-fixed";
 
@@ -15,7 +16,11 @@ export const SidebarContext = createContext<SidebarContextValue | undefined>(
   undefined,
 );
 
-export default function SidebarProvider({ children }: { children: React.ReactNode }) {
+export default function SidebarProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // Comportement sidebar
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [sidebarOpen, setSideBarOpen] = useState(false);
@@ -38,16 +43,23 @@ export default function SidebarProvider({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (isMobile) {
-      setSideBarOpen(false);
-      setSideBarFixed(false);
-      return;
+      const timeoutId = window.setTimeout(() => {
+        setSideBarOpen(false);
+        setSideBarFixed(false);
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
 
     const savedValue = localStorage.getItem(SIDEBAR_FIXED_STORAGE_KEY);
     const nextSidebarFixed = savedValue === null ? true : savedValue === "true";
 
-    setSideBarFixed(nextSidebarFixed);
-    setSideBarOpen(nextSidebarFixed);
+    const timeoutId = window.setTimeout(() => {
+      setSideBarFixed(nextSidebarFixed);
+      setSideBarOpen(nextSidebarFixed);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [isMobile]);
 
   // Desktop only: persist fixed state
@@ -84,8 +96,9 @@ export default function SidebarProvider({ children }: { children: React.ReactNod
 
 export const useSidebar = () => {
   const ctx = useContext(SidebarContext);
+  const { t } = useTranslation();
   if (!ctx) {
-    throw new Error("useSidebar doit etre utilise dans SidebarProvider.");
+    throw new Error(t("providers.sidebar"));
   }
   return ctx;
 };

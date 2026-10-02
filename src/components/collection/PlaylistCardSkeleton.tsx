@@ -76,7 +76,12 @@ export default function PlaylistCardSkeleton() {
           }}
         >
           <Skeleton variant="text" animation="wave" width="70%" height={24} />
-          <Skeleton variant="circular" animation="wave" width={20} height={20} />
+          <Skeleton
+            variant="circular"
+            animation="wave"
+            width={20}
+            height={20}
+          />
         </Box>
         <Box
           sx={{

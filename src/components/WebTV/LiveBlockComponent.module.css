@@ -1,4 +1,4 @@
-.liveContainer {
+.live-container {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -9,7 +9,7 @@
   min-height: 280px;
 }
 
-.liveHeader {
+.live-header {
   background-color: #000000;
   color: #ffffff;
   font-weight: 700;
@@ -19,7 +19,7 @@
   text-transform: uppercase;
 }
 
-.liveList {
+.live-list {
   list-style: none;
   margin: 0;
   padding: 0.75rem 1rem;
@@ -29,7 +29,7 @@
   flex: 1;
 }
 
-.liveItem {
+.live-item {
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -42,11 +42,11 @@
   transition: color 0.2s ease;
 }
 
-.liveItem:hover {
+.live-item:hover {
   color: #ff4757;
 }
 
-.redDot {
+.red-dot {
   width: 10px;
   height: 10px;
   background-color: #ff4757;
@@ -72,14 +72,14 @@
   }
 }
 
-.emptyMessage {
+.empty-message {
   padding: 1rem;
   font-size: 0.85rem;
   color: #777777;
   font-style: italic;
 }
 
-.accentBanner {
+.accent-banner {
   background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
   height: 120px;
   border-radius: 2px;

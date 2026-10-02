@@ -44,7 +44,14 @@ body,
 body {
   background-color: var(--background);
   color: var(--text-color);
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -123,6 +130,15 @@ button:active,
   margin: 0 auto;
 }
 
+.pod-image-banner {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
 .cunningham-theme--dark .MuiBreadcrumbs-separator {
   color: var(--text-color);
 }
@@ -157,7 +173,10 @@ button:active,
     padding: var(--c--globals--spacings--xs);
   }
 }
-.c__app { overflow: visible !important; overflow-x: visible !important; }
+.c__app {
+  overflow: visible !important;
+  overflow-x: visible !important;
+}
 
 /* Video.js Poster Fix */
 .video-js .vjs-poster img {
@@ -185,9 +204,15 @@ button:active,
 
 /* Skeleton Loader */
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .skeleton-block {
@@ -251,8 +276,8 @@ html[data-theme="dark"] .MuiCard-root {
 }
 
 /* Flat layout for Settings & Preferences: no background boxes, no borders */
-html[data-theme="dark"] div[class*="settings_container"],
-html[data-theme="dark"] div[class*="settings_content"],
+html[data-theme="dark"] div[class*="settings-container"],
+html[data-theme="dark"] div[class*="settings-content"],
 html[data-theme="dark"] .flat-container {
   background: transparent !important;
   border: none !important;
@@ -339,18 +364,18 @@ html[data-theme="dark"] .MuiFormHelperText-root {
 }
 
 /* File Uploaders & Drag-and-Drop Zones in Dark Mode */
-html[data-theme="dark"] .c__file_uploader,
-html[data-theme="dark"] div[class*="vignette_upload"],
-html[data-theme="dark"] div[class*="vignette_empty_zone"],
+html[data-theme="dark"] .c__file-uploader,
+html[data-theme="dark"] div[class*="vignette-upload"],
+html[data-theme="dark"] div[class*="vignette-empty-zone"],
 html[data-theme="dark"] div[class*="dropzone"] {
   background-color: rgba(59, 130, 246, 0.08) !important;
   border-color: #3b82f6 !important;
   color: #60a5fa !important;
 }
 
-html[data-theme="dark"] .c__file_uploader__label,
-html[data-theme="dark"] div[class*="vignette_empty_title"],
-html[data-theme="dark"] div[class*="vignette_empty_hint"] {
+html[data-theme="dark"] .c__file-uploader__label,
+html[data-theme="dark"] div[class*="vignette-empty-title"],
+html[data-theme="dark"] div[class*="vignette-empty-hint"] {
   color: #60a5fa !important;
 }
 
@@ -359,9 +384,10 @@ html[data-theme="dark"] div[style*="background: white"],
 html[data-theme="dark"] div[style*="background: #f9fafb"],
 html[data-theme="dark"] div[style*="background: rgb(249, 250, 251)"],
 html[data-theme="dark"] div[style*="background: #fdfdfd"],
-html[data-theme="dark"] div[style*="background: var(--c--globals--colors--gray-050)"],
-html[data-theme="dark"] div[class*="restreint_fields"],
-html[data-theme="dark"] div[class*="element_card"] {
+html[data-theme="dark"]
+  div[style*="background: var(--c--globals--colors--gray-050)"],
+html[data-theme="dark"] div[class*="restreint-fields"],
+html[data-theme="dark"] div[class*="element-card"] {
   background-color: #0f172a !important;
   border-color: #334155 !important;
   color: #f8fafc !important;
@@ -396,19 +422,19 @@ div[class*="dataGrid"] thead {
 }
 
 .c__datagrid thead tr,
-.c__datagrid__header_row,
+.c__datagrid__header-row,
 div[class*="dataGrid"] thead tr {
   border-bottom: 2px solid var(--c--globals--colors--gray-300, #cbd5e1) !important;
 }
 
 html[data-theme="dark"] .c__datagrid thead tr,
-html[data-theme="dark"] .c__datagrid__header_row,
+html[data-theme="dark"] .c__datagrid__header-row,
 html[data-theme="dark"] div[class*="dataGrid"] thead tr {
   border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .c__datagrid th,
-.c__datagrid__header_cell,
+.c__datagrid__header-cell,
 div[class*="dataGrid"] th {
   text-transform: uppercase !important;
   font-size: 0.75rem !important;
@@ -422,7 +448,7 @@ div[class*="dataGrid"] th {
 }
 
 html[data-theme="dark"] .c__datagrid th,
-html[data-theme="dark"] .c__datagrid__header_cell,
+html[data-theme="dark"] .c__datagrid__header-cell,
 html[data-theme="dark"] div[class*="dataGrid"] th {
   color: #94a3b8 !important;
   border-bottom: 2px solid rgba(255, 255, 255, 0.12) !important;

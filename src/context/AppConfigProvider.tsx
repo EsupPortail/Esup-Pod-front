@@ -1,9 +1,16 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
 import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
 import type { AppConfig } from "@/src/types";
+import { useTranslation } from "../hooks/useTranslation";
 
 interface AppConfigContextType {
   config: AppConfig | null;
@@ -22,6 +29,7 @@ const AppConfigContext = createContext<AppConfigContextType>({
 export function AppConfigProvider({ children }: { children: React.ReactNode }) {
   const [config, setConfig] = useState<AppConfig | null>(null);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
 
   const fetchConfig = useCallback(async () => {
@@ -34,15 +42,19 @@ export function AppConfigProvider({ children }: { children: React.ReactNode }) {
       if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError("Erreur de chargement de la configuration.");
+        setError(t("errors.loadConfig"));
       }
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
-    fetchConfig();
+    const timeoutId = window.setTimeout(() => {
+      void fetchConfig();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [fetchConfig]);
 
   return (

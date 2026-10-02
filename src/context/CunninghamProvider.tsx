@@ -9,6 +9,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useTranslation } from "../hooks/useTranslation";
 
 type CunninghamThemeContextValue = {
   theme: string;
@@ -24,30 +25,12 @@ export default function CunninghamStyleProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [theme, setTheme] = useState("default");
-  const [isThemeSelected, setIsThemeSelected] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "default";
+    return localStorage.getItem("pod_theme") ?? "default";
+  });
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("pod_theme");
-    const initialTheme = savedTheme ?? "default";
-    setTheme(initialTheme);
-    setIsThemeSelected(true);
-
-    if (typeof document !== "undefined") {
-      if (initialTheme === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-        document.documentElement.classList.add("cunningham-theme--dark");
-        document.body.classList.add("dark-mode");
-      } else {
-        document.documentElement.removeAttribute("data-theme");
-        document.documentElement.classList.remove("cunningham-theme--dark");
-        document.body.classList.remove("dark-mode");
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isThemeSelected) return;
     localStorage.setItem("pod_theme", theme);
 
     if (typeof document !== "undefined") {
@@ -61,7 +44,7 @@ export default function CunninghamStyleProvider({
         document.body.classList.remove("dark-mode");
       }
     }
-  }, [theme, isThemeSelected]);
+  }, [theme]);
 
   const handleTheme = useCallback(() => {
     setTheme((currentTheme) =>
@@ -86,10 +69,9 @@ export default function CunninghamStyleProvider({
 
 export const useCunninghamTheme = () => {
   const ctx = useContext(CunninghamThemeContext);
+  const { t } = useTranslation();
   if (!ctx) {
-    throw new Error(
-      "useCunninghamTheme doit etre utilise dans CunninghamStyleProvider.",
-    );
+    throw new Error(t("providers.cunninghamTheme"));
   }
   return ctx;
 };

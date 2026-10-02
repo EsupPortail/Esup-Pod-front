@@ -31,6 +31,7 @@ interface ContributorsResponse {
   count: number;
 }
 
+/** Provides contribution queries and mutations for a video. */
 export const useContributions = (videoId: number) => {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
@@ -91,6 +92,7 @@ export const useContributions = (videoId: number) => {
   };
 };
 
+/** Searches contributors matching a query. */
 export const useContributorsSearch = (searchQuery: string) => {
   const { accessToken, refresh } = useAuth();
 
@@ -103,7 +105,7 @@ export const useContributorsSearch = (searchQuery: string) => {
         {
           accessToken,
           onRefresh: refresh,
-        }
+        },
       );
       const data = await requestJson<ContributorsResponse>(res);
       return data.results;

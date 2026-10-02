@@ -12,7 +12,8 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 export default function DressingPage() {
   const { isAuthenticated, isInitializing } = useRequireAuth("/login");
-  const { watermarks, isLoading, error, uploadWatermark, deleteWatermark } = useWatermarks();
+  const { watermarks, isLoading, error, uploadWatermark, deleteWatermark } =
+    useWatermarks();
   const { t } = useTranslation();
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -21,7 +22,9 @@ export default function DressingPage() {
     return null;
   }
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -30,7 +33,7 @@ export default function DressingPage() {
       await uploadWatermark(file);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'upload de l'image");
+      alert(t("dressingPage.uploadError"));
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -38,68 +41,67 @@ export default function DressingPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce filigrane ?")) {
+    if (confirm(t("dressingPage.confirmDelete"))) {
       await deleteWatermark(id);
     }
   };
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "1.5rem" }}>
-      <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.5rem" }}>
-        {t("dressingPage.title")}
-      </h1>
-      <p style={{ color: "var(--text-color-muted, #94a3b8)", marginBottom: "2rem", lineHeight: 1.5 }}>
-        {t("dressingPage.pageDescription")}
-      </p>
+    <div className={styles["content-box"]}>
+      <h1 className={styles["title"]}>{t("dressingPage.title")}</h1>
+      <p className={styles["desc"]}>{t("dressingPage.pageDescription")}</p>
 
       {error && (
-        <div style={{ marginBottom: "1rem" }}>
-          <Alert type={VariantType.ERROR}>
-            {t("dressingPage.loadError")}
-          </Alert>
+        <div className={styles["error"]}>
+          <Alert type={VariantType.ERROR}>{t("dressingPage.loadError")}</Alert>
         </div>
       )}
 
-      <div className={styles.headerRow}>
+      <div className={styles["header-row"]}>
         <h3>{t("dressingPage.myWatermarks")}</h3>
-        <input 
-          type="file" 
-          accept="image/png, image/jpeg" 
-          ref={fileInputRef} 
-          style={{ display: "none" }} 
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          ref={fileInputRef}
+          className={styles["image"]}
           onChange={handleFileChange}
         />
-        <Button 
+        <Button
           icon={<AddPhotoAlternateIcon />}
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          {isUploading ? t("dressingPage.uploading") : t("dressingPage.addWatermark")}
+          {isUploading
+            ? t("dressingPage.uploading")
+            : t("dressingPage.addWatermark")}
         </Button>
       </div>
 
       {isLoading ? (
         <p>{t("common.loading")}</p>
       ) : watermarks.length === 0 ? (
-        <Alert type={VariantType.INFO}>
-          {t("dressingPage.noWatermarks")}
-        </Alert>
+        <Alert type={VariantType.INFO}>{t("dressingPage.noWatermarks")}</Alert>
       ) : (
-        <div className={styles.watermarkGrid}>
+        <div className={styles["watermark-grid"]}>
           {watermarks.map((wm) => (
-            <div key={wm.id} className={styles.watermarkCard}>
-              <div className={styles.watermarkPreview}>
-                <Image src={wm.image} alt="Watermark" fill style={{ objectFit: "contain" }} />
+            <div key={wm.id} className={styles["watermark-card"]}>
+              <div className={styles["watermark-preview"]}>
+                <Image
+                  src={wm.image}
+                  alt={t("a11y.watermark")}
+                  fill
+                  className={styles["watermark-preview-image"]}
+                />
               </div>
-              <div className={styles.watermarkActions}>
-                <span className={styles.dateLabel}>
+              <div className={styles["watermark-actions"]}>
+                <span className={styles["date-label"]}>
                   {new Date(wm.created_at).toLocaleDateString()}
                 </span>
-                <Button 
-                  color="error" 
-                  icon={<DeleteIcon />} 
+                <Button
+                  color="error"
+                  icon={<DeleteIcon />}
                   onClick={() => handleDelete(wm.id)}
-                  aria-label="Supprimer"
+                  aria-label={t("common.delete")}
                 />
               </div>
             </div>

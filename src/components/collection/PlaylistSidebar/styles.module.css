@@ -1,4 +1,4 @@
-.playlistSidebar {
+.playlist-sidebar {
   display: flex;
   flex-direction: column;
   gap: var(--c--globals--spacings--xs);
@@ -7,31 +7,31 @@
   padding: var(--c--globals--spacings--sm);
 }
 
-.playlistSidebarHeader {
+.playlist-sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--c--globals--spacings--xxs);
 }
 
-.playlistSidebarLabel {
+.playlist-sidebar-label {
   font-size: var(--c--globals--font--sizes--sm);
   text-transform: uppercase;
   color: var(--c--globals--colors--gray-700);
 }
 
-.playlistSidebarTitle {
+.playlist-sidebar-title {
   margin: 0;
   font-size: var(--c--globals--font--sizes--md);
   font-weight: var(--c--globals--font--weights--bold);
 }
 
-.playlistSidebarCount {
+.playlist-sidebar-count {
   font-size: var(--c--globals--font--sizes--xs);
   color: var(--c--globals--colors--gray-700);
 }
 
-.playlistSidebarList {
+.playlist-sidebar-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -42,7 +42,7 @@
   overflow-y: auto;
 }
 
-.playlistSidebarItem {
+.playlist-sidebar-item {
   display: flex;
   align-items: flex-start;
   gap: var(--c--globals--spacings--xs);
@@ -52,41 +52,41 @@
   transition: background-color 0.15s ease;
 }
 
-.playlistSidebarThumbnail {
+.playlist-sidebar-thumbnail {
   width: 64px;
   height: 36px;
   object-fit: cover;
   border-radius: 4px;
 }
 
-.playlistSidebarItem:hover {
+.playlist-sidebar-item:hover {
   background-color: var(--c--globals--colors--gray-100);
 }
 
-.playlistSidebarItemActive {
+.playlist-sidebar-item-active {
   background-color: var(
     --c--contextuals--background--semantic--brand--secondary
   );
 }
 
-.playlistSidebarIndex {
+.playlist-sidebar-index {
   font-size: var(--c--globals--font--sizes--md);
   color: var(--c--globals--colors--gray-700);
   min-width: 1.5rem;
 }
 
-.playlistSidebarText {
+.playlist-sidebar-text {
   display: flex;
   flex-direction: column;
 }
 
-.playlistSidebarVideoTitle {
+.playlist-sidebar-video-title {
   margin: 0;
   font-size: var(--c--globals--font--sizes--md);
   font-weight: var(--c--globals--font--weights--medium);
 }
 
-.playlistSidebarNowPlaying {
+.playlist-sidebar-now-playing {
   margin: 0;
   font-size: var(--c--globals--font--sizes--md);
   color: var(--c--contextuals--content--palette--brand--neutral);
@@ -94,7 +94,7 @@
 }
 
 @media (max-width: 1024px) {
-  .playlistSidebar {
+  .playlist-sidebar {
     max-height: none;
   }
 }

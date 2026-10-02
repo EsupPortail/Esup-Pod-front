@@ -5,6 +5,7 @@ import { DataGrid } from "@openfun/cunningham-react";
 import type { SortModel } from "@openfun/cunningham-react";
 import type { CollectionDisplayRow } from "./types";
 import { getCollectionGridColumns } from "./CollectionGridColumns";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import styles from "./styles.module.css";
 
 interface CollectionGridProps {
@@ -12,6 +13,7 @@ interface CollectionGridProps {
 }
 
 export default function CollectionGrid({ rows }: CollectionGridProps) {
+  const { t } = useTranslation();
   const [sortModel, setSortModel] = useState<SortModel>([]);
 
   const sortedRows = useMemo(() => {
@@ -42,13 +44,13 @@ export default function CollectionGrid({ rows }: CollectionGridProps) {
 
   return (
     <DataGrid
-      className={styles.dataGrid}
+      className={styles["data-grid"]}
       rows={sortedRows}
-      columns={getCollectionGridColumns({ rows: sortedRows })}
+      columns={getCollectionGridColumns({ rows: sortedRows, t })}
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting
-      emptyPlaceholderLabel="Aucune collection trouvée."
+      emptyPlaceholderLabel={t("channel.noTheme")}
     />
   );
 }

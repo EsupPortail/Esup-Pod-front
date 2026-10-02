@@ -3,11 +3,12 @@
 import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Paper from "@mui/material/Paper";
-import { Loader, Alert, Button, VariantType } from "@openfun/cunningham-react";
+import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
 import styles from "./styles.module.css";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Supprimer la liste de lecture";
 
@@ -16,6 +17,7 @@ export default function DeletePlaylistPage() {
   const params = useParams();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
+  const { t } = useTranslation();
   const {
     playlist,
     usePlaylistLoading,
@@ -43,34 +45,37 @@ export default function DeletePlaylistPage() {
   }
 
   return (
-    <div className={styles.delete_container}>
-      <Paper sx={{ p: 4, maxWidth: 520, width: "100%" }}>
-        <h2>Supprimer la liste de lecture</h2>
+    <div className={styles["delete-container"]}>
+      <Paper className={styles["paper"]}>
+        <h2>{t("playlists.delete")}</h2>
 
         {usePlaylistLoading && !playlist && <CenteredLoader />}
 
         {usePlaylistError ? (
           <div>
-            <Alert type={VariantType.ERROR} className={styles.delete_error_alert}>
-              {usePlaylistError ?? "Playlist introuvable."}
+            <Alert
+              type={VariantType.ERROR}
+              className={styles["delete-error-alert"]}
+            >
+              {usePlaylistError ?? `${t("playlists.notFound")}`}
             </Alert>
             <Button
               variant="secondary"
               onClick={() => router.back()}
               disabled={usePlaylistLoading}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
           </div>
         ) : playlist ? (
           <>
             <p>
-              Êtes-vous sûr·e de vouloir supprimer la playlist{" "}
+              {t("playlists.deleteConfirmation")}{" "}
               <strong>{playlist.title}</strong> ? <br />
-              Cette action est définitive.
+              {t("common.permanentAction")}
             </p>
 
-            <div className={styles.buttons_action}>
+            <div className={styles["buttons-action"]}>
               <Button
                 color="brand"
                 variant="secondary"
@@ -78,7 +83,7 @@ export default function DeletePlaylistPage() {
                 onClick={() => router.back()}
                 disabled={usePlaylistLoading}
               >
-                Annuler
+                {t("common.cancel")}
               </Button>
 
               <Button
@@ -88,7 +93,7 @@ export default function DeletePlaylistPage() {
                 onClick={handleDelete}
                 disabled={usePlaylistLoading}
               >
-                Supprimer la playlist
+                {t("common.delete")}
               </Button>
             </div>
           </>

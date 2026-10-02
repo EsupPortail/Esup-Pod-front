@@ -19,14 +19,14 @@
     padding: var(--c--globals--spacings--sm);
   }
 
-  .formContent {
+  .form-content {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: var(--c--globals--spacings--sm);
   }
 
-  .formActions {
+  .form-actions {
     display: flex;
     justify-content: flex-end;
   }
@@ -57,7 +57,7 @@
   }
 }
 
-.commentHighlight {
+.comment-highlight {
   background-color: color-mix(
     in srgb,
     var(--c--contextuals--background--semantic--success--secondary) 50%,
@@ -116,7 +116,7 @@
   margin-top: var(--c--globals--spacings--xxxs);
 }
 
-.actionButton {
+.action-button {
   display: inline-flex;
   align-items: center;
   gap: 0.05rem;
@@ -130,13 +130,13 @@
   border-radius: 8px;
 }
 
-.actionButton:hover {
+.action-button:hover {
   background-color: var(
     --c--contextuals--background--semantic--brand--tertiary
   );
 }
 
-.actionButtonStatic {
+.action-button-static {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -144,7 +144,7 @@
   font-size: var(--c--globals--font--sizes--sm);
 }
 
-.actionButton span {
+.action-button-static span {
   line-height: 1;
 }
 
@@ -154,19 +154,19 @@
   font-weight: var(--c--globals--font--weights--medium);
 }
 
-.replyForm {
+.reply-form {
   display: flex;
   flex-direction: column;
   gap: var(--c--globals--spacings--sm);
   margin-top: var(--c--globals--spacings--xs);
 }
 
-.replyActions {
+.reply-actions {
   display: flex;
   justify-content: flex-end;
 }
 
-.repliesToggle {
+.replies-toggle {
   width: fit-content;
   padding: 0;
   margin-top: var(--c--globals--spacings--xxxs);
@@ -182,7 +182,7 @@
   border-radius: 8px;
 }
 
-.repliesToggle:hover {
+.replies-toggle:hover {
   background-color: var(
     --c--contextuals--background--semantic--neutral--tertiary
   );
@@ -203,7 +203,11 @@
     flex-direction: column;
   }
 
-  .formContent {
+  .form-content {
+    width: 100%;
+  }
+
+  .form-content {
     width: 100%;
   }
 
@@ -212,7 +216,7 @@
     padding-left: var(--c--globals--spacings--sm);
   }
 
-  .replyActions button {
+  .reply-actions button {
     width: 100%;
   }
 }

@@ -60,7 +60,10 @@ export default function CollectionsList({
         ))}
 
         {themes.map((theme) => (
-          <Grid key={theme.id} size={{ xs: 12, sm: 12, md: mdSize, lg: lgSize, xl: xlSize }}>
+          <Grid
+            key={theme.id}
+            size={{ xs: 12, sm: 12, md: mdSize, lg: lgSize, xl: xlSize }}
+          >
             <CollectionCard
               type="theme"
               theme={theme}

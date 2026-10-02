@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Alert, Button, Loader, VariantType } from "@openfun/cunningham-react";
+import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useAuth } from "@/src/context/AuthProvider";
 import { usePlaylistCreationContext } from "@/src/context/PlaylistCreationContext";
@@ -16,10 +16,10 @@ import { useVideoListFilters } from "@/src/hooks/useVideoListFilters";
 import { useMounted } from "@/src/hooks/useMounted";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-
-export const breadcrumbLabel = "Playlist";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function PlaylistPage() {
+  const { t, locale } = useTranslation();
   const params = useParams();
   const router = useRouter();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug;
@@ -27,18 +27,17 @@ export default function PlaylistPage() {
     usePlaylist();
   const { user } = useAuth();
   const mounted = useMounted();
-  const { lastCreatedPlaylist, setLastCreatedPlaylist } =
-    usePlaylistCreationContext();
+  const { lastCreatedPlaylist } = usePlaylistCreationContext();
 
   const playlistJustCreated =
     lastCreatedPlaylist != null && lastCreatedPlaylist.slug === slug;
 
   useEffect(() => {
     if (!slug) return;
-    fetchOne(slug);
+    void fetchOne(slug);
   }, [fetchOne, slug]);
 
-  // Si on vient juste de créer la playlist, on réutilise celle du contexte
+  // If the playlist was just created, reuse the one from the context
   const effectivePlaylist =
     playlist ?? (playlistJustCreated ? lastCreatedPlaylist : null);
 
@@ -47,7 +46,6 @@ export default function PlaylistPage() {
   const {
     filters,
     setFilters,
-    videos,
     users,
     types,
     disciplines,
@@ -57,7 +55,7 @@ export default function PlaylistPage() {
     useVideoLoading,
   } = useVideoListFilters({ mode: "all", enabled: false });
 
-  // Applique le tri par défaut défini sur la playlist
+  // Apply the default sorting defined for the playlist
   useEffect(() => {
     if (!effectivePlaylist?.default_order) return;
 
@@ -67,7 +65,7 @@ export default function PlaylistPage() {
     });
   }, [effectivePlaylist?.default_order, setFilters]);
 
-  // Vidéos brutes de la playlist (sans filtres)
+  // Raw videos from the playlist (without filters)
   const playlistItemVideos = playlistItems
     .map((item) => item.video)
     .filter((video) => video != null);
@@ -84,15 +82,21 @@ export default function PlaylistPage() {
         video.title.toLowerCase().includes(search),
       );
     }
-    
+
     const ordering = filters.ordering;
     if (ordering) {
       result = [...result].sort((a, b) => {
         switch (ordering) {
           case "-created_at":
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
           case "created_at":
-            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+            return (
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
+            );
           case "-title":
             return b.title.localeCompare(a.title);
           case "title":
@@ -125,7 +129,7 @@ export default function PlaylistPage() {
   if (!slug) {
     return (
       <Alert type={VariantType.ERROR} canClose>
-        Playlist introuvable.
+        {t("playlist.noResults")}
       </Alert>
     );
   }
@@ -140,26 +144,26 @@ export default function PlaylistPage() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Alert type={VariantType.ERROR} canClose>
-          {usePlaylistError ?? "Impossible de charger la playlist."}
+          {usePlaylistError ?? `${t("playlists.unableToLoad")} ${slug}`}
         </Alert>
-        <BackButton label="Retour" />
+        <BackButton label={t("common.back")} />
       </div>
     );
   }
 
   return (
     <div>
-      <BackButton label="Retour" />
-      <div className={styles.playlist_content}>
+      <BackButton label={t("common.back")} />
+      <div className={styles["playlist-content"]}>
         {playlistJustCreated && (
           <Alert type={VariantType.SUCCESS} aria-live="polite">
-            Votre liste de lecture a été créée avec succès! 🥳
+            {t("playlist.playlistCreated")}
           </Alert>
         )}
-        <div className={styles.playlist_header_row}>
+        <div className={styles["playlist-header-row"]}>
           <div>
             <h1>{capitalize(effectivePlaylist?.title ?? "")}</h1>
-            <div className={styles.playlist_actions}>
+            <div className={styles["playlist-actions"]}>
               <Button
                 color="brand"
                 variant="primary"
@@ -167,7 +171,7 @@ export default function PlaylistPage() {
                 onClick={handleStartPlaylist}
               >
                 <PlayArrowIcon />
-                Lancer la liste de lecture
+                {t("favorites.startPlaylist")}
               </Button>
               {isOwner && (
                 <>
@@ -179,7 +183,7 @@ export default function PlaylistPage() {
                       router.push(`/playlist/edit/${effectivePlaylist?.slug}`)
                     }
                   >
-                    Éditer la liste de lecture
+                    {t("playlist.editPlaylist")}
                   </Button>
                   <Button
                     color="error"
@@ -189,39 +193,44 @@ export default function PlaylistPage() {
                       router.push(`/playlist/delete/${effectivePlaylist?.slug}`)
                     }
                   >
-                    Supprimer la liste de lecture
+                    {t("playlists.delete")}
                   </Button>
                 </>
               )}
             </div>
             {effectivePlaylist.description && (
-              <div className={styles.playlist_description}>
+              <div className={styles["playlist-description"]}>
                 <p>{effectivePlaylist.description}</p>
               </div>
             )}
 
-            <dl className={styles.playlist_infos_details}>
+            <dl className={styles["playlist-infos-details"]}>
               <div>
-                <dt>{timeAgo(effectivePlaylist?.created_at)}</dt>
+                <dt>{timeAgo(effectivePlaylist?.created_at, locale)}</dt>
               </div>
               <div>
-                <dt>Créée par :</dt>
+                <dt>{t("common.createdBy")}</dt>
                 <dd>
-                  {effectivePlaylist?.owner_username ?? "Utilisateur inconnu"}
+                  {effectivePlaylist?.owner_username ??
+                    `${t("common.unknown")}`}
                 </dd>
               </div>
 
               <div>
-                <dt>Mis à jour le :</dt>
-                <dd>{formatDateWithTime(effectivePlaylist?.updated_at)}</dd>
+                <dt>{t("common.latestUpdate")}</dt>
+                <dd>
+                  {formatDateWithTime(effectivePlaylist?.updated_at, locale)}
+                </dd>
               </div>
 
               <div>
-                <dt>Statut de la liste de lecture : </dt>
-                {!effectivePlaylist?.is_public && <dd>Privée</dd>}
-                {effectivePlaylist?.is_public && <dd>Publique</dd>}
+                <dt>{t("common.playlistStatus")}</dt>
+                {!effectivePlaylist?.is_public && (
+                  <dd>{t("common.private")}</dd>
+                )}
+                {effectivePlaylist?.is_public && <dd>{t("common.public")}</dd>}
                 {effectivePlaylist?.is_protected && (
-                  <dd>Protégée par mot de passe</dd>
+                  <dd>{t("common.passwordProtected")}</dd>
                 )}
               </div>
             </dl>
@@ -273,11 +282,11 @@ export default function PlaylistPage() {
                 currentUserId={user?.id}
               />
             ) : (
-              <Alert>Aucune vidéo ne correspond à vos filtres.</Alert>
+              <Alert>{t("playlists.noVideos")}</Alert>
             )}
           </div>
         ) : (
-          <Alert>Aucune vidéo dans cette playlist.</Alert>
+          <Alert>{t("table.noVideosFound")}</Alert>
         )}
       </div>
     </div>

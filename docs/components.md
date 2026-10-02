@@ -40,4 +40,4 @@ Next.js utilise l'App Router.
 - Par défaut, tout fichier dans `src/app/` est un **Server Component** (rendu sur le serveur Node.js).
 - Si votre composant nécessite de l'interactivité (ex: `onClick`, `useState`), vous DEVEZ ajouter la directive `"use client";` tout en haut du fichier.
 
-*Convention interne :* On essaie de garder la coquille de la page `page.tsx` comme composant serveur pour l'injection des métadonnées (SEO), et d'importer un composant `<MaFeatureClientPage />` qui s'occupe de la logique client.
+_Convention interne :_ On essaie de garder la coquille de la page `page.tsx` comme composant serveur pour l'injection des métadonnées (SEO), et d'importer un composant `<MaFeatureClientPage />` qui s'occupe de la logique client.

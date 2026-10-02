@@ -1,4 +1,4 @@
-.backButton {
+.back-button {
   min-height: 38px;
   border: 1px solid var(--border-color, rgba(0, 0, 0, 0.2));
   border-radius: 9999px;
@@ -17,23 +17,27 @@
   margin-bottom: var(--c--globals--spacings--md);
 }
 
-.backButton:hover {
+.back-button:hover {
   border-color: var(--c--globals--colors--brand--main);
-  background-color: color-mix(in srgb, var(--c--globals--colors--brand--main) 4%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--c--globals--colors--brand--main) 4%,
+    transparent
+  );
   color: var(--c--globals--colors--brand--main);
 }
 
-.backButton span.material-icons {
+.back-button span.material-icons {
   font-size: 1.1rem;
 }
 
-html[data-theme="dark"] .backButton {
+html[data-theme="dark"] .back-button {
   background-color: #1e293b !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
 }
 
-html[data-theme="dark"] .backButton:hover {
+html[data-theme="dark"] .back-button:hover {
   background-color: #334155 !important;
   color: #60a5fa !important;
   border-color: #60a5fa !important;

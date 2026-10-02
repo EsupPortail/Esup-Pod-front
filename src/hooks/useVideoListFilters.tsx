@@ -28,10 +28,10 @@ export function useVideoListFilters({
     ...initialFilters,
   }));
 
-
   const { users } = useUsers();
   const { types, fetchAll: fetchTypes } = useTypes();
-  const { discipline: disciplines, fetchAll: fetchDisciplines } = useDiscipline();
+  const { discipline: disciplines, fetchAll: fetchDisciplines } =
+    useDiscipline();
   const { tags, fetchAll: fetchTags } = useTags();
 
   const fetchedMetadataRef = useRef(false);
@@ -48,7 +48,7 @@ export function useVideoListFilters({
       search: filters.search || undefined,
       page: filters.page || 1,
     }),
-    [filters]
+    [filters],
   );
 
   const {
@@ -58,8 +58,10 @@ export function useVideoListFilters({
     useVideoLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
-  } = useVideosList(videoListParams, mode === "dashboard" ? "me" : "all", { enabled });
+    isFetchingNextPage,
+  } = useVideosList(videoListParams, mode === "dashboard" ? "me" : "all", {
+    enabled,
+  });
 
   useEffect(() => {
     if (!fetchedMetadataRef.current) {
@@ -75,8 +77,8 @@ export function useVideoListFilters({
       new Set(
         videos
           .map((video) => video.channel)
-          .filter((channel): channel is number => channel != null)
-      )
+          .filter((channel): channel is number => channel != null),
+      ),
     );
   }, [videos]);
 
@@ -94,6 +96,6 @@ export function useVideoListFilters({
     useVideoLoading,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
   };
 }

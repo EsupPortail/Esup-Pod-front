@@ -15,7 +15,7 @@ interface LanguageSelectorProps {
   className?: string;
 }
 
-export function LanguageSelector({ variant = "dropdown", className }: LanguageSelectorProps) {
+export function LanguageSelector({ className }: LanguageSelectorProps) {
   const { locale, setLocale, supportedLocales } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -44,7 +44,9 @@ export function LanguageSelector({ variant = "dropdown", className }: LanguageSe
         aria-expanded={open ? "true" : undefined}
         aria-label="Changer de langue"
         startIcon={<LanguageIcon sx={{ fontSize: "1.1rem !important" }} />}
-        endIcon={<ExpandMoreIcon sx={{ fontSize: "1rem !important", opacity: 0.7 }} />}
+        endIcon={
+          <ExpandMoreIcon sx={{ fontSize: "1rem !important", opacity: 0.7 }} />
+        }
         sx={{
           color: "var(--text-color, inherit)",
           textTransform: "none",
@@ -106,8 +108,10 @@ export function LanguageSelector({ variant = "dropdown", className }: LanguageSe
                 borderRadius: "6px",
                 color: "var(--text-color, #0f172a)",
                 "&.Mui-selected": {
-                  backgroundColor: "var(--c--contextuals--background--semantic--brand--secondary, rgba(59, 130, 246, 0.1)) !important",
-                  color: "var(--c--contextuals--background--semantic--brand--primary, #2563eb) !important",
+                  backgroundColor:
+                    "var(--c--contextuals--background--semantic--brand--secondary, rgba(59, 130, 246, 0.1)) !important",
+                  color:
+                    "var(--c--contextuals--background--semantic--brand--primary, #2563eb) !important",
                 },
                 "&:hover": {
                   backgroundColor: "rgba(128, 128, 128, 0.08)",
@@ -115,7 +119,16 @@ export function LanguageSelector({ variant = "dropdown", className }: LanguageSe
               }}
             >
               <span>{loc.label}</span>
-              {isSelected && <CheckIcon sx={{ fontSize: "1rem", color: "var(--c--contextuals--background--semantic--brand--primary, #2563eb)", ml: 1 }} />}
+              {isSelected && (
+                <CheckIcon
+                  sx={{
+                    fontSize: "1rem",
+                    color:
+                      "var(--c--contextuals--background--semantic--brand--primary, #2563eb)",
+                    ml: 1,
+                  }}
+                />
+              )}
             </MenuItem>
           );
         })}
@@ -123,4 +136,3 @@ export function LanguageSelector({ variant = "dropdown", className }: LanguageSe
     </>
   );
 }
-

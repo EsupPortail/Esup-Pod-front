@@ -4,6 +4,7 @@ export type CollectionListParams = Partial<CollectionFiltersValue> & {
   page?: number;
 };
 
+/** Applies collection filters to a URL's search parameters. */
 export const applyCollectionSearchParams = (
   url: URL,
   params?: CollectionListParams,

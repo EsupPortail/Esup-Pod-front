@@ -9,28 +9,30 @@ import { mapCollectionsToDisplayRows } from "./CollectionDisplay.mapper";
 import CollectionGrid from "./CollectionGrid";
 import CollectionViewToggle from "./CollectionViewToggle";
 import styles from "./styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 const getCollectionsLabel = (
   rowsLength: number,
   channelsCount: number,
   themesCount: number,
   playlistsCount: number,
+  t: (key: string) => string,
 ) => {
   const isPlural = rowsLength > 1;
 
   if (channelsCount > 0) {
-    return isPlural ? "chaînes" : "chaîne";
+    return isPlural ? t("common.channels") : t("common.channel");
   }
 
   if (themesCount > 0) {
-    return isPlural ? "thèmes" : "thème";
+    return isPlural ? t("common.themes") : t("common.theme");
   }
 
   if (playlistsCount > 0) {
-    return isPlural ? "listes de lecture" : "liste de lecture";
+    return isPlural ? t("playlists.playlists") : "playlists.playlist";
   }
 
-  return isPlural ? "collections" : "collection";
+  return isPlural ? t("common.collections") : t("common.collection");
 };
 
 export default function CollectionDisplay({
@@ -49,15 +51,18 @@ export default function CollectionDisplay({
   onPageChange,
   loading = false,
 }: CollectionDisplayProps) {
-  const [view, setView] = useState<CollectionViewMode>(defaultView);
+  const { t, locale } = useTranslation();
 
-  useEffect(() => {
-    if (!storageKey) return;
-    const storedView = window.localStorage.getItem(storageKey);
-    if (storedView === "cards" || storedView === "grid") {
-      setView(storedView);
+  const [view, setView] = useState<CollectionViewMode>(() => {
+    if (typeof window === "undefined" || !storageKey) {
+      return defaultView;
     }
-  }, [storageKey]);
+
+    const storedView = window.localStorage.getItem(storageKey);
+    return storedView === "cards" || storedView === "grid"
+      ? storedView
+      : defaultView;
+  });
 
   const handleChangeView = (nextView: CollectionViewMode) => {
     setView(nextView);
@@ -76,8 +81,18 @@ export default function CollectionDisplay({
         channelSlug,
         basePath,
         currentUserId,
+        locale,
       }),
-    [channels, themes, playlists, videos, channelSlug, basePath, currentUserId],
+    [
+      channels,
+      themes,
+      playlists,
+      videos,
+      channelSlug,
+      basePath,
+      currentUserId,
+      locale,
+    ],
   );
 
   const pagination = usePagination({
@@ -142,13 +157,14 @@ export default function CollectionDisplay({
     channels.length,
     themes.length,
     playlists.length,
+    t,
   );
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.toolbar}>
         <p>
-          {count} {label} trouvée{count > 1 ? "s" : ""}
+          {count} {label} {t("common.found", { count }).toLowerCase()}
         </p>
         <CollectionViewToggle view={view} onChange={handleChangeView} />
       </div>

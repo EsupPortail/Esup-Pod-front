@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useCallback } from "react";
 import { useAuth } from "@/src/context/AuthProvider";
 import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
 import type { Video } from "@/src/types";
-import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useTranslation } from "./useTranslation";
 
 type UnlockPayload = {
   password?: string;
@@ -56,12 +61,15 @@ const buildVideoListUrl = (
 ): string => {
   const url = new URL(baseUrl);
 
-  if (params?.channel != null) url.searchParams.set("channel", String(params.channel));
+  if (params?.channel != null)
+    url.searchParams.set("channel", String(params.channel));
   if (params?.ordering) url.searchParams.set("ordering", params.ordering);
   if (params?.search) url.searchParams.set("search", params.search);
   if (params?.page != null) url.searchParams.set("page", String(params.page));
-  if (params?.createdAtGte) url.searchParams.set("created_at__gte", params.createdAtGte);
-  if (params?.createdAtLte) url.searchParams.set("created_at__lte", params.createdAtLte);
+  if (params?.createdAtGte)
+    url.searchParams.set("created_at__gte", params.createdAtGte);
+  if (params?.createdAtLte)
+    url.searchParams.set("created_at__lte", params.createdAtLte);
 
   appendValues(url.searchParams, "type__slug", params?.typeSlugs);
   appendValues(url.searchParams, "discipline", params?.disciplineIds);
@@ -74,7 +82,9 @@ const buildVideoListUrl = (
   return url.toString();
 };
 
-type VideoListResponse = Video[] | { results?: Video[]; count?: number; next?: string; previous?: string };
+type VideoListResponse =
+  | Video[]
+  | { results?: Video[]; count?: number; next?: string; previous?: string };
 
 const normalizeVideoList = (data: VideoListResponse): Video[] => {
   if (Array.isArray(data)) return data;
@@ -86,6 +96,7 @@ const normalizeVideoList = (data: VideoListResponse): Video[] => {
 
 export function useVideo(slug: string, enabled = true) {
   const { accessToken, refresh } = useAuth();
+  const { t } = useTranslation();
 
   return useQuery<Video, Error>({
     queryKey: ["video", slug],
@@ -96,7 +107,7 @@ export function useVideo(slug: string, enabled = true) {
       });
 
       if (res.status === 404 && !accessToken) throw new Error("AUTH_REQUIRED");
-      if (!res.ok) throw new Error("Erreur de chargement de la vidéo.");
+      if (!res.ok) throw new Error(t("errors.loadErrorVideo"));
 
       return requestJson<Video>(res);
     },
@@ -111,30 +122,40 @@ export function useVideo(slug: string, enabled = true) {
  * @param params Objet contenant les critères de recherche, de tri et de filtre (`VideoListParams`).
  * @param fetchType Détermine la route API utilisée : "all" (toutes les vidéos publiques/accessibles) ou "me" (vidéos de l'utilisateur connecté).
  * @param options Options supplémentaires, ex: `enabled` pour conditionner l'exécution de la requête.
- * 
+ *
  * @returns Un objet contenant les vidéos (`videos`), le compte total (`videosCount`), l'état de chargement (`useVideoLoading`), les erreurs (`useVideoError`), et les fonctions pour charger la page suivante.
  */
 export function useVideosList(
   params?: VideoListParams,
   fetchType: "all" | "me" = "all",
-  options?: { enabled?: boolean }
+  options?: { enabled?: boolean },
 ) {
   const { accessToken, refresh } = useAuth();
 
+  const { t } = useTranslation();
   const query = useInfiniteQuery<VideoListResponse, Error>({
     queryKey: ["videos", fetchType, params],
     queryFn: async ({ pageParam = 1 }) => {
       // UTILISATION DE LA ROUTE OPTIMISÉE POUR RECUPÉRER PROPRIETAIRE + CO-PROPRIETAIRE
-      const baseUrl = fetchType === "me" ? getRoutes().video.me : getRoutes().video.list;
-      const response = await authFetch(buildVideoListUrl(baseUrl, { ...params, page: params?.page || (pageParam as number) }), {
-        accessToken,
-        onRefresh: refresh,
-      });
+      const baseUrl =
+        fetchType === "me" ? getRoutes().video.me : getRoutes().video.list;
+      const response = await authFetch(
+        buildVideoListUrl(baseUrl, {
+          ...params,
+          page: params?.page || (pageParam as number),
+        }),
+        {
+          accessToken,
+          onRefresh: refresh,
+        },
+      );
       if (!response.ok) {
-        if (response.status === 401) throw new Error("Accès non autorisé (401). Veuillez vous connecter.");
-        if (response.status === 404) throw new Error("Ressource introuvable (404).");
-        if (response.status >= 500) throw new Error("Le serveur API est indisponible ou en erreur (500).");
-        throw new Error(`Erreur lors du chargement des vidéos (${response.status}).`);
+        if (response.status === 401) throw new Error(t("errors.error401"));
+        if (response.status === 404) throw new Error(t("errors.notFound"));
+        if (response.status >= 500) throw new Error(t("errors.serverError"));
+        throw new Error(
+          t("errors.loadErrorVideos", { status: response.status }),
+        );
       }
       return requestJson<VideoListResponse>(response);
     },
@@ -153,13 +174,16 @@ export function useVideosList(
 
   // Aplatissement des pages pour retourner un simple tableau de vidéos
   const videos = query.data?.pages.flatMap(normalizeVideoList) ?? [];
-  const videosCount = !Array.isArray(query.data?.pages[0]) ? query.data?.pages[0]?.count ?? videos.length : videos.length;
+  const videosCount = !Array.isArray(query.data?.pages[0])
+    ? (query.data?.pages[0]?.count ?? videos.length)
+    : videos.length;
 
   return {
     videos,
     videosCount,
     useVideoLoading: (options?.enabled ?? true) && query.isLoading,
-    useVideoError: (options?.enabled ?? true) ? (query.error?.message ?? null) : null,
+    useVideoError:
+      (options?.enabled ?? true) ? (query.error?.message ?? null) : null,
     fetchNextPage: query.fetchNextPage,
     hasNextPage: query.hasNextPage,
     isFetchingNextPage: query.isFetchingNextPage,
@@ -169,6 +193,7 @@ export function useVideosList(
 export function useDeleteVideo() {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (slug: string) => {
@@ -178,7 +203,7 @@ export function useDeleteVideo() {
         method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Erreur lors de la suppression de la vidéo.");
+      if (!res.ok) throw new Error(t("errors.deleteErrorVideo"));
       return slug;
     },
     onSuccess: (deletedSlug) => {
@@ -194,8 +219,15 @@ export function useUnlockVideo() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slug, payload }: { slug: string; payload?: UnlockPayload }) => {
-      const hasPayload = payload != null && Object.values(payload).some((value) => value);
+    mutationFn: async ({
+      slug,
+      payload,
+    }: {
+      slug: string;
+      payload?: UnlockPayload;
+    }) => {
+      const hasPayload =
+        payload != null && Object.values(payload).some((value) => value);
       const hasHash = Boolean(payload?.hash?.trim());
       const baseUnlockUrl = getRoutes().video.unlock(slug);
       const unlockUrl = hasHash
@@ -206,12 +238,14 @@ export function useUnlockVideo() {
         accessToken,
         onRefresh: refresh,
         method: hasPayload ? "POST" : "GET",
-        headers: hasPayload ? { "Content-Type": "application/x-www-form-urlencoded" } : undefined,
+        headers: hasPayload
+          ? { "Content-Type": "application/x-www-form-urlencoded" }
+          : undefined,
         body: hasPayload
           ? new URLSearchParams({
-            password: payload?.password?.trim() || "",
-            hash: payload?.hash?.trim() || "",
-          })
+              password: payload?.password?.trim() || "",
+              hash: payload?.hash?.trim() || "",
+            })
           : undefined,
       });
 
@@ -233,24 +267,22 @@ export function useUnlockVideo() {
 export function useDuplicateVideo() {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (slug: string) => {
-      const response = await authFetch(
-        getRoutes().video.duplicate(slug),
-        {
-          method: "POST",
-          accessToken,
-          onRefresh: refresh,
-        }
-      );
+      const response = await authFetch(getRoutes().video.duplicate(slug), {
+        method: "POST",
+        accessToken,
+        onRefresh: refresh,
+      });
       if (!response.ok) {
-        throw new Error("Erreur lors de la duplication de la vidéo.");
+        throw new Error(t("errors.dupErrorVideo"));
       }
       return requestJson<Video>(response);
     },
-    onSuccess: (newVideo) => {
-      queryClient.invalidateQueries({ queryKey: ["videos"] });
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["videos"] });
     },
   });
 }

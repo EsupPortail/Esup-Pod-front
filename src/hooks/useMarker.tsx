@@ -12,7 +12,10 @@ export const useMarker = (videoSlug: string) => {
   const { data: markerTime, isLoading } = useQuery<{ marker: number }>({
     queryKey: ["marker", videoSlug],
     queryFn: async () => {
-      const res = await authFetch(getRoutes().video.marker(videoSlug), authOpts);
+      const res = await authFetch(
+        getRoutes().video.marker(videoSlug),
+        authOpts,
+      );
       if (res.status === 404) return { marker: 0 };
       return requestJson(res);
     },

@@ -3,14 +3,18 @@ import type { Column } from "@openfun/cunningham-react";
 import type { CollectionDisplayRow } from "./types";
 import styles from "./styles.module.css";
 import PlaylistCardActionMenu from "../PlaylistActionMenu";
+import Image from "next/image";
 
 interface GetCollectionGridColumnsOptions {
   rows: CollectionDisplayRow[];
+  t?: (key: string, params?: Record<string, string | number>) => string;
 }
 
 export function getCollectionGridColumns({
   rows,
+  t,
 }: GetCollectionGridColumnsOptions): Column<CollectionDisplayRow>[] {
+  const translate = t ?? ((key: string) => key);
   const hasPlaylistRows = rows.some((row) => row.type === "playlist");
   const hasChannelRows = rows.some((row) => row.type === "channel");
   const hasThemeRows = rows.some((row) => row.type === "theme");
@@ -21,36 +25,39 @@ export function getCollectionGridColumns({
       headerName: "",
       enableSorting: false,
       renderCell: ({ row }) => (
-        <Link href={row.href} className={styles.thumbnailWrapper}>
-          <img className={styles.thumbnail} src={row.thumbnailUrl} alt={row.title} />
+        <Link href={row.href} className={styles["thumbnail-wrapper"]}>
+          <Image
+            unoptimized
+            className={styles["thumbnail"]}
+            src={row.thumbnailUrl}
+            alt={translate("a11y.collectionThumbnail", { title: row.title })}
+            width={56}
+            height={34}
+          />
         </Link>
       ),
     },
     {
       field: "title",
-      headerName: "Titre",
+      headerName: `${t!("table.title")}`,
       renderCell: ({ row }) => (
-        <Link href={row.href} className={styles.tableTitleLink}>
+        <Link href={row.href} className={styles["table-title-link"]}>
           {row.title}
         </Link>
       ),
     },
     {
       field: "typeLabel",
-      headerName: "Type",
+      headerName: `${t!("videoPage.type")}`,
       renderCell: ({ row }) => (
-        <span className={styles.typeBadge}>
-          {row.typeLabel}
-        </span>
+        <span className={styles["type-badge"]}>{row.typeLabel}</span>
       ),
     },
     {
       field: "videosCount",
-      headerName: "Vidéos",
+      headerName: `${t!("common.videos")}`,
       renderCell: ({ row }) => (
-        <span className={styles.countBadge}>
-          {row.videosCount}
-        </span>
+        <span className={styles["count-badge"]}>{row.videosCount}</span>
       ),
     },
   ];
@@ -58,11 +65,9 @@ export function getCollectionGridColumns({
   if (hasChannelRows) {
     columns.push({
       field: "themesCount",
-      headerName: "Thèmes",
+      headerName: `${t!("common.theme")}`,
       renderCell: ({ row }) => (
-        <span className={styles.countBadge}>
-          {row.themesCount}
-        </span>
+        <span className={styles["count-badge"]}>{row.themesCount}</span>
       ),
     });
   }
@@ -70,11 +75,9 @@ export function getCollectionGridColumns({
   if (hasThemeRows) {
     columns.push({
       field: "subThemesCount",
-      headerName: "Sous-thèmes",
+      headerName: `${t!("common.subtopics")}`,
       renderCell: ({ row }) => (
-        <span className={styles.countBadge}>
-          {row.subThemesCount}
-        </span>
+        <span className={styles["count-badge"]}>{row.subThemesCount}</span>
       ),
     });
   }
@@ -82,21 +85,17 @@ export function getCollectionGridColumns({
   if (hasPlaylistRows) {
     columns.push({
       field: "createdAtValue",
-      headerName: "Création",
+      headerName: `${t!("filters.creationDate")}`,
       renderCell: ({ row }) => (
-        <span className={styles.dateText}>
-          {row.createdAtLabel}
-        </span>
+        <span className={styles["date-text"]}>{row.createdAtLabel}</span>
       ),
     });
 
     columns.push({
       field: "updatedAtValue",
-      headerName: "Modifiée le",
+      headerName: `${t!("videoPage.updatedAt")}`,
       renderCell: ({ row }) => (
-        <span className={styles.dateText}>
-          {row.updatedAtLabel}
-        </span>
+        <span className={styles["date-text"]}>{row.updatedAtLabel}</span>
       ),
     });
     columns.push({

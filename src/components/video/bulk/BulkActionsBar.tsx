@@ -2,12 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import type { MouseEvent } from "react";
-import {
-  Button,
-  Modal,
-  ModalSize,
-  VariantType,
-} from "@openfun/cunningham-react";
+import { Button, Modal, ModalSize } from "@openfun/cunningham-react";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
@@ -21,7 +16,6 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import BlockIcon from "@mui/icons-material/Block";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -187,8 +181,14 @@ const LICENSE_CHOICES = [
   { value: "NC", label: "Copyright / Droits réservés" },
   { value: "CC-BY", label: "CC BY — Attribution" },
   { value: "CC-BY-NC", label: "CC BY-NC — Pas d'usage commercial" },
-  { value: "CC-BY-NC-ND", label: "CC BY-NC-ND — Pas de modification, pas d'usage commercial" },
-  { value: "CC-BY-NC-SA", label: "CC BY-NC-SA — Partage à l'identique, pas d'usage commercial" },
+  {
+    value: "CC-BY-NC-ND",
+    label: "CC BY-NC-ND — Pas de modification, pas d'usage commercial",
+  },
+  {
+    value: "CC-BY-NC-SA",
+    label: "CC BY-NC-SA — Partage à l'identique, pas d'usage commercial",
+  },
   { value: "CC-BY-SA", label: "CC BY-SA — Partage à l'identique" },
   { value: "CC-BY-ND", label: "CC BY-ND — Pas de modification" },
   { value: "CC0", label: "Domaine public (CC0)" },
@@ -216,7 +216,6 @@ export default function BulkActionsBar({
   selectedVideos,
   types,
   disciplines,
-  tags,
   channels,
   onApplySuccess,
   onClearSelection,
@@ -227,7 +226,11 @@ export default function BulkActionsBar({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [toast, setToast] = useState<Toast>({ open: false, message: "", severity: "success" });
+  const [toast, setToast] = useState<Toast>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const { bulkUpdate, bulkDelete, isUpdating, isDeleting } = useBulkActions();
   const isLoading = isUpdating || isDeleting;
@@ -236,7 +239,10 @@ export default function BulkActionsBar({
   const hasSelection = count > 0;
 
   // Calcul des états d'encodage sur la sélection courante
-  const hasEncodingInProgress = useMemo(() => SOME_ENCODING(selectedVideos), [selectedVideos]);
+  const hasEncodingInProgress = useMemo(
+    () => SOME_ENCODING(selectedVideos),
+    [selectedVideos],
+  );
 
   // Actions disponibles / désactivées pour la sélection courante
   const resolvedActions = useMemo(
@@ -245,12 +251,15 @@ export default function BulkActionsBar({
         ...opt,
         enabled: opt.condition(selectedVideos),
       })),
-    [selectedVideos, t]
+    [selectedVideos, t],
   );
 
-  const showToast = useCallback((message: string, severity: "success" | "error") => {
-    setToast({ open: true, message, severity });
-  }, []);
+  const showToast = useCallback(
+    (message: string, severity: "success" | "error") => {
+      setToast({ open: true, message, severity });
+    },
+    [],
+  );
 
   const handleDropdownClick = (event: MouseEvent<HTMLElement>) => {
     if (!hasSelection) return;
@@ -282,7 +291,7 @@ export default function BulkActionsBar({
         await bulkDelete(videoIds);
         showToast(
           `${count} vidéo${count > 1 ? "s supprimées" : " supprimée"} avec succès.`,
-          "success"
+          "success",
         );
       } else {
         const fieldsPayload: Record<string, any> = {};
@@ -301,13 +310,16 @@ export default function BulkActionsBar({
             fieldsPayload["status"] = fieldValue;
             break;
           case "is_auth_required":
-            fieldsPayload["is_auth_required"] = fieldValue === "true" || fieldValue === true;
+            fieldsPayload["is_auth_required"] =
+              fieldValue === "true" || fieldValue === true;
             break;
           case "allow_downloading":
-            fieldsPayload["allow_downloading"] = fieldValue === "true" || fieldValue === true;
+            fieldsPayload["allow_downloading"] =
+              fieldValue === "true" || fieldValue === true;
             break;
           case "disable_comment":
-            fieldsPayload["disable_comment"] = fieldValue === "true" || fieldValue === true;
+            fieldsPayload["disable_comment"] =
+              fieldValue === "true" || fieldValue === true;
             break;
           case "license":
             fieldsPayload["license"] = fieldValue;
@@ -321,7 +333,10 @@ export default function BulkActionsBar({
           case "tags":
             fieldsPayload["tags"] =
               typeof fieldValue === "string"
-                ? fieldValue.split(",").map((t) => t.trim()).filter(Boolean)
+                ? fieldValue
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean)
                 : fieldValue;
             break;
           case "discipline":
@@ -338,7 +353,7 @@ export default function BulkActionsBar({
         await bulkUpdate({ videoIds, fields: fieldsPayload });
         showToast(
           `${count} vidéo${count > 1 ? "s mises à jour" : " mise à jour"} avec succès.`,
-          "success"
+          "success",
         );
       }
 
@@ -349,20 +364,23 @@ export default function BulkActionsBar({
       onApplySuccess();
     } catch (err: any) {
       showToast(
-        err?.message ?? "Une erreur est survenue lors de l'exécution de l'action groupée.",
-        "error"
+        err?.message ??
+          "Une erreur est survenue lors de l'exécution de l'action groupée.",
+        "error",
       );
     }
   };
 
   const getActionLabel = (key: BulkActionKey) =>
-    getActionsOptions(t).find((opt: ActionOption) => opt.value === key)?.label ?? key;
+    getActionsOptions(t).find((opt: ActionOption) => opt.value === key)
+      ?.label ?? key;
 
   // La confirmation est désactivée si le champ requis est vide
   // Sauf pour les actions ne nécessitant pas de valeur (delete, channel)
   const NO_VALUE_NEEDED: BulkActionKey[] = ["delete", "channel"];
   const isConfirmDisabled =
-    isLoading || (!NO_VALUE_NEEDED.includes(selectedAction) && fieldValue === "");
+    isLoading ||
+    (!NO_VALUE_NEEDED.includes(selectedAction) && fieldValue === "");
 
   return (
     <>
@@ -370,7 +388,8 @@ export default function BulkActionsBar({
       {hasSelection && (
         <div
           style={{
-            backgroundColor: "var(--c--theme--colors--card-bg, rgba(255, 255, 255, 0.05))",
+            backgroundColor:
+              "var(--c--theme--colors--card-bg, rgba(255, 255, 255, 0.05))",
             border: "1px solid var(--border-color, rgba(0, 0, 0, 0.12))",
             borderRadius: "12px",
             padding: "16px 20px",
@@ -392,7 +411,9 @@ export default function BulkActionsBar({
                 {t("bulk.title")}
               </h2>
               {hasSelection ? (
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
                   <span
                     style={{
                       backgroundColor:
@@ -447,7 +468,14 @@ export default function BulkActionsBar({
             </div>
 
             {/* Contrôles */}
-            <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                flexWrap: "wrap",
+              }}
+            >
               <Box className={filterStyles.filterItem}>
                 <ListItemButton
                   onClick={handleDropdownClick}
@@ -475,13 +503,19 @@ export default function BulkActionsBar({
                   anchorEl={anchorEl}
                   placement="bottom-start"
                   transition
-                  sx={{ zIndex: 1300, minWidth: 320, width: Math.max(anchorEl?.clientWidth || 0, 320) }}
+                  sx={{
+                    zIndex: 1300,
+                    minWidth: 320,
+                    width: Math.max(anchorEl?.clientWidth || 0, 320),
+                  }}
                   modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
                 >
                   {({ TransitionProps }) => (
                     <Fade {...TransitionProps} timeout={200}>
                       <Paper elevation={8} className={filterStyles.filterMenu}>
-                        <ClickAwayListener onClickAway={() => setDropdownOpen(false)}>
+                        <ClickAwayListener
+                          onClickAway={() => setDropdownOpen(false)}
+                        >
                           <Box sx={{ p: 0.5 }}>
                             {/* Groupe édition */}
                             <Typography
@@ -505,7 +539,12 @@ export default function BulkActionsBar({
                               .map((opt) => (
                                 <Tooltip
                                   key={opt.value}
-                                  title={!opt.enabled ? (opt.conditionLabel ?? "Non disponible pour cette sélection") : ""}
+                                  title={
+                                    !opt.enabled
+                                      ? (opt.conditionLabel ??
+                                        "Non disponible pour cette sélection")
+                                      : ""
+                                  }
                                   placement="right"
                                   arrow
                                   disableHoverListener={opt.enabled}
@@ -515,7 +554,8 @@ export default function BulkActionsBar({
                                     <MenuItem
                                       disabled={!opt.enabled}
                                       onClick={() =>
-                                        opt.enabled && handleSelectAction(opt.value)
+                                        opt.enabled &&
+                                        handleSelectAction(opt.value)
                                       }
                                       sx={{
                                         borderRadius: "6px",
@@ -526,7 +566,9 @@ export default function BulkActionsBar({
                                         alignItems: "center",
                                         gap: 1.2,
                                         whiteSpace: "nowrap",
-                                        color: opt.enabled ? "var(--text-color, #0f172a)" : "#64748b",
+                                        color: opt.enabled
+                                          ? "var(--text-color, #0f172a)"
+                                          : "#64748b",
                                         "&.Mui-disabled": {
                                           opacity: 0.75,
                                           color: "#64748b !important",
@@ -535,7 +577,11 @@ export default function BulkActionsBar({
                                     >
                                       {!opt.enabled && (
                                         <LockIcon
-                                          sx={{ fontSize: "0.9rem", color: "#64748b !important", opacity: 0.9 }}
+                                          sx={{
+                                            fontSize: "0.9rem",
+                                            color: "#64748b !important",
+                                            opacity: 0.9,
+                                          }}
                                         />
                                       )}
                                       {opt.label}
@@ -544,7 +590,13 @@ export default function BulkActionsBar({
                                 </Tooltip>
                               ))}
 
-                            <Divider sx={{ my: 1.5, borderColor: "var(--border-color, rgba(0, 0, 0, 0.12))" }} />
+                            <Divider
+                              sx={{
+                                my: 1.5,
+                                borderColor:
+                                  "var(--border-color, rgba(0, 0, 0, 0.12))",
+                              }}
+                            />
 
                             {/* Groupe danger */}
                             <Typography
@@ -610,22 +662,31 @@ export default function BulkActionsBar({
         onClose={handleCloseModal}
         title={
           selectedAction === "delete"
-            ? "Confirmer la suppression"
+            ? t("bulk.confirmDelete")
             : `Modifier en lot : ${getActionLabel(selectedAction)}`
         }
         size={ModalSize.MEDIUM}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px", padding: "8px 0" }}>
-
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            padding: "8px 0",
+          }}
+        >
           {/* Avertissement suppression */}
           {selectedAction === "delete" && (
             <Alert severity="warning" icon={<WarningAmberIcon />}>
               Vous allez supprimer définitivement{" "}
-              <strong>{count} vidéo{count > 1 ? "s" : ""}</strong>.
-              Cette action est <strong>irréversible</strong>.
+              <strong>
+                {count} vidéo{count > 1 ? "s" : ""}
+              </strong>
+              . Cette action est <strong>irréversible</strong>.
               {hasEncodingInProgress && (
                 <div style={{ marginTop: "8px" }}>
-                  ⚠️ Attention : certaines vidéos sont actuellement en cours d'encodage.
+                  ⚠️ Attention : certaines vidéos sont actuellement en cours
+                  d'encodage.
                 </div>
               )}
             </Alert>
@@ -646,19 +707,35 @@ export default function BulkActionsBar({
               </label>
 
               {selectedAction === "type" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir un type --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir un type --
+                  </option>
                   {types.map((t) => (
-                    <option key={t.id} value={t.id}>{t.title}</option>
+                    <option key={t.id} value={t.id}>
+                      {t.title}
+                    </option>
                   ))}
                 </select>
               )}
 
               {selectedAction === "channel" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="">-- Aucune chaîne (retirer de toute chaîne) --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="">
+                    -- Aucune chaîne (retirer de toute chaîne) --
+                  </option>
                   {channels.map((ch) => (
-                    <option key={ch} value={ch}>Chaîne #{ch}</option>
+                    <option key={ch} value={ch}>
+                      Chaîne #{ch}
+                    </option>
                   ))}
                 </select>
               )}
@@ -669,13 +746,23 @@ export default function BulkActionsBar({
                   onChange={(e) => setFieldValue(e.target.value)}
                   rows={4}
                   placeholder="Nouvelle description…"
-                  style={{ ...selectStyle, fontFamily: "inherit", resize: "vertical" }}
+                  style={{
+                    ...selectStyle,
+                    fontFamily: "inherit",
+                    resize: "vertical",
+                  }}
                 />
               )}
 
               {selectedAction === "status" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir le statut --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir le statut --
+                  </option>
                   <option value="PU">🌐 Publique — visible par tous</option>
                   <option value="DR">🔒 Privée — brouillon, non visible</option>
                   <option value="RE">🔗 Restreinte — lien requis</option>
@@ -683,34 +770,68 @@ export default function BulkActionsBar({
               )}
 
               {selectedAction === "is_auth_required" && (
-                <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir --</option>
-                  <option value="true">✅ Oui — connexion requise pour accéder</option>
-                  <option value="false">🌐 Non — accessible sans connexion</option>
+                <select
+                  value={String(fieldValue)}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir --
+                  </option>
+                  <option value="true">
+                    ✅ Oui — connexion requise pour accéder
+                  </option>
+                  <option value="false">
+                    🌐 Non — accessible sans connexion
+                  </option>
                 </select>
               )}
 
               {selectedAction === "allow_downloading" && (
-                <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir --</option>
-                  <option value="true">⬇️ Oui — autoriser le téléchargement</option>
-                  <option value="false">🚫 Non — désactiver le téléchargement</option>
+                <select
+                  value={String(fieldValue)}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir --
+                  </option>
+                  <option value="true">
+                    ⬇️ Oui — autoriser le téléchargement
+                  </option>
+                  <option value="false">
+                    🚫 Non — désactiver le téléchargement
+                  </option>
                 </select>
               )}
 
               {selectedAction === "disable_comment" && (
-                <select value={String(fieldValue)} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir --</option>
+                <select
+                  value={String(fieldValue)}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir --
+                  </option>
                   <option value="false">💬 Activer les commentaires</option>
                   <option value="true">🚫 Désactiver les commentaires</option>
                 </select>
               )}
 
               {selectedAction === "license" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir une licence --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir une licence --
+                  </option>
                   {LICENSE_CHOICES.map((lic) => (
-                    <option key={lic.value} value={lic.value}>{lic.label}</option>
+                    <option key={lic.value} value={lic.value}>
+                      {lic.label}
+                    </option>
                   ))}
                 </select>
               )}
@@ -747,26 +868,49 @@ export default function BulkActionsBar({
                     placeholder="ex: cours, informatique, python"
                     style={selectStyle}
                   />
-                  <p style={{ color: "var(--c--globals--colors--gray-500)", fontSize: "0.8rem", marginTop: "6px" }}>
-                    Séparez les mots-clés par des virgules. Ils remplaceront les mots-clés existants.
+                  <p
+                    style={{
+                      color: "var(--c--globals--colors--gray-500)",
+                      fontSize: "0.8rem",
+                      marginTop: "6px",
+                    }}
+                  >
+                    Séparez les mots-clés par des virgules. Ils remplaceront les
+                    mots-clés existants.
                   </p>
                 </>
               )}
 
               {selectedAction === "discipline" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir une discipline --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir une discipline --
+                  </option>
                   {disciplines.map((d) => (
-                    <option key={d.id} value={d.id}>{d.title}</option>
+                    <option key={d.id} value={d.id}>
+                      {d.title}
+                    </option>
                   ))}
                 </select>
               )}
 
               {selectedAction === "cursus" && (
-                <select value={fieldValue} onChange={(e) => setFieldValue(e.target.value)} style={selectStyle}>
-                  <option value="" disabled>-- Choisir le niveau --</option>
+                <select
+                  value={fieldValue}
+                  onChange={(e) => setFieldValue(e.target.value)}
+                  style={selectStyle}
+                >
+                  <option value="" disabled>
+                    -- Choisir le niveau --
+                  </option>
                   {CURSUS_CHOICES.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
                   ))}
                 </select>
               )}
@@ -775,7 +919,13 @@ export default function BulkActionsBar({
 
           {/* Liste des vidéos concernées avec badge encodage */}
           <div>
-            <p style={{ fontWeight: 600, fontSize: "0.9rem", marginBottom: "8px" }}>
+            <p
+              style={{
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                marginBottom: "8px",
+              }}
+            >
               Vidéos concernées ({count}) :
             </p>
             <div
@@ -793,16 +943,23 @@ export default function BulkActionsBar({
             >
               {selectedVideos.map((video) => {
                 const isEncoding =
-                  video.encoding_status === "PE" || video.encoding_status === "PR";
+                  video.encoding_status === "PE" ||
+                  video.encoding_status === "PR";
                 return (
                   <div
                     key={video.id}
-                    style={{ fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "8px" }}
+                    style={{
+                      fontSize: "0.85rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                    }}
                   >
                     <span
                       style={{
                         fontWeight: 600,
-                        color: "var(--c--contextuals--background--semantic--brand--primary)",
+                        color:
+                          "var(--c--contextuals--background--semantic--brand--primary)",
                         minWidth: "32px",
                       }}
                     >
@@ -859,7 +1016,14 @@ export default function BulkActionsBar({
           </div>
 
           {/* Boutons de la modal */}
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "4px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "12px",
+              marginTop: "4px",
+            }}
+          >
             <Button
               type="button"
               variant="tertiary"
@@ -867,7 +1031,7 @@ export default function BulkActionsBar({
               onClick={handleCloseModal}
               disabled={isLoading}
             >
-              Annuler
+              t("common.cancel")
             </Button>
             <Button
               type="button"
@@ -877,7 +1041,9 @@ export default function BulkActionsBar({
               disabled={isConfirmDisabled}
             >
               {isLoading ? (
-                <span style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span
+                  style={{ display: "flex", alignItems: "center", gap: "8px" }}
+                >
                   <CircularProgress size={16} color="inherit" />
                   Traitement en cours…
                 </span>
@@ -903,7 +1069,11 @@ export default function BulkActionsBar({
           severity={toast.severity}
           variant="filled"
           icon={
-            toast.severity === "success" ? <CheckCircleOutlineIcon /> : <ErrorOutlineIcon />
+            toast.severity === "success" ? (
+              <CheckCircleOutlineIcon />
+            ) : (
+              <ErrorOutlineIcon />
+            )
           }
           sx={{ minWidth: "320px", borderRadius: "10px" }}
         >

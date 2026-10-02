@@ -1,8 +1,8 @@
-.authStatusAlert {
+.auth-status-alert {
   opacity: 1;
   transition: opacity 250ms var(--c--globals--transitions--ease-in-out);
 }
 
-.authStatusAlert.isClosing {
+.auth-status-alert.is-closing {
   opacity: 0;
 }

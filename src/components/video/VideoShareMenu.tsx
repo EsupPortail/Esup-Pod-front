@@ -14,6 +14,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LanguageIcon from "@mui/icons-material/Language";
 import { useSocialNetworks } from "@/src/hooks/useSocialNetworks";
 import type { Video, SocialNetwork } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type Props = {
   video: Video;
@@ -24,6 +25,8 @@ export default function VideoShareMenu({ video, className }: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isCopied, setIsCopied] = useState(false);
   const { socialNetworks } = useSocialNetworks();
+
+  const { t } = useTranslation();
 
   const open = Boolean(anchorEl);
 
@@ -44,7 +47,10 @@ export default function VideoShareMenu({ video, className }: Props) {
 
   // Determine active networks for this video
   const availableNetworks: SocialNetwork[] = React.useMemo(() => {
-    if (video.social_network_details && video.social_network_details.length > 0) {
+    if (
+      video.social_network_details &&
+      video.social_network_details.length > 0
+    ) {
       return video.social_network_details;
     }
     return socialNetworks;
@@ -60,14 +66,19 @@ export default function VideoShareMenu({ video, className }: Props) {
       : "";
 
     if (shareUrl) {
-      window.open(shareUrl, "_blank", "noopener,noreferrer,width=600,height=400");
+      window.open(
+        shareUrl,
+        "_blank",
+        "noopener,noreferrer,width=600,height=400",
+      );
     }
     handleClose();
   };
 
   const getIcon = (iconName: string) => {
     const name = iconName.toLowerCase();
-    if (name.includes("x") || name.includes("twitter")) return <XIcon fontSize="small" />;
+    if (name.includes("x") || name.includes("twitter"))
+      return <XIcon fontSize="small" />;
     if (name.includes("facebook")) return <FacebookIcon fontSize="small" />;
     if (name.includes("linkedin")) return <LinkedInIcon fontSize="small" />;
     if (name.includes("whatsapp")) return <WhatsAppIcon fontSize="small" />;
@@ -77,7 +88,8 @@ export default function VideoShareMenu({ video, className }: Props) {
   return (
     <>
       <button className={className} onClick={handleClick} type="button">
-        <ShareIcon fontSize="small" /> {isCopied ? "Lien copié !" : "Partager"}
+        <ShareIcon fontSize="small" />{" "}
+        {isCopied ? `${t("videoPage.linkCopied")}` : `${t("videoPage.share")}`}
       </button>
 
       <Menu
@@ -90,13 +102,15 @@ export default function VideoShareMenu({ video, className }: Props) {
           <ListItemIcon>
             <ContentCopyIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Copier le lien</ListItemText>
+          <ListItemText>{t("videoPage.copyLink")}</ListItemText>
         </MenuItem>
 
         {availableNetworks.map((net) => (
           <MenuItem key={net.id} onClick={() => handleShareToNetwork(net)}>
             <ListItemIcon>{getIcon(net.icon_name || net.name)}</ListItemIcon>
-            <ListItemText>Partager sur {net.name}</ListItemText>
+            <ListItemText>
+              {t("videoPage.shareOn", { network: net.name })}
+            </ListItemText>
           </MenuItem>
         ))}
       </Menu>

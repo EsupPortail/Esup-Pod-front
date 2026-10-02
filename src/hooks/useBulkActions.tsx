@@ -11,7 +11,13 @@ export const useBulkActions = () => {
   const routes = getRoutes();
 
   const bulkUpdateMutation = useMutation({
-    mutationFn: async ({ videoIds, fields }: { videoIds: number[]; fields: Record<string, any> }) => {
+    mutationFn: async ({
+      videoIds,
+      fields,
+    }: {
+      videoIds: number[];
+      fields: Record<string, any>;
+    }) => {
       const res = await authFetch(routes.video.bulk, {
         ...authOpts,
         method: "PATCH",

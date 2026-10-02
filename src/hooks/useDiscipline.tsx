@@ -3,11 +3,13 @@ import type { Discipline } from "@/src/types";
 import { useAuth } from "../context/AuthProvider";
 import { getRoutes } from "../api/routes";
 import { fetchAllPages } from "../api/fetchAllPages";
+import { useTranslation } from "./useTranslation";
 
 export function useDiscipline() {
   const { accessToken, refresh } = useAuth();
   const [discipline, setDiscipline] = useState<Discipline[]>([]);
   const [useDisciplineLoading, setUseDisciplineLoading] = useState(false);
+  const { t } = useTranslation();
   const [useDisciplineError, setUseDisciplineError] = useState<string | null>(
     null,
   );
@@ -27,13 +29,13 @@ export function useDiscipline() {
       return normalizedDisciplines;
     } catch (e: unknown) {
       setUseDisciplineError(
-        e instanceof Error ? e.message : "Erreur de chargement.",
+        e instanceof Error ? e.message : t("errors.loadError"),
       );
       return [];
     } finally {
       setUseDisciplineLoading(false);
     }
-  }, [accessToken, refresh]);
+  }, [accessToken, refresh, t]);
 
   return { discipline, fetchAll, useDisciplineLoading, useDisciplineError };
 }

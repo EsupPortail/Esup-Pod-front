@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useChannel } from "@/src/hooks/useChannel";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import type { Channel } from "@/src/types";
 import { debounce } from "@mui/material/utils";
 
@@ -21,6 +22,7 @@ export default function AsyncChannelFilterDropdown({
   onChange,
 }: AsyncChannelFilterDropdownProps) {
   const { fetchAll } = useChannel();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -28,23 +30,26 @@ export default function AsyncChannelFilterDropdown({
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
   useEffect(() => {
-    let active = true;
     const loadSelectedChannel = async () => {
       if (!selectedChannelId) {
         setSelectedOption(null);
         return;
       }
-      
-      const existing = options.find((o) => o.value === selectedChannelId) || (selectedOption?.value === selectedChannelId ? selectedOption : null);
+
+      const existing =
+        options.find((o) => o.value === selectedChannelId) ||
+        (selectedOption?.value === selectedChannelId ? selectedOption : null);
       if (existing) {
         setSelectedOption(existing);
       } else {
-        setSelectedOption({ label: `Chaîne ${selectedChannelId}`, value: selectedChannelId });
+        setSelectedOption({
+          label: t("videoPage.channelWithId", { id: selectedChannelId }),
+          value: selectedChannelId,
+        });
       }
     };
-    loadSelectedChannel();
-    return () => { active = false; };
-  }, [selectedChannelId]);
+    void loadSelectedChannel();
+  }, [options, selectedChannelId, selectedOption, t]);
 
   const fetchOptions = useMemo(
     () =>
@@ -62,17 +67,13 @@ export default function AsyncChannelFilterDropdown({
           setLoading(false);
         }
       }, 300),
-    [fetchAll]
+    [fetchAll],
   );
 
   useEffect(() => {
-    let active = true;
     if (open) {
-      fetchOptions(inputValue);
+      void fetchOptions(inputValue);
     }
-    return () => {
-      active = false;
-    };
   }, [inputValue, open, fetchOptions]);
 
   return (
@@ -98,13 +99,15 @@ export default function AsyncChannelFilterDropdown({
           <TextField
             {...params}
             size="small"
-            label="Chaîne"
+            label={t("videoPage.channel")}
             variant="outlined"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
                   {params.InputProps.endAdornment}
                 </>
               ),

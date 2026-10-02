@@ -16,43 +16,43 @@ export default function WebTVHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <header className={styles.headerContainer}>
-      <div className={styles.leftSection}>
-        <Link href="/" className={styles.logoLink}>
-          <span className="material-icons" style={{ fontSize: "1.8rem" }}>
+    <header className={styles["header-container"]}>
+      <div className={styles["left-section"]}>
+        <Link href="/" className={styles["logo-link"]}>
+          <span className={`material-icons ${styles["icon-large"]}`}>
             layers
           </span>
-          <span>WebTV</span>
+          <span>{t("webtv.webtv")}</span>
         </Link>
 
         <nav>
-          <ul className={styles.navLinks}>
+          <ul className={styles["nav-links"]}>
             <li>
-              <Link href="/channel" className={styles.navItem}>
+              <Link href="/channel" className={styles["nav-item"]}>
                 {t("common.collection")}
               </Link>
             </li>
-            <span className={styles.separator}>|</span>
+            <span className={styles["separator"]}>|</span>
             <li>
-              <Link href="/video?type=serie" className={styles.navItem}>
+              <Link href="/video?type=serie" className={styles["nav-item"]}>
                 {t("common.series")}
               </Link>
             </li>
-            <span className={styles.separator}>|</span>
+            <span className={styles["separator"]}>|</span>
             <li>
-              <Link href="/video?discipline=all" className={styles.navItem}>
+              <Link href="/video?discipline=all" className={styles["nav-item"]}>
                 {t("common.discipline")}
               </Link>
             </li>
-            <span className={styles.separator}>|</span>
+            <span className={styles["separator"]}>|</span>
             <li>
-              <Link href="/video" className={styles.navItem}>
+              <Link href="/video" className={styles["nav-item"]}>
                 {t("common.allVideos")}
               </Link>
             </li>
-            <span className={styles.separator}>|</span>
+            <span className={styles["separator"]}>|</span>
             <li>
-              <Link href="/live" className={styles.navItem}>
+              <Link href="/live" className={styles["nav-item"]}>
                 {t("common.directs")}
               </Link>
             </li>
@@ -60,24 +60,24 @@ export default function WebTVHeader() {
         </nav>
       </div>
 
-      <div className={styles.rightSection}>
+      <div className={styles["right-section"]}>
         <LanguageSelector variant="compact" />
 
         {user && accessToken ? (
-          <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-            <span style={{ fontSize: "0.88rem", fontWeight: 600 }}>
+          <div className={styles["user-section"]}>
+            <span className={styles["username"]}>
               {user.first_name || user.username}
             </span>
-            <button onClick={logout} className={styles.loginBtn}>
-              <span className="material-icons" style={{ fontSize: "1.1rem" }}>
+            <button onClick={logout} className={styles["login-btn"]}>
+              <span className={`material-icons ${styles["icon-small"]}`}>
                 logout
               </span>
               {t("common.logout")}
             </button>
           </div>
         ) : (
-          <Link href="/login" className={styles.loginBtn}>
-            <span className="material-icons" style={{ fontSize: "1.1rem" }}>
+          <Link href="/login" className={styles["login-btn"]}>
+            <span className={`material-icons ${styles["icon-small"]}`}>
               login
             </span>
             {t("common.login")}
@@ -86,11 +86,11 @@ export default function WebTVHeader() {
 
         <button
           onClick={() => setIsSearchOpen(true)}
-          className={styles.searchBtn}
+          className={styles["search-btn"]}
           aria-label={t("common.search")}
         >
           {t("common.search")}
-          <span className="material-icons" style={{ fontSize: "1.1rem" }}>
+          <span className={`material-icons ${styles["icon-small"]}`}>
             search
           </span>
         </button>
@@ -103,30 +103,17 @@ export default function WebTVHeader() {
         maxWidth="md"
         fullWidth
         PaperProps={{
-          style: {
-            padding: "1.5rem",
-            backgroundColor: "#ffffff",
-            borderRadius: "8px",
-          },
+          className: styles["dialog-paper"],
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3 style={{ margin: 0, fontWeight: 700 }}>Rechercher des contenus</h3>
+        <div className={styles["dialog-content"]}>
+          <div className={styles["dialog-header"]}>
+            <h3 className={styles["dialog-title"]}>
+              {t("webtv.searchContent")}
+            </h3>
             <button
               onClick={() => setIsSearchOpen(false)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px",
-              }}
+              className={styles["dialog-close"]}
             >
               <span className="material-icons">close</span>
             </button>

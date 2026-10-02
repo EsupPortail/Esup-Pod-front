@@ -1,4 +1,4 @@
-.favoritesSidebar {
+.favorites-sidebar {
   display: flex;
   flex-direction: column;
   gap: var(--c--globals--spacings--xs);
@@ -7,31 +7,31 @@
   padding: var(--c--globals--spacings--sm);
 }
 
-.favoritesSidebarHeader {
+.favorites-sidebar-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--c--globals--spacings--xxs);
 }
 
-.favoritesSidebarLabel {
+.favorites-sidebar-label {
   font-size: var(--c--globals--font--sizes--sm);
   text-transform: uppercase;
   color: var(--c--globals--colors--gray-700);
 }
 
-.favoritesSidebarTitle {
+.favorites-sidebar-title {
   margin: 0;
   font-size: var(--c--globals--font--sizes--md);
   font-weight: var(--c--globals--font--weights--bold);
 }
 
-.favoritesSidebarCount {
+.favorites-sidebar-count {
   font-size: var(--c--globals--font--sizes--xs);
   color: var(--c--globals--colors--gray-700);
 }
 
-.favoritesSidebarList {
+.favorites-sidebar-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -42,7 +42,7 @@
   overflow-y: auto;
 }
 
-.favoritesSidebarItem {
+.favorites-sidebar-item {
   display: flex;
   align-items: flex-start;
   gap: var(--c--globals--spacings--xs);
@@ -52,48 +52,48 @@
   transition: background-color 0.15s ease;
 }
 
-.favoritesSidebarThumbnail {
+.favorites-sidebar-thumbnail {
   width: 64px;
   height: 36px;
   object-fit: cover;
   border-radius: 4px;
 }
 
-.favoritesSidebarItem:hover {
+.favorites-sidebar-item:hover {
   background-color: var(--c--globals--colors--gray-100);
 }
 
-.favoritesSidebarItemActive {
+.favorites-sidebar-item-active {
   background-color: var(
     --c--contextuals--background--semantic--brand--secondary
   );
 }
 
-.favoritesSidebarIndex {
+.favorites-sidebar-index {
   font-size: var(--c--globals--font--sizes--sm);
   color: var(--c--globals--colors--gray-700);
   min-width: 1.5rem;
 }
 
-.favoritesSidebarText {
+.favorites-sidebar-text {
   display: flex;
   flex-direction: column;
 }
 
-.favoritesSidebarVideoTitle {
+.favorites-sidebar-video-title {
   margin: 0;
   font-size: var(--c--globals--font--sizes--sm);
   font-weight: var(--c--globals--font--weights--medium);
 }
 
-.favoritesSidebarNowPlaying {
+.favorites-sidebar-now-playing {
   margin: 0;
   font-size: var(--c--globals--font--sizes--xs);
   color: var(--c--contextuals--content--palette--brand--primary);
 }
 
 @media (max-width: 1024px) {
-  .favoritesSidebar {
+  .favorites-sidebar {
     max-height: none;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -23,7 +23,7 @@ export default function AsyncUserFilterDropdown({
   onChange,
 }: AsyncUserFilterDropdownProps) {
   const { config } = useAppConfig();
-  const { fetchAll, fetchUser } = useUsers();
+  const { fetchAll } = useUsers();
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -32,20 +32,28 @@ export default function AsyncUserFilterDropdown({
 
   // Load initial selected users' details
   useEffect(() => {
-    let active = true;
     const loadSelectedUsers = async () => {
       // In a real scenario, we might need a fetchUsersByUsernames endpoint.
       // For now, we fall back to usernames if we don't have the full object.
       // But we can try to find them if they exist in the options.
-      const currentSelected = selectedUsernames.map((username) => {
-        const existing = options.find((o) => o.value === username) || selectedOptions.find((o) => o.value === username);
-        return existing || { label: username, value: username };
+      setSelectedOptions((previousSelected) => {
+        const currentSelected = selectedUsernames.map((username) => {
+          const existing =
+            options.find((o) => o.value === username) ||
+            previousSelected.find((o) => o.value === username);
+          return existing || { label: username, value: username };
+        });
+        const valuesDiffer =
+          currentSelected.length !== previousSelected.length ||
+          currentSelected.some(
+            (option, index) => option.value !== previousSelected[index]?.value,
+          );
+
+        return valuesDiffer ? currentSelected : previousSelected;
       });
-      setSelectedOptions(currentSelected);
     };
-    loadSelectedUsers();
-    return () => { active = false; };
-  }, [selectedUsernames]);
+    void loadSelectedUsers();
+  }, [options, selectedUsernames]);
 
   const fetchOptions = useMemo(
     () =>
@@ -63,17 +71,13 @@ export default function AsyncUserFilterDropdown({
           setLoading(false);
         }
       }, 300),
-    [fetchAll]
+    [config?.authentication, fetchAll],
   );
 
   useEffect(() => {
-    let active = true;
     if (open) {
-      fetchOptions(inputValue);
+      void fetchOptions(inputValue);
     }
-    return () => {
-      active = false;
-    };
   }, [inputValue, open, fetchOptions]);
 
   return (
@@ -106,7 +110,9 @@ export default function AsyncUserFilterDropdown({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
                   {params.InputProps.endAdornment}
                 </>
               ),

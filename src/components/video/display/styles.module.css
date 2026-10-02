@@ -1,17 +1,17 @@
-.toggleWrapper {
+.toggle-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
 
-.toggleLabel {
+.toggle-label {
   font-size: var(--c--globals--font--sizes--sm);
   font-weight: var(--c--globals--font--weights--bold);
   color: var(--background-brand);
 }
 
-.toggleGroup {
+.toggle-group {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
@@ -27,7 +27,7 @@
   margin-bottom: 1rem;
 }
 
-.selectAllContainer {
+.select-all-container {
   display: inline-flex;
   align-items: center;
   padding: 2px 10px;
@@ -37,7 +37,7 @@
   transition: all 0.2s ease;
 }
 
-.selectAllContainer:hover {
+.select-all-container:hover {
   background-color: rgba(59, 130, 246, 0.15);
   border-color: #3b82f6;
 }
@@ -50,26 +50,26 @@
   }
 }
 
-.toggleButton,
-.toggleButtonActive {
+.toggle-button,
+.toggle-button-active {
   border-radius: 999px !important;
   min-width: 0;
   font-weight: var(--c--globals--font--weights--bold) !important;
 }
 
-.toggleButton {
+.toggle-button {
   background: transparent !important;
   color: var(--background-brand) !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-.toggleButtonActive {
+.toggle-button-active {
   background: var(--background-brand) !important;
   color: white !important;
 }
 
-.toggleButtonContent {
+.toggle-button-content {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -77,11 +77,11 @@
   white-space: nowrap;
 }
 
-.toggleText {
+.toggle-text {
   display: inline;
 }
 
-.thumbnailWrapper {
+.thumbnail-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +96,7 @@
   transition: transform 0.2s ease;
 }
 
-.defaultThumbnailPoster {
+.default-thumbnail-poster {
   height: 34px;
   width: 56px;
   border-radius: 8px;
@@ -108,12 +108,12 @@
   transition: transform 0.2s ease;
 }
 
-.thumbnailWrapper:hover .thumbnail,
-.thumbnailWrapper:hover .defaultThumbnailPoster {
+.thumbnail-wrapper:hover .thumbnail,
+.thumbnail-wrapper:hover .default-thumbnail-poster {
   transform: scale(1.08);
 }
 
-.tableTitleLink {
+.table-title-link {
   color: #0f172a;
   text-decoration: none;
   font-weight: 600;
@@ -121,20 +121,20 @@
   transition: color 0.2s ease;
 }
 
-:global(html[data-theme="dark"]) .tableTitleLink {
+:global(html[data-theme="dark"]) .table-title-link {
   color: #60a5fa;
 }
 
-.tableTitleLink:hover {
+.table-title-link:hover {
   color: #2563eb;
   text-decoration: underline;
 }
 
-:global(html[data-theme="dark"]) .tableTitleLink:hover {
+:global(html[data-theme="dark"]) .table-title-link:hover {
   color: #93c5fd;
 }
 
-.countBadge {
+.count-badge {
   display: inline-block;
   background: rgba(0, 0, 0, 0.06);
   color: #334155;
@@ -144,22 +144,22 @@
   font-size: 0.75rem;
 }
 
-:global(html[data-theme="dark"]) .countBadge {
+:global(html[data-theme="dark"]) .count-badge {
   background: rgba(255, 255, 255, 0.08);
   color: #e2e8f0;
 }
 
-.dateText {
+.date-text {
   color: #64748b;
   font-size: 0.8rem;
   font-weight: 500;
 }
 
-:global(html[data-theme="dark"]) .dateText {
+:global(html[data-theme="dark"]) .date-text {
   color: #94a3b8;
 }
 
-.statusBadge {
+.status-badge {
   display: inline-block;
   border-radius: 9999px;
   padding: 3px 10px;
@@ -168,58 +168,58 @@
   letter-spacing: 0.02em;
 }
 
-.statusPublic {
+.status-public {
   background: rgba(34, 197, 94, 0.15);
   color: #16a34a;
 }
 
-:global(html[data-theme="dark"]) .statusPublic {
+:global(html[data-theme="dark"]) .status-public {
   color: #4ade80;
 }
 
-.statusRestricted {
+.status-restricted {
   background: rgba(245, 158, 11, 0.18);
   color: #d97706;
 }
 
-:global(html[data-theme="dark"]) .statusRestricted {
+:global(html[data-theme="dark"]) .status-restricted {
   color: #fbbf24;
 }
 
-.statusPassword {
+.status-password {
   background: rgba(59, 130, 246, 0.15);
   color: #2563eb;
 }
 
-:global(html[data-theme="dark"]) .statusPassword {
+:global(html[data-theme="dark"]) .status-password {
   color: #60a5fa;
 }
 
 @media (max-width: 640px) {
-  .toggleWrapper {
+  .toggle-wrapper {
     width: 100%;
     justify-content: flex-end;
   }
 
-  .toggleLabel {
+  .toggle-label {
     display: none;
   }
 
-  .toggleGroup {
+  .toggle-group {
     width: 100%;
   }
 
-  .toggleButton,
-  .toggleButtonActive {
+  .toggle-button,
+  .toggle-button-active {
     flex: 1;
   }
 
-  .toggleButtonContent {
+  .toggle-button-content {
     width: 100%;
   }
 }
 
-.paginationWrapper {
+.pagination-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -229,18 +229,17 @@
   border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.paginationInfo {
+.pagination-info {
   font-size: 0.875rem;
   color: #64748b;
   font-weight: 500;
 }
 
-:global(html[data-theme="dark"]) .paginationInfo {
+:global(html[data-theme="dark"]) .pagination-info {
   color: #94a3b8;
 }
 
-.scrollTopBtn {
+.scroll-top-btn {
   margin-top: 0.5rem !important;
   text-transform: none !important;
 }
-

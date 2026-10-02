@@ -26,7 +26,7 @@ Exemples :
 ```typescript
 export function useVideo(slug: string, enabled = true) {
   const { accessToken, refresh } = useAuth();
-  
+
   return useQuery({
     queryKey: ["video", slug],
     queryFn: async () => {
@@ -59,6 +59,6 @@ useMutation({
   mutationFn: (data) => createVideo(data),
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["videos"] });
-  }
+  },
 });
 ```

@@ -24,7 +24,7 @@ export default function FavoritesPlaylistPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { isInitializing, mounted } = useRequireAuth();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { favorites, fetchAll, useFavoritesError } = useFavorites();
 
   const { filters, setFilters, users, types, disciplines, tags } =
@@ -49,7 +49,7 @@ export default function FavoritesPlaylistPage() {
       }
     };
 
-    loadFavorites();
+    void loadFavorites();
 
     return () => {
       cancelled = true;
@@ -81,11 +81,11 @@ export default function FavoritesPlaylistPage() {
     [favoriteVideos],
   );
 
-  // appliquer manuellement les filtres pour les favoris
+  // Manually apply filters to favorites
   const filteredFavoriteVideos: Video[] = useMemo(() => {
     let result = favoriteVideos;
 
-    // Filtre recherche
+    // Search filter
     if (filters.search.trim() !== "") {
       const searchLower = filters.search.toLowerCase();
       result = result.filter(
@@ -114,7 +114,7 @@ export default function FavoritesPlaylistPage() {
       });
     }
 
-    // Filtre type
+    // Filter types
     if (filters.typeSlugs.length > 0) {
       const typeSet = new Set(filters.typeSlugs);
       result = result.filter(
@@ -122,7 +122,7 @@ export default function FavoritesPlaylistPage() {
       );
     }
 
-    // Filtre disciplines
+    // Filter disciplines
     if (filters.disciplineIds.length > 0) {
       const disciplineSet = new Set(filters.disciplineIds);
       result = result.filter((video) =>
@@ -132,7 +132,7 @@ export default function FavoritesPlaylistPage() {
       );
     }
 
-    // Filtre tags
+    // Filter tags
     if (filters.tagSlugs.length > 0) {
       const tagSet = new Set(filters.tagSlugs);
       result = result.filter((video) =>
@@ -140,14 +140,14 @@ export default function FavoritesPlaylistPage() {
       );
     }
 
-    // Filtre chaîne
+    // Filter channel
     if (filters.channel != null) {
       result = result.filter(
         (video) => (video.channel as number | null) === filters.channel,
       );
     }
 
-    // Tri filters.ordering
+    // Sort filters.ordering
     if (filters.ordering === "-created_at") {
       result = [...result].sort(
         (a, b) =>
@@ -160,16 +160,16 @@ export default function FavoritesPlaylistPage() {
       );
     } else if (filters.ordering === "title") {
       result = [...result].sort((a, b) =>
-        a.title.localeCompare(b.title, "fr", { sensitivity: "base" }),
+        a.title.localeCompare(b.title, locale, { sensitivity: "base" }),
       );
     } else if (filters.ordering === "-title") {
       result = [...result].sort((a, b) =>
-        b.title.localeCompare(a.title, "fr", { sensitivity: "base" }),
+        b.title.localeCompare(a.title, locale, { sensitivity: "base" }),
       );
     }
 
     return result;
-  }, [favoriteVideos, filters, users]);
+  }, [favoriteVideos, filters, users, locale]);
 
   const hasActiveVideoFilters = useMemo(() => {
     const base: VideoFiltersValue = filters;
@@ -212,7 +212,7 @@ export default function FavoritesPlaylistPage() {
         <Alert canClose type={VariantType.ERROR}>
           {useFavoritesError}
         </Alert>
-        <BackButton label="Retour" />
+        <BackButton label={t("common.back")} />
       </div>
     );
   }
@@ -222,10 +222,10 @@ export default function FavoritesPlaylistPage() {
       <BackButton label={t("common.back")} />
 
       <div>
-        <div className={styles.title_row}>
+        <div className={styles["title-row"]}>
           <h1>{t("favorites.title")}</h1>
           {favoriteVideos.length > 0 && (
-            <div className={styles.start_favorites_button}>
+            <div className={styles["start-favorites-button"]}>
               <Button
                 color="brand"
                 variant="primary"
@@ -240,9 +240,7 @@ export default function FavoritesPlaylistPage() {
         </div>
 
         {favoriteVideos.length === 0 ? (
-          <Alert type={VariantType.INFO}>
-            {t("favorites.noFavorites")}
-          </Alert>
+          <Alert type={VariantType.INFO}>{t("favorites.noFavorites")}</Alert>
         ) : (
           <div>
             <VideoFilters

@@ -11,52 +11,72 @@
   margin-top: auto;
 }
 
-.footer_content {
+.footer-content {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   padding-bottom: var(--c--globals--spacings--s);
 }
 
-.footer_contact_univ address {
+.footer-contact-univ address {
   font-style: normal;
 }
-.footer_contact_univ_logo {
+.footer-contact-univ-logo {
+  position: relative;
   height: 42px;
+  width: 150px;
 }
 
-.footer_link a,
-.footer_link_esup a {
+.footer-contact-univ-logo-image {
+  object-fit: contain;
+  object-position: left center;
+}
+
+.footer-link a,
+.footer-link-esup a {
   padding: var(--c--globals--spacings--xs) var(--c--globals--spacings--s) 0 0;
   font-weight: var(--c--globals--font--weights--bold);
   color: var(--text-color);
   text-transform: uppercase;
 }
 
-.footer_extra_link {
+.footer-extra-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-top: var(--c--globals--spacings--xs);
 }
 
-.footer_extra_link_icons img {
-  padding-right: var(--c--globals--spacings--xxs);
-  height: 25px;
+.footer-extra-link-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.footer_link_esup {
+
+.footer-extra-link-icons img {
+  object-fit: contain;
+}
+
+.footer-extra-link-icon {
+  position: relative;
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+  margin-right: var(--c--globals--spacings--xxs);
+}
+.footer-link-esup {
   display: flex;
   flex-direction: column;
   align-items: start;
 }
 
-.footer_link {
+.footer-link {
   padding-top: var(--c--globals--spacings--xs);
   display: flex;
   flex-wrap: wrap;
 }
 
-.credits_infos {
+.credits-infos {
   text-align: center;
   font-size: var(--c--globals--font--sizes--t);
 }
@@ -66,8 +86,8 @@
   .footer {
     margin-left: 0px;
   }
-  .footer_content,
-  .footer_link {
+  .footer-content,
+  .footer-link {
     flex-direction: column;
     align-items: start;
   }

@@ -1,16 +1,16 @@
-.login_content {
+.login-content {
   display: flex;
   align-content: center;
   flex-direction: column;
   flex-wrap: wrap;
 }
 
-.login_content h1 {
+.login-content h1 {
   padding: var(--c--globals--spacings--base) 0;
   text-align: center;
 }
 
-.login_form {
+.login-form {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
@@ -18,4 +18,17 @@
   margin: auto;
   padding-top: var(--c--globals--spacings--md);
   align-items: center;
+}
+
+.sso-button {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.error {
+  color: red;
+  margin-top: 0.25rem;
 }

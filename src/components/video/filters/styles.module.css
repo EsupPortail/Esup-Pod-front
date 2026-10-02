@@ -1,17 +1,17 @@
-.filtersContent {
+.filters-content {
   margin-top: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   margin-bottom: 1.5rem;
 }
 
-.filtersContentHeader {
+.filters-content-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.filtersButtonRow {
+.filters-button-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -41,12 +41,12 @@
   --filters-field-width: 150px;
 }
 
-.filterItem {
+.filter-item {
   flex: 0 1 auto;
   min-width: var(--filters-field-width);
 }
 
-.filterButton {
+.filter-button {
   min-height: 38px;
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
   border-radius: 9999px !important;
@@ -62,12 +62,12 @@
   font-family: inherit !important;
 }
 
-.filterButton:hover {
+.filter-button:hover {
   border-color: #2563eb !important;
   background-color: rgba(37, 99, 235, 0.04) !important;
 }
 
-.filterButton.active {
+.filter-button.active {
   border: 1.5px solid #2563eb !important;
   background-color: #eff6ff !important;
   color: #1d4ed8 !important;
@@ -75,25 +75,25 @@
   box-shadow: 0 1px 3px rgba(37, 99, 235, 0.12) !important;
 }
 
-html[data-theme="dark"] .filterButton {
+html[data-theme="dark"] .filter-button {
   background-color: #1e293b !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
 }
 
-html[data-theme="dark"] .filterButton:hover {
+html[data-theme="dark"] .filter-button:hover {
   background-color: #334155 !important;
   border-color: #60a5fa !important;
 }
 
-html[data-theme="dark"] .filterButton.active {
+html[data-theme="dark"] .filter-button.active {
   background-color: rgba(59, 130, 246, 0.25) !important;
   border: 1.5px solid #3b82f6 !important;
   color: #ffffff !important;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25) !important;
 }
 
-.filterMenu {
+.filter-menu {
   padding: 0.75rem;
   border-radius: 8px !important;
   border: 1px solid rgba(0, 0, 0, 0.15) !important;
@@ -101,7 +101,7 @@ html[data-theme="dark"] .filterButton.active {
   background-color: var(--c--theme--colors--card-bg, #ffffff) !important;
 }
 
-.filterOptions {
+.filter-options {
   max-height: 280px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -111,7 +111,7 @@ html[data-theme="dark"] .filterButton.active {
   gap: 2px;
 }
 
-.filterOption {
+.filter-option {
   margin: 0 !important;
   width: 100% !important;
   padding: 8px 12px !important;
@@ -121,8 +121,13 @@ html[data-theme="dark"] .filterButton.active {
   align-items: center !important;
 }
 
-.filterOption:hover {
+.filter-option:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.date-text {
+  color: #94a3b8;
+  font-size: 0.8rem;
 }
 
 .row .field {
@@ -135,11 +140,11 @@ html[data-theme="dark"] .filterButton.active {
   min-width: var(--filters-field-width);
 }
 
-.orderingField {
+.ordering-field {
   min-width: var(--filters-field-width);
 }
 
-.searchRow {
+.search-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -154,7 +159,7 @@ html[data-theme="dark"] .filterButton.active {
   gap: 0.5rem;
 }
 
-.searchField {
+.searchF-field {
   min-width: 220px;
 }
 
@@ -168,18 +173,18 @@ html[data-theme="dark"] .filterButton.active {
     width: 100% !important;
     -webkit-overflow-scrolling: touch !important;
   }
-  
+
   .row::-webkit-scrollbar {
     display: none;
   }
 
-  .filterItem {
+  .filter-item {
     flex: 0 0 auto !important;
     width: auto !important;
     min-width: 0 !important;
   }
 
-  .filterButton {
+  .filter-button {
     width: auto !important;
   }
 }
@@ -188,53 +193,53 @@ html[data-theme="dark"] .filterButton.active {
 /* DARK MODE OVERRIDES FOR FILTERS                                            */
 /* ========================================================================== */
 
-html[data-theme="dark"] .filterButton {
+html[data-theme="dark"] .filter-button {
   background-color: #1e293b !important;
   color: #94a3b8 !important;
   border-color: #334155 !important;
 }
 
-html[data-theme="dark"] .filterButton:hover {
+html[data-theme="dark"] .filter-button:hover {
   background-color: #334155 !important;
   border-color: #60a5fa !important;
   color: #f8fafc !important;
 }
 
-html[data-theme="dark"] .filterButton.active {
+html[data-theme="dark"] .filter-button.active {
   background-color: rgba(59, 130, 246, 0.25) !important;
   border-color: #3b82f6 !important;
   color: #ffffff !important;
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.3) !important;
 }
 
-html[data-theme="dark"] .filterButton.active p,
-html[data-theme="dark"] .filterButton.active svg,
-html[data-theme="dark"] .filterButton.active span {
+html[data-theme="dark"] .filter-button.active p,
+html[data-theme="dark"] .filter-button.active svg,
+html[data-theme="dark"] .filter-button.active span {
   color: #ffffff !important;
 }
 
-html[data-theme="dark"] .filterMenu {
+html[data-theme="dark"] .filter-menu {
   background-color: #1e293b !important;
   color: #f8fafc !important;
   border-color: #334155 !important;
 }
 
-html[data-theme="dark"] .filterOption:hover {
+html[data-theme="dark"] .filter-option:hover {
   background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-.clearFiltersBtn {
+.clear-filters-btn {
   color: #2563eb !important;
   font-weight: 600 !important;
   font-size: 0.85rem !important;
   transition: color 0.2s ease !important;
 }
 
-:global(html[data-theme="dark"]) .clearFiltersBtn {
+:global(html[data-theme="dark"]) .clear-filters-btn {
   color: #60a5fa !important;
 }
 
-.clearFiltersBtn:hover {
+.clear-filters-btn:hover {
   color: #ef4444 !important;
   text-decoration: underline !important;
 }

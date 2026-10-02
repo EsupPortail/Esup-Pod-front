@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, Button, Loader, VariantType } from "@openfun/cunningham-react";
+import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import { useEffect, useMemo } from "react";
 import BackButton from "@/src/components/BackButton/BackButton";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
@@ -19,14 +19,21 @@ export default function MyPlaylistsPage() {
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { filters, setFilters, playlists, playlistsCount, users, error, loading } =
-    useCollectionListFilters({ mode: "playlists" });
+  const {
+    filters,
+    setFilters,
+    playlists,
+    playlistsCount,
+    users,
+    error,
+    loading,
+  } = useCollectionListFilters({ mode: "playlists" });
   const isInitialLoading = loading && playlists.length === 0;
 
   useEffect(() => {
     if (!user) return;
 
-    // Vérifier si le filtre est activé sur l'utilisateur courant
+    // Check if the filter is enabled for the current user
     if (
       filters.ownerUsernames.length === 1 &&
       filters.ownerUsernames[0] === user.username
@@ -53,9 +60,9 @@ export default function MyPlaylistsPage() {
   return (
     <div>
       <BackButton label={t("common.back")} />
-      <div className={styles.title_row}>
+      <div className={styles["title-row"]}>
         <h1>{t("playlists.myTitle")}</h1>
-        <Link href="/playlist/add" className={styles.add_playlist_button}>
+        <Link href="/playlist/add" className={styles["add-playlist-button"]}>
           <Button color="brand" variant="primary" size="small">
             {t("playlists.addPlaylist")}
           </Button>
@@ -75,15 +82,15 @@ export default function MyPlaylistsPage() {
           users={user ? users : []}
           showUserFilter={false}
           onChange={(newFilters) => {
-          if (
-            newFilters.search !== filters.search ||
-            newFilters.createdAtGte !== filters.createdAtGte ||
-            newFilters.createdAtLte !== filters.createdAtLte
-          ) {
-            newFilters.page = 1;
-          }
-          setFilters(newFilters);
-        }}
+            if (
+              newFilters.search !== filters.search ||
+              newFilters.createdAtGte !== filters.createdAtGte ||
+              newFilters.createdAtLte !== filters.createdAtLte
+            ) {
+              newFilters.page = 1;
+            }
+            setFilters(newFilters);
+          }}
         />
 
         {loading && playlists.length > 0 && <CenteredLoader />}

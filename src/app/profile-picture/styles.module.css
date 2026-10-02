@@ -2,7 +2,7 @@
   padding: var(--c--globals--spacings--xxl);
 }
 
-.picture_form {
+.picture-form {
   display: flex;
   flex-direction: column;
   justify-content: center;

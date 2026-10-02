@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
@@ -24,6 +24,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Button } from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export type SelectOption = {
   label: string;
@@ -58,12 +59,11 @@ export default function FilterDropdown({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
-  // Local selected state for deferred multi-select updates (Vinted-style commit button)
-  const [localSelectedValues, setLocalSelectedValues] = useState<string[]>(selectedValues);
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    setLocalSelectedValues(selectedValues);
-  }, [selectedValues]);
+  // Local selected state for deferred multi-select updates (Vinted-style commit button)
+  const [localSelectedValues, setLocalSelectedValues] =
+    useState<string[]>(selectedValues);
 
   const searchText = onSearchChange ? (searchValue ?? "") : localSearchText;
 
@@ -74,22 +74,29 @@ export default function FilterDropdown({
       );
 
   const matchedSelected = matchingOptions.filter((o) =>
-    multiple ? localSelectedValues.includes(o.value) : selectedValues.includes(o.value)
+    multiple
+      ? localSelectedValues.includes(o.value)
+      : selectedValues.includes(o.value),
   );
-  
+
   const matchedUnselected = matchingOptions.filter((o) =>
-    multiple ? !localSelectedValues.includes(o.value) : !selectedValues.includes(o.value)
+    multiple
+      ? !localSelectedValues.includes(o.value)
+      : !selectedValues.includes(o.value),
   );
 
   // Take the first 50 unselected to avoid performance issues (10k+ tags)
-  const displayUnselected = isAsync ? matchedUnselected : matchedUnselected.slice(0, 50);
+  const displayUnselected = isAsync
+    ? matchedUnselected
+    : matchedUnselected.slice(0, 50);
 
   const filteredOptions = [...matchedSelected, ...displayUnselected];
 
   const selectedCount = selectedValues.length;
   const selectedLabel =
     !multiple && selectedCount === 1
-      ? options.find((option) => option.value === selectedValues[0])?.label || selectedValues[0]
+      ? options.find((option) => option.value === selectedValues[0])?.label ||
+        selectedValues[0]
       : null;
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -113,7 +120,9 @@ export default function FilterDropdown({
     }
 
     if (localSelectedValues.includes(optionValue)) {
-      setLocalSelectedValues(localSelectedValues.filter((value) => value !== optionValue));
+      setLocalSelectedValues(
+        localSelectedValues.filter((value) => value !== optionValue),
+      );
     } else {
       setLocalSelectedValues([...localSelectedValues, optionValue]);
     }
@@ -122,13 +131,20 @@ export default function FilterDropdown({
   const popperWidth = isMobile && anchorEl ? anchorEl.clientWidth : 260;
 
   return (
-    <Box className={styles.filterItem}>
+    <Box className={styles["filter-dropdown"]}>
       <ListItemButton
         onClick={handleClick}
-        className={`${styles.filterButton} ${selectedCount > 0 ? styles.active : ""}`}
+        className={`${styles["filter-button"]} ${selectedCount > 0 ? styles["active"] : ""}`}
         aria-expanded={open}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: "6px", overflow: "hidden" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            overflow: "hidden",
+          }}
+        >
           <Typography
             variant="body2"
             fontWeight={selectedCount > 0 ? 600 : 500}
@@ -222,14 +238,14 @@ export default function FilterDropdown({
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={250}>
-            <Paper elevation={8} className={styles.filterMenu}>
+            <Paper elevation={8} className={styles["filter-menu"]}>
               <ClickAwayListener onClickAway={handleClose}>
                 <Box>
                   {(options.length > 0 || onSearchChange || isAsync) && (
                     <TextField
                       fullWidth
                       variant="outlined"
-                      placeholder="Rechercher..."
+                      placeholder={t("navbar.searchPlaceholder")}
                       size="small"
                       value={searchText}
                       onChange={(event) => {
@@ -253,14 +269,16 @@ export default function FilterDropdown({
                     />
                   )}
 
-                  <FormGroup className={styles.filterOptions}>
+                  <FormGroup className={styles["filter-options"]}>
                     {filteredOptions.map((option) => (
                       <FormControlLabel
                         key={option.value}
                         control={
                           multiple ? (
                             <Checkbox
-                              checked={localSelectedValues.includes(option.value)}
+                              checked={localSelectedValues.includes(
+                                option.value,
+                              )}
                               onChange={() => handleToggle(option.value)}
                               size="small"
                             />
@@ -275,13 +293,17 @@ export default function FilterDropdown({
                           )
                         }
                         label={option.label}
-                        className={styles.filterOption}
+                        className={styles["filter-option"]}
                       />
                     ))}
 
                     {!loading && filteredOptions.length === 0 && (
-                      <Typography color="text.secondary" variant="body2" sx={{ p: 1 }}>
-                        Aucun résultat
+                      <Typography
+                        color="text.secondary"
+                        variant="body2"
+                        sx={{ p: 1 }}
+                      >
+                        {t("common.noResults")}
                       </Typography>
                     )}
                   </FormGroup>
@@ -306,7 +328,7 @@ export default function FilterDropdown({
                         size="small"
                         disabled={localSelectedValues.length === 0}
                       >
-                        Effacer
+                        {t("filters.clearFilters")}
                       </Button>
                       <Button
                         onClick={() => {
@@ -316,7 +338,7 @@ export default function FilterDropdown({
                         variant="primary"
                         size="small"
                       >
-                        Afficher
+                        {t("filters.showResults")}
                       </Button>
                     </Box>
                   )}

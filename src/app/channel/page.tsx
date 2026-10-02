@@ -9,7 +9,7 @@ import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useCollectionListFilters } from "@/src/hooks/useCollectionListFilters";
 import { useTranslation } from "@/src/hooks/useTranslation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 import { useMounted } from "@/src/hooks/useMounted";
 
@@ -19,8 +19,16 @@ export default function Channels() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const mounted = useMounted();
-  const { filters, setFilters, channels, channelsCount, themes, users, error, loading } =
-    useCollectionListFilters({ mode: "channels" });
+  const {
+    filters,
+    setFilters,
+    channels,
+    channelsCount,
+    themes,
+    users,
+    error,
+    loading,
+  } = useCollectionListFilters({ mode: "channels" });
 
   const publicChannels = useMemo(() => {
     return channels.filter((channel) => channel.is_public);

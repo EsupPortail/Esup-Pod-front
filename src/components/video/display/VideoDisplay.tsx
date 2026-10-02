@@ -28,16 +28,16 @@ export default function VideosDisplay({
   onSelectVideo,
   onSelectAll,
 }: VideosDisplayProps) {
-  const { t } = useTranslation();
-  const [view, setView] = useState<VideoViewMode>(defaultView);
-
-  useEffect(() => {
-    if (!storageKey) return;
-    const storedView = window.localStorage.getItem(storageKey);
-    if (storedView === "cards" || storedView === "grid") {
-      setView(storedView);
+  const { t, locale } = useTranslation();
+  const [view, setView] = useState<VideoViewMode>(() => {
+    if (typeof window !== "undefined" && storageKey) {
+      const storedView = window.localStorage.getItem(storageKey);
+      if (storedView === "cards" || storedView === "grid") {
+        return storedView;
+      }
     }
-  }, [storageKey]);
+    return defaultView;
+  });
 
   const handleChangeView = (nextView: VideoViewMode) => {
     setView(nextView);
@@ -83,11 +83,12 @@ export default function VideosDisplay({
   const gridRows = useMemo(() => {
     return mapVideosToDisplayRows(
       paginatedVideos,
+      locale,
       currentUserId,
       selectedVideoIds,
-      onSelectVideo
+      onSelectVideo,
     );
-  }, [paginatedVideos, currentUserId, selectedVideoIds, onSelectVideo]);
+  }, [paginatedVideos, currentUserId, selectedVideoIds, onSelectVideo, locale]);
 
   const isAllSelected = useMemo(() => {
     if (paginatedVideos.length === 0) return false;
@@ -106,11 +107,13 @@ export default function VideosDisplay({
       <div className={styles.toolbar}>
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {selectable && (
-            <div className={styles.selectAllContainer}>
+            <div className={styles["select-all-container"]}>
               <Checkbox
                 label={t("common.selectAll")}
                 checked={isAllSelected}
-                onChange={(e) => onSelectAll?.((e.target as HTMLInputElement).checked)}
+                onChange={(e) =>
+                  onSelectAll?.((e.target as HTMLInputElement).checked)
+                }
                 aria-label={t("common.selectAll")}
               />
             </div>
@@ -133,14 +136,25 @@ export default function VideosDisplay({
           onSelectVideo={onSelectVideo}
         />
       ) : (
-        <VideoGrid rows={gridRows} selectable={selectable} onSelectAll={onSelectAll} />
+        <VideoGrid
+          rows={gridRows}
+          selectable={selectable}
+          onSelectAll={onSelectAll}
+        />
       )}
 
       {count > 0 && (
         <div className={styles.paginationWrapper}>
           <p className={styles.paginationInfo}>
-            Affichage de {startItem} à {endItem} sur {count} vidéo{count > 1 ? "s" : ""}
-            {pagesCount && pagesCount > 1 ? ` (Page ${page} sur ${pagesCount})` : ""}
+            {t("common.paginationInfo", {
+              start: startItem,
+              end: endItem,
+              count,
+              pageInfo:
+                pagesCount && pagesCount > 1
+                  ? t("common.paginationPage", { page, pagesCount })
+                  : "",
+            })}
           </p>
 
           {pagesCount && pagesCount > 1 && (

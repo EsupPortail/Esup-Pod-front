@@ -19,7 +19,11 @@ export default function Accueil() {
   const router = useRouter();
   const mounted = useMounted();
   const { config } = useAppConfig();
-  const { videos, useVideoError, useVideoLoading } = useVideosList(undefined, "all", { enabled: mounted });
+  const { videos, useVideoError, useVideoLoading } = useVideosList(
+    undefined,
+    "all",
+    { enabled: mounted },
+  );
   const { user } = useAuth();
   const { t } = useTranslation();
 
@@ -52,25 +56,34 @@ export default function Accueil() {
     <div>
       <h1 className={styles.title}>Pod Univ</h1>
       <h2 className={styles.subtitle}>{t("home.welcomeSubtitle")}</h2>
-      
+
       <div>
-        <div className={styles.welcomeBanner}>
-          
+        <div className={styles["welcome-banner"]}>
           {/* Left Text */}
-          <div className={styles.welcomeText}>
-            <p style={{ lineHeight: 1.6 }}>
-              {t("home.welcomeIntro")}
-            </p>
+          <div className={styles["welcome-text"]}>
+            <p style={{ lineHeight: 1.6 }}>{t("home.welcomeIntro")}</p>
           </div>
 
           {/* Right Box */}
-          <div className={styles.welcomeGreenBox}>
-            <span className="material-icons" style={{ fontSize: "3rem", opacity: 0.9 }}>help_outline</span>
+          <div className={styles["welcome-green-box"]}>
+            <span
+              className="material-icons"
+              style={{ fontSize: "3rem", opacity: 0.9 }}
+            >
+              help_outline
+            </span>
             <div>
-              <Link href="/pages/comment-faire" className={styles.welcomeLinkTitle}>{t("home.howToTitle")}</Link>
+              <Link
+                href="/pages/how-to"
+                className={styles["welcome-link-title"]}
+              >
+                {t("home.howToTitle")}
+              </Link>
               <p style={{ fontSize: "0.85rem", lineHeight: 1.4 }}>
                 {t("home.howToDescPrefix")}
-                <Link href="/pages/utiliser-pod" className={styles.welcomeLink}>{t("home.quickGuideLink")}</Link>
+                <Link href="/pages/use-pod" className={styles["welcome-link"]}>
+                  {t("home.quickGuideLink")}
+                </Link>
                 {t("home.howToDescSuffix")}
               </p>
             </div>
@@ -78,13 +91,39 @@ export default function Accueil() {
         </div>
 
         {/* Buttons Row */}
-        <div className={styles.actionButtons}>
-          {user && ((config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff) && (
-            <Button onClick={() => router.push('/video/add')} icon={<span className="material-icons">add_circle</span>} variant="primary">{t("common.addVideo")}</Button>
-          )}
-          <Button onClick={() => router.push('/pages/utiliser-pod')} icon={<span className="material-icons">play_circle</span>} variant="primary">{t("home.btnUsePod")}</Button>
-          <Button onClick={() => router.push('/pages/comment-faire')} icon={<span className="material-icons">help_outline</span>} variant="primary">{t("home.btnHowTo")}</Button>
-          <Button onClick={() => router.push('/pages/droits-auteur')} icon={<span className="material-icons">security</span>} variant="primary">{t("home.btnCopyright")}</Button>
+        <div className={styles["action-buttons"]}>
+          {user &&
+            ((config as any)?.video?.allow_authenticated_upload !== false ||
+              user?.is_staff) && (
+              <Button
+                onClick={() => router.push("/video/add")}
+                icon={<span className="material-icons">add_circle</span>}
+                variant="primary"
+              >
+                {t("common.addVideo")}
+              </Button>
+            )}
+          <Button
+            onClick={() => router.push("/pages/use-pod")}
+            icon={<span className="material-icons">play_circle</span>}
+            variant="primary"
+          >
+            {t("home.btnUsePod")}
+          </Button>
+          <Button
+            onClick={() => router.push("/pages/how-to")}
+            icon={<span className="material-icons">help_outline</span>}
+            variant="primary"
+          >
+            {t("home.btnHowTo")}
+          </Button>
+          <Button
+            onClick={() => router.push("/pages/copyright")}
+            icon={<span className="material-icons">security</span>}
+            variant="primary"
+          >
+            {t("home.btnCopyright")}
+          </Button>
         </div>
 
         <div style={{ marginTop: "var(--c--globals--spacings--xxl)" }}>
@@ -94,7 +133,7 @@ export default function Accueil() {
                 "var(--c--contextuals--content--semantic--neutral--primary)",
               borderBottom: "2px solid var(--c--globals--colors--gray-200)",
               paddingBottom: "var(--c--globals--spacings--xs)",
-              marginBottom: "var(--c--globals--spacings--md)"
+              marginBottom: "var(--c--globals--spacings--md)",
             }}
           >
             {t("home.latestVideos")}
@@ -123,8 +162,10 @@ export default function Accueil() {
             </div>
           ) : (
             !useVideoLoading && (
-              <Alert type={useVideoError ? VariantType.WARNING : VariantType.INFO}>
-                {useVideoError 
+              <Alert
+                type={useVideoError ? VariantType.WARNING : VariantType.INFO}
+              >
+                {useVideoError
                   ? t("home.videoServiceError")
                   : t("home.noRecentVideos")}
               </Alert>

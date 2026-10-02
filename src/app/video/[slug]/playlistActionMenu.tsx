@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import IconButton from "@mui/joy/IconButton";
+import { useEffect, useMemo, useState } from "react";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import Checkbox from "@mui/material/Checkbox";
 import ListItemText from "@mui/material/ListItemText";
@@ -17,7 +16,7 @@ import styles from "./styles.module.css";
 import type { Playlist } from "@/src/types";
 import { usePlaylist } from "@/src/hooks/usePlaylist";
 import { useFavorites } from "@/src/hooks/useFavorites";
-import { Tooltip } from "@mui/material";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 interface PlaylistActionMenuProps {
   playlists: Playlist[];
@@ -39,16 +38,20 @@ export default function PlaylistActionMenu({
     isFavorite,
   } = useFavorites();
 
-  // Ancre Popover (null = fermé)
+  const { t } = useTranslation();
+
+  // Popover anchor (null = closed)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const [pendingSlug, setPendingSlug] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Etat local : map slug -> bool indiquant si la vidéo est dans la playlist.
-  const [checkedMap, setCheckedMap] = useState<Record<string, boolean>>({});
+  // Local state: slug -> boolean indicating whether the video is in the playlist.
+  const [checkedOverrides, setCheckedOverrides] = useState<
+    Record<number, Record<string, boolean>>
+  >({});
 
-  //Message success qui s’affiche 5 secondes.
+  // Success message displayed for 5 seconds.
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [infoKind, setInfoKind] = useState<InfoKind | null>(null);
 
@@ -64,16 +67,17 @@ export default function PlaylistActionMenu({
     return () => clearTimeout(timeout);
   }, [infoMessage]);
 
-  // Synchro playlists -> checkedMap
-  useEffect(() => {
+  // Derive membership from playlists and preserve optimistic updates locally.
+  const checkedMap = useMemo(() => {
     const next: Record<string, boolean> = {};
+    const videoOverrides = checkedOverrides[videoId] ?? {};
     playlists.forEach((playlist) => {
       const contains =
         playlist.items?.some((item) => item.video.id === videoId) ?? false;
-      next[playlist.slug] = contains;
+      next[playlist.slug] = videoOverrides[playlist.slug] ?? contains;
     });
-    setCheckedMap(next);
-  }, [playlists, videoId]);
+    return next;
+  }, [checkedOverrides, playlists, videoId]);
 
   useEffect(() => {
     if (!favorites.length) {
@@ -102,29 +106,41 @@ export default function PlaylistActionMenu({
 
     try {
       if (!isInPlaylist) {
-        // Ajouter la vidéo à la playlist
+        // Add video to playlist
         await addVideo(playlist.slug, { video_id: videoId });
-        setCheckedMap((prev) => ({
+        setCheckedOverrides((prev) => ({
           ...prev,
-          [playlist.slug]: true,
+          [videoId]: {
+            ...prev[videoId],
+            [playlist.slug]: true,
+          },
         }));
         setInfoKind("added");
-        setInfoMessage(`Vidéo ajoutée à la playlist « ${playlist.title} ».`);
+        setInfoMessage(
+          t("videoPage.videoAddedToPlaylist", {
+            title: playlist.title,
+          }),
+        );
       } else {
-        // Retirer la vidéo de la playlist
+        // Remove video from playlist
         await deleteVideo(playlist.slug, { video_id: videoId });
-        setCheckedMap((prev) => ({
+        setCheckedOverrides((prev) => ({
           ...prev,
-          [playlist.slug]: false,
+          [videoId]: {
+            ...prev[videoId],
+            [playlist.slug]: false,
+          },
         }));
         setInfoKind("removed");
-        setInfoMessage(`Vidéo retirée de la playlist « ${playlist.title} ».`);
+        setInfoMessage(
+          t("videoPage.videoRemovedFromPlaylist", {
+            title: playlist.title,
+          }),
+        );
       }
     } catch (e) {
       setError(
-        e instanceof Error
-          ? e.message
-          : "Une erreur est survenue lors de la mise à jour de la playlist.",
+        e instanceof Error ? e.message : t("playlists.playlistUpdateError"),
       );
     } finally {
       setPendingSlug(null);
@@ -147,20 +163,18 @@ export default function PlaylistActionMenu({
         const res = await addFavorite(videoId);
         if (res) {
           setInfoKind("favorite-added");
-          setInfoMessage("Vidéo ajoutée à vos favoris.");
+          setInfoMessage(t("videoPage.videoAddedToFavorites"));
         }
       } else {
         const ok = await removeFavoriteForVideo(videoId);
         if (ok) {
           setInfoKind("favorite-removed");
-          setInfoMessage("Vidéo retirée de vos favoris.");
+          setInfoMessage(t("videoPage.videoRemovedFromFavorites"));
         }
       }
     } catch (e) {
       setError(
-        e instanceof Error
-          ? e.message
-          : "Une erreur est survenue lors de la mise à jour des favoris.",
+        e instanceof Error ? e.message : t("favorites.favoriteUpdateError"),
       );
     }
   };
@@ -178,27 +192,35 @@ export default function PlaylistActionMenu({
     <>
       <div style={{ display: "flex", gap: "0.25rem" }}>
         <button
-          className={styles.action_pill}
+          className={styles["action-pill"]}
           aria-describedby={id}
           onClick={handlePlaylistButtonClick}
         >
-          <PlaylistAddIcon fontSize="small" /> Playlist
+          <PlaylistAddIcon fontSize="small" /> {t("common.playlist")}
         </button>
 
         <button
-          className={styles.action_pill}
+          className={styles["action-pill"]}
           onClick={handleToggleFavorite}
         >
           {favorite ? (
-            <FavoriteIcon fontSize="small" aria-hidden="true" sx={{ color: "red" }} />
+            <FavoriteIcon
+              fontSize="small"
+              aria-hidden="true"
+              sx={{ color: "red" }}
+            />
           ) : (
-            <FavoriteBorderIcon fontSize="small" sx={{ color: "red" }} aria-hidden="true" />
+            <FavoriteBorderIcon
+              fontSize="small"
+              sx={{ color: "red" }}
+              aria-hidden="true"
+            />
           )}
-          Favori
+          {t("videoPage.favorite")}
         </button>
       </div>
 
-      {/* Liste des playlists */}
+      {/* playlists list */}
       <Popover
         id={id}
         open={open}
@@ -222,7 +244,7 @@ export default function PlaylistActionMenu({
             component="h4"
             sx={{ fontSize: "0.9rem", m: 0 }}
           >
-            Ajouter à une liste de lecture
+            {t("videoPage.addToPlaylist")}
           </Typography>
           {error && (
             <Typography
@@ -247,7 +269,7 @@ export default function PlaylistActionMenu({
           }}
         >
           {playlists.length === 0 && (
-            <MenuItem disabled>Aucune playlist disponible</MenuItem>
+            <MenuItem disabled>{t("videoPage.noPlaylistsAvailable")}</MenuItem>
           )}
 
           {playlists.map((playlist) => {

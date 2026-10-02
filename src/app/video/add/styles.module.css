@@ -1,15 +1,15 @@
-.bloc_terms {
+.bloc-terms {
   margin: var(--c--globals--spacings--md) 0;
   padding: var(--c--globals--spacings--md);
   border: 1px solid var(--background-brand);
   border-radius: 8px;
 }
-.bloc_terms legend {
+.bloc-terms legend {
   color: var(--text-color-brand);
   padding: 0 var(--c--globals--spacings--sm);
 }
 
-.bloc_terms_checkbox {
+.bloc-terms-checkbox {
   margin-top: var(--c--globals--spacings--lg);
 }
 
@@ -20,6 +20,6 @@
   align-items: center;
 }
 
-.linearProgress {
+.linear-progress {
   margin: var(--c--globals--spacings--xl) 0;
 }

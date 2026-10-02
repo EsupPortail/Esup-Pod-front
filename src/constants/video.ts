@@ -2,13 +2,7 @@ export type VideoStatus = "DR" | "PU" | "RE" | "EN" | "ER";
 export type VideoEncodingStatus = "PE" | "PR" | "DO" | "ER";
 
 export type VideoLicense =
-  | "CC-BY"
-  | "CC-BY-SA"
-  | "CC-BY-NC"
-  | "CC-BY-ND"
-  | "COPYRIGHT"
-  | ""
-  | null;
+  "CC-BY" | "CC-BY-SA" | "CC-BY-NC" | "CC-BY-ND" | "COPYRIGHT" | "" | null;
 
 export const DEFAULT_VIDEO_LICENSE_OPTIONS = [
   "CC-BY",

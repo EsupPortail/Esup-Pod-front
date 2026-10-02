@@ -6,21 +6,30 @@ import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
 import { requestJson } from "@/src/utils/requestJson";
 import type { Chapter } from "@/src/types";
+import { useTranslation } from "./useTranslation";
 
+/** Provides chapter queries and mutations for a video. */
 export const useChapters = (videoSlug?: string, videoId?: number) => {
   const { accessToken, refresh } = useAuth();
   const queryClient = useQueryClient();
-
+  const { t } = useTranslation();
   const authOpts = { accessToken, onRefresh: refresh };
 
-  const { data: chapters, isLoading, error } = useQuery<Chapter[]>({
+  const {
+    data: chapters,
+    isLoading,
+    error,
+  } = useQuery<Chapter[]>({
     queryKey: ["chapters", videoSlug, videoId],
     queryFn: async () => {
       if (!videoSlug && !videoId) return [];
       const param = videoSlug ? `video_slug=${videoSlug}` : `video=${videoId}`;
-      const res = await authFetch(`${getRoutes().chapters.list}?${param}`, authOpts);
+      const res = await authFetch(
+        `${getRoutes().chapters.list}?${param}`,
+        authOpts,
+      );
       if (!res.ok) {
-        throw new Error("Impossible de charger les chapitres.");
+        throw new Error(t("errors.loadChapters"));
       }
       const data = await requestJson<Chapter[] | { results: Chapter[] }>(res);
       return Array.isArray(data) ? data : data.results || [];
@@ -29,7 +38,11 @@ export const useChapters = (videoSlug?: string, videoId?: number) => {
   });
 
   const createChapterMutation = useMutation({
-    mutationFn: async (payload: { video: number; title: string; time_start: number }) => {
+    mutationFn: async (payload: {
+      video: number;
+      title: string;
+      time_start: number;
+    }) => {
       const res = await authFetch(getRoutes().chapters.list, {
         ...authOpts,
         method: "POST",
@@ -37,7 +50,7 @@ export const useChapters = (videoSlug?: string, videoId?: number) => {
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        throw new Error("Impossible d'ajouter le chapitre.");
+        throw new Error(t("errors.addChapter"));
       }
       return requestJson<Chapter>(res);
     },
@@ -54,7 +67,7 @@ export const useChapters = (videoSlug?: string, videoId?: number) => {
         method: "DELETE",
       });
       if (!res.ok) {
-        throw new Error("Impossible de supprimer le chapitre.");
+        throw new Error(t("errors.deleteChapter"));
       }
       return true;
     },

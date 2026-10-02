@@ -9,7 +9,8 @@ interface CustomTextBlockProps {
 
 export default function CustomTextBlock({ block }: CustomTextBlockProps) {
   const title = block.display_title;
-  const content = block.subtitle_or_text || (block.extra_config?.content as string) || "";
+  const content =
+    block.subtitle_or_text || (block.extra_config?.content as string) || "";
 
   return (
     <section
@@ -23,7 +24,13 @@ export default function CustomTextBlock({ block }: CustomTextBlockProps) {
       }}
     >
       {title && (
-        <h3 style={{ margin: "0 0 0.8rem 0", fontWeight: 700, fontSize: "1.1rem" }}>
+        <h3
+          style={{
+            margin: "0 0 0.8rem 0",
+            fontWeight: 700,
+            fontSize: "1.1rem",
+          }}
+        >
           {title}
         </h3>
       )}

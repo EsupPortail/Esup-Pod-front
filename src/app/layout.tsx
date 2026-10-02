@@ -14,14 +14,16 @@ import { PlaylistCreationProvider } from "../context/PlaylistCreationContext";
 import { QueryProvider } from "../context/QueryProvider";
 
 import { AppConfigProvider } from "../context/AppConfigProvider";
-import { LanguageProvider } from "../context/LanguageProvider";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Esup POD V5",
-    default: "Esup POD V5",
+    template: "%s | Esup-Pod",
+    default: "Esup-Pod",
   },
-  description: "Plateforme vidéo Esup-Pod V5",
+  description: "Plateforme vidéo Esup-Pod",
 };
 
 export const viewport: Viewport = {
@@ -30,15 +32,23 @@ export const viewport: Viewport = {
   /*maximumScale: 1,*/
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
+  const t = await getTranslations();
+
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -56,11 +66,13 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <a href="#main" className="skip-link">Aller au contenu principal</a>
+        <a href="#main" className="skip-link">
+          {t("common.goToMainContent")}
+        </a>
         <div className="layout">
           <CunninghamStyleProvider>
-            <AppConfigProvider>
-              <LanguageProvider>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <AppConfigProvider>
                 <DatePickerProvider>
                   <QueryProvider>
                     <AuthProvider>
@@ -83,8 +95,8 @@ export default function RootLayout({
                     </AuthProvider>
                   </QueryProvider>
                 </DatePickerProvider>
-              </LanguageProvider>
-            </AppConfigProvider>
+              </AppConfigProvider>
+            </NextIntlClientProvider>
           </CunninghamStyleProvider>
         </div>
       </body>

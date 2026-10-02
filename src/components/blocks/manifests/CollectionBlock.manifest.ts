@@ -1,7 +1,8 @@
 export const CollectionBlockManifest = {
   frontend_id: "collection-block",
   name: "Bloc Générale de Collections",
-  description: "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists).",
+  description:
+    "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists).",
   fields: {
     collection_type: {
       type: "select",
@@ -16,7 +17,8 @@ export const CollectionBlockManifest = {
     },
     collection_ids: {
       type: "text",
-      label: "Identifiants ou Slugs de collections à afficher (séparés par virgule)",
+      label:
+        "Identifiants ou Slugs de collections à afficher (séparés par virgule)",
       placeholder: "ex: 1, 5, actualites-2026",
       default: "",
     },

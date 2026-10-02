@@ -8,22 +8,26 @@ import { useSocialNetworks } from "@/src/hooks/useSocialNetworks";
 import { authFetch } from "@/src/api/authFetch";
 import { useAuth } from "@/src/context/AuthProvider";
 import type { Video } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type Props = {
   video: Video;
   onNetworksUpdated?: () => void;
 };
 
-export default function VideoSocialNetworksForm({ video, onNetworksUpdated }: Props) {
+export default function VideoSocialNetworksForm({
+  video,
+  onNetworksUpdated,
+}: Props) {
   const { socialNetworks, isLoading } = useSocialNetworks();
   const { accessToken, refresh } = useAuth();
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
-    video.social_networks ?? socialNetworks.map((n) => n.id)
+    video.social_networks ?? socialNetworks.map((n) => n.id),
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
-
+  const { t } = useTranslation();
   const handleToggleNetwork = async (id: number) => {
     const nextIds = selectedIds.includes(id)
       ? selectedIds.filter((item) => item !== id)
@@ -42,12 +46,12 @@ export default function VideoSocialNetworksForm({ video, onNetworksUpdated }: Pr
         body: JSON.stringify({ social_networks: nextIds }),
       });
       if (!res.ok) {
-        throw new Error("Erreur lors de la sauvegarde des réseaux sociaux.");
+        throw new Error(t("socialNetworks.errorSaveSocial"));
       }
-      setMsg("Réseaux sociaux enregistrés.");
+      setMsg(t("socialNetworks.saved"));
       if (onNetworksUpdated) onNetworksUpdated();
     } catch (err) {
-      setMsg(err instanceof Error ? err.message : "Erreur de sauvegarde.");
+      setMsg(err instanceof Error ? err.message : t("errors.save"));
     } finally {
       setIsUpdating(false);
     }
@@ -66,26 +70,43 @@ export default function VideoSocialNetworksForm({ video, onNetworksUpdated }: Pr
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <ShareIcon style={{ color: "var(--c--globals--colors--primary-600, #00818a)" }} />
+        <ShareIcon
+          style={{ color: "var(--c--globals--colors--primary-600, #00818a)" }}
+        />
         <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 600 }}>
-          Réseaux sociaux autorisés au partage
+          {t("socialNetworks.authorizedShare")}
         </h3>
       </div>
 
       <p style={{ margin: 0, fontSize: "0.85rem", color: "#6b7280" }}>
-        Choisissez les réseaux sociaux que vous rendez disponibles pour le partage de cette vidéo sur la page de visionnage.
+        {t("socialNetworks.choice")}
       </p>
 
       {msg && (
-        <div style={{ fontSize: "0.85rem", color: msg.includes("enregistrés") ? "#2e7d32" : "#d32f2f" }}>
+        <div
+          style={{
+            fontSize: "0.85rem",
+            color: msg.includes(t("socialNetworks.saved"))
+              ? "#2e7d32"
+              : "#d32f2f",
+          }}
+        >
           {msg}
         </div>
       )}
 
       {isLoading ? (
-        <p style={{ margin: 0, fontSize: "0.85rem" }}>Chargement des réseaux sociaux...</p>
+        <p style={{ margin: 0, fontSize: "0.85rem" }}>
+          {t("socialNetworks.loading")}
+        </p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: "8px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+            gap: "8px",
+          }}
+        >
           {socialNetworks.map((net) => {
             const isChecked = selectedIds.includes(net.id);
             return (
@@ -99,7 +120,11 @@ export default function VideoSocialNetworksForm({ video, onNetworksUpdated }: Pr
                     size="small"
                   />
                 }
-                label={<span style={{ fontSize: "0.9rem", fontWeight: 500 }}>{net.name}</span>}
+                label={
+                  <span style={{ fontSize: "0.9rem", fontWeight: 500 }}>
+                    {net.name}
+                  </span>
+                }
               />
             );
           })}

@@ -1,6 +1,14 @@
 export type CursusCode = "L1" | "L2" | "L3" | "M1" | "M2" | "D" | "0";
 
-export const CURSUS_CODES: CursusCode[] = ["L1", "L2", "L3", "M1", "M2", "D", "0"];
+export const CURSUS_CODES: CursusCode[] = [
+  "L1",
+  "L2",
+  "L3",
+  "M1",
+  "M2",
+  "D",
+  "0",
+];
 
 export const CURSUS_LABELS: Record<CursusCode, string> = {
   L1: "Licence 1",
@@ -12,6 +20,7 @@ export const CURSUS_LABELS: Record<CursusCode, string> = {
   0: "Other",
 };
 
+/** Returns the available cursus options with translated labels when provided. */
 export const getCursusOptions = (t?: (key: string) => string) => {
   return CURSUS_CODES.map((code) => ({
     value: code,
@@ -21,17 +30,20 @@ export const getCursusOptions = (t?: (key: string) => string) => {
 
 export const CURSUS_OPTIONS = getCursusOptions();
 
+/** Returns the display label for a cursus code. */
 export const getCursusLabel = (
   code: string | null | undefined,
-  t?: (key: string) => string
+  t?: (key: string) => string,
 ) => {
   if (!code) {
     return t ? t("cursus.0") : CURSUS_LABELS["0"];
   }
 
-  const validCode = (CURSUS_CODES.includes(code as CursusCode)
-    ? code
-    : "0") as CursusCode;
+  const validCode = (
+    CURSUS_CODES.includes(code as CursusCode) ? code : "0"
+  ) as CursusCode;
 
-  return t ? t(`cursus.${validCode}`) : (CURSUS_LABELS[validCode] ?? CURSUS_LABELS["0"]);
+  return t
+    ? t(`cursus.${validCode}`)
+    : (CURSUS_LABELS[validCode] ?? CURSUS_LABELS["0"]);
 };

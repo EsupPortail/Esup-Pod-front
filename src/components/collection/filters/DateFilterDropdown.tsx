@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
@@ -15,6 +15,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@openfun/cunningham-react";
 import styles from "@/src/components/video/filters/styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type DateFilterDropdownProps = {
   createdAtGte: string;
@@ -34,13 +35,9 @@ export default function DateFilterDropdown({
   const [localLte, setLocalLte] = useState(createdAtLte);
   const isMobile = useMediaQuery("(max-width: 600px)");
 
-  // Sync state if props change outside
-  useEffect(() => {
-    setLocalGte(createdAtGte);
-    setLocalLte(createdAtLte);
-  }, [createdAtGte, createdAtLte]);
-
   const isActive = Boolean(createdAtGte || createdAtLte);
+
+  const { t } = useTranslation();
 
   const handleClick = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,24 +67,46 @@ export default function DateFilterDropdown({
   const popperWidth = isMobile && anchorEl ? anchorEl.clientWidth : 280;
 
   return (
-    <Box className={styles.filterItem}>
+    <Box className={styles["filter-item"]}>
       <ListItemButton
         onClick={handleClick}
-        className={`${styles.filterButton} ${isActive ? styles.active : ""}`}
+        className={`${styles["filter-button"]} ${isActive ? styles.active : ""}`}
         aria-expanded={open}
       >
         <Typography
           variant="body2"
           fontWeight={isActive ? 600 : 500}
           noWrap
-          sx={{ color: isActive ? "var(--c--globals--colors--brand--main)" : "inherit" }}
+          sx={{
+            color: isActive
+              ? "var(--c--globals--colors--brand--main)"
+              : "inherit",
+          }}
         >
-          {isActive ? "Date (filtre actif)" : "Date de création"}
+          {isActive
+            ? t("filters.activeCreationDate")
+            : t("filters.creationDate")}
         </Typography>
         {open ? (
-          <ExpandLessIcon fontSize="small" sx={{ color: isActive ? "var(--c--globals--colors--brand--main)" : "inherit", ml: "auto" }} />
+          <ExpandLessIcon
+            fontSize="small"
+            sx={{
+              color: isActive
+                ? "var(--c--globals--colors--brand--main)"
+                : "inherit",
+              ml: "auto",
+            }}
+          />
         ) : (
-          <ExpandMoreIcon fontSize="small" sx={{ color: isActive ? "var(--c--globals--colors--brand--main)" : "inherit", ml: "auto" }} />
+          <ExpandMoreIcon
+            fontSize="small"
+            sx={{
+              color: isActive
+                ? "var(--c--globals--colors--brand--main)"
+                : "inherit",
+              ml: "auto",
+            }}
+          />
         )}
       </ListItemButton>
 
@@ -104,13 +123,22 @@ export default function DateFilterDropdown({
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={250}>
-            <Paper elevation={8} className={styles.filterMenu}>
+            <Paper elevation={8} className={styles["filter-menu"]}>
               <ClickAwayListener onClickAway={handleClose}>
                 <Box>
-                  <Typography variant="subtitle2" sx={{ mb: 2, px: 1 }}>Sélectionnez une période</Typography>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2, px: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 2, px: 1 }}>
+                    {t("filters.selectPeriod")}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      px: 1,
+                    }}
+                  >
                     <TextField
-                      label="Créé après"
+                      label={t("filters.createdAfter")}
                       type="datetime-local"
                       size="small"
                       fullWidth
@@ -119,7 +147,7 @@ export default function DateFilterDropdown({
                       InputLabelProps={{ shrink: true }}
                     />
                     <TextField
-                      label="Créé avant"
+                      label={t("filters.createdBefore")}
                       type="datetime-local"
                       size="small"
                       fullWidth
@@ -140,11 +168,20 @@ export default function DateFilterDropdown({
                       gap: "8px",
                     }}
                   >
-                    <Button onClick={handleClear} variant="tertiary" size="small" disabled={!localGte && !localLte}>
-                      Effacer
+                    <Button
+                      onClick={handleClear}
+                      variant="tertiary"
+                      size="small"
+                      disabled={!localGte && !localLte}
+                    >
+                      {t("filters.clearFilters")}
                     </Button>
-                    <Button onClick={handleApply} variant="primary" size="small">
-                      Afficher
+                    <Button
+                      onClick={handleApply}
+                      variant="primary"
+                      size="small"
+                    >
+                      {t("filters.showResults")}
                     </Button>
                   </Box>
                 </Box>

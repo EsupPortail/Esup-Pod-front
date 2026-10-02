@@ -53,12 +53,12 @@ L'application sera disponible sur `http://localhost:3000`.
 
 Pour plus de détails :
 
-* [Guide de développement / Architecture](./docs/architecture.md)
+- [Guide de développement / Architecture](./docs/architecture.md)
 
 ### Technical documentation
 
-* The documentation (to install, customize, etc…) is on the
+- The documentation (to install, customize, etc…) is on the
   [ESUP Wiki](https://www.esup-portail.org/wiki/display/ES/esup-pod "Documentation")
 
 | [Université de Lille](https://www.univ-lille.fr/) | [Esup Portail](https://www.esup-portail.org/) | Ministère de lʼEnseignement supérieur et de la Recherche |
-| :---: | :---: | :---: |
+| :-----------------------------------------------: | :-------------------------------------------: | :------------------------------------------------------: |

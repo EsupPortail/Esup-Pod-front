@@ -27,6 +27,7 @@ interface VideoGridBlockProps {
 }
 
 import { useTranslation } from "@/src/hooks/useTranslation";
+import Image from "next/image";
 
 export default function VideoGridBlockComponent({
   block,
@@ -41,13 +42,14 @@ export default function VideoGridBlockComponent({
   const [loading, setLoading] = useState(!providedVideos);
 
   const displayTitle =
-    providedTitle || block?.display_title || block?.subtitle_or_text || t("common.videos");
+    providedTitle ||
+    block?.display_title ||
+    block?.subtitle_or_text ||
+    t("common.videos");
   const limit = providedLimit || block?.item_limit || (isHero ? 6 : 5);
 
   useEffect(() => {
     if (providedVideos) {
-      setVideos(providedVideos.slice(0, limit));
-      setLoading(false);
       return;
     }
 
@@ -61,9 +63,9 @@ export default function VideoGridBlockComponent({
           endpoint += `&ordering=${block.extra_config.order_by}`;
         }
 
-        const response = await requestJson<
-          Video[] | { results: Video[] }
-        >(endpoint);
+        const response = await requestJson<Video[] | { results: Video[] }>(
+          endpoint,
+        );
 
         const list = Array.isArray(response)
           ? response
@@ -81,33 +83,44 @@ export default function VideoGridBlockComponent({
   }, [block, providedVideos, limit]);
 
   const showViews = config?.video?.show_views !== false;
+  const displayedVideos = providedVideos
+    ? providedVideos.slice(0, limit)
+    : videos;
+  const isLoading = providedVideos ? false : loading;
 
   return (
-    <section className={styles.blockWrapper}>
-      {!isHero && <div className={styles.sectionBadgeHeader}>{displayTitle}</div>}
+    <section className={styles["block-wrapper"]}>
+      {!isHero && (
+        <div className={styles["section-badge-header"]}>{displayTitle}</div>
+      )}
 
-      {loading ? (
-        <div style={{ padding: "1rem", color: "#666" }}>{t("common.loading")}</div>
-      ) : videos.length > 0 ? (
-        <div className={isHero ? styles.heroGrid : styles.videosGrid}>
-          {videos.map((video, index) => {
+      {isLoading ? (
+        <div style={{ padding: "1rem", color: "#666" }}>
+          {t("common.loading")}
+        </div>
+      ) : displayedVideos.length > 0 ? (
+        <div className={isHero ? styles.heroGrid : styles["videos-grid"]}>
+          {displayedVideos.map((video, index) => {
             const fallbackColor = cardColors[index % cardColors.length];
             return (
               <Link
                 key={video.id}
                 href={`/video/${video.slug}`}
-                className={styles.videoCard}
+                className={styles["video-card"]}
               >
-                <div className={styles.thumbnailContainer}>
+                <div className={styles["thumbnail-container"]}>
                   {video.thumbnail ? (
-                    <img
+                    <Image
+                      unoptimized
+                      width={100}
+                      height={100}
                       src={video.thumbnail}
-                      alt={video.title}
-                      className={styles.thumbnailImage}
+                      alt={t("a11y.videoThumbnail", { title: video.title })}
+                      className={styles["thumbnail-image"]}
                     />
                   ) : (
                     <div
-                      className={styles.thumbnailPlaceholder}
+                      className={styles["thumbnail-placeholder"]}
                       style={{ backgroundColor: fallbackColor }}
                     >
                       <span
@@ -119,17 +132,20 @@ export default function VideoGridBlockComponent({
                     </div>
                   )}
                 </div>
-                <div className={styles.cardBody}>
-                  <h4 className={styles.cardTitle}>{video.title}</h4>
+                <div className={styles["card-body"]}>
+                  <h4 className={styles["card-title"]}>{video.title}</h4>
                   {showViews && video.views_count != null && (
-                    <span className={styles.cardMeta}>
+                    <span className={styles["card-meta"]}>
                       <span
                         className="material-icons"
                         style={{ fontSize: "0.9rem" }}
                       >
                         visibility
                       </span>
-                      {video.views_count} {video.views_count > 1 ? t("common.views") : t("common.view")}
+                      {video.views_count}{" "}
+                      {video.views_count > 1
+                        ? t("common.views")
+                        : t("common.view")}
                     </span>
                   )}
                 </div>

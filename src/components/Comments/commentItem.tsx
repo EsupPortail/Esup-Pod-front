@@ -70,9 +70,10 @@ export default function CommentItem({
     !!user && (user.is_staff || String(user.id) === String(comment.author));
 
   const initials = useMemo(() => {
-    const nameToUse = comment.author_name && comment.author_name.trim() 
-      ? comment.author_name 
-      : comment.author_username;
+    const nameToUse =
+      comment.author_name && comment.author_name.trim()
+        ? comment.author_name
+        : comment.author_username;
     return getInitialsFromAuthorName(nameToUse || "");
   }, [comment.author_name, comment.author_username]);
 
@@ -134,7 +135,7 @@ export default function CommentItem({
   return (
     <article
       ref={commentRef}
-      className={`${styles.comment} ${isHighlighted ? styles.commentHighlight : ""}`}
+      className={`${styles.comment} ${isHighlighted ? styles["comment-highlight"] : ""}`}
       id={`comment-${comment.id}`}
     >
       <div className={styles.header}>
@@ -157,15 +158,15 @@ export default function CommentItem({
               <Button
                 type="button"
                 size="small"
-                className={styles.actionButton}
+                className={styles["action-button"]}
                 onClick={() => onVote(comment.id)}
-                aria-label="Voter pour ce commentaire"
+                aria-label={t("comments.voteForComment")}
               >
                 <ThumbUpOffAltIcon fontSize="small" />
                 <span>{comment.nbr_vote}</span>
               </Button>
             ) : (
-              <div className={styles.actionButtonStatic}>
+              <div className={styles["action-button-static"]}>
                 <ThumbUpOffAltIcon fontSize="small" />
                 <span>{comment.nbr_vote}</span>
               </div>
@@ -175,7 +176,7 @@ export default function CommentItem({
               <Button
                 type="button"
                 size="small"
-                className={styles.actionButton}
+                className={styles["action-button"]}
                 onClick={() => setIsReplyFormOpen((prev) => !prev)}
               >
                 {t("comments.reply")}
@@ -201,14 +202,14 @@ export default function CommentItem({
           )}
 
           {isReplyFormOpen && (
-            <div className={styles.replyForm}>
+            <div className={styles["reply-form"]}>
               <TextArea
                 label={t("comments.yourReply")}
                 rows={3}
                 value={replyContent}
                 onChange={(event) => setReplyContent(event.target.value)}
               />
-              <div className={styles.replyActions}>
+              <div className={styles["reply-actions"]}>
                 <Button
                   color="brand"
                   size="small"
@@ -217,7 +218,9 @@ export default function CommentItem({
                   onClick={handleReply}
                   disabled={!replyContent.trim() || isSubmittingReply}
                 >
-                  {isSubmittingReply ? t("comments.submitting") : t("comments.reply")}
+                  {isSubmittingReply
+                    ? t("comments.submitting")
+                    : t("comments.reply")}
                 </Button>
               </div>
             </div>
@@ -227,14 +230,14 @@ export default function CommentItem({
             <Button
               type="button"
               size="small"
-              className={styles.repliesToggle}
+              className={styles["replies-toggle"]}
               onClick={() => setIsRepliesOpen((prev) => !prev)}
             >
               {isRepliesOpen
                 ? t("comments.hideReplies")
                 : children.length === 1
-                ? t("comments.showReplies", { count: children.length })
-                : t("comments.showRepliesPlural", { count: children.length })}
+                  ? t("comments.showReplies", { count: children.length })
+                  : t("comments.showRepliesPlural", { count: children.length })}
               {isRepliesOpen ? (
                 <KeyboardArrowUpIcon />
               ) : (

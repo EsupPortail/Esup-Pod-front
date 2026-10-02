@@ -14,6 +14,7 @@ import CenteredLoader from "@/src/components/Loader/CenteredLoader";
 import styles from "../edit/[slug]/styles.module.css";
 import { PlaylistForm } from "@/src/components/collection/PlaylistForm";
 import { usePlaylistCreationContext } from "@/src/context/PlaylistCreationContext";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Ajouter une liste de lecture";
 
@@ -26,17 +27,20 @@ type AddPlaylistFormValues = {
   default_order: CollectionOrder;
 };
 
-const FORM_FIELD_LABELS: Partial<Record<keyof AddPlaylistFormValues, string>> =
-  {
-    title: "Titre",
-    description: "Description",
-    is_password_required: "Ajouter un mot de passe",
-    is_public: "Statut",
-    password: "Mot de passe",
-    default_order: "Tri par défault",
+export default function AddPlaylist() {
+  const { t } = useTranslation();
+
+  const FORM_FIELD_LABELS: Partial<
+    Record<keyof AddPlaylistFormValues, string>
+  > = {
+    title: t("common.title"),
+    description: t("common.description"),
+    is_password_required: t("common.isPasswordRequired"),
+    is_public: t("common.isPublic"),
+    password: t("common.password"),
+    default_order: t("common.defaultOrder"),
   };
 
-export default function AddPlaylist() {
   const router = useRouter();
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
   const { createPlaylist, usePlaylistLoading, usePlaylistError } =
@@ -77,7 +81,8 @@ export default function AddPlaylist() {
       initialValuesRef.current = watchedValues as AddPlaylistFormValues;
     } else {
       const changed =
-        JSON.stringify(initialValuesRef.current) !== JSON.stringify(watchedValues);
+        JSON.stringify(initialValuesRef.current) !==
+        JSON.stringify(watchedValues);
       setIsDirty(changed);
     }
   }, [watchedValues]);
@@ -100,12 +105,12 @@ export default function AddPlaylist() {
     };
 
     if (!payload.title) {
-      setError("Le titre est obligatoire.");
+      setError(t("common.titleRequired"));
       return;
     }
 
     if (!payload.description) {
-      setError("La description est obligatoire.");
+      setError(`${t("common.descRequired")}`);
       return;
     }
 
@@ -113,9 +118,7 @@ export default function AddPlaylist() {
       payload.password = "";
     } else {
       if (isPasswordRequired && !passwordValue) {
-        setError(
-          "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
-        );
+        setError(`${t("common.passwordProtected")}`);
         return;
       }
 
@@ -128,14 +131,11 @@ export default function AddPlaylist() {
       const created = await createPlaylist(payload);
 
       if (!created) {
-        setError(
-          usePlaylistError ??
-            "Une erreur est survenue lors de la création de la playlist.",
-        );
+        setError(usePlaylistError ?? `${t("playlists.creationError")}`);
         return;
       }
 
-      // On stocke la playlist créée dans le contexte global
+      // Store the created playlist in the global context
       setLastCreatedPlaylist(created);
 
       reset();
@@ -143,9 +143,7 @@ export default function AddPlaylist() {
       router.push(`/playlist/${created.slug}`);
     } catch (e: unknown) {
       const message =
-        e instanceof Error
-          ? e.message
-          : "Une erreur inattendue est survenue lors de la création de la playlist.";
+        e instanceof Error ? e.message : `${t("playlists.creationError")}`;
       setError(message);
     }
   };
@@ -160,9 +158,10 @@ export default function AddPlaylist() {
     });
 
     setformError(
-      labels.length > 1
-        ? `Veuillez corriger les ${labels.length} champs suivants : ${labels.join(", ")}.`
-        : `Veuillez corriger le champ suivant : ${labels[0]}.`,
+      t("errors.formFieldsError", {
+        count: labels.length,
+        fields: labels.join(", "),
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -177,8 +176,8 @@ export default function AddPlaylist() {
 
   return (
     <div>
-      <BackButton label="Retour" />
-      <h1>Ajouter une liste de lecture</h1>
+      <BackButton label={t("common.back")} />
+      <h1>{t("playlist.addPlaylist")}</h1>
 
       {(formError || error || usePlaylistError) && (
         <Alert type={VariantType.ERROR} canClose>
@@ -197,7 +196,7 @@ export default function AddPlaylist() {
           isSubmitting={isSubmitting}
           isMobile={isMobile}
           isLoading={usePlaylistLoading}
-          submitLabel="Ajouter la playlist"
+          submitLabel={t("playlist.addThePlaylist")}
         />
       </form>
     </div>

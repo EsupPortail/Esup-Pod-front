@@ -30,8 +30,10 @@ export default function VideoPlayer({
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [aspectRatio, setAspectRatio] = useState<string>("16 / 9");
-  
-  const [seekIndicator, setSeekIndicator] = useState<{ type: "forward" | "backward" } | null>(null);
+
+  const [seekIndicator, setSeekIndicator] = useState<{
+    type: "forward" | "backward";
+  } | null>(null);
   const seekIndicatorTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const showSeekIndicator = (type: "forward" | "backward") => {
@@ -57,13 +59,15 @@ export default function VideoPlayer({
   const poster = video.thumbnail_url ?? video.thumbnail ?? "";
 
   const chapters: Chapter[] = useMemo(() => {
-    return [...(video.chapters ?? [])].sort((a, b) => a.time_start - b.time_start);
+    return [...(video.chapters ?? [])].sort(
+      (a, b) => a.time_start - b.time_start,
+    );
   }, [video.chapters]);
 
   const subtitlesKey = JSON.stringify(
     (video.subtitles ?? [])
       .filter((s) => s.file?.endsWith(".vtt"))
-      .map((s) => ({ file: s.file, lang: s.language, def: s.is_default }))
+      .map((s) => ({ file: s.file, lang: s.language, def: s.is_default })),
   );
 
   useEffect(() => {
@@ -106,8 +110,8 @@ export default function VideoPlayer({
         mediaEl.poster = poster;
       }
 
-      const validSubtitles = (video.subtitles ?? []).filter(
-        (s) => s.file?.endsWith(".vtt")
+      const validSubtitles = (video.subtitles ?? []).filter((s) =>
+        s.file?.endsWith(".vtt"),
       );
       for (const subtitle of validSubtitles) {
         const trackEl = document.createElement("track");
@@ -142,7 +146,7 @@ export default function VideoPlayer({
           enableModifiersForNumbers: false,
         });
       });
-      
+
       vjsPlayerRef.current = vjsPlayer;
 
       vjsPlayer.one("loadedmetadata", () => {
@@ -161,9 +165,11 @@ export default function VideoPlayer({
       });
 
       vjsPlayer.on("keydown", (e: any) => {
-        if (e.which === 37) { // Left arrow
+        if (e.which === 37) {
+          // Left arrow
           showSeekIndicator("backward");
-        } else if (e.which === 39) { // Right arrow
+        } else if (e.which === 39) {
+          // Right arrow
           showSeekIndicator("forward");
         }
       });
@@ -208,7 +214,7 @@ export default function VideoPlayer({
       } else if (isTs && mpegts && mpegts.isSupported()) {
         mpegtsPlayer = mpegts.createPlayer(
           { type: "mse", url: streamUrl },
-          { accurateSeek: false, seekType: "range" }
+          { accurateSeek: false, seekType: "range" },
         );
         mpegtsPlayer.attachMediaElement(mediaEl);
         mpegtsPlayer.load();
@@ -223,7 +229,11 @@ export default function VideoPlayer({
     return () => {
       isMounted = false;
       if (mpegtsPlayer) {
-        try { mpegtsPlayer.destroy(); } catch { /* ignore */ }
+        try {
+          mpegtsPlayer.destroy();
+        } catch {
+          /* ignore */
+        }
       }
       if (vjsPlayer) {
         vjsPlayer.dispose();
@@ -237,7 +247,13 @@ export default function VideoPlayer({
 
   // Handle seeking to marker time once ready
   useEffect(() => {
-    if (isReady && useMarkerTime && markerTime > 0 && !hasSeekedRef.current && vjsPlayerRef.current) {
+    if (
+      isReady &&
+      useMarkerTime &&
+      markerTime > 0 &&
+      !hasSeekedRef.current &&
+      vjsPlayerRef.current
+    ) {
       vjsPlayerRef.current.currentTime(markerTime);
       hasSeekedRef.current = true;
     }
@@ -250,7 +266,8 @@ export default function VideoPlayer({
 
     const handlePause = () => {
       const time = player.currentTime();
-      if (time && time > 5) { // don't save if very start
+      if (time && time > 5) {
+        // don't save if very start
         saveMarker(Math.floor(time));
       }
     };
@@ -322,7 +339,10 @@ export default function VideoPlayer({
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <span className="material-icons" style={{ fontSize: "1.1rem", color: "#94a3b8" }}>
+          <span
+            className="material-icons"
+            style={{ fontSize: "1.1rem", color: "#94a3b8" }}
+          >
             {isEncoding ? "hourglass_empty" : "info"}
           </span>
           <span>
@@ -349,7 +369,9 @@ export default function VideoPlayer({
               gap: "4px",
               marginLeft: "4px",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.textDecoration = "underline")
+            }
             onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
           >
             <span className="material-icons" style={{ fontSize: "0.95rem" }}>
@@ -386,43 +408,49 @@ export default function VideoPlayer({
       />
 
       {/* Chapters Overlay / Segment Markers on progress bar */}
-      {isReady && chapters.length > 0 && video.duration && video.duration > 0 && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "35px",
-            left: "12px",
-            right: "12px",
-            height: "4px",
-            pointerEvents: "none",
-            zIndex: 12,
-            display: "flex",
-          }}
-        >
-          {chapters.map((ch, idx) => {
-            const nextStart = chapters[idx + 1] ? chapters[idx + 1].time_start : video.duration!;
-            const segDuration = Math.max(0, nextStart - ch.time_start);
-            const pct = (segDuration / video.duration!) * 100;
+      {isReady &&
+        chapters.length > 0 &&
+        video.duration &&
+        video.duration > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "35px",
+              left: "12px",
+              right: "12px",
+              height: "4px",
+              pointerEvents: "none",
+              zIndex: 12,
+              display: "flex",
+            }}
+          >
+            {chapters.map((ch, idx) => {
+              const nextStart = chapters[idx + 1]
+                ? chapters[idx + 1].time_start
+                : video.duration!;
+              const segDuration = Math.max(0, nextStart - ch.time_start);
+              const pct = (segDuration / video.duration!) * 100;
 
-            return (
-              <div
-                key={ch.id || idx}
-                style={{
-                  width: `${pct}%`,
-                  height: "100%",
-                  borderRight: idx < chapters.length - 1 ? "2px solid #000" : "none",
-                  boxSizing: "border-box",
-                  pointerEvents: "auto",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={() => setHoveredChapter(ch.title)}
-                onMouseLeave={() => setHoveredChapter(null)}
-                title={ch.title}
-              />
-            );
-          })}
-        </div>
-      )}
+              return (
+                <div
+                  key={ch.id || idx}
+                  style={{
+                    width: `${pct}%`,
+                    height: "100%",
+                    borderRight:
+                      idx < chapters.length - 1 ? "2px solid #000" : "none",
+                    boxSizing: "border-box",
+                    pointerEvents: "auto",
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={() => setHoveredChapter(ch.title)}
+                  onMouseLeave={() => setHoveredChapter(null)}
+                  title={ch.title}
+                />
+              );
+            })}
+          </div>
+        )}
 
       {/* Chapter Hover Title */}
       {hoveredChapter && (
@@ -474,7 +502,13 @@ export default function VideoPlayer({
           <span className="material-icons" style={{ fontSize: "2rem" }}>
             {seekIndicator.type === "forward" ? "fast_forward" : "fast_rewind"}
           </span>
-          <span style={{ fontSize: "0.85rem", fontWeight: "bold", marginTop: "4px" }}>
+          <span
+            style={{
+              fontSize: "0.85rem",
+              fontWeight: "bold",
+              marginTop: "4px",
+            }}
+          >
             {seekIndicator.type === "forward" ? "+10s" : "-10s"}
           </span>
           <style>{`

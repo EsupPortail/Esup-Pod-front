@@ -1,14 +1,8 @@
 // cunningham.ts
-export default {
+const cunninghamConfig = {
   themes: {
     default: {
       components: {
-        "forms-input": {
-          "placeholder-color": "#6A788A",
-        },
-        "forms-labelledbox": {
-          "label-color--small": "#6A788A",
-        },
         "forms-checkbox": {
           "border-radius": "6px",
         },
@@ -57,3 +51,5 @@ export default {
     },
   },
 };
+
+export default cunninghamConfig;

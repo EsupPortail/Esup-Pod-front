@@ -31,14 +31,44 @@ export default function CollectionCardSkeleton() {
         />
       </Card>
       <Box sx={{ mt: 1.5 }}>
-        <Skeleton variant="text" animation="wave" width="80%" height={24} sx={{ mb: 1 }} />
+        <Skeleton
+          variant="text"
+          animation="wave"
+          width="80%"
+          height={24}
+          sx={{ mb: 1 }}
+        />
         <Box sx={{ display: "flex", gap: 2, mb: 1 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, width: "30%" }}>
-            <Skeleton variant="circular" animation="wave" width={16} height={16} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              width: "30%",
+            }}
+          >
+            <Skeleton
+              variant="circular"
+              animation="wave"
+              width={16}
+              height={16}
+            />
             <Skeleton variant="text" animation="wave" width="80%" height={16} />
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, width: "30%" }}>
-            <Skeleton variant="circular" animation="wave" width={16} height={16} />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              width: "30%",
+            }}
+          >
+            <Skeleton
+              variant="circular"
+              animation="wave"
+              width={16}
+              height={16}
+            />
             <Skeleton variant="text" animation="wave" width="80%" height={16} />
           </Box>
         </Box>

@@ -67,7 +67,7 @@ export default function VideoCardActionMenu({
       <IconButton
         onClick={handleClick}
         size="small"
-        aria-label="Actions vidéo"
+        aria-label={t("a11y.videoActions")}
         aria-controls={open ? "video-action-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -120,7 +120,12 @@ export default function VideoCardActionMenu({
               },
             }}
           >
-            <ListItemIcon sx={{ color: "var(--text-color-muted, #64748b)", minWidth: "auto !important" }}>
+            <ListItemIcon
+              sx={{
+                color: "var(--text-color-muted, #64748b)",
+                minWidth: "auto !important",
+              }}
+            >
               <EditIcon fontSize="small" />
             </ListItemIcon>
             {t("videoAction.edit")}
@@ -142,14 +147,23 @@ export default function VideoCardActionMenu({
               },
             }}
           >
-            <ListItemIcon sx={{ color: "var(--text-color-muted, #64748b)", minWidth: "auto !important" }}>
+            <ListItemIcon
+              sx={{
+                color: "var(--text-color-muted, #64748b)",
+                minWidth: "auto !important",
+              }}
+            >
               <ContentCopyIcon fontSize="small" />
             </ListItemIcon>
-            {isDuplicating ? t("videoAction.duplicating") : t("videoAction.duplicate")}
+            {isDuplicating
+              ? t("videoAction.duplicating")
+              : t("videoAction.duplicate")}
           </MenuItem>
         )}
 
-        <Divider sx={{ my: 0.5, borderColor: "var(--border-color, #e2e8f0)" }} />
+        <Divider
+          sx={{ my: 0.5, borderColor: "var(--border-color, #e2e8f0)" }}
+        />
 
         {canEdit && (
           <MenuItem
@@ -167,7 +181,9 @@ export default function VideoCardActionMenu({
               },
             }}
           >
-            <ListItemIcon sx={{ color: "#ef4444 !important", minWidth: "auto !important" }}>
+            <ListItemIcon
+              sx={{ color: "#ef4444 !important", minWidth: "auto !important" }}
+            >
               <DeleteForeverIcon fontSize="small" />
             </ListItemIcon>
             {t("videoAction.delete")}

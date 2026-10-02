@@ -33,31 +33,31 @@ export function ProfileMenuContent({
   const { t } = useTranslation();
 
   return (
-    <div className={styles.navbar_profil_menu}>
+    <div className={styles["navbar-profil-menu"]}>
       {/* ---------- Bouton de fermeture (mobile) ---------- */}
       {isMobile && (
         <Button
-          className={styles.button_close}
+          className={styles["button-close"]}
           onClick={onClose}
-          aria-label="Fermer le menu"
+          aria-label={t("sidebar.closeMenu")}
         >
           <CloseIcon aria-hidden="true" />
         </Button>
       )}
 
-      <span className={styles.navbar_profil_menu_name_user}>
+      <span className={styles["navbar-profil-menu-name-user"]}>
         {getUserDisplayName(user, config?.authentication, false)}
       </span>
 
-      <div className={styles.navbar_profil_menu_content}>
+      <div className={styles["navbar-profil-menu-content"]}>
         {/* ----- Modifier l’image de profil ----- */}
         <MenuItem
-          className={styles.navbar_profil_menu_item}
+          className={styles["navbar-profil-menu-item"]}
           component={Link}
           href="/profile-picture"
         >
           <PanoramaOutlinedIcon
-            className={styles.menu_item_icon}
+            className={styles["menu-item-icon"]}
             aria-hidden="true"
           />
           {t("navbar.myProfileImage")}
@@ -66,12 +66,12 @@ export function ProfileMenuContent({
         {/* ----- Mes filigranes / Habillages ----- */}
         {(config as any)?.dressing?.use_dressing !== false && (
           <MenuItem
-            className={styles.navbar_profil_menu_item}
+            className={styles["navbar-profil-menu-item"]}
             component={Link}
             href="/dressing"
           >
             <PaletteOutlinedIcon
-              className={styles.menu_item_icon}
+              className={styles["menu-item-icon"]}
               aria-hidden="true"
             />
             {t("preferences.dressing")}
@@ -81,14 +81,14 @@ export function ProfileMenuContent({
         {/* ----- Accès à l’administration (superUser uniquement) ----- */}
         {user.is_superuser && (
           <MenuItem
-            className={styles.navbar_profil_menu_item}
+            className={styles["navbar-profil-menu-item"]}
             component={Link}
             href={getRoutes().administration}
             target="_blank"
             rel="noopener noreferrer"
           >
             <AdminPanelSettingsOutlinedIcon
-              className={styles.menu_item_icon}
+              className={styles["menu-item-icon"]}
               aria-hidden="true"
             />
             Administration
@@ -96,12 +96,15 @@ export function ProfileMenuContent({
         )}
 
         {/* ----- Déconnexion ----- */}
-        <MenuItem className={styles.navbar_profil_menu_item} onClick={onLogout}>
+        <MenuItem
+          className={styles["navbar-profil-menu-item"]}
+          onClick={onLogout}
+        >
           <LogoutOutlinedIcon
-            className={styles.menu_item_icon}
+            className={styles["menu-item-icon"]}
             aria-hidden="true"
           />
-          Déconnexion
+          {t("common.logout")}
         </MenuItem>
       </div>
     </div>

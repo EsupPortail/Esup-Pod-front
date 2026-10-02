@@ -49,7 +49,7 @@ function LoginContent() {
     setError(null);
     try {
       await logIn(data.username.trim(), data.password.trim());
-      // Ne pas laisser cette page de login forcée dans l'historique du BackButton
+      // Prevent this forced login page from remaining in the BackButton history
       if (authRequired) {
         router.replace(safeRedirect);
       } else {
@@ -62,8 +62,8 @@ function LoginContent() {
   /* ------------------------------------------------------------------ */
 
   return (
-    <div className={styles.login_content}>
-      {/* ==== Avertissement ==== */}
+    <div className={styles["login-content"]}>
+      {/* ==== Warning ==== */}
       {authRequired && (
         <div role="alert" aria-live="polite">
           <Alert canClose type={VariantType.WARNING}>
@@ -72,7 +72,7 @@ function LoginContent() {
         </div>
       )}
 
-      {/* ==== Erreur serveur ==== */}
+      {/* ==== Server Error ==== */}
       {error && (
         <div role="alert" aria-live="assertive">
           <Alert canClose type={VariantType.ERROR}>
@@ -84,76 +84,82 @@ function LoginContent() {
       <h1>{t("common.login")}</h1>
 
       {/* ==== SSO Buttons ==== */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px", width: "100%" }}>
+      <div className={styles["sso-button"]}>
         {config?.authentication?.use_cas && (
           <Button
-            onClick={() => window.location.href = `${backUrl}/login/cas/`}
+            onClick={() => (window.location.href = `${backUrl}/login/cas/`)}
             variant="secondary"
           >
-            Connexion CAS
+            {t("navbar.login")} CAS
           </Button>
         )}
         {config?.authentication?.use_shib && (
           <Button
-            onClick={() => window.location.href = `${backUrl}/login/shibboleth/`}
+            onClick={() =>
+              (window.location.href = `${backUrl}/login/shibboleth/`)
+            }
             variant="secondary"
           >
-            Connexion {config?.authentication?.shibboleth_name || "Shibboleth"}
+            {t("navbar.login")}{" "}
+            {config?.authentication?.shibboleth_name || "Shibboleth"}
           </Button>
         )}
         {config?.authentication?.use_oidc && (
           <Button
-            onClick={() => window.location.href = `${backUrl}/login/oidc/`}
+            onClick={() => (window.location.href = `${backUrl}/login/oidc/`)}
             variant="secondary"
           >
-            Connexion {config?.authentication?.oidc_name || "OIDC"}
+            {t("navbar.login")} {config?.authentication?.oidc_name || "OIDC"}
           </Button>
         )}
       </div>
 
       {config?.authentication?.use_local_auth !== false && (
-        <form className={styles.login_form} onSubmit={handleSubmit(onSubmit)}>
-          {/* ==== Formulaire ==== */}
-        <Input
-          id="login-username"
-          label={`${t("auth.username")} *`}
-          autoComplete="login"
-          state={errors.username ? "error" : "default"}
-          aria-describedby="username-error"
-          aria-required="true"
-          {...register("username", {
-            required: "Ce champ est requis.",
-            validate: (value) =>
-              value.trim().length > 0 || "Ce champ est requis.",
-          })}
-        />
-        {errors.username && (
-          <p id="username-error" style={{ color: "red", marginTop: "0.25rem" }}>
-            {errors.username.message}
-          </p>
-        )}
+        <form
+          className={styles["login-form"]}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* ==== Form ==== */}
+          <Input
+            id="login-username"
+            label={`${t("auth.username")} *`}
+            autoComplete="login"
+            state={errors.username ? "error" : "default"}
+            aria-describedby="username-error"
+            aria-required="true"
+            {...register("username", {
+              required: t("auth.usernameRequired"),
+              validate: (value) =>
+                value.trim().length > 0 || t("auth.usernameRequired"),
+            })}
+          />
+          {errors.username && (
+            <p id="username-error" className={styles["error"]}>
+              {errors.username.message}
+            </p>
+          )}
 
-        {/* ==== Mot de passe ==== */}
-        <InputPassword
-          id="login-password"
-          label={`${t("auth.password")} *`}
-          autoComplete="password"
-          state={errors.password ? "error" : "default"}
-          aria-describedby="password-error"
-          aria-required="true"
-          {...register("password", {
-            required: "Ce champ est requis.",
-            validate: (value) =>
-              value.trim().length > 0 || "Ce champ est requis.",
-          })}
-        />
-        {errors.password && (
-          <p id="password-error" style={{ color: "red", marginTop: "0.25rem" }}>
-            {errors.password.message}
-          </p>
-        )}
+          {/* ==== Password ==== */}
+          <InputPassword
+            id="login-password"
+            label={`${t("auth.password")} *`}
+            autoComplete="password"
+            state={errors.password ? "error" : "default"}
+            aria-describedby="password-error"
+            aria-required="true"
+            {...register("password", {
+              required: t("auth.passwordRequired"),
+              validate: (value) =>
+                value.trim().length > 0 || t("auth.passwordRequired"),
+            })}
+          />
+          {errors.password && (
+            <p id="password-error" className={styles["error"]}>
+              {errors.password.message}
+            </p>
+          )}
 
-        {/* ==== Bouton de soumission ==== */}
+          {/* ==== Submit button ==== */}
           <Button variant="primary" type="submit" disabled={isSubmitting}>
             {isSubmitting ? t("common.loading") : t("auth.submitLogin")}
           </Button>

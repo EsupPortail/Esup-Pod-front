@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
+import styles from "./styles.module.css";
 
-export default function UserSettingsLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "1rem 0" }}>
-      {children}
-    </div>
-  );
+export default function UserSettingsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className={styles["settings-container"]}>{children}</div>;
 }

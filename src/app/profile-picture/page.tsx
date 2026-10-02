@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Alert, Button, FileUploader, VariantType } from "@openfun/cunningham-react";
+import Image from "next/image";
+import {
+  Alert,
+  Button,
+  FileUploader,
+  VariantType,
+} from "@openfun/cunningham-react";
 import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import { useAuth } from "@/src/context/AuthProvider";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import styles from "./styles.module.css";
 
 export const breadcrumbLabel = "Changer ma photo de profil";
@@ -18,28 +25,25 @@ export default function UserProfilePicture() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const currentPictureUrl = user?.userpicture
     ? `${BACKEND_URL.replace(/\/$/, "")}/${user.userpicture.replace(/^\//, "")}`
     : null;
 
   useEffect(() => {
-    if (!file) {
-      setPreviewUrl(null);
-      return;
-    }
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
-  // 1) Nouvel handler dans le composant
+  // 1) New handler in the component
   const handleDeletePicture = async () => {
     setError(null);
     setSuccess(null);
 
     if (!user) {
-      setError("Utilisateur non connecté.");
+      setError(t("errors.notConnected"));
       return;
     }
 
@@ -47,7 +51,7 @@ export default function UserProfilePicture() {
     try {
       const pictureUrl = getRoutes().auth.user.picture(user.id);
 
-      // Suppression côté API
+      // Deletion via the API
       const res = await authFetch(pictureUrl, {
         method: "DELETE",
         accessToken,
@@ -56,15 +60,15 @@ export default function UserProfilePicture() {
 
       if (!res.ok) {
         const message = await res.text();
-        throw new Error(message || "Échec de la suppression de l'image.");
+        throw new Error(message || t("errors.imageDeleteError"));
       }
 
-      setSuccess("Photo de profil supprimée avec succès.");
+      setSuccess(t("a11y.deleteProfilePictureSuccess"));
       await reloadAuthData();
       setFile(null);
       setPreviewUrl(null);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : t("errors.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -76,11 +80,11 @@ export default function UserProfilePicture() {
     setSuccess(null);
 
     if (!user) {
-      setError("Utilisateur non connecté.");
+      setError(t("errors.notConnected"));
       return;
     }
     if (!file) {
-      setError("Veuillez sélectionner une image.");
+      setError(t("errors.chooseImage"));
       return;
     }
 
@@ -111,17 +115,18 @@ export default function UserProfilePicture() {
 
       if (!res.ok) {
         const message = await res.text();
-        throw new Error(message || "Echec de l'envoi de l'image.");
+        throw new Error(message || t("errors.imageSendError"));
       }
 
       if (res.status === 200) {
-        setSuccess("Image de profil mise a jour avec succès ! 🥳");
-        setFile(null);
+        setSuccess(t("a11y.newProfilePictureSuccess"));
       }
+      setFile(null);
+      setPreviewUrl(null);
       await reloadAuthData();
       setFile(null);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : t("errors.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +134,7 @@ export default function UserProfilePicture() {
 
   return (
     <div>
-      <h1>Changer mon image de profil</h1>
+      <h1>{t("a11y.changeProfilePicture")}</h1>
       {error && (
         <Alert canClose type={VariantType.ERROR}>
           {error}
@@ -141,48 +146,60 @@ export default function UserProfilePicture() {
         </Alert>
       )}
       <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.picture_form}>
-          <div className={styles.picture_preview}>
+        <div className={styles["picture-form"]}>
+          <div className={styles["picture-preview"]}>
             {previewUrl ? (
-              <img src={previewUrl} alt="Apercu" width={160} height={160} />
-            ) : user?.userpicture ? (
-              <img
-                src={currentPictureUrl ?? undefined}
-                alt="Photo actuelle"
+              <Image
+                src={previewUrl}
+                alt={t("a11y.profilePreview")}
                 width={160}
                 height={160}
+                unoptimized
+              />
+            ) : user?.userpicture ? (
+              <Image
+                src={currentPictureUrl!}
+                alt={t("a11y.currentProfilePicture")}
+                width={160}
+                height={160}
+                unoptimized
               />
             ) : (
               !isInitializing && (
                 <Alert type={VariantType.INFO}>
-                  Vous n'avez pas encore de photo de profil.
+                  {t("a11y.noProfilePicture")}
                 </Alert>
               )
             )}
           </div>
           <FileUploader
-            bigText="Ajouter une photo de profil"
+            bigText={t("a11y.chooseImage")}
             fullWidth={true}
             state={error ? "error" : "default"}
             onFilesChange={(event) => {
               const selectedFile = event.target.value?.[0] ?? null;
               setError(null);
               setFile(selectedFile);
+              setPreviewUrl(
+                selectedFile ? URL.createObjectURL(selectedFile) : null,
+              );
             }}
             accept=".jpg, .jpeg, .png, .webp"
             text={
-              error ? error : "Formats supportés: jpg, jpeg, png, webp"
+              error
+                ? error
+                : `${t("a11y.supportedFormats")} jpg, jpeg, png, webp`
             }
           />
           <div></div>
           <Button
-            className={styles.submit_button}
+            className={styles["submit-button"]}
             fullWidth
             variant="primary"
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Envoi..." : "Mettre à jour"}
+            {isSubmitting ? t("pending.sending") : t("common.update")}
           </Button>
 
           {user?.userpicture && (
@@ -193,7 +210,9 @@ export default function UserProfilePicture() {
               disabled={isSubmitting}
               onClick={handleDeletePicture}
             >
-              {isSubmitting ? "Suppression..." : "Supprimer la photo actuelle"}
+              {isSubmitting
+                ? t("pending.deleting")
+                : t("a11y.deleteProfilePicture")}
             </Button>
           )}
         </div>

@@ -1,8 +1,9 @@
 "use client";
 
 import { useRequireAuth } from "@/src/hooks/useRequireAuth";
-import { Alert, VariantType, Button, Modal, ModalSize, Input } from "@openfun/cunningham-react";
+import { Alert, VariantType, Button } from "@openfun/cunningham-react";
 import { useWatermarks } from "@/src/hooks/useDressing";
+import { useTranslation } from "@/src/hooks/useTranslation";
 import { useState, useRef } from "react";
 import styles from "./dressing.module.css";
 import Image from "next/image";
@@ -11,7 +12,9 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 
 export default function DressingSettings() {
   const { isAuthenticated, isInitializing } = useRequireAuth("/login");
-  const { watermarks, isLoading, error, uploadWatermark, deleteWatermark } = useWatermarks();
+  const { watermarks, isLoading, error, uploadWatermark, deleteWatermark } =
+    useWatermarks();
+  const { t } = useTranslation();
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -19,7 +22,9 @@ export default function DressingSettings() {
     return null; // ou loader
   }
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -28,7 +33,7 @@ export default function DressingSettings() {
       await uploadWatermark(file);
     } catch (err) {
       console.error(err);
-      alert("Erreur lors de l'upload de l'image");
+      alert(t("dressingPage.uploadError"));
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -36,66 +41,67 @@ export default function DressingSettings() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce filigrane ?")) {
+    if (confirm(t("dressingPage.deleteConfirm"))) {
       await deleteWatermark(id);
     }
   };
 
   return (
     <div>
-      <h2>Habillages (Dressing)</h2>
-      <p style={{ color: "var(--c--globals--colors--gray-500)", marginBottom: "2rem" }}>
-        Gérez vos filigranes (watermarks) pour les incruster directement dans vos vidéos.
-      </p>
+      <h2>{t("sidebar.videoBranding")}</h2>
+      <p className={styles["desc"]}>{t("dressingPage.pageDescription")}</p>
 
       {error && (
-        <div style={{ marginBottom: "1rem" }}>
-          <Alert type={VariantType.ERROR}>
-            Erreur lors du chargement des filigranes.
-          </Alert>
+        <div className={styles["error"]}>
+          <Alert type={VariantType.ERROR}>{t("dressingPage.loadError")}</Alert>
         </div>
       )}
 
-      <div className={styles.headerRow}>
-        <h3>Mes Filigranes</h3>
-        <input 
-          type="file" 
-          accept="image/png, image/jpeg" 
-          ref={fileInputRef} 
-          style={{ display: "none" }} 
+      <div className={styles["header-row"]}>
+        <h3>{t("dressingPage.myWatermarks")}</h3>
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          ref={fileInputRef}
+          hidden={true}
           onChange={handleFileChange}
         />
-        <Button 
+        <Button
           icon={<AddPhotoAlternateIcon />}
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          {isUploading ? "Envoi en cours..." : "Ajouter un filigrane"}
+          {isUploading
+            ? `${t("dressingPage.uploading")}`
+            : t("dressingPage.addWatermark")}
         </Button>
       </div>
 
       {isLoading ? (
-        <p>Chargement...</p>
+        <p>{t("common.loading")}</p>
       ) : watermarks.length === 0 ? (
-        <Alert type={VariantType.INFO}>
-          Vous n'avez pas encore envoyé de filigrane.
-        </Alert>
+        <Alert type={VariantType.INFO}>{t("dressingPage.noWatermarks")}</Alert>
       ) : (
-        <div className={styles.watermarkGrid}>
+        <div className={styles["watermark-grid"]}>
           {watermarks.map((wm) => (
-            <div key={wm.id} className={styles.watermarkCard}>
-              <div className={styles.watermarkPreview}>
-                <Image src={wm.image} alt="Watermark" fill style={{ objectFit: "contain" }} />
+            <div key={wm.id} className={styles["watermark-card"]}>
+              <div className={styles["watermark-preview"]}>
+                <Image
+                  src={wm.image}
+                  alt={t("a11y.watermark")}
+                  fill
+                  className={styles["watermark-preview-image"]}
+                />
               </div>
-              <div className={styles.watermarkActions}>
-                <span className={styles.dateLabel}>
+              <div className={styles["watermark-actions"]}>
+                <span className={styles["date-label"]}>
                   {new Date(wm.created_at).toLocaleDateString()}
                 </span>
-                <Button 
-                  color="error" 
-                  icon={<DeleteIcon />} 
+                <Button
+                  color="error"
+                  icon={<DeleteIcon />}
                   onClick={() => handleDelete(wm.id)}
-                  aria-label="Supprimer"
+                  aria-label={t("common.delete")}
                 />
               </div>
             </div>

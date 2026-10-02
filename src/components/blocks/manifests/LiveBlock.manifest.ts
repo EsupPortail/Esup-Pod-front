@@ -1,7 +1,8 @@
 export const LiveBlockManifest = {
   frontend_id: "live-block",
   name: "Bloc Directs (Live Streams)",
-  description: "Affiche la liste des directs en cours avec un indicateur actif rouge.",
+  description:
+    "Affiche la liste des directs en cours avec un indicateur actif rouge.",
   fields: {
     order_by: {
       type: "select",

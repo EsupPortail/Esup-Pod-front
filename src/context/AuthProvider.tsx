@@ -4,6 +4,7 @@ import {
   useContext,
   createContext,
   useEffect,
+  useCallback,
   useMemo,
   useState,
   useRef,
@@ -15,6 +16,7 @@ import { getRoutes } from "../api/routes";
 import { useAppConfig } from "../hooks/useAppConfig";
 
 import { useRouter } from "next/navigation";
+import { useTranslation } from "../hooks/useTranslation";
 type AuthConfig = {
   use_local: boolean;
   use_cas: boolean;
@@ -117,31 +119,36 @@ export default function AuthProvider(props: AuthProviderProps) {
     [authConfig, logoutInfo],
   );
 
+  const persistTokens = useCallback(
+    (token: string | null, refreshValue: string | null) => {
+      setAccessToken(token);
+      setRefreshToken(refreshValue);
 
+      // Si on enregistre de nouveaux tokens (login ou refresh réussi),
+      // on réinitialise le flag pour permettre une future détection
+      // d'expiration de session.
+      if (token && refreshValue) {
+        hasForcedLogoutRef.current = false;
+      }
+      if (token) {
+        localStorage.setItem(ACCESS_TOKEN_KEY, token);
+      } else {
+        localStorage.removeItem(ACCESS_TOKEN_KEY);
+      }
+      if (refreshValue) {
+        localStorage.setItem(REFRESH_TOKEN_KEY, refreshValue);
+      } else {
+        localStorage.removeItem(REFRESH_TOKEN_KEY);
+      }
+    },
+    [],
+  );
 
-  const persistTokens = (token: string | null, refreshValue: string | null) => {
-    setAccessToken(token);
-    setRefreshToken(refreshValue);
-
-    // Si on enregistre de nouveaux tokens (login ou refresh réussi),
-    // on réinitialise le flag pour permettre une future détection
-    // d'expiration de session.
-    if (token && refreshValue) {
-      hasForcedLogoutRef.current = false;
-    }
-    token
-      ? localStorage.setItem(ACCESS_TOKEN_KEY, token)
-      : localStorage.removeItem(ACCESS_TOKEN_KEY);
-    refreshValue
-      ? localStorage.setItem(REFRESH_TOKEN_KEY, refreshValue)
-      : localStorage.removeItem(REFRESH_TOKEN_KEY);
-  };
-
-  const logout = () => {
+  const logout = useCallback(() => {
     persistTokens(null, null);
     setUser(null);
     setLogoutInfo(null);
-  };
+  }, [persistTokens]);
 
   /**
    * Déconnexion forcée + redirection vers la page de login
@@ -151,7 +158,7 @@ export default function AuthProvider(props: AuthProviderProps) {
    * plusieurs fois en cas de multiples requêtes concurrentes qui
    * échouent en même temps.
    */
-  const forceLogoutAndRedirectToLogin = () => {
+  const forceLogoutAndRedirectToLogin = useCallback(() => {
     if (hasForcedLogoutRef.current) {
       return;
     }
@@ -171,46 +178,50 @@ export default function AuthProvider(props: AuthProviderProps) {
     router.replace(
       `/login?reason=auth&redirect=${encodeURIComponent(currentPath)}`,
     );
-  };
+  }, [logout, router]);
 
-  const verify = async (token?: string | null) => {
-    const tokenToVerify = token ?? accessToken;
-    if (!tokenToVerify) return false;
-    try {
-      await requestJson(getRoutes().auth.token.verify, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: tokenToVerify }),
-      });
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const refresh = async (token?: string | null) => {
-    const tokenToRefresh = token ?? refreshToken;
-    if (!tokenToRefresh) return null;
-    try {
-      const data = await requestJson<{ access: string }>(
-        getRoutes().auth.token.refresh,
-        {
+  const verify = useCallback(
+    async (token?: string | null) => {
+      const tokenToVerify = token ?? accessToken;
+      if (!tokenToVerify) return false;
+      try {
+        await requestJson(getRoutes().auth.token.verify, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ refresh: tokenToRefresh }),
-        },
-      );
-      const newAccess = data.access;
-      persistTokens(newAccess, tokenToRefresh);
-      return newAccess;
-    } catch {
-      // Si le refresh échoue (401 typiquement), on considère que la
-      // session est expirée : on force la déconnexion et on redirige
-      // l'utilisateur vers la page de login.
-      forceLogoutAndRedirectToLogin();
-      return null;
-    }
-  };
+          body: JSON.stringify({ token: tokenToVerify }),
+        });
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [accessToken],
+  );
+
+  const refresh = useCallback(
+    async (token?: string | null) => {
+      const tokenToRefresh = token ?? refreshToken;
+      if (!tokenToRefresh) return null;
+      try {
+        const data = await requestJson<{ access: string }>(
+          getRoutes().auth.token.refresh,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh: tokenToRefresh }),
+          },
+        );
+        const newAccess = data.access;
+        persistTokens(newAccess, tokenToRefresh);
+        return newAccess;
+      } catch {
+        // If the refresh fails (typically 401), we consider the session to be expired: we force logout and redirect the user to the login page.
+        forceLogoutAndRedirectToLogin();
+        return null;
+      }
+    },
+    [forceLogoutAndRedirectToLogin, persistTokens, refreshToken],
+  );
 
   const loadAuthDataWithToken = async (
     token: string,
@@ -243,28 +254,14 @@ export default function AuthProvider(props: AuthProviderProps) {
     }
   };
 
-  const reloadAuthData = async () => {
+  const reloadAuthData = useCallback(async () => {
     if (!accessToken) {
       setUser(null);
       setLogoutInfo(null);
       return;
     }
     await loadAuthDataWithToken(accessToken, refresh);
-  };
-
-  const logIn = async (username: string, password: string) => {
-    const data = await requestJson<{ access: string; refresh: string }>(
-      getRoutes().auth.token.create,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      },
-    );
-
-    persistTokens(data.access, data.refresh);
-    await loadAuthDataWithToken(data.access, () => refresh(data.refresh));
-  };
+  }, [accessToken, refresh]);
 
   useEffect(() => {
     const init = async () => {
@@ -299,11 +296,25 @@ export default function AuthProvider(props: AuthProviderProps) {
     };
 
     init();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const value = useMemo<AuthContextValue>(
-    () => ({
+  const value = useMemo<AuthContextValue>(() => {
+    const logIn = async (username: string, password: string) => {
+      const data = await requestJson<{ access: string; refresh: string }>(
+        getRoutes().auth.token.create,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        },
+      );
+
+      persistTokens(data.access, data.refresh);
+      await loadAuthDataWithToken(data.access, () => refresh(data.refresh));
+    };
+
+    return {
       accessToken,
       refreshToken,
       isAuthenticated: Boolean(accessToken),
@@ -317,17 +328,21 @@ export default function AuthProvider(props: AuthProviderProps) {
       refresh,
       verify,
       reloadAuthData,
-    }),
-    [
-      accessToken,
-      refreshToken,
-      isInitializing,
-      user,
-      authConfig,
-      logoutUrl,
-      isAuthDataLoading,
-    ],
-  );
+    };
+  }, [
+    accessToken,
+    refreshToken,
+    isInitializing,
+    user,
+    authConfig,
+    logoutUrl,
+    isAuthDataLoading,
+    logout,
+    refresh,
+    verify,
+    reloadAuthData,
+    persistTokens,
+  ]);
 
   return (
     <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
@@ -335,9 +350,10 @@ export default function AuthProvider(props: AuthProviderProps) {
 }
 
 export const useAuth = () => {
+  const { t } = useTranslation();
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth doit etre utilise dans AuthProvider.");
+    throw new Error(t("providers.auth"));
   }
   return ctx;
 };

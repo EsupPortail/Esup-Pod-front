@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Paper from "@mui/material/Paper";
 import { useVideo, useDeleteVideo } from "@/src/hooks/useVideos";
@@ -10,17 +9,23 @@ import { Alert, Button, VariantType } from "@openfun/cunningham-react";
 import styles from "./styles.module.css";
 import { useVideoPermissions } from "@/src/hooks/useVideoPermission";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Supprimer la vidéo";
 
 export default function DeleteVideoPage() {
   const router = useRouter();
   const params = useParams();
+  const { t } = useTranslation();
   const getVideoSlug = Array.isArray(params.slug)
     ? params.slug[0]
     : params.slug;
   const { isAuthenticated, isInitializing, mounted } = useRequireAuth();
-  const { data: video, isLoading: useVideoLoading, error } = useVideo(getVideoSlug ?? "");
+  const {
+    data: video,
+    isLoading: useVideoLoading,
+    error,
+  } = useVideo(getVideoSlug ?? "");
   const useVideoError = error?.message ?? null;
   const { mutateAsync: deleteVideo } = useDeleteVideo();
   const { isOwnerOrCoOwner } = useVideoPermissions(video ?? null);
@@ -41,7 +46,7 @@ export default function DeleteVideoPage() {
   }
 
   return (
-    <div className={styles.delete_container}>
+    <div className={styles["delete-container"]}>
       <Paper sx={{ p: 4, maxWidth: 520, width: "100%" }}>
         <h2>Supprimer la vidéo</h2>
 
@@ -49,7 +54,7 @@ export default function DeleteVideoPage() {
 
         {useVideoError ? (
           <div>
-            <Alert type={VariantType.ERROR} className={styles.delete_alert}>
+            <Alert type={VariantType.ERROR} className={styles["delete-alert"]}>
               {useVideoError ?? "Vidéo introuvable."}
             </Alert>
             <Button
@@ -57,11 +62,11 @@ export default function DeleteVideoPage() {
               onClick={() => router.back()}
               disabled={useVideoLoading}
             >
-              Annuler
+              {t("common.cancel")}
             </Button>
           </div>
         ) : !isOwnerOrCoOwner ? (
-          <Alert type={VariantType.ERROR} className={styles.delete_alert}>
+          <Alert type={VariantType.ERROR} className={styles["delete-alert"]}>
             Vous ne pouvez pas accéder à cette page
           </Alert>
         ) : video ? (
@@ -72,7 +77,7 @@ export default function DeleteVideoPage() {
               Cette action est définitive.
             </p>
 
-            <div className={styles.buttons_action}>
+            <div className={styles["buttons-action"]}>
               <Button
                 color="brand"
                 variant="secondary"
@@ -80,7 +85,7 @@ export default function DeleteVideoPage() {
                 onClick={() => router.back()}
                 disabled={useVideoLoading}
               >
-                Annuler
+                {t("common.cancel")}
               </Button>
 
               <Button

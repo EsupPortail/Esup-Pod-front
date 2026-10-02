@@ -31,7 +31,7 @@ src/components/video/player/
 2. **Contextes / Providers** : `AuthProvider` (le maintien de l'état JWT, le refresh silencieux).
 3. **Utilitaires** : Les fonctions métiers pures (`requestJson.ts`).
 
-*Nous ne testons pas l'interface UI au pixel près (Snapshots), mais bien les comportements.*
+_Nous ne testons pas l'interface UI au pixel près (Snapshots), mais bien les comportements._
 
 ## 5. Exécution des Tests
 

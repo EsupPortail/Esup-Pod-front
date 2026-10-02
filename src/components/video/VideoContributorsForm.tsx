@@ -17,19 +17,29 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PersonIcon from "@mui/icons-material/Person";
 import CircularProgress from "@mui/material/CircularProgress";
 import styles from "../../app/video/edit/[slug]/styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 // Custom debounce
-function debounce(func: Function, timeout = 300) {
-  let timer: any;
-  return (...args: any[]) => {
+function debounce<T extends (...args: never[]) => void>(
+  func: T,
+  timeout = 300,
+) {
+  let timer: ReturnType<typeof setTimeout>;
+
+  return (...args: Parameters<T>) => {
     clearTimeout(timer);
+
     timer = setTimeout(() => {
       func(...args);
     }, timeout);
   };
 }
 
-export default function VideoContributorsForm({ videoId }: { videoId: number }) {
+export default function VideoContributorsForm({
+  videoId,
+}: {
+  videoId: number;
+}) {
   const {
     contributions,
     isLoading: contributionsLoading,
@@ -37,26 +47,26 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
     removeContribution,
   } = useContributions(videoId);
   const { config } = useAppConfig();
+  const { t } = useTranslation();
 
-  const roleChoices =
-    (config as any)?.completion?.role_choices || [
-      ["actor", "Acteur"],
-      ["author", "Auteur"],
-      ["consultant", "Consultant"],
-      ["contributor", "Contributeur"],
-      ["director", "Réalisateur"],
-      ["speaker", "Intervenant"],
-      ["technician", "Technicien"],
-      ["voice-over", "Voix off"],
-    ];
+  const roleChoices = (config as any)?.completion?.role_choices || [
+    ["actor", "Acteur"],
+    ["author", "Auteur"],
+    ["consultant", "Consultant"],
+    ["contributor", "Contributeur"],
+    ["director", "Réalisateur"],
+    ["speaker", "Intervenant"],
+    ["technician", "Technicien"],
+    ["voice-over", "Voix off"],
+  ];
 
   const [searchInputValue, setSearchInputValue] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const { data: searchResults, isLoading: searchLoading } = useContributorsSearch(
-    debouncedSearch
-  );
+  const { data: searchResults, isLoading: searchLoading } =
+    useContributorsSearch(debouncedSearch);
 
-  const [selectedContributor, setSelectedContributor] = useState<Contributor | null>(null);
+  const [selectedContributor, setSelectedContributor] =
+    useState<Contributor | null>(null);
   const [selectedRole, setSelectedRole] = useState("author");
   const [jobTitle, setJobTitle] = useState("");
 
@@ -64,7 +74,7 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
 
   const debouncedSetSearch = useMemo(
     () => debounce((v: string) => setDebouncedSearch(v), 400),
-    []
+    [],
   );
 
   const handleAdd = async () => {
@@ -81,9 +91,7 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
       setSearchInputValue("");
       setJobTitle("");
     } catch (err: any) {
-      setError(
-        err.message || "Impossible d'ajouter ce contributeur (peut-être déjà ajouté avec ce rôle ?)"
-      );
+      setError(err.message || t("contributors.addError"));
     }
   };
 
@@ -93,22 +101,35 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
   };
 
   return (
-    <div className={styles.element_card}>
-      <div className={styles.element_card_info}>
-        <span className={styles.element_card_title}>Contributeurs & Intervenants</span>
-        <span className={styles.element_card_desc}>
-          Ajoutez des auteurs, réalisateurs ou intervenants à votre vidéo.
+    <div className={styles["element-card"]}>
+      <div className={styles["element-card_info"]}>
+        <span className={styles["element-card_title"]}>
+          {t("common.contributors")}
+        </span>
+        <span className={styles["element-card_desc"]}>
+          {t("common.addContributorsDesc")}
         </span>
       </div>
       <div style={{ width: "100%", padding: "1rem" }}>
         {error && (
-          <Alert type={VariantType.ERROR} canClose onClose={() => setError(null)}>
+          <Alert
+            type={VariantType.ERROR}
+            canClose
+            onClose={() => setError(null)}
+          >
             {error}
           </Alert>
         )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "flex-start" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              flexWrap: "wrap",
+              alignItems: "flex-start",
+            }}
+          >
             <Autocomplete
               sx={{ flexGrow: 1, minWidth: "250px" }}
               options={searchResults || []}
@@ -125,14 +146,16 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Rechercher un contributeur..."
+                  label={t("contributors.searchLabel")}
                   variant="outlined"
                   size="small"
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <>
-                        {searchLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                        {searchLoading ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
                         {params.InputProps.endAdornment}
                       </>
                     ),
@@ -142,7 +165,7 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
             />
             <TextField
               select
-              label="Rôle"
+              label={t("contributors.roleLabel")}
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
               size="small"
@@ -155,21 +178,22 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
               ))}
             </TextField>
 
-            {(selectedRole as any) === "speaker" && (config as any)?.completion?.use_speaker !== false && (
-              <TextField
-                label="Fonction / Titre"
-                size="small"
-                value={jobTitle}
-                onChange={(e) => setJobTitle(e.target.value)}
-              />
-            )}
+            {(selectedRole as any) === "speaker" &&
+              (config as any)?.completion?.use_speaker !== false && (
+                <TextField
+                  label={t("contributors.functionLabel")}
+                  size="small"
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                />
+              )}
 
             <Button
               color="brand"
               onClick={handleAdd}
               disabled={!selectedContributor || addContribution.isPending}
             >
-              {addContribution.isPending ? "Ajout..." : "Ajouter"}
+              {addContribution.isPending ? t("common.adding") : t("common.add")}
             </Button>
           </div>
 
@@ -177,7 +201,9 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
             {contributionsLoading ? (
               <CircularProgress size={24} />
             ) : contributions.length > 0 ? (
-              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
                 {contributions.map((c) => (
                   <Box
                     key={c.id}
@@ -191,15 +217,29 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
                       background: "var(--c--globals--colors--gray-000)",
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                      }}
+                    >
                       <PersonIcon color="action" />
                       <Box>
                         <div style={{ fontWeight: 600 }}>
-                          {c.contributor_details.first_name} {c.contributor_details.last_name}
+                          {c.contributor_details.first_name}{" "}
+                          {c.contributor_details.last_name}
                         </div>
-                        <div style={{ fontSize: "0.85rem", color: "var(--c--globals--colors--gray-600)" }}>
+                        <div
+                          style={{
+                            fontSize: "0.85rem",
+                            color: "var(--c--globals--colors--gray-600)",
+                          }}
+                        >
                           {getRoleLabel(c.role)}
-                          {c.role === "speaker" && c.job_title ? ` - ${c.job_title}` : ""}
+                          {c.role === "speaker" && c.job_title
+                            ? ` - ${c.job_title}`
+                            : ""}
                         </div>
                       </Box>
                     </Box>
@@ -216,7 +256,7 @@ export default function VideoContributorsForm({ videoId }: { videoId: number }) 
               </Box>
             ) : (
               <span style={{ fontSize: "0.9rem", color: "gray" }}>
-                Aucun contributeur associé.
+                {t("contributors.noContributors")}
               </span>
             )}
           </Box>

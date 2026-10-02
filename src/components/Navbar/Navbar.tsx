@@ -35,7 +35,7 @@ import Tooltip from "@mui/material/Tooltip";
 const appLogo = process.env.NEXT_PUBLIC_APP_LOGO;
 const appTitle = process.env.NEXT_PUBLIC_APP_TITLE;
 /* ------------------------------------------------------------------ */
-/*  Recherche (chargement dynamique)                                  */
+/*  Search Form (Dynamically Loaded)                                   */
 /* ------------------------------------------------------------------ */
 const SearchForm = dynamic(
   () => import("../SearchForm/SearchForm").then((mod) => mod.SearchForm),
@@ -43,9 +43,10 @@ const SearchForm = dynamic(
 );
 
 import { useTranslation } from "@/src/hooks/useTranslation";
+import Image from "next/image";
 
 /* ------------------------------------------------------------------ */
-/*  Menu Préférences Unifié (Thème, Langue, Paramètres)               */
+/*  Preferences Menu (Unified Preferences Menu - Theme, Language, Settings) */
 /* ------------------------------------------------------------------ */
 export function PreferencesMenu() {
   const { theme, handleTheme } = useCunninghamTheme();
@@ -109,14 +110,21 @@ export function PreferencesMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleTheme} sx={{ borderRadius: "8px", gap: 1.5, py: 1 }}>
+        <MenuItem
+          onClick={handleTheme}
+          sx={{ borderRadius: "8px", gap: 1.5, py: 1 }}
+        >
           {isDark ? (
-            <LightModeOutlinedIcon sx={{ fontSize: "1.2rem", color: "#f59e0b" }} />
+            <LightModeOutlinedIcon
+              sx={{ fontSize: "1.2rem", color: "#f59e0b" }}
+            />
           ) : (
             <DarkModeOutlinedIcon sx={{ fontSize: "1.2rem" }} />
           )}
           <Typography variant="body2" fontWeight={500}>
-            {isDark ? t("preferences.lightModeLabel") : t("preferences.darkModeLabel")}
+            {isDark
+              ? t("preferences.lightModeLabel")
+              : t("preferences.darkModeLabel")}
           </Typography>
         </MenuItem>
 
@@ -143,14 +151,14 @@ export function PreferencesMenu() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Bouton de connexion                                               */
+/*  Login Button                                                        */
 /* ------------------------------------------------------------------ */
 export function LoginButton() {
   const { t } = useTranslation();
   return (
     <Link key="login-link" href="/login">
       <Button
-        className={styles.navbar_button}
+        className={styles["navbar-button"]}
         icon={
           <span className="material-icons" aria-hidden="true">
             person
@@ -161,14 +169,16 @@ export function LoginButton() {
         size="medium"
         aria-label={t("common.login")}
       >
-        <span className={styles.navbar_button_display}>{t("common.login")}</span>
+        <span className={styles["navbar-button-display"]}>
+          {t("common.login")}
+        </span>
       </Button>
     </Link>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Menu utilisateur authentifié                                      */
+/*  Authenticated User Menu                                             */
 /* ------------------------------------------------------------------ */
 export function AuthMenu({
   isMobile,
@@ -181,6 +191,7 @@ export function AuthMenu({
   const { logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const { t } = useTranslation();
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -197,17 +208,22 @@ export function AuthMenu({
 
   return (
     <div>
-      <div className={styles.navbar_profil}>
-        <Tooltip title={user.is_staff ? `${user.username} (Admin)` : user.username} arrow>
+      <div className={styles["navbar-profil"]}>
+        <Tooltip
+          title={user.is_staff ? `${user.username} (Admin)` : user.username}
+          arrow
+        >
           <IconButton
             onClick={handleClickMenu}
             size="small"
             aria-controls={openMenu ? "account-menu" : undefined}
             aria-expanded={openMenu ? "true" : undefined}
-            aria-label="Ouvrir le menu du profil"
+            aria-label={t("navbar.openProfileMenu")}
             sx={{
               p: "2px",
-              border: user.is_staff ? "2px solid #3b82f6" : "2px solid transparent",
+              border: user.is_staff
+                ? "2px solid #3b82f6"
+                : "2px solid transparent",
               borderRadius: "50%",
             }}
           >
@@ -219,7 +235,7 @@ export function AuthMenu({
       </div>
 
       {isMobile ? (
-        /* ---- Version mobile : dialogue plein écran ---- */
+        /* ---- Mobile version: full-screen dialog ---- */
         <Dialog fullScreen open={openMenu} onClose={handleCloseMenu}>
           <ProfileMenuContent
             user={user}
@@ -228,7 +244,7 @@ export function AuthMenu({
           />
         </Dialog>
       ) : (
-        /* ---- Version desktop : menu ancré ---- */
+        /* ---- Desktop version: anchored menu ---- */
         <Menu
           anchorEl={anchorEl}
           id="account-menu"
@@ -276,7 +292,7 @@ export function AuthMenu({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Composant principal Navbar                                        */
+/*  Main Navbar Component                                              */
 /* ------------------------------------------------------------------ */
 export default function Navbar() {
   const { handleFixSidebar, sidebarOpen } = useSidebar();
@@ -284,17 +300,25 @@ export default function Navbar() {
   const { t } = useTranslation();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const router = useRouter();
   const { config } = useAppConfig();
-  const canUpload = (config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff;
+  const canUpload =
+    (config as any)?.video?.allow_authenticated_upload !== false ||
+    user?.is_staff;
 
   return (
     <div>
       <nav className={styles.navbar}>
         {isMobile && isSearchOpen ? (
-          <div style={{ display: 'flex', width: '100%', alignItems: 'center', gap: '8px' }}>
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
             <IconButton
-              aria-label="Fermer la recherche"
+              aria-label={t("navbar.closeSearch")}
               onClick={() => setIsSearchOpen(false)}
             >
               <span className="material-icons" aria-hidden="true">
@@ -307,79 +331,99 @@ export default function Navbar() {
           </div>
         ) : (
           <>
-        {/* ------- Bouton d’ouverture/fermeture du menu principal ------- */}
-        <div className={styles.navbar_item}>
-          <button
-            type="button"
-            aria-label="Menu principal"
-            onClick={handleFixSidebar}
-            className={styles.navbar_button_menu}
-          >
-            {sidebarOpen ? (
-              <MenuOpenIcon aria-hidden="true" />
-            ) : (
-              <MenuIcon aria-hidden="true" />
+            {/* ------- Main menu open/close button ------- */}
+            <div className={styles["navbar-item"]}>
+              <button
+                type="button"
+                aria-label={t("sidebar.mainMenu")}
+                onClick={handleFixSidebar}
+                className={styles["navbar-button-menu"]}
+              >
+                {sidebarOpen ? (
+                  <MenuOpenIcon aria-hidden="true" />
+                ) : (
+                  <MenuIcon aria-hidden="true" />
+                )}
+              </button>
+            </div>
+
+            <div className="">
+              <Link
+                className={styles["navbar-logo"]}
+                key="accueil-link"
+                href="/"
+              >
+                {appLogo && (
+                  <Image
+                    width={100}
+                    height={100}
+                    className="pr-sm pl-sm"
+                    src={appLogo}
+                    alt={t("a11y.homeLogo")}
+                  />
+                )}
+                <strong>{appTitle}</strong>
+              </Link>
+            </div>
+
+            {/* ------------------- Search (desktop) ------------------- */}
+            {!isMobile && (
+              <div className={styles["navbar-search"]}>
+                <SearchForm />
+              </div>
             )}
-          </button>
-        </div>
 
-        <div className="">
-          <Link className={styles.navbar_logo} key="accueil-link" href="/">
-            <img className="pr-sm pl-sm" src={appLogo} alt="Logo Esup-Pod — Retour à l'accueil" />
-            <strong>{appTitle}</strong>
-          </Link>
-        </div>
+            {/* ------------------- Search (mobile) ------------------- */}
+            {isMobile && (
+              <div className={styles["navbar-search-mobile"]}>
+                <IconButton
+                  aria-label={t("navbar.openSearch")}
+                  onClick={() => setIsSearchOpen(true)}
+                >
+                  <span className="material-icons" aria-hidden="true">
+                    search
+                  </span>
+                </IconButton>
+              </div>
+            )}
 
-        {/* ------------------- Recherche (desktop) ------------------- */}
-        {!isMobile && (
-          <div className={styles.navbar_search}>
-            <SearchForm />
-          </div>
-        )}
+            {/* ------------------- "Add a video" button ------------------- */}
+            {accessToken && user && !isInitializing && canUpload && (
+              <div className={styles["navbar-add-video"]}>
+                <Button
+                  className={styles["navbar-button"]}
+                  icon={<AddCircleOutlineIcon aria-hidden="true" />}
+                  iconPosition="right"
+                  variant="primary"
+                  size="medium"
+                  href="/video/add"
+                >
+                  <span className={styles["navbar-button-display"]}>
+                    {t("common.addVideo")}
+                  </span>
+                </Button>
+              </div>
+            )}
 
-        {/* ------------------- Recherche (mobile) ------------------- */}
-        {isMobile && (
-          <div className={styles.navbar_search_mobile}>
-            <IconButton
-              aria-label="Ouvrir la recherche"
-              onClick={() => setIsSearchOpen(true)}
+            {/* ------------------- Utilities (Unified Preferences Menu) ------------------- */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                marginLeft: "var(--c--globals--spacings--s)",
+                marginRight: "var(--c--globals--spacings--s)",
+              }}
             >
-              <span className="material-icons" aria-hidden="true">
-                search
-              </span>
-            </IconButton>
-          </div>
-        )}
+              <PreferencesMenu />
+            </div>
 
-        {/* ------------------- Bouton “Ajouter une vidéo” ------------------- */}
-        {accessToken && user && !isInitializing && canUpload && (
-          <div className={styles.navbar_add_video}>
-            <Button
-              className={styles.navbar_button}
-              icon={<AddCircleOutlineIcon aria-hidden="true" />}
-              iconPosition="right"
-              variant="primary"
-              size="medium"
-              href="/video/add"
-            >
-              <span className={styles.navbar_button_display}>
-                {t("common.addVideo")}
-              </span>
-            </Button>
-          </div>
-        )}
-
-        {/* ------------------- Utilitaires (Menu Préférences Unifié) ------------------- */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "var(--c--globals--spacings--s)", marginRight: "var(--c--globals--spacings--s)" }}>
-          <PreferencesMenu />
-        </div>
-
-        {/* ------------------- Auth / connexion ------------------- */}
-        {accessToken && user ? (
-          <AuthMenu isMobile={isMobile} user={user} />
-        ) : !isInitializing ? (
-          <LoginButton />
-        ) : null}
+            {/* ------------------- Auth / login ------------------- */}
+            {accessToken && user ? (
+              <AuthMenu isMobile={isMobile} user={user} />
+            ) : !isInitializing ? (
+              <LoginButton />
+            ) : null}
           </>
         )}
       </nav>

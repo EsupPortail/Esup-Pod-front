@@ -4,13 +4,10 @@ import { useSidebar } from "../../context/SidebarProvider";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useAppConfig } from "@/src/hooks/useAppConfig";
 import styles from "./styles.module.css";
-import Divider from "@mui/material/Divider";
 import MenuItem from "./menuItem";
 import { List } from "@mui/material";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
-import LiveTvIcon from "@mui/icons-material/LiveTv";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import GroupsIcon from "@mui/icons-material/Groups";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import { DashboardRounded } from "@mui/icons-material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -30,9 +27,7 @@ const SideBar = () => {
   /* ----------------------------- *
    *  Menus – données statiques
    * -------------------------------- */
-  const publicVideoItems = [
-    { name: t("common.allVideos"), link: "/video" },
-  ];
+  const publicVideoItems = [{ name: t("common.allVideos"), link: "/video" }];
   if (config?.collection?.use_channels !== false) {
     publicVideoItems.push({ name: t("common.channels"), link: "/channel" });
   }
@@ -68,11 +63,18 @@ const SideBar = () => {
   }
 
   const menuPodItems: any[] = [
-    { name: t("sidebar.dashboard"), Icon: DashboardRounded, link: "/dashboard" },
+    {
+      name: t("sidebar.dashboard"),
+      Icon: DashboardRounded,
+      link: "/dashboard",
+    },
   ];
 
   const addVideoItems = [];
-  if ((config as any)?.video?.allow_authenticated_upload !== false || user?.is_staff) {
+  if (
+    (config as any)?.video?.allow_authenticated_upload !== false ||
+    user?.is_staff
+  ) {
     addVideoItems.push({ name: t("common.addVideo"), link: "/video/add" });
   }
 
@@ -111,15 +113,16 @@ const SideBar = () => {
       id="sidebar-nav"
       aria-label={t("sidebar.mainMenu")}
       aria-labelledby="sidebar-title"
-      className={`${styles.sidebar} ${sidebarOpen ? styles.open : styles.closed
-        }`}
+      className={`${styles.sidebar} ${
+        sidebarOpen ? styles.open : styles.closed
+      }`}
       onMouseEnter={isMobile ? undefined : () => handleViewSidebar(true)}
       onMouseLeave={isMobile ? undefined : () => handleViewSidebar(false)}
     >
       {/* ----- Bouton de fermeture (mobile) ----- */}
       {isMobile && (
         <Button
-          className={styles.button_close}
+          className={styles["button-close"]}
           onClick={handleFixSidebar}
           aria-label={t("sidebar.closeMenu")}
         >
@@ -134,7 +137,8 @@ const SideBar = () => {
               label={`${t("sidebar.welcome")} ${user?.first_name || user?.username || "admin"} 👋`}
               sx={{
                 display: sidebarOpen ? "inline-flex" : "none",
-                backgroundColor: "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))",
+                backgroundColor:
+                  "var(--background-brand-secondary, rgba(59, 130, 246, 0.15))",
                 color: "var(--background-brand, #3b82f6)",
                 fontWeight: 600,
                 fontSize: "0.85rem",
@@ -146,7 +150,11 @@ const SideBar = () => {
                 textOverflow: "ellipsis",
               }}
             />
-            <List component="nav" disablePadding sx={{ mt: sidebarOpen ? 2 : 1 }}>
+            <List
+              component="nav"
+              disablePadding
+              sx={{ mt: sidebarOpen ? 2 : 1 }}
+            >
               {[...menuPodItems, ...menuPrincipalItems].map((item, index) => (
                 <MenuItem {...item} key={index} />
               ))}
@@ -156,7 +164,7 @@ const SideBar = () => {
           <>
             <h3
               id="sidebar-title"
-              className={styles.menu_title}
+              className={styles["menu-title"]}
               style={{
                 display: sidebarOpen ? "block" : "none",
                 color: "var(--text-color-brand)",

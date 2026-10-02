@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HighQualityIcon from "@mui/icons-material/HighQuality";
 import type { Video, DownloadOption } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type Props = {
   video: Video;
@@ -15,15 +16,23 @@ type Props = {
   onDownloadStreamUrl?: (url: string, resolution: string) => void;
 };
 
-export default function VideoDownloadMenu({ video, className, onDownloadStreamUrl }: Props) {
+export default function VideoDownloadMenu({
+  video,
+  className,
+  onDownloadStreamUrl,
+}: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { t } = useTranslation();
 
   const options: DownloadOption[] = React.useMemo(() => {
     if (video.download_options && video.download_options.length > 0) {
       return video.download_options;
     }
     if (video.video_url) {
-      return [{ label: "Original", resolution: "Original", url: video.video_url }];
+      return [
+        { label: "Original", resolution: "Original", url: video.video_url },
+      ];
     }
     return [];
   }, [video.download_options, video.video_url]);
@@ -56,7 +65,7 @@ export default function VideoDownloadMenu({ video, className, onDownloadStreamUr
   return (
     <>
       <button className={className} onClick={handleClick} type="button">
-        <DownloadIcon fontSize="small" /> Télécharger
+        <DownloadIcon fontSize="small" /> {t("videoPage.download")}
       </button>
 
       {options.length > 0 && (
@@ -66,8 +75,15 @@ export default function VideoDownloadMenu({ video, className, onDownloadStreamUr
           onClose={handleClose}
           slotProps={{ paper: { sx: { borderRadius: "8px", minWidth: 180 } } }}
         >
-          <div style={{ padding: "8px 16px", fontSize: "0.75rem", fontWeight: 700, color: "#6b7280" }}>
-            Choisir la qualité :
+          <div
+            style={{
+              padding: "8px 16px",
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              color: "#6b7280",
+            }}
+          >
+            {t("videoPage.chooseQuality")}
           </div>
           {options.map((opt, idx) => (
             <MenuItem key={idx} onClick={() => handleSelectQuality(opt)}>

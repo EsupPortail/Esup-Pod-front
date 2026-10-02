@@ -1,13 +1,16 @@
-.webTvContainer {
+.web-tv-container {
   min-height: 100vh;
   background-color: #fbf5eb;
   color: #111111;
   display: flex;
   flex-direction: column;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
-.mainContent {
+.main-content {
   max-width: 1320px;
   width: 100%;
   margin: 0 auto;
@@ -15,7 +18,7 @@
   flex: 1;
 }
 
-.heroSection {
+.hero-section {
   display: grid;
   grid-template-columns: 240px 1fr;
   gap: 1.5rem;
@@ -24,12 +27,12 @@
 }
 
 @media (max-width: 900px) {
-  .heroSection {
+  .hero-section {
     grid-template-columns: 1fr;
   }
 }
 
-.webTvFooter {
+.web-tv-footer {
   background-color: #0b0c10;
   color: #ffffff;
   padding: 1.5rem;
@@ -39,7 +42,7 @@
   justify-content: flex-start;
 }
 
-.footerLogo {
+.footer-logo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -47,4 +50,12 @@
   font-size: 1.1rem;
   color: #ffffff;
   text-decoration: none;
+}
+
+.icon-large {
+  font-size: 1.8rem;
+}
+
+.icon-small {
+  font-size: 1.1rem;
 }

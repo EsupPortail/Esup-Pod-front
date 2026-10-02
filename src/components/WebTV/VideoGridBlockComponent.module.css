@@ -1,11 +1,11 @@
-.blockWrapper {
+.block-wrapper {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
 }
 
-.sectionBadgeHeader {
+.section-badge-header {
   display: inline-block;
   background-color: #000000;
   color: #ffffff;
@@ -17,34 +17,35 @@
   border-radius: 2px;
 }
 
-.videosGrid {
+.videos-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1.25rem;
 }
 
-.heroGrid {
+.hero-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
 }
 
 @media (max-width: 1200px) {
-  .videosGrid {
+  .videos-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  .heroGrid {
+  .hero-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .videosGrid, .heroGrid {
+  .videos-grid,
+  .hero-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.videoCard {
+.video-card {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -52,28 +53,30 @@
   overflow: hidden;
   text-decoration: none;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.videoCard:hover {
+.video-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-.thumbnailContainer {
+.thumbnail-container {
   height: 120px;
   width: 100%;
   position: relative;
   overflow: hidden;
 }
 
-.thumbnailImage {
+.thumbnail-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.thumbnailPlaceholder {
+.thumbnail-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
@@ -82,7 +85,7 @@
   color: #ffffff;
 }
 
-.cardBody {
+.card-body {
   padding: 0.9rem 1rem;
   display: flex;
   flex-direction: column;
@@ -91,7 +94,7 @@
   min-height: 70px;
 }
 
-.cardTitle {
+.card-title {
   font-size: 0.92rem;
   font-weight: 700;
   color: #111111;
@@ -107,7 +110,7 @@
   -webkit-box-orient: vertical;
 }
 
-.cardMeta {
+.card-meta {
   font-size: 0.78rem;
   color: #777777;
   display: flex;

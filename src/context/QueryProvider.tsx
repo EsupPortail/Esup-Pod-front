@@ -17,7 +17,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
             retry: 1, // Une seule tentative en cas d'erreur
           },
         },
-      })
+      }),
   );
 
   return (

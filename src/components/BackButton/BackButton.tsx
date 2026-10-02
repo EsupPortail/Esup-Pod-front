@@ -24,7 +24,7 @@ export default function BackButton({
     <button
       onClick={onClick ?? (() => router.back())}
       type="button"
-      className={[styles.backButton, className].filter(Boolean).join(" ")}
+      className={[styles["back-button"], className].filter(Boolean).join(" ")}
       aria-label={displayLabel}
     >
       <span className="material-icons">arrow_back</span>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../../context/SidebarProvider";
 import styles from "./styles.module.css";
@@ -23,21 +23,31 @@ const MenuItem = (props: MenuItemProps) => {
   const { name, link, Icon, items = [] } = props;
   const isExpandable = items && items.length > 0;
 
-  const isChildActive = isExpandable && items.some(item =>
-    Boolean(item.link) && (pathname === item.link || (Boolean(item.link) && item.link !== "/" && Boolean(pathname?.startsWith(item.link!))))
-  );
+  const isChildActive =
+    isExpandable &&
+    items.some(
+      (item) =>
+        Boolean(item.link) &&
+        (pathname === item.link ||
+          (Boolean(item.link) &&
+            item.link !== "/" &&
+            Boolean(pathname?.startsWith(item.link!)))),
+    );
 
   const [open, setOpen] = useState(isChildActive);
   const isNavigable = !isExpandable && Boolean(link);
   const isMobile = useMediaQuery("(max-width: 1024px)");
+  const isOpen = sidebarOpen && (open || isChildActive);
 
-  const isSelfActive = isNavigable && Boolean(link) && (
-    pathname === link || (Boolean(link) && link !== "/" && Boolean(pathname?.startsWith(link!)))
-  );
+  const isSelfActive =
+    isNavigable &&
+    Boolean(link) &&
+    (pathname === link ||
+      (Boolean(link) && link !== "/" && Boolean(pathname?.startsWith(link!))));
 
   function handleClick() {
     if (isExpandable && sidebarOpen) {
-      setOpen(!open);
+      setOpen(!isOpen);
       return;
     }
 
@@ -46,24 +56,16 @@ const MenuItem = (props: MenuItemProps) => {
     }
   }
 
-  useEffect(() => {
-    if (!sidebarOpen) {
-      setOpen(false);
-    } else if (isChildActive) {
-      setOpen(true);
-    }
-  }, [sidebarOpen, isChildActive]);
-
   const isChildItem = !Icon;
 
   const MenuItemRoot = (
     <ListItemButton
       key={name}
-      className={styles.menu_item}
+      className={styles["menu-item"]}
       onClick={handleClick}
       component={isNavigable ? Link : "div"}
       href={isNavigable ? link : undefined}
-      selected={isSelfActive || (isExpandable && open)}
+      selected={isSelfActive || (isExpandable && isOpen)}
       sx={{
         position: "relative",
         transition: "all 0.2s ease",
@@ -121,37 +123,47 @@ const MenuItem = (props: MenuItemProps) => {
         inset={!Icon}
       />
       {/* Display the expand menu if the item has children */}
-      {isExpandable && sidebarOpen && !open && (
+      {isExpandable && sidebarOpen && !isOpen && (
         <IconExpandMore
           style={{
-            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive
+              ? "#3b82f6"
+              : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
-      {isExpandable && sidebarOpen && open && (
+      {isExpandable && sidebarOpen && isOpen && (
         <IconExpandLess
           style={{
-            color: isChildActive ? "#3b82f6" : "var(--c--contextuals--content--semantic--neutral--primary)",
+            color: isChildActive
+              ? "#3b82f6"
+              : "var(--c--contextuals--content--semantic--neutral--primary)",
           }}
         />
       )}
     </ListItemButton>
   );
 
-  const MenuItemChildren = isExpandable && sidebarOpen ? (
-    <Collapse in={open} timeout="auto" unmountOnExit>
-      <Divider />
-      <List component="div" disablePadding>
-        {items.map((item, index) => (
-          <MenuItem {...item} key={index} />
-        ))}
-      </List>
-    </Collapse>
-  ) : null;
+  const MenuItemChildren =
+    isExpandable && sidebarOpen ? (
+      <Collapse in={isOpen} timeout="auto" unmountOnExit>
+        <Divider />
+        <List component="div" disablePadding>
+          {items.map((item, index) => (
+            <MenuItem {...item} key={index} />
+          ))}
+        </List>
+      </Collapse>
+    ) : null;
 
   return (
     <>
-      <Tooltip title={!sidebarOpen ? name : ""} placement="right" arrow disableHoverListener={sidebarOpen}>
+      <Tooltip
+        title={!sidebarOpen ? name : ""}
+        placement="right"
+        arrow
+        disableHoverListener={sidebarOpen}
+      >
         <div>{MenuItemRoot}</div>
       </Tooltip>
       {MenuItemChildren}

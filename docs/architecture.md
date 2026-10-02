@@ -88,4 +88,5 @@ Actuellement, les jetons JWT (Access et Refresh) sont stockés dans le `localSto
 - **Recommandation future** : Si le backend le permet, une migration vers des cookies `httpOnly` pour stocker le Refresh Token est recommandée pour durcir la sécurité. En attendant, la sécurité repose entièrement sur l'assainissement strict du code React (échappement automatique des variables) et la mise en place d'une CSP (Content Security Policy) robuste pour prévenir les injections de scripts.
 
 ---
-*Ce document doit évoluer à mesure que le refactoring de la plateforme progresse.*
+
+_Ce document doit évoluer à mesure que le refactoring de la plateforme progresse._

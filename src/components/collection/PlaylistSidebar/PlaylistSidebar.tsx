@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import type { Playlist } from "@/src/types";
 import styles from "./styles.module.css";
 import { truncateVideoTitle } from "@/src/constants/string";
+import Image from "next/image";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type PlaylistSidebarProps = {
   playlist: Playlist;
@@ -15,6 +17,7 @@ export default function PlaylistSidebar({
   currentVideoSlug,
 }: PlaylistSidebarProps) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const items = (playlist.items ?? []).filter((item) => !!item.video);
 
@@ -30,16 +33,17 @@ export default function PlaylistSidebar({
   }
 
   return (
-    <div className={styles.playlistSidebar}>
-      <header className={styles.playlistSidebarHeader}>
+    <div className={styles["playlist-sidebar"]}>
+      <header className={styles["playlist-sidebar-header"]}>
         <div>
-          <p className={styles.playlistSidebarLabel}>
-            Lecture de la liste <b> {truncateVideoTitle(playlist.title, 20)}</b>
+          <p className={styles["playlist-sidebar-label"]}>
+            {t("playlists.playlists")}
+            <b> {truncateVideoTitle(playlist.title, 20)}</b>
           </p>
         </div>
       </header>
 
-      <ul className={styles.playlistSidebarList}>
+      <ul className={styles["playlist-sidebar-list"]}>
         {items.map((item, index) => {
           const video = item.video!;
           const isActive = video.slug === currentVideoSlug;
@@ -47,24 +51,29 @@ export default function PlaylistSidebar({
           return (
             <li
               key={item.id}
-              className={`${styles.playlistSidebarItem} ${
-                isActive ? styles.playlistSidebarItemActive : ""
+              className={`${styles["playlist-sidebar-item"]} ${
+                isActive ? styles["playlist-sidebar-item-active"] : ""
               }`}
               onClick={() => handleClick(video.slug)}
             >
-              <span className={styles.playlistSidebarIndex}>{index + 1}</span>
-              <img
+              <span className={styles["playlist-sidebar-index"]}>
+                {index + 1}
+              </span>
+              <Image
+                unoptimized
                 src={video.thumbnail_url || "/default_thumbnail.svg"}
-                alt={video.title}
-                className={styles.playlistSidebarThumbnail}
+                alt={t("a11y.videoThumbnail", { title: video.title })}
+                className={styles["playlist-sidebar-thumbnail"]}
+                width={64}
+                height={36}
               />
-              <div className={styles.playlistSidebarText}>
-                <p className={styles.playlistSidebarVideoTitle}>
+              <div className={styles["playlist-sidebar-text"]}>
+                <p className={styles["playlist-sidebar-video-title"]}>
                   {truncateVideoTitle(video.title, 20)}
                 </p>
                 {isActive && (
-                  <p className={styles.playlistSidebarNowPlaying}>
-                    Lecture en cours
+                  <p className={styles["playlist-sidebar-now-playing"]}>
+                    {t("playlists.nowPlaying")}
                   </p>
                 )}
               </div>

@@ -36,7 +36,7 @@ const parseTimestamp = (str: string): number => {
 export default function VideoChaptersForm({ video }: Props) {
   const { chapters, createChapter, deleteChapter } = useChapters(
     video.slug,
-    video.id
+    video.id,
   );
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -122,17 +122,23 @@ export default function VideoChaptersForm({ video }: Props) {
     const seconds = parseTimestamp(timestamp);
     if (duration && seconds > duration) {
       setFormError(
-        `Le timestamp dépasse la durée de la vidéo (${formatTimestamp(duration)}).`
+        `Le timestamp dépasse la durée de la vidéo (${formatTimestamp(duration)}).`,
       );
       return;
     }
     setFormError(null);
     setIsSubmitting(true);
     try {
-      await createChapter({ video: video.id, title: title.trim(), time_start: seconds });
+      await createChapter({
+        video: video.id,
+        title: title.trim(),
+        time_start: seconds,
+      });
       setTitle("");
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Erreur lors de l'ajout.");
+      setFormError(
+        err instanceof Error ? err.message : "Erreur lors de l'ajout.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -150,12 +156,13 @@ export default function VideoChaptersForm({ video }: Props) {
   const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   /* sorted chapters */
-  const sortedChapters = [...chapters].sort((a, b) => a.time_start - b.time_start);
+  const sortedChapters = [...chapters].sort(
+    (a, b) => a.time_start - b.time_start,
+  );
 
   /* ── render ─────────────────────────────────────────────────── */
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
       {/* ── PLAYER SECTION ─────────────────────────────────────── */}
       <div
         style={{
@@ -172,7 +179,12 @@ export default function VideoChaptersForm({ video }: Props) {
             <video
               ref={videoRef}
               src={videoSrc}
-              style={{ width: "100%", display: "block", maxHeight: 320, background: "#000" }}
+              style={{
+                width: "100%",
+                display: "block",
+                maxHeight: 320,
+                background: "#000",
+              }}
               onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
               onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
               onPlay={() => setIsPlaying(true)}
@@ -295,7 +307,8 @@ export default function VideoChaptersForm({ video }: Props) {
                   gap: 6,
                   padding: "5px 14px",
                   borderRadius: 999,
-                  border: "1.5px solid var(--c--globals--colors--primary-400, #4db6bd)",
+                  border:
+                    "1.5px solid var(--c--globals--colors--primary-400, #4db6bd)",
                   background: "rgba(0,129,138,0.15)",
                   color: "var(--c--globals--colors--primary-300, #7dd4d8)",
                   fontSize: "0.82rem",
@@ -333,8 +346,8 @@ export default function VideoChaptersForm({ video }: Props) {
               Vidéo en cours d&apos;encodage
             </span>
             <span style={{ fontSize: "0.8rem", opacity: 0.5 }}>
-              Le lecteur sera disponible une fois l&apos;encodage terminé.
-              Vous pouvez saisir les timestamps manuellement.
+              Le lecteur sera disponible une fois l&apos;encodage terminé. Vous
+              pouvez saisir les timestamps manuellement.
             </span>
           </div>
         )}
@@ -342,9 +355,19 @@ export default function VideoChaptersForm({ video }: Props) {
 
       {/* ── CHAPTER LIST ───────────────────────────────────────── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 4,
+          }}
+        >
           <BookmarksIcon
-            style={{ fontSize: 18, color: "var(--c--globals--colors--primary-600, #00818a)" }}
+            style={{
+              fontSize: 18,
+              color: "var(--c--globals--colors--primary-600, #00818a)",
+            }}
           />
           <span style={{ fontWeight: 600, fontSize: "0.95rem" }}>
             Chapitres ({sortedChapters.length})
@@ -390,7 +413,8 @@ export default function VideoChaptersForm({ video }: Props) {
                   gap: 12,
                   padding: "8px 12px",
                   background: "var(--c--globals--colors--gray-050, #f9fafb)",
-                  border: "1px solid var(--c--globals--colors--gray-200, #e5e7eb)",
+                  border:
+                    "1px solid var(--c--globals--colors--gray-200, #e5e7eb)",
                   borderRadius: 8,
                   cursor: isEncoded ? "pointer" : "default",
                   transition: "background 0.15s",
@@ -403,7 +427,8 @@ export default function VideoChaptersForm({ video }: Props) {
                     width: 24,
                     height: 24,
                     borderRadius: "50%",
-                    background: "var(--c--globals--colors--primary-600, #00818a)",
+                    background:
+                      "var(--c--globals--colors--primary-600, #00818a)",
                     color: "#fff",
                     fontSize: "0.75rem",
                     fontWeight: 700,
@@ -501,7 +526,13 @@ export default function VideoChaptersForm({ video }: Props) {
         </p>
 
         {formError && (
-          <p style={{ margin: "0 0 10px", color: "#d32f2f", fontSize: "0.82rem" }}>
+          <p
+            style={{
+              margin: "0 0 10px",
+              color: "#d32f2f",
+              fontSize: "0.82rem",
+            }}
+          >
             {formError}
           </p>
         )}
@@ -548,7 +579,10 @@ export default function VideoChaptersForm({ video }: Props) {
                 boxSizing: "border-box",
               }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "#00818a")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "var(--c--globals--colors--gray-300, #ccc)")}
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor =
+                  "var(--c--globals--colors--gray-300, #ccc)")
+              }
             />
           </div>
 
@@ -581,7 +615,10 @@ export default function VideoChaptersForm({ video }: Props) {
                 boxSizing: "border-box",
               }}
               onFocus={(e) => (e.currentTarget.style.borderColor = "#00818a")}
-              onBlur={(e) => (e.currentTarget.style.borderColor = "var(--c--globals--colors--gray-300, #ccc)")}
+              onBlur={(e) =>
+                (e.currentTarget.style.borderColor =
+                  "var(--c--globals--colors--gray-300, #ccc)")
+              }
             />
           </div>
 

@@ -27,18 +27,21 @@ export interface Dressing {
   y_position?: number;
 }
 
+/** Provides watermark queries and mutations. */
 export const useWatermarks = () => {
   const queryClient = useQueryClient();
   const { accessToken, refresh: refreshAuthToken } = useAuth();
-  
+
   const authOpts = { accessToken, onRefresh: refreshAuthToken };
 
   const { data, isLoading, error } = useQuery<CustomImage[]>({
     queryKey: ["watermarks"],
     queryFn: async () => {
       const res = await authFetch(getRoutes().dressing.watermarks, authOpts);
-      const json = await requestJson<CustomImage[] | { results: CustomImage[] }>(res);
-      return Array.isArray(json) ? json : (json as any).results ?? [];
+      const json = await requestJson<
+        CustomImage[] | { results: CustomImage[] }
+      >(res);
+      return Array.isArray(json) ? json : ((json as any).results ?? []);
     },
     enabled: !!accessToken,
   });
@@ -47,7 +50,7 @@ export const useWatermarks = () => {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append("image", file);
-      
+
       const res = await authFetch(getRoutes().dressing.watermarks, {
         ...authOpts,
         method: "POST",
@@ -83,6 +86,7 @@ export const useWatermarks = () => {
   };
 };
 
+/** Provides dressing queries and mutations. */
 export const useDressings = () => {
   const queryClient = useQueryClient();
   const { accessToken, refresh: refreshAuthToken } = useAuth();
@@ -93,7 +97,7 @@ export const useDressings = () => {
     queryFn: async () => {
       const res = await authFetch(getRoutes().dressing.dressings, authOpts);
       const json = await requestJson<Dressing[] | { results: Dressing[] }>(res);
-      return Array.isArray(json) ? json : (json as any).results ?? [];
+      return Array.isArray(json) ? json : ((json as any).results ?? []);
     },
     enabled: !!accessToken,
   });
@@ -114,7 +118,13 @@ export const useDressings = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<Dressing> }) => {
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<Dressing>;
+    }) => {
       const res = await authFetch(getRoutes().dressing.dressing(Number(id)), {
         ...authOpts,
         method: "PATCH",

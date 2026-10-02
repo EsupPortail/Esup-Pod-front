@@ -3,13 +3,18 @@
 import { Alert, VariantType } from "@openfun/cunningham-react";
 import BackButton from "@/src/components/BackButton/BackButton";
 import { useChannel } from "@/src/hooks/useChannel";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "next/navigation";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import styles from "./styles.module.css";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 import VideoDisplay from "@/src/components/video/display/VideoDisplay";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
@@ -22,10 +27,13 @@ import VideoFilters, {
 } from "@/src/components/video/filters/VideoFilters";
 import { useTheme } from "@/src/hooks/useTheme";
 import { useMounted } from "@/src/hooks/useMounted";
+import Image from "next/image";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Chaine";
 
 export default function Channel() {
+  const { t } = useTranslation();
   const [value, setValue] = useState("themes");
   const mounted = useMounted();
   const didSetInitialTab = useRef(false);
@@ -42,11 +50,19 @@ export default function Channel() {
     useChannelLoading,
   } = useChannel();
 
-  // Thèmes filtrés pour la chaîne de la page
-  const { filters, setFilters, themes, themesCount, users, channels, error, loading } =
-    useCollectionListFilters({ mode: "themes", enabled: !!channel?.id });
+  // Filtered themes for channel pages
+  const {
+    filters,
+    setFilters,
+    themes,
+    themesCount,
+    users,
+    channels,
+    error,
+    loading,
+  } = useCollectionListFilters({ mode: "themes", enabled: !!channel?.id });
 
-  // Thèmes bruts pour la chaîne de la page
+  // Raw themes for the page channel
   const { fetchAll: fetchAllThemes } = useTheme();
   const {
     filters: videoFilters,
@@ -97,13 +113,13 @@ export default function Channel() {
     );
   }, [videoFilters]);
 
-  // Thèmes de la chaine avec les filtres
+  // Channel's themes with filters applied
   const channelThemes = useMemo(
     () => themes.filter((theme) => theme.channel === channel?.id),
     [themes, channel?.id],
   );
 
-  // Charge une fois tous les thèmes de la chaîne de la page, indépendamment des filtres
+  // Load once all themes of the page channel, regardless of filters
   useEffect(() => {
     if (!channel?.id) return;
 
@@ -116,10 +132,10 @@ export default function Channel() {
     void loadBaseThemes();
   }, [channel?.id, fetchAllThemes]);
 
-  // Thèmes de base pour cette chaîne
+  // Base themes for this channel
   const channelAllThemes = baseChannelThemes;
 
-  const handleTabValue = () => {
+  const handleTabValue = useCallback(() => {
     const hasThemes = channelAllThemes.length > 0;
     const hasUnclassifiedVideos = visibleAndPublicVideos.length > 0;
 
@@ -131,34 +147,40 @@ export default function Channel() {
     if (hasUnclassifiedVideos) {
       setValue("unclassified");
     }
-  };
+  }, [channelAllThemes.length, visibleAndPublicVideos.length]);
 
   useEffect(() => {
     if (!channel?.id) return;
     setFilters((prev) => {
       const newOrdering = prev.ordering || channel.default_order;
-      if (prev.channel === channel.id && prev.ordering === newOrdering) return prev;
+      if (prev.channel === channel.id && prev.ordering === newOrdering)
+        return prev;
       return { ...prev, channel: channel.id, ordering: newOrdering };
     });
     videoSetFilters((prev) => {
       const newOrdering = prev.ordering || channel.default_order;
-      if (prev.channel === channel.id && prev.ordering === newOrdering) return prev;
+      if (prev.channel === channel.id && prev.ordering === newOrdering)
+        return prev;
       return { ...prev, channel: channel.id, ordering: newOrdering };
     });
   }, [channel?.id, channel?.default_order, setFilters, videoSetFilters]);
 
   useEffect(() => {
     if (!channelSlug) return;
-    fetchChannel(channelSlug);
+    void fetchChannel(channelSlug);
   }, [fetchChannel, channelSlug]);
 
   useEffect(() => {
     if (didSetInitialTab.current) return;
     if (!channel || !hasLoadedBaseThemes || useVideoLoading) return;
 
-    handleTabValue();
-    didSetInitialTab.current = true;
-  }, [channel, hasLoadedBaseThemes, useVideoLoading, channelAllThemes.length, visibleAndPublicVideos.length]);
+    const timeoutId = window.setTimeout(() => {
+      handleTabValue();
+      didSetInitialTab.current = true;
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [channel, hasLoadedBaseThemes, useVideoLoading, handleTabValue]);
 
   if (
     !channel ||
@@ -172,26 +194,26 @@ export default function Channel() {
 
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton label={t("common.back")} />
       {useChannelLoading ? (
         <CenteredLoader />
       ) : (
         <>
-          <img
-            src={channel.banner || channel.logo || "/default_channel_banner.png"}
-            alt={`${channel.title} banner`}
-            style={{
-              width: "100%",
-              height: "200px",
-              objectFit: "cover",
-              borderRadius: "8px",
-              marginBottom: "2rem",
-            }}
+          <Image
+            unoptimized
+            src={
+              channel.banner || channel.logo || "/default_channel_banner.png"
+            }
+            alt={t("a11y.channelBanner", { title: channel.title })}
+            className="pod-image-banner"
+            width={0}
+            height={0}
+            loading={"eager"}
           />{" "}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
             <Avatar
               sx={{ width: 80, height: 80 }}
-              alt={channel.title}
+              alt={t("a11y.channelLogo", { title: channel.title })}
               src={channel.logo || "/default_channel_logo.png"}
             ></Avatar>{" "}
             <Box
@@ -212,17 +234,17 @@ export default function Channel() {
                 <Tabs
                   value={value}
                   onChange={handleChange}
-                  aria-label="Contenus de la chaine"
+                  aria-label={t("channels.content")}
                 >
                   <Tab
                     disabled={visibleAndPublicVideos.length === 0}
-                    label={`Videos non classées (${videosCount})`}
+                    label={`${t("channels.unclassified")} (${videosCount})`}
                     value="unclassified"
                   />
 
                   <Tab
                     disabled={channelAllThemes.length === 0}
-                    label={`Thèmes (${channelAllThemes.length})`}
+                    label={` ${t("common.themes")} (${channelAllThemes.length})`}
                     value="themes"
                   />
                 </Tabs>
@@ -233,13 +255,13 @@ export default function Channel() {
                 visibleAndPublicVideos.length === 0 &&
                 channelAllThemes.length === 0 ? (
                   <Alert type={VariantType.INFO}>
-                    Cette chaine n'a aucune vidéo ou thème associé.
+                    {t("channels.noContent")}
                   </Alert>
                 ) : (
                   <Box sx={{ mt: 2 }}>
                     {value === "unclassified" && (
                       <div>
-                        <h2>Videos non classées</h2>
+                        <h2>{t("channels.unclassified")}</h2>
                         {useVideoError && (
                           <Alert canClose type={VariantType.ERROR}>
                             {useVideoError}
@@ -259,9 +281,11 @@ export default function Channel() {
                               newFilters.search !== videoFilters.search ||
                               newFilters.channel !== videoFilters.channel ||
                               newFilters.ordering !== videoFilters.ordering ||
-                              newFilters.ownerUsernames !== videoFilters.ownerUsernames ||
+                              newFilters.ownerUsernames !==
+                                videoFilters.ownerUsernames ||
                               newFilters.typeSlugs !== videoFilters.typeSlugs ||
-                              newFilters.disciplineIds !== videoFilters.disciplineIds ||
+                              newFilters.disciplineIds !==
+                                videoFilters.disciplineIds ||
                               newFilters.cursus !== videoFilters.cursus ||
                               newFilters.tagSlugs !== videoFilters.tagSlugs
                             ) {
@@ -271,18 +295,21 @@ export default function Channel() {
                           }}
                         />
 
-                        {visibleAndPublicVideos.length === 0 && !useVideoLoading ? (
+                        {visibleAndPublicVideos.length === 0 &&
+                        !useVideoLoading ? (
                           <Alert type={VariantType.INFO}>
                             {hasActiveVideoFilters
-                              ? "Aucune vidéo ne correspond à vos filtres."
-                              : "Aucune vidéo liée à cette chaîne."}
+                              ? t("favorites.noMatchingFilters")
+                              : t("channels.noVideos")}
                           </Alert>
                         ) : (
                           <VideoDisplay
                             videos={visibleAndPublicVideos}
                             videosCount={videosCount}
                             page={videoFilters.page}
-                            onPageChange={(page) => videoSetFilters({ ...videoFilters, page })}
+                            onPageChange={(page) =>
+                              videoSetFilters({ ...videoFilters, page })
+                            }
                             loading={useVideoLoading}
                           />
                         )}
@@ -291,7 +318,7 @@ export default function Channel() {
 
                     {value === "themes" && (
                       <div>
-                        <h2>Thèmes</h2>
+                        <h2>{t("common.themes")}</h2>
 
                         {error && (
                           <Alert canClose type={VariantType.ERROR}>
@@ -319,8 +346,10 @@ export default function Channel() {
                               newFilters.search !== filters.search ||
                               newFilters.channel !== filters.channel ||
                               newFilters.ordering !== filters.ordering ||
-                              newFilters.ownerUsernames !== filters.ownerUsernames ||
-                              newFilters.createdAtGte !== filters.createdAtGte ||
+                              newFilters.ownerUsernames !==
+                                filters.ownerUsernames ||
+                              newFilters.createdAtGte !==
+                                filters.createdAtGte ||
                               newFilters.createdAtLte !== filters.createdAtLte
                             ) {
                               newFilters.page = 1;
@@ -329,21 +358,26 @@ export default function Channel() {
                           }}
                         />
 
-                        {channelAllThemes.length === 0 && !loading && hasLoadedBaseThemes ? (
+                        {channelAllThemes.length === 0 &&
+                        !loading &&
+                        hasLoadedBaseThemes ? (
                           <Alert type={VariantType.INFO}>
-                            Aucun thème lié à cette chaine.
+                            {t("themes.noThemes")}
                           </Alert>
-                        ) : channelThemes.length === 0 && !loading && hasLoadedBaseThemes ? (
+                        ) : channelThemes.length === 0 &&
+                          !loading &&
+                          hasLoadedBaseThemes ? (
                           <Alert type={VariantType.INFO}>
-                            Aucun thème ne correspond à vos critères de
-                            recherche.
+                            {t("playlists.noMatchingFilters")}
                           </Alert>
                         ) : (
                           <CollectionDisplay
                             themes={channelThemes}
                             collectionsCount={themesCount}
                             page={filters.page}
-                            onPageChange={(page) => setFilters({ ...filters, page })}
+                            onPageChange={(page) =>
+                              setFilters({ ...filters, page })
+                            }
                             defaultView="cards"
                             storageKey="channel-theme-view"
                             channelSlug={channelSlug}

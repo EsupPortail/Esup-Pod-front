@@ -24,7 +24,10 @@ export default function Breadcrumb() {
   const playlistSlug = isPlaylistEditRoute ? pathNames[2] : "";
 
   // Dynamic breadcrumb label resolver based on active language
-  const getDynamicBreadcrumbLabel = (href: string, rawSegment: string): string => {
+  const getDynamicBreadcrumbLabel = (
+    href: string,
+    rawSegment: string,
+  ): string => {
     switch (href) {
       case "/user-settings":
       case "/user-settings/preferences":
@@ -59,7 +62,7 @@ export default function Breadcrumb() {
 
   return (
     <Breadcrumbs className={styles.breadcrumb} aria-label="breadcrumb">
-      <Link underline="hover" className={styles.breadcrumbLink} href="/">
+      <Link underline="hover" className={styles["breadcrumb-link"]} href="/">
         {t("common.home")}
       </Link>
 
@@ -84,7 +87,7 @@ export default function Breadcrumb() {
           <Link
             key={href}
             underline="hover"
-            className={styles.breadcrumbLink}
+            className={styles["breadcrumb-link"]}
             href={href}
             aria-current="page"
           >

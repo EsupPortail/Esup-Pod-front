@@ -1,4 +1,4 @@
-# Code de conduite *Esup-Pod*
+# Code de conduite _Esup-Pod_
 
 ## Notre engagement
 
@@ -18,24 +18,24 @@ accueillante, diversifiée, inclusive et saine.
 
 Exemples de comportements qui contribuent à créer un environnement positif :
 
-* Faire preuve d'empathie et de bienveillance envers les autres
-* Être respectueux des opinions, points de vue et expériences divergents
-* Donner et recevoir avec grâce les critiques constructives
-* Assumer ses responsabilités et s'excuser auprès des personnes
+- Faire preuve d'empathie et de bienveillance envers les autres
+- Être respectueux des opinions, points de vue et expériences divergents
+- Donner et recevoir avec grâce les critiques constructives
+- Assumer ses responsabilités et s'excuser auprès des personnes
   affectées par nos erreurs et apprendre de ces expériences
-* Se concentrer sur ce qui est le meilleur non pas uniquement pour nous
+- Se concentrer sur ce qui est le meilleur non pas uniquement pour nous
   en tant qu'individu, mais aussi pour l'ensemble de la communauté
 
 Exemples de comportements inacceptables :
 
-* L'utilisation de langage ou d'images sexualisés et d'attentions
+- L'utilisation de langage ou d'images sexualisés et d'attentions
   ou d'avances sexuelles de toute nature
-* Le *trolling*, les commentaires insultants ou désobligeants et les attaques
+- Le _trolling_, les commentaires insultants ou désobligeants et les attaques
   personnelles ou d'ordre politique
-* Le harcèlement en public ou en privé
-* La publication d'informations privées d'autrui, telle qu'une
+- Le harcèlement en public ou en privé
+- La publication d'informations privées d'autrui, telle qu'une
   adresse postale ou une adresse électronique, sans leur autorisation explicite
-* Toute autre conduite qui pourrait raisonnablement
+- Toute autre conduite qui pourrait raisonnablement
   être considérée comme inappropriée dans un cadre professionnel
 
 ## Responsabilités d'application

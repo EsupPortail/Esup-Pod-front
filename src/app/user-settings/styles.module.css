@@ -1,4 +1,4 @@
-.settings_container {
+.settings-container {
   max-width: 1000px;
   margin: 0 auto;
   padding: 1rem 0;
@@ -7,7 +7,7 @@
   border: none !important;
 }
 
-.settings_content {
+.settings-content {
   flex-grow: 1;
   background: transparent !important;
   border-radius: 0 !important;
@@ -17,8 +17,8 @@
 }
 
 /* Dark mode flat overrides */
-[data-theme="dark"] .settings_content,
-[data-theme="dark"] .settings_container {
+[data-theme="dark"] .settings-content,
+[data-theme="dark"] .settings-container {
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;

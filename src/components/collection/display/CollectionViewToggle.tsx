@@ -5,32 +5,41 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import TableRowsIcon from "@mui/icons-material/TableRows";
 import type { CollectionViewToggleProps } from "./types";
 import styles from "./styles.module.css";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function CollectionViewToggle({
   view,
   onChange,
 }: CollectionViewToggleProps) {
+  const { t } = useTranslation();
+
   return (
-    <div className={styles.toggleWrapper}>
-      <span className={styles.toggleLabel}>Affichage : </span>
+    <div className={styles["toggle-wrapper"]}>
+      <span className={styles["toggle-label"]}>
+        {t("common.displayMode")} :{" "}
+      </span>
 
       <div
-        className={styles.toggleGroup}
+        className={styles["toggle-group"]}
         role="tablist"
-        aria-label="Mode d'affichage des collections"
+        aria-label={t("a11y.collectionDisplayMode")}
       >
         <Button
           size="small"
           type="button"
           className={
-            view === "cards" ? styles.toggleButtonActive : styles.toggleButton
+            view === "cards"
+              ? styles["toggle-button-active"]
+              : styles["toggle-button"]
           }
           onClick={() => onChange("cards")}
           aria-pressed={view === "cards"}
         >
-          <span className={styles.toggleButtonContent}>
+          <span className={styles["toggle-button-content"]}>
             <GridViewIcon fontSize="small" />
-            <span className={styles.toggleText}>Cartes</span>
+            <span className={styles["toggle-text"]}>
+              {t("common.viewCards")}
+            </span>
           </span>
         </Button>
 
@@ -38,14 +47,18 @@ export default function CollectionViewToggle({
           size="small"
           type="button"
           className={
-            view === "grid" ? styles.toggleButtonActive : styles.toggleButton
+            view === "grid"
+              ? styles["toggle-button-active"]
+              : styles["toggle-button"]
           }
           onClick={() => onChange("grid")}
           aria-pressed={view === "grid"}
         >
-          <span className={styles.toggleButtonContent}>
+          <span className={styles["toggle-button-content"]}>
             <TableRowsIcon fontSize="small" />
-            <span className={styles.toggleText}>Tableau</span>
+            <span className={styles["toggle-text"]}>
+              {t("common.viewTable")}
+            </span>
           </span>
         </Button>
       </div>

@@ -21,7 +21,10 @@ export function SearchForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ width: "100%", display: "flex", justifyContent: "center" }}
+    >
       <div
         style={{
           display: "flex",
@@ -36,7 +39,13 @@ export function SearchForm() {
           transition: "all 0.2s ease-in-out",
         }}
       >
-        <SearchIcon sx={{ color: "var(--text-color-muted, #94a3b8)", fontSize: "1.2rem", mr: 1 }} />
+        <SearchIcon
+          sx={{
+            color: "var(--text-color-muted, #94a3b8)",
+            fontSize: "1.2rem",
+            mr: 1,
+          }}
+        />
         <InputBase
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -53,7 +62,11 @@ export function SearchForm() {
           }}
         />
         {query && (
-          <IconButton size="small" onClick={() => setQuery("")} sx={{ color: "var(--text-color-muted, #94a3b8)" }}>
+          <IconButton
+            size="small"
+            onClick={() => setQuery("")}
+            sx={{ color: "var(--text-color-muted, #94a3b8)" }}
+          >
             <ClearIcon fontSize="small" />
           </IconButton>
         )}

@@ -1,17 +1,17 @@
-.toggleWrapper {
+.toggle-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
 
-.toggleLabel {
+.toggle-label {
   font-size: var(--c--globals--font--sizes--sm);
   font-weight: var(--c--globals--font--weights--bold);
   color: var(--background-brand);
 }
 
-.toggleGroup {
+.toggle-group {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
@@ -35,26 +35,26 @@
   }
 }
 
-.toggleButton,
-.toggleButtonActive {
+.toggle-button,
+.toggle-buttonActive {
   border-radius: 999px !important;
   min-width: 0;
   font-weight: var(--c--globals--font--weights--bold) !important;
 }
 
-.toggleButton {
+.toggle-button {
   background: transparent !important;
   color: var(--background-brand) !important;
   border: none !important;
   box-shadow: none !important;
 }
 
-.toggleButtonActive {
+.toggle-button-active {
   background: var(--background-brand) !important;
   color: white !important;
 }
 
-.toggleButtonContent {
+.toggle-button-content {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,11 +62,11 @@
   white-space: nowrap;
 }
 
-.toggleText {
+.toggle-text {
   display: inline;
 }
 
-.thumbnailWrapper {
+.thumbnail-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -81,11 +81,11 @@
   transition: transform 0.2s ease;
 }
 
-.thumbnailWrapper:hover .thumbnail {
+.thumbnail-wrapper:hover .thumbnail {
   transform: scale(1.08);
 }
 
-.tableTitleLink {
+.table-title-link {
   color: var(--text-color, #f8fafc);
   text-decoration: none;
   font-weight: 600;
@@ -93,12 +93,12 @@
   transition: color 0.2s ease;
 }
 
-.tableTitleLink:hover {
+.table-title-link:hover {
   color: #60a5fa;
   text-decoration: underline;
 }
 
-.typeBadge {
+.type-badge {
   display: inline-block;
   background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
@@ -109,7 +109,7 @@
   letter-spacing: 0.02em;
 }
 
-.countBadge {
+.count-badge {
   display: inline-block;
   background: rgba(255, 255, 255, 0.08);
   color: var(--text-color, #e2e8f0);
@@ -119,31 +119,31 @@
   font-size: 0.75rem;
 }
 
-.dateText {
+.date-text {
   color: #94a3b8;
   font-size: 0.8rem;
 }
 
 @media (max-width: 640px) {
-  .toggleWrapper {
+  .toggle-wrapper {
     width: 100%;
     justify-content: flex-end;
   }
 
-  .toggleLabel {
+  .toggle-label {
     display: none;
   }
 
-  .toggleGroup {
+  .toggle-group {
     width: 100%;
   }
 
-  .toggleButton,
-  .toggleButtonActive {
+  .toggle-button,
+  .toggle-button-active {
     flex: 1;
   }
 
-  .toggleButtonContent {
+  .toggle-button-content {
     width: 100%;
   }
 }

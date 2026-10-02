@@ -5,12 +5,11 @@ import BackButton from "@/src/components/BackButton/BackButton";
 import { useTheme } from "@/src/hooks/useTheme";
 import { useChannel } from "@/src/hooks/useChannel";
 import type { Theme } from "@/src/types";
-import { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import styles from "../styles.module.css";
 import CollectionFilters from "@/src/components/collection/filters/CollectionFilters";
 import CollectionDisplay from "@/src/components/collection/display/CollectionDisplay";
 import CenteredLoader from "@/src/components/Loader/CenteredLoader";
@@ -22,12 +21,14 @@ import VideoFilters, {
 } from "@/src/components/video/filters/VideoFilters";
 import { useAuth } from "@/src/context/AuthProvider";
 import { useMounted } from "@/src/hooks/useMounted";
+import Image from "next/image";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export const breadcrumbLabel = "Thème";
 
 export default function Theme() {
-  const [value, setValue] = useState("childThemes");
-  const didSetInitialTab = useRef(false);
+  const { t } = useTranslation();
+  const [value, setValue] = useState<string | null>(null);
   const { user } = useAuth();
   const mounted = useMounted();
 
@@ -55,7 +56,6 @@ export default function Theme() {
   const {
     filters: videoFilters,
     setFilters: setVideoFilters,
-    videos,
     users: videoUsers,
     types,
     disciplines,
@@ -65,7 +65,7 @@ export default function Theme() {
     useVideoLoading,
   } = useVideoListFilters({ mode: "all", enabled: false });
 
-  // Filtres collections (thèmes)
+  // Filters collections (themes)
   const {
     filters: collectionFilters,
     setFilters: setCollectionFilters,
@@ -93,16 +93,22 @@ export default function Theme() {
         video.title.toLowerCase().includes(search),
       );
     }
-    
+
     // Sort
     const ordering = videoFilters.ordering;
     if (ordering) {
       result = [...result].sort((a, b) => {
         switch (ordering) {
           case "-created_at":
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            return (
+              new Date(b.created_at).getTime() -
+              new Date(a.created_at).getTime()
+            );
           case "created_at":
-            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+            return (
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
+            );
           case "-title":
             return b.title.localeCompare(a.title);
           case "title":
@@ -127,13 +133,20 @@ export default function Theme() {
     [filteredThemeVideos, user],
   );
 
-  const baseChildThemes = (theme?.children ?? []) as Theme[];
+  const baseChildThemes = useMemo(
+    () => (theme?.children ?? []) as Theme[],
+    [theme?.children],
+  );
+
+  const defaultTab =
+    baseChildThemes.length > 0 ? "childThemes" : "unclassified";
+  const selectedTab = value ?? defaultTab;
 
   const parentTheme = theme?.parent
     ? (allThemes.find((item) => item.id === theme.parent) ?? null)
     : null;
 
-  // True si l'utilisateur a réellement appliqué au moins un filtre vidéo
+  // True if the user has actually applied at least one video filter
   const hasActiveVideoFilters = useMemo(() => {
     const base: VideoFiltersValue = videoFilters;
 
@@ -148,7 +161,7 @@ export default function Theme() {
     );
   }, [videoFilters]);
 
-  // Sous-thèmes après application des filtres
+  // Child themes after applying filters
   const filteredChildThemes = useMemo<Theme[]>(() => {
     if (!baseChildThemes.length) return [];
 
@@ -193,16 +206,6 @@ export default function Theme() {
     collectionFilters.channel,
   ]);
 
-  const handleTabValue = () => {
-    const hasVideos = themeItems.length > 0;
-    const hasChildren = baseChildThemes.length > 0;
-    if (hasChildren) {
-      setValue("childThemes");
-    } else if (hasVideos) {
-      setValue("unclassified");
-    }
-  };
-
   useEffect(() => {
     if (!theme?.default_order) return;
 
@@ -214,25 +217,17 @@ export default function Theme() {
 
   useEffect(() => {
     if (!slug) return;
-    fetchTheme(slug);
+    void fetchTheme(slug);
   }, [fetchTheme, slug]);
 
   useEffect(() => {
     if (!theme) return;
-    fetchThemes();
+    void fetchThemes();
   }, [fetchThemes, theme]);
 
   useEffect(() => {
-    if (didSetInitialTab.current) return;
-    if (!theme) return;
-
-    handleTabValue();
-    didSetInitialTab.current = true;
-  }, [theme, themeItems.length, baseChildThemes.length]);
-
-  useEffect(() => {
     if (!channelSlug) return;
-    fetchChannel(channelSlug);
+    void fetchChannel(channelSlug);
   }, [channelSlug, fetchChannel]);
 
   if (!theme || !mounted || !themeItemVideos) {
@@ -243,32 +238,30 @@ export default function Theme() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Alert canClose type={VariantType.ERROR}>
-          {useThemeError ?? "Impossible de charger ce thème."}
+          {useThemeError ?? `${t("errors.unableToTheme")}`}
         </Alert>
-        <BackButton label="Retour" />
+        <BackButton label={t("common.back")} />
       </div>
     );
   }
 
   return (
     <div>
-      <BackButton label="Retour" />
+      <BackButton label={t("common.back")} />
       <div>
         {useThemeError && (
           <Alert canClose type={VariantType.ERROR}>
             {useThemeError}
           </Alert>
         )}
-        <img
+        <Image
+          unoptimized
+          width={1200}
+          height={300}
           src={theme.banner || "/default_theme_banner.png"}
-          alt={`${theme.title} banner`}
-          style={{
-            width: "100%",
-            height: "200px",
-            objectFit: "cover",
-            borderRadius: "8px",
-            marginBottom: "2rem",
-          }}
+          alt={t("a11y.themeBanner", { title: theme.title })}
+          className="pod-image-banner"
+          fill
         />{" "}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 2 }}>
@@ -288,33 +281,31 @@ export default function Theme() {
 
       <div>
         {baseChildThemes.length === 0 && themeItems.length === 0 ? (
-          <Alert type={VariantType.INFO}>
-            Ce thème n'a aucune vidéo ou sous-thème associé.
-          </Alert>
+          <Alert type={VariantType.INFO}>{t("common.noResults")}</Alert>
         ) : (
           <Box sx={{ width: "100%", typography: "body1" }}>
             <Tabs
-              value={value}
+              value={selectedTab}
               onChange={handleChange}
-              aria-label="Contenus de la chaine"
+              aria-label={t("channels.content")}
             >
               <Tab
                 disabled={themeItemVideos.length === 0}
-                label={`Videos non classées (${themeItemVideos.length})`}
+                label={`${t("channels.unclassified")} (${themeItemVideos.length})`}
                 value="unclassified"
               />
 
               <Tab
                 disabled={baseChildThemes.length === 0}
-                label={`Sous-thèmes (${baseChildThemes.length})`}
+                label={`${t("common.subtopics")} (${baseChildThemes.length})`}
                 value="childThemes"
               />
             </Tabs>
 
             <Box sx={{ mt: 2 }}>
-              {value === "unclassified" && (
+              {selectedTab === "unclassified" && (
                 <div>
-                  <h2>Videos non classées</h2>
+                  <h2>{t("channels.unclassified")}</h2>
                   {useVideoError && (
                     <Alert canClose type={VariantType.ERROR}>
                       {useVideoError}
@@ -334,9 +325,11 @@ export default function Theme() {
                         newFilters.search !== videoFilters.search ||
                         newFilters.channel !== videoFilters.channel ||
                         newFilters.ordering !== videoFilters.ordering ||
-                        newFilters.ownerUsernames !== videoFilters.ownerUsernames ||
+                        newFilters.ownerUsernames !==
+                          videoFilters.ownerUsernames ||
                         newFilters.typeSlugs !== videoFilters.typeSlugs ||
-                        newFilters.disciplineIds !== videoFilters.disciplineIds ||
+                        newFilters.disciplineIds !==
+                          videoFilters.disciplineIds ||
                         newFilters.cursus !== videoFilters.cursus ||
                         newFilters.tagSlugs !== videoFilters.tagSlugs
                       ) {
@@ -346,26 +339,29 @@ export default function Theme() {
                     }}
                   />
 
-                  {visibleAndPublicThemeVideos.length === 0 && !useVideoLoading ? (
+                  {visibleAndPublicThemeVideos.length === 0 &&
+                  !useVideoLoading ? (
                     <Alert type={VariantType.INFO}>
                       {hasActiveVideoFilters
-                        ? "Aucune vidéo ne correspond à vos filtres."
-                        : "Aucune vidéo liée à ce thème."}
+                        ? t("common.noResults")
+                        : t("common.noResults")}
                     </Alert>
                   ) : (
                     <VideosDisplay
                       videos={visibleAndPublicThemeVideos}
                       page={videoFilters.page}
-                      onPageChange={(page) => setVideoFilters({ ...videoFilters, page })}
+                      onPageChange={(page) =>
+                        setVideoFilters({ ...videoFilters, page })
+                      }
                       loading={useVideoLoading}
                     />
                   )}
                 </div>
               )}
 
-              {value === "childThemes" && (
+              {selectedTab === "childThemes" && (
                 <div>
-                  <h2>Sous-thèmes</h2>
+                  <h2>{t("common.subtopics")}</h2>
 
                   <CollectionFilters
                     mode="themes"
@@ -387,9 +383,12 @@ export default function Theme() {
                         newFilters.search !== collectionFilters.search ||
                         newFilters.ordering !== collectionFilters.ordering ||
                         newFilters.channel !== collectionFilters.channel ||
-                        newFilters.ownerUsernames !== collectionFilters.ownerUsernames ||
-                        newFilters.createdAtGte !== collectionFilters.createdAtGte ||
-                        newFilters.createdAtLte !== collectionFilters.createdAtLte
+                        newFilters.ownerUsernames !==
+                          collectionFilters.ownerUsernames ||
+                        newFilters.createdAtGte !==
+                          collectionFilters.createdAtGte ||
+                        newFilters.createdAtLte !==
+                          collectionFilters.createdAtLte
                       ) {
                         newFilters.page = 1;
                       }
@@ -399,12 +398,11 @@ export default function Theme() {
 
                   {baseChildThemes.length === 0 ? (
                     <Alert type={VariantType.INFO}>
-                      Aucun sous-thème lié à ce thème.
+                      {t("common.noResults")}
                     </Alert>
                   ) : filteredChildThemes.length === 0 ? (
                     <Alert type={VariantType.INFO}>
-                      Aucun sous-thème ne correspond à vos critères de
-                      recherche.
+                      {t("common.noResults")}
                     </Alert>
                   ) : (
                     <CollectionDisplay
@@ -413,7 +411,9 @@ export default function Theme() {
                       storageKey="theme-subtheme-view"
                       channelSlug={channelSlug}
                       page={collectionFilters.page}
-                      onPageChange={(page) => setCollectionFilters({ ...collectionFilters, page })}
+                      onPageChange={(page) =>
+                        setCollectionFilters({ ...collectionFilters, page })
+                      }
                       basePath={
                         Array.isArray(params.themeSlug)
                           ? params.themeSlug.join("/")

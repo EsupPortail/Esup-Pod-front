@@ -5,9 +5,13 @@ import { requestJson } from "@/src/utils/requestJson";
 import type { Theme } from "@/src/types";
 import { type CollectionListParams } from "@/src/hooks/collectionListParams";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "./useTranslation";
 
 export function useTheme() {
-  const [listParams, setListParams] = useState<CollectionListParams | undefined>(undefined);
+  const { t } = useTranslation();
+  const [listParams, setListParams] = useState<
+    CollectionListParams | undefined
+  >(undefined);
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
 
   const listQuery = useQuery({
@@ -29,17 +33,20 @@ export function useTheme() {
       }
 
       const res = await authFetch(url.toString());
-      if (!res.ok) throw new Error("Erreur de récupération des thèmes.");
-      const data = await requestJson<Theme[] | { results?: Theme[]; count?: number }>(res);
+      if (!res.ok) throw new Error(t("errors.getThemeError", { count: 2 }));
+      const data = await requestJson<
+        Theme[] | { results?: Theme[]; count?: number }
+      >(res);
 
       const normalizedThemes = Array.isArray(data)
         ? data
         : Array.isArray(data.results)
           ? data.results
           : [];
-      const count = !Array.isArray(data) && typeof data.count === 'number'
-        ? data.count
-        : normalizedThemes.length;
+      const count =
+        !Array.isArray(data) && typeof data.count === "number"
+          ? data.count
+          : normalizedThemes.length;
 
       return { themes: normalizedThemes, count };
     },
@@ -52,17 +59,20 @@ export function useTheme() {
     queryFn: async () => {
       if (!currentSlug) return null;
       const res = await authFetch(getRoutes().theme.get(currentSlug));
-      if (!res.ok) throw new Error("Erreur de récupération du thème.");
+      if (!res.ok) throw new Error(t("errors.getThemeError", { count: 1 }));
       return requestJson<Theme>(res);
     },
     enabled: !!currentSlug,
     staleTime: 30000,
   });
 
-  const fetchAll = useCallback(async (params?: CollectionListParams) => {
-    setListParams(params);
-    return listQuery.data?.themes ?? [];
-  }, [listQuery.data]);
+  const fetchAll = useCallback(
+    async (params?: CollectionListParams) => {
+      setListParams(params);
+      return listQuery.data?.themes ?? [];
+    },
+    [listQuery.data],
+  );
 
   const fetchOne = useCallback(async (slug: string) => {
     setCurrentSlug(slug);

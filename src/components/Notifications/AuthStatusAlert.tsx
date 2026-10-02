@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, VariantType } from "@openfun/cunningham-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/src/context/AuthProvider";
@@ -43,7 +43,7 @@ export default function AuthStatusAlert({
     };
   }, [isAuthenticated, params]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     if (!shouldClear) return;
     setIsClosing(true);
     window.setTimeout(() => {
@@ -55,7 +55,7 @@ export default function AuthStatusAlert({
       const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
       router.replace(nextUrl);
     }, 250);
-  };
+  }, [pathname, params, router, shouldClear]);
 
   useEffect(() => {
     if (!autoDismissMs || isInitializing || !message || !shouldShow) return;
@@ -77,8 +77,8 @@ export default function AuthStatusAlert({
       canClose
       type={VariantType.SUCCESS}
       onClose={handleClose}
-      className={`${styles.authStatusAlert} ${
-        isClosing ? styles.isClosing : ""
+      className={`${styles["auth-status-alert"]} ${
+        isClosing ? styles["is-closing"] : ""
       }`.trim()}
     >
       {message}

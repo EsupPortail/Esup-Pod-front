@@ -5,7 +5,6 @@ import CardMedia from "@mui/material/CardMedia";
 import CardActionArea from "@mui/material/CardActionArea";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import CardActions from "@mui/material/CardActions";
 import Link from "next/link";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import type { Playlist } from "@/src/types";
@@ -13,6 +12,7 @@ import { timeAgo } from "@/src/constants/date";
 import { truncateVideoTitle } from "@/src/constants/string";
 
 import PlaylistActionMenu from "./PlaylistActionMenu";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type PlaylistCardProps = {
   playlist: Playlist;
@@ -25,6 +25,7 @@ export default function PlaylistCard({
   href,
   isOwner,
 }: PlaylistCardProps) {
+  const { t, locale } = useTranslation();
   const playlistHref = href ?? `/playlist/${playlist.slug}`;
   const videosCount = playlist.items?.length ?? 0;
   const playlistThumbnail =
@@ -41,10 +42,11 @@ export default function PlaylistCard({
         borderRadius: "12px",
         transition: "all 0.3s ease",
         "&:hover": {
-          borderColor: "var(--c--contextuals--background--semantic--brand--primary)",
+          borderColor:
+            "var(--c--contextuals--background--semantic--brand--primary)",
           boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
           transform: "translateY(-2px)",
-        }
+        },
       }}
     >
       <CardActionArea
@@ -133,7 +135,7 @@ export default function PlaylistCard({
             <CardMedia
               component="img"
               image={playlistThumbnail}
-              alt={playlist.title}
+              alt={t("a11y.playlistThumbnail", { title: playlist.title })}
               className="playlist-image"
               sx={{
                 borderTopLeftRadius: "11px",
@@ -174,13 +176,13 @@ export default function PlaylistCard({
               }}
             >
               {playlist.is_protected && (
-                <Tooltip title="Playlist protégée par mot de passe">
+                <Tooltip title={t("playlists.passwordProtected")}>
                   <span className="material-icons">key</span>
                 </Tooltip>
               )}
 
               {!playlist.is_public && (
-                <Tooltip title="Playlist privée">
+                <Tooltip title={t("playlists.private")}>
                   <span className="material-icons">visibility_off</span>
                 </Tooltip>
               )}
@@ -218,7 +220,7 @@ export default function PlaylistCard({
                     color: "text.secondary",
                   }}
                 >
-                  {videosCount} vidéo{videosCount > 1 ? "s" : ""}
+                  {t("common.pluralVideos", { count: videosCount })}
                 </Typography>
               </Box>
               <Typography
@@ -227,7 +229,7 @@ export default function PlaylistCard({
                   color: "text.secondary",
                 }}
               >
-                {timeAgo(playlist.created_at)}
+                {timeAgo(playlist.created_at, locale)}
               </Typography>
             </Box>
           </div>

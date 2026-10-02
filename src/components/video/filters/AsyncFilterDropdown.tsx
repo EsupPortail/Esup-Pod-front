@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import FilterDropdown from "./FilterDropdown"; // We'll extract FilterDropdown
 
 export type AsyncFilterDropdownProps = {
@@ -18,7 +18,9 @@ export default function AsyncFilterDropdown({
   fetchOptions,
   multiple = true,
 }: AsyncFilterDropdownProps) {
-  const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+  const [options, setOptions] = useState<{ label: string; value: string }[]>(
+    [],
+  );
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);

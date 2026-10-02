@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.idea
 
 # debug
 npm-debug.log*
@@ -43,3 +44,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scripts
+detect-french_perso.cjs
+/reports
+rapport.json
+*-fr-report.json
+RECAP_i18n.md

@@ -9,21 +9,25 @@ import { useLayoutBlocks } from "@/src/hooks/useLayoutBlocks";
 import styles from "./WebTVLayout.module.css";
 
 import BlockRenderer from "../blocks/BlockRenderer";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 export default function WebTVLayout() {
   const { blocks, loading } = useLayoutBlocks();
+  const { t } = useTranslation();
 
   // Find live block configuration if explicitly present in backend blocks
-  const liveBlock = blocks.find((b) => b.frontend_id.includes("live") || b.frontend_id.includes("direct"));
+  const liveBlock = blocks.find(
+    (b) => b.frontend_id.includes("live") || b.frontend_id.includes("direct"),
+  );
   const otherBlocks = blocks.filter((b) => b !== liveBlock);
 
   return (
-    <div className={styles.webTvContainer}>
+    <div className={styles["web-tv-container"]}>
       <WebTVHeader />
 
-      <main className={styles.mainContent}>
+      <main className={styles["main-content"]}>
         {/* Top Hero Section: Left = Direct (Live list), Right = Video Grid */}
-        <section className={styles.heroSection}>
+        <section className={styles["hero-section"]}>
           <div>
             <LiveBlockComponent block={liveBlock} />
           </div>
@@ -35,7 +39,7 @@ export default function WebTVLayout() {
         {/* Dynamic Blocks Section rendered via BlockRenderer */}
         {loading ? (
           <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-            Chargement des contenus WebTV...
+            {t("webtv.loadingContent")}
           </div>
         ) : otherBlocks.length > 0 ? (
           otherBlocks.map((block) => (
@@ -44,14 +48,17 @@ export default function WebTVLayout() {
         ) : (
           /* Default reference sections matching design if no custom backend blocks defined */
           <>
-            <VideoGridBlockComponent title="Actualité : Climat" itemLimit={5} />
-            <VideoGridBlockComponent title="Série / Émission" itemLimit={5} />
+            <VideoGridBlockComponent
+              title={t("webtv.climateActu")}
+              itemLimit={5}
+            />
+            <VideoGridBlockComponent title={t("common.series")} itemLimit={5} />
             <CollectionBlockComponent
               block={{
                 frontend_id: "default-collections-actu",
                 order: 3,
                 is_active: true,
-                display_title: "Les Collections d'Actualité",
+                display_title: t("webtv.actuCollections"),
                 item_limit: 5,
               }}
             />
@@ -60,18 +67,21 @@ export default function WebTVLayout() {
                 frontend_id: "default-collections-latest",
                 order: 4,
                 is_active: true,
-                display_title: "Les dernières Collections",
+                display_title: t("webtv.latestCollections"),
                 item_limit: 5,
               }}
             />
-            <VideoGridBlockComponent title="Les vidéos les plus vues" itemLimit={5} />
+            <VideoGridBlockComponent
+              title={t("webtv.mostViewed")}
+              itemLimit={5}
+            />
           </>
         )}
       </main>
 
       {/* Footer */}
-      <footer className={styles.webTvFooter}>
-        <div className={styles.footerLogo}>
+      <footer className={styles["web-tv-footer"]}>
+        <div className={styles["footer-logo"]}>
           <span className="material-icons" style={{ fontSize: "1.5rem" }}>
             school
           </span>
