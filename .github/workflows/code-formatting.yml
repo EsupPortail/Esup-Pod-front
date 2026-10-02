@@ -2,13 +2,9 @@ name: Code Formatting
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - dev
-    pull_request:
-      branches:
-      - dev
-      - main
   workflow_dispatch:
 
 permissions:
@@ -27,7 +23,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git remote set-url origin https://x-access-token:${{ secrets.FORMAT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
