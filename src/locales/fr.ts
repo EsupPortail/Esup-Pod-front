@@ -93,6 +93,11 @@ export const fr = {
     getThemeError: "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
     deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
     addSubtitleError: "Erreur lors de l'ajout du sous-titre",
+    loadPlaylist: "Erreur de chargement {count, plural, one {de la playlist} other {des playlists}}.",
+    updatePlaylist: "Erreur lors de la modification de la playlist",
+    deletePlaylist: "Erreur lors de la suppression de la playlist",
+    addVideoToPlaylist: "Erreur lors de l'ajout de la vidéo à la playlist",
+    deleteVideoFromPlaylist: "Erreur lors du retrait de la vidéo de la playlist",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",

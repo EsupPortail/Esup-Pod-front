@@ -95,6 +95,11 @@ export const es: TranslationKeys = {
     getThemeError: "Error al recuperar {count, plural, one {el tema} other {los temas}}",
     deleteSubtitleError: "Error al eliminar el subtítulo",
     addSubtitleError: "Error al añadir el subtítulo",
+    loadPlaylist: "Error al cargar {count, plural, one {la lista de reproducción} other {las listas de reproducción}}.",
+    updatePlaylist: "Error al modificar la lista de reproducción",
+    deletePlaylist: "Error al eliminar la lista de reproducción",
+    addVideoToPlaylist: "Error al añadir el vídeo a la lista de reproducción",
+    deleteVideoFromPlaylist: "Error al eliminar el vídeo de la lista de reproducción",
   },
   socialNetworks: {
     unableToLoad: "No se pueden cargar las redes sociales.",

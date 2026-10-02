@@ -16,6 +16,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 
 type UpdatePlaylistPayload = Partial<PlaylistRequest>;
 type PlaylistItemPayload = { video_id: number };
@@ -25,6 +26,7 @@ export function usePlaylistList(
   options?: { enabled?: boolean },
 ) {
   const { accessToken, refresh } = useAuth();
+  const t = useTranslations();
 
   const query = useInfiniteQuery({
     queryKey: ["playlists", "list", params],
@@ -39,7 +41,7 @@ export function usePlaylistList(
         accessToken,
         onRefresh: refresh,
       });
-      if (!res.ok) throw new Error("Erreur de chargement des playlists.");
+      if (!res.ok) throw new Error(t("errors.loadPlaylist"));
 
       return requestJson<
         Playlist[] | { results?: Playlist[]; count?: number; next?: string }
@@ -81,6 +83,7 @@ export function usePlaylistList(
 // Rétrocompatibilité : Retourne toutes les méthodes attendues par tes anciens composants
 export function usePlaylist() {
   const { accessToken, refresh } = useAuth();
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [listParams, setListParams] = useState<
     CollectionListParams | undefined
@@ -98,7 +101,7 @@ export function usePlaylist() {
         accessToken,
         onRefresh: refresh,
       });
-      if (!res.ok) throw new Error("Erreur de chargement de la playlist.");
+      if (!res.ok) throw new Error(t("errors.loadPlaylist"));
       return requestJson<Playlist>(res);
     },
     enabled: !!currentSlug,
@@ -137,7 +140,7 @@ export function usePlaylist() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Erreur modification playlist");
+      if (!res.ok) throw new Error(t("errors.updatePlaylist"));
       return requestJson<Playlist>(res);
     },
     ...mutationConfig,
@@ -150,7 +153,7 @@ export function usePlaylist() {
         onRefresh: refresh,
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Erreur suppression playlist");
+      if (!res.ok) throw new Error(t("errors.deletePlaylist"));
       return slug;
     },
     ...mutationConfig,
@@ -171,7 +174,7 @@ export function usePlaylist() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Erreur ajout vidéo dans playlist");
+      if (!res.ok) throw new Error(t("errors.addVideoToPlaylist"));
       return requestJson<Playlist>(res);
     },
     ...mutationConfig,
@@ -192,7 +195,7 @@ export function usePlaylist() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Erreur retrait vidéo de playlist");
+      if (!res.ok) throw new Error(t("errors.deleteVideoFromPlaylist"));
       return requestJson<Playlist>(res);
     },
     ...mutationConfig,

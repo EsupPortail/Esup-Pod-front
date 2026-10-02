@@ -94,6 +94,11 @@ export const en: TranslationKeys = {
     getThemeError: "Error while retrieving {count, plural, one {the theme} other {the themes}}",
     deleteSubtitleError: "Error while deleting the subtitle",
     addSubtitleError: "Error while adding the subtitle",
+    loadPlaylist: "Error while loading {count, plural, one {the playlist} other {the playlists}}",
+    updatePlaylist: "Error while updating the playlist",
+    deletePlaylist: "Error while deleting the playlist",
+    addVideoToPlaylist: "Error while adding the video to the playlist",
+    deleteVideoFromPlaylist: "Error while removing the video from the playlist",
   },
   socialNetworks: {
     unableToLoad: "Unable to load social networks.",
