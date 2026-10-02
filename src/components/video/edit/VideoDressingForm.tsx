@@ -188,7 +188,7 @@ function CreateDressingPanel({ onBack, onCreated }: CreatePanelProps) {
               fontWeight: 500,
             }}
           >
-            <span>{t("videoEdit.oppacity")}</span>
+            <span>{t("videoEdit.opacity")}</span>
             <span
               style={{
                 background: PRIMARY_LIGHT,

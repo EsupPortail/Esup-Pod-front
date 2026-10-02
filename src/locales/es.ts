@@ -817,7 +817,7 @@ export const es: TranslationKeys = {
     dressingTitle: "Personalizar el vídeo",
     dressingDesc: "Aplique un diseño (marca de agua, introducción / cierre).",
     position: "Posición de la marca de agua",
-    oppacity: "Opacidad de la marca de agua",
+    opacity: "Opacidad de la marca de agua",
     trimTitle: "Recortar el vídeo",
     trimDesc: "Delimite un punto de entrada y de salida para acortar el vídeo.",
     chaptersDialogTitle: "Capítulos del vídeo",

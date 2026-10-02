@@ -807,7 +807,7 @@ export const en: TranslationKeys = {
     dressingTitle: "Brand the video",
     dressingDesc: "Apply branding (watermark, opening / closing sequence).",
     position: "Watermark position",
-    oppacity: "Watermark opacity",
+    opacity: "Watermark opacity",
     trimTitle: "Trim the video",
     trimDesc: "Set an entry and exit point to shorten the video.",
     chaptersDialogTitle: "Video chapters",

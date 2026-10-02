@@ -126,13 +126,13 @@ export const fr = {
 
     // Images
     chooseImage: "Veuillez choisir une image",
-    imageSendError: "Echec de l’envoi de l’image",
-    imageDeleteError: "Echec de la suppression de l’image",
+    imageSendError: "Échec de l’envoi de l’image",
+    imageDeleteError: "Échec de la suppression de l’image",
 
     // Pages & sections
     loadPage: "Erreur lors du chargement de la page",
     getBlocks: "Erreur lors de la récupération des blocs de mise en page.",
-    unableToSection: "Impossible de charger cette section de lapplication",
+    unableToSection: "Impossible de charger cette section de l'application",
     unableToTheme: "Impossible de charger ce thème.",
 
     // Chaînes & thèmes
@@ -186,8 +186,8 @@ export const fr = {
   },
   providers: {
     // Hooks de contexte
-    auth: "useAuth doit etre utilise dans AuthProvider.",
-    sidebar: "useSidebar doit etre utilise dans SidebarProvider.",
+    auth: "useAuth doit être utilise dans AuthProvider.",
+    sidebar: "useSidebar doit être utilise dans SidebarProvider.",
     playlistCreation:
       "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
     cunninghamTheme:
@@ -719,7 +719,7 @@ export const fr = {
     showRepliesPlural: "{count} réponses",
   },
   socialNetworks: {
-    unableToLoad: "Impossible de charger les réseau social.",
+    unableToLoad: "Impossible de charger les réseaux sociaux.",
     loading: "Chargement des réseaux sociaux…",
     errorSaveSocial:
       "Une erreur est survenue lors de l’enregistrement du réseau social.",
@@ -829,7 +829,7 @@ export const fr = {
     dressingDesc:
       "Appliquez un habillage (filigrane, amorce d’ouverture / fermeture).",
     position: "Position du filigrane",
-    oppacity: "Opacité du filigrane",
+    opacity: "Opacité du filigrane",
     trimTitle: "Découper la vidéo",
     trimDesc:
       "Délimitez un point d’entrée et de sortie pour raccourcir la vidéo.",
@@ -971,15 +971,15 @@ export const fr = {
     // Général
     title: "Chaînes",
     content: "Contenus de la chaîne",
-    unclassified: "Videos non classées",
+    unclassified: "Vidéos non classées",
 
     // Listes vides
     noChannels: "Aucune chaîne disponible pour le moment.",
     noMatchingFilters: "Aucune chaîne ne correspond à vos filtres.",
-    noContent: "Cette chaine n’a aucune vidéo ou thème associé.",
-    noTheme: "Cette chaine n’a aucun thème associé.",
+    noContent: "Cette chaîne n’a aucune vidéo ou thème associé.",
+    noTheme: "Cette chaîne n’a aucun thème associé.",
     noThemes: "Aucun thème ne correspond à vos critères de recherche.",
-    noVideos: "Cette chaine n’a aucune vidéo associé.",
+    noVideos: "Cette chaîne n’a aucune vidéo associé.",
   },
   dressingPage: {
     title: "Habillages & Filigranes Vidéo",
