@@ -91,10 +91,7 @@ export default function VideoContributorsForm({
       setSearchInputValue("");
       setJobTitle("");
     } catch (err: any) {
-      setError(
-        err.message ||
-          t("contributors.addError"),
-      );
+      setError(err.message || t("contributors.addError"));
     }
   };
 
