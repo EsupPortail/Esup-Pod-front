@@ -1,6 +1,8 @@
 export const fr = {
   common: {
+    opacity: "Opacité",
     close: "Fermer",
+    video: "Vidéo",
     loading: "Chargement…",
     search: "Rechercher",
     login: "Connexion",
@@ -9,7 +11,8 @@ export const fr = {
     connected: "Connecté",
     addVideo: "Ajouter une vidéo",
     home: "Accueil",
-    video: "Vidéo",
+    selectionReturn: "Retour à la sélection",
+    configBase: "Configurez les paramètres de base",
     videos: "Vidéos",
     collection: "Collection",
     collections: "Collections",
@@ -70,6 +73,7 @@ export const fr = {
     infos: "Informations",
   },
   errors: {
+    update: "Une erreur est survenue lors de la mise à jour",
     deleteErrorVideo:
       "Une erreur est survenue lors de la suppression de la vidéo",
     dupErrorVideo: "Une erreur est survenue lors de la duplication de la vidéo",
@@ -124,6 +128,8 @@ export const fr = {
     getChannels: "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
     loadConfig: "Erreur lors du chargement de la configuration",
     save: "Erreur lors de la sauvegarde",
+    create: "Erreur lors de la création",
+
   },
   providers: {
     auth: "useAuth doit etre utilise dans AuthProvider.",
@@ -341,6 +347,24 @@ export const fr = {
     unableToDownload: "Impossible de télécharger la vidéo.",
     encodingInProgress: "Vidéo en cours d’encodage…",
     retry: "Réessayer",
+  },
+  videoDressing: {
+    title: "Titre de l'habillage",
+    unique: "Nom unique permettant d'identifier l'habillage",
+    addWatermark: "Pour ajouter un filigrane ou des amorces, créez un nouvel habillage puis éditez-le.",
+    opacity: "Opacité",
+    creation: "Création…",
+    create: "Créer un nouvel habillage",
+    errorUpdate: "Erreur lors de la mise à jour de l'habillage",
+    successCreate: "Habillage appliqué avec succès",
+    dressing: "Habillage de la vidéo",
+    loading: "Chargement de l'habillage…",
+    noDressing: "Aucun habillage disponible pour le moment.",
+    noConfig: "Aucun élément configuré",
+    watermark: "Filigrane",
+    start: "Amorce de début",
+    end: "Amorce de fin",
+    
   },
   videoPage: {
     back: "Retour",

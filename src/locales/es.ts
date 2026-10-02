@@ -2,7 +2,10 @@ import type { TranslationKeys } from "./fr";
 
 export const es: TranslationKeys = {
   common: {
+    opacity: "Opacidad",
     close: "Cerrar",
+    save: "Guardar",
+    
     loading: "Cargando…",
     search: "Buscar",
     login: "Iniciar sesión",
@@ -11,6 +14,7 @@ export const es: TranslationKeys = {
     connected: "Conectado",
     addVideo: "Añadir un vídeo",
     home: "Inicio",
+    selectionReturn: "Volver a la selección",
     video: "Vídeo",
     videos: "Vídeos",
     collection: "Colección",
@@ -31,7 +35,6 @@ export const es: TranslationKeys = {
     direct: "Directo",
     views: "visualizaciones",
     view: "visualización",
-    save: "Guardar",
     cancel: "Cancelar",
     error: "Se ha producido un error",
     back: "Volver",
@@ -69,9 +72,11 @@ export const es: TranslationKeys = {
     leaveWithoutSaving: "Salir sin guardar",
     commingSoon: "Funcionalidad próximamente disponible",
     infos: "Información",
+    configBase: "Configuración de la base",
   },
 
   errors: {
+    update: "Error al actualizar",
     deleteErrorVideo: "Se ha producido un error al eliminar el vídeo",
     dupErrorVideo: "Se ha producido un error al duplicar el vídeo",
     error: "Se ha producido un error",
@@ -124,6 +129,8 @@ export const es: TranslationKeys = {
     getChannels: "Error al obtener {count, plural, one {el canal} other {los canales}}",
     loadConfig: "Error al cargar la configuración",
     save: "Error al guardar",
+    create: "Error al crear",
+    
   },
   providers: {
     auth: "useAuth debe estar envuelto en un proveedor AuthProvider",
@@ -653,6 +660,24 @@ export const es: TranslationKeys = {
     deleteConfirm: "¿Está seguro de que desea eliminar esta marca de agua?",
     loadError: "Error al cargar las marcas de agua.",
     uploadError: "Error al subir la imagen",
+  },
+
+  videoDressing: {
+    title: "Diseño de vídeo",
+    unique: "Diseño único",
+    addWatermark: "Añadir una marca de agua",
+    opacity: "Opacidad",
+    creation: "Creación del diseño",
+    create: "Crear",
+    errorUpdate: "Error al actualizar el diseño.",
+    successCreate: "El diseño se ha creado correctamente.",
+    dressing: "Diseño",
+    loading: "Cargando…",
+    noDressing: "No hay ningún diseño disponible.",
+    noConfig: "No hay ninguna configuración disponible.",
+    watermark: "Marca de agua",
+    start: "Inicio",
+    end: "Fin",
   },
 
   languages: {

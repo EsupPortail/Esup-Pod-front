@@ -2,6 +2,7 @@ import type { TranslationKeys } from "./fr";
 
 export const en: TranslationKeys = {
   common: {
+    opacity: "Opacity",
     close: "Close",
     loading: "Loading…",
     search: "Search",
@@ -9,6 +10,8 @@ export const en: TranslationKeys = {
     logout: "Log out",
     addVideo: "Add a video",
     home: "Home",
+    selectionReturn: "Return to selection",
+    configBase: "Configure the basic settings",
     disconnected: "Disconnected",
     connected: "Connected",
     video: "Video",
@@ -72,6 +75,7 @@ export const en: TranslationKeys = {
   },
 
   errors: {
+    update: "Update error",
     deleteErrorVideo: "An error occurred while deleting the video",
     dupErrorVideo: "An error occurred while duplicating the video",
     error: "An error occurred",
@@ -123,6 +127,7 @@ export const en: TranslationKeys = {
     getChannels: "Error while retrieving {count, plural, one {the channel} other {the channels}}",
     loadConfig: "Error while loading the configuration",
     save: "Saving error",
+    create: "Creation error",
   },
   providers: {
     auth: "useAuth must be used within an AuthProvider.",
@@ -132,6 +137,7 @@ export const en: TranslationKeys = {
     getChannels:
       "Error while retrieving {count, plural, one {the channel} other {the channels}}",
   },
+  
   a11y: {
     institutionLogo: "Institution logo",
     facebookLogo: "Facebook logo",
@@ -639,6 +645,24 @@ export const en: TranslationKeys = {
     deleteConfirm: "Are you sure you want to delete this watermark?",
     loadError: "Error while loading watermarks.",
     uploadError: "Error while uploading the image",
+  },
+
+  videoDressing: {
+    title: "Video Dressing",
+    unique: "Unique dressing",
+    addWatermark: "Add a watermark",
+    opacity: "Opacity",
+    creation: "Create video dressing",
+    create: "Create",
+    errorUpdate: "Error while updating video dressing.",
+    successCreate: "Video dressing created successfully.",
+    dressing: "Video dressing",
+    loading: "Loading video dressing...",
+    noDressing: "No video dressing configured.",
+    noConfig: "No configuration available.",
+    watermark: "Watermark",
+    start: "Start",
+    end: "End",
   },
 
   languages: {
