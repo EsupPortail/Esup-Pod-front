@@ -72,9 +72,9 @@ export default function AddVideo() {
       if (!data.videoFile) {
         setFieldError("videoFile", {
           type: "required",
-          message: "Veuillez sélectionner un fichier.",
+          message: `${t("a11y.chooseFile")}`,
         });
-        setError("Veuillez sélectionner un fichier vidéo.");
+        setError(`${t("a11y.chooseFile")}`);
         return;
       }
 
@@ -98,7 +98,7 @@ export default function AddVideo() {
       router.push(`/video/edit/${newVid.slug}`);
     } catch (err: unknown) {
       setIsRedirecting(false);
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : `${t("errors.error")}`);
     }
   };
 
@@ -136,7 +136,7 @@ export default function AddVideo() {
       router.push(`/video/edit/${newVid.slug}`);
     } catch (err: unknown) {
       setIsRedirecting(false);
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : `${t("errors.error")}`);
     }
   };
 
@@ -144,7 +144,7 @@ export default function AddVideo() {
     <div>
       <BackButton label={t("common.back")} onClick={() => router.back()} />
       <h1 style={{ fontWeight: 700, fontSize: "1.5rem", marginBottom: 16 }}>
-        Importer une vidéo
+        {t("navbar.addVideo")}
       </h1>
 
       {error && (
@@ -156,8 +156,7 @@ export default function AddVideo() {
       {isRedirecting ? (
         <div>
           <Alert canClose type={VariantType.SUCCESS} aria-live="polite">
-            Votre vidéo est en cours de traitement sur POD. Ne fermez pas la
-            page...
+            {t("a11y.videoProcessingMessage")}
           </Alert>
           <LinearProgress
             sx={{ padding: "5px" }}
@@ -174,28 +173,23 @@ export default function AddVideo() {
           <Alert
             additional={
               <>
-                La taille du fichier doit être{" "}
-                <b>
-                  inférieure à {config?.encoding?.max_upload_size_gb ?? 2} Go
-                </b>
-                .
+                {t.rich("a11y.fileSizeLimit", {
+                  maxSize: config?.encoding?.max_upload_size_gb ?? 2,
+                  bold: (chunks) => <b>{chunks}</b>,
+                })}
                 <br />
-                Le temps d&apos;envoi dépend de la taille de votre fichier et de
-                votre vitesse de téléchargement.
+                {t("a11y.uploadTimeInfo")}
                 <br />
-                <b>
-                  Pendant l&apos;envoi, ne fermez pas votre navigateur avant
-                  d&apos;avoir reçu un message de succès ou d&apos;échec.
-                </b>
+                <b>{t("a11y.uploadWarning")}</b>
               </>
             }
             aria-live="polite"
           >
-            Informations
+            {t("common.infos")}
           </Alert>
 
           <FileUploader
-            bigText="Choisissez un fichier audio ou vidéo"
+            bigText={t("a11y.chooseVideoOrAudioFile")}
             fullWidth={true}
             state={errors.videoFile ? "error" : "default"}
             onFilesChange={(event) => {
@@ -208,12 +202,12 @@ export default function AddVideo() {
                 ?.map((ext: string) => `.${ext}`)
                 .join(", ") || ".mp4, .avi, .mkv"
             }
-            aria-label="Sélectionner un fichier audio ou vidéo"
+            aria-label={t("a11y.chooseVideoOrAudioFile")}
             aria-describedby="videoFile-error"
             aria-required="true"
             text={
               errors.videoFile?.message ??
-              `Les formats suivants sont supportés : ${config?.encoding?.allowed_extensions?.join(", ") || "mp4, avi, mkv"}.`
+              `${t("a11y.supportedFormats")} : ${config?.encoding?.allowed_extensions?.join(", ") || "mp4, avi, mkv"}.`
             }
           />
           {errors.videoFile && (
@@ -226,35 +220,22 @@ export default function AddVideo() {
           )}
 
           <fieldset className={styles["bloc-terms"]}>
-            <legend>Conditions d&apos;utilisation</legend>
+            <legend>{t("a11y.termsOfUse")}</legend>
             <p>
-              <b>
-                Attention ! Assurez‑vous de respecter le code de la propriété
-                intellectuelle avant de publier une vidéo :
-              </b>
+              <b>{t("a11y.intellectualPropertyWarning")}</b>
             </p>
-            <p>
-              Je confirme que je dispose des autorisations nécessaires signées
-              par les parties concernées par la publication de ce média, en ce
-              compris le consentement relatif au droit à l&apos;image et au
-              traitement des données personnelles. Je certifie que
-              l&apos;ensemble des personnes concernées ont bénéficié d&apos;une
-              information complète relative au traitement de leurs données
-              personnelles, conformément aux dispositions des articles 13 et 14
-              du RGPD.
-            </p>
+            <p>{t("a11y.publicationAuthorizations")}</p>
             <Checkbox
               className={styles["bloc-terms-checkbox"]}
-              label="J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo."
+              label={t("a11y.intellectualPropertyAcknowledgement")}
               fullWidth
               state={errors.acceptTerm ? "error" : "default"}
               aria-describedby="acceptTerm-error"
               aria-required="true"
               {...register("acceptTerm", {
-                required: "Veuillez accepter les conditions d'utilisation.",
+                required: `${t("a11y.acceptTermsRequired")}`,
                 validate: (value) =>
-                  Boolean(value) ||
-                  "Veuillez accepter les conditions d'utilisation.",
+                  Boolean(value) || `${t("a11y.acceptTermsRequired")}`,
               })}
             />
             {errors.acceptTerm && (
@@ -281,7 +262,7 @@ export default function AddVideo() {
               color="success"
               disabled={isSubmitting || isRedirecting}
             >
-              Importer la vidéo
+              {t("a11y.importVideo")}
             </Button>
             <Button
               type="button"
@@ -291,13 +272,13 @@ export default function AddVideo() {
               onClick={() => setIsEmptyModalOpen(true)}
             >
               <NoteAddIcon fontSize="small" style={{ marginRight: 6 }} />
-              Passer l&apos;importation (Créer une fiche vide)
+              {t("a11y.skipImportCreateEmpty")}
             </Button>
           </div>
         </form>
       )}
 
-      {/* Modal pour créer une fiche vide */}
+      {/* Modal to create an empty record */}
       <Dialog
         open={isEmptyModalOpen}
         onClose={() => setIsEmptyModalOpen(false)}
@@ -314,7 +295,7 @@ export default function AddVideo() {
           }}
         >
           <NoteAddIcon sx={{ color: "#00818a" }} />
-          Créer une fiche vide
+          {t("a11y.createEmptyRecord")}
         </DialogTitle>
         <DialogContent dividers>
           <div
@@ -326,18 +307,17 @@ export default function AddVideo() {
             }}
           >
             <p style={{ margin: 0, fontSize: "0.875rem", color: "#6b7280" }}>
-              Vous vous apprêtez à créer une fiche vidéo sans fichier média
-              source. Vous pourrez ajouter la vidéo source ultérieurement depuis
-              l&apos;étape <b>&ldquo;Importation&rdquo;</b> de la page
-              d&apos;édition.
+              {t.rich("a11y.emptyRecordWarning", {
+                b: (chunks) => <b>{chunks}</b>,
+              })}
             </p>
             <TextField
-              label="Titre de la vidéo *"
+              label={`${t("videoEdit.titlePlaceholder")} *`}
               fullWidth
               error={Boolean(errors.emptyTitle)}
               helperText={
                 errors.emptyTitle?.message ??
-                "Saisissez un titre clair et descriptif."
+                `${t("a11y.clearDescriptiveTitle")}`
               }
               InputProps={{ style: { borderRadius: 10 } }}
               {...register("emptyTitle")}
@@ -359,7 +339,7 @@ export default function AddVideo() {
             disabled={isSubmitting}
             onClick={handleSubmit(onSubmitEmptyCard)}
           >
-            Créer la fiche vide
+            {t("a11y.createEmptyRecord")}
           </Button>
         </DialogActions>
       </Dialog>

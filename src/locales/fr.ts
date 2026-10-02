@@ -65,6 +65,7 @@ export const fr = {
     stayOnPage: "Rester sur la page",
     leaveWithoutSaving: "Quitter sans enregistrer",
     commingSoon: "Fonctionnalité à venir",
+    infos: "Informations",
   },
   errors: {
     deleteErrorVideo:
@@ -94,14 +95,17 @@ export const fr = {
     loadError: "Erreur de chargement",
     tagsLoadError: "Erreur lors du chargement des mots-clés : {error}",
     noKeywords: "Aucun mot-clé disponible pour le moment.",
-    getThemeError: "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
+    getThemeError:
+      "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
     deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
     addSubtitleError: "Erreur lors de l'ajout du sous-titre",
-    loadPlaylist: "Erreur de chargement {count, plural, one {de la playlist} other {des playlists}}.",
+    loadPlaylist:
+      "Erreur de chargement {count, plural, one {de la playlist} other {des playlists}}.",
     updatePlaylist: "Erreur lors de la modification de la playlist",
     deletePlaylist: "Erreur lors de la suppression de la playlist",
     addVideoToPlaylist: "Erreur lors de l'ajout de la vidéo à la playlist",
-    deleteVideoFromPlaylist: "Erreur lors du retrait de la vidéo de la playlist",
+    deleteVideoFromPlaylist:
+      "Erreur lors du retrait de la vidéo de la playlist",
     loadPage: "Erreur lors du chargement de la page",
     getBlocks: "Erreur lors de la récupération des blocs de mise en page.",
     loadFavorites: "Erreur lors du chargement des favoris",
@@ -115,7 +119,8 @@ export const fr = {
     addChapter: "Erreur lors de l'ajout du chapitre",
     deleteChapter: "Erreur lors de la suppression du chapitre",
     loadInfo: "Erreur lors du chargement des informations",
-    getChannels: "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
+    getChannels:
+      "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
   },
   a11y: {
     institutionLogo: "Logo de l’établissement",
@@ -138,12 +143,36 @@ export const fr = {
     deleteProfilePictureSuccess: "Image de profil supprimée avec succès",
     deleteProfilePicture: "Supprimer la photo actuelle",
     chooseImage: "Veuillez sélectionner une image",
+    chooseFile: "Veuillez sélectionner un fichier vidéo",
     changeProfilePicture: "Changer mon image de profil",
     noProfilePicture: "Vous n’avez pas encore de photo de profil.",
     thumbnail: "Vignette",
     preview: "Aperçu",
     chooseVideo: "Sélectionner cette vidéo",
     supportedFormats: "Formats supportés : ",
+    videoProcessingMessage:
+      "Votre vidéo est en cours de traitement. Ne fermez pas la page…",
+    fileSizeLimit:
+      "La taille du fichier doit être <bold>inférieure à {maxSize} Go.</bold>",
+    uploadTimeInfo:
+      "Le temps d’envoi dépend de la taille de votre fichier et de votre vitesse de téléchargement.",
+    uploadWarning:
+      "Pendant l’envoi, ne fermez pas votre navigateur avant d’avoir reçu un message de succès ou d’échec.",
+    chooseVideoOrAudioFile: "Choisissez un fichier audio ou vidéo",
+    termsOfUse: "Conditions d’utilisation",
+    intellectualPropertyWarning:
+      "Attention ! Assurez-vous de respecter le code de la propriété intellectuelle avant de publier une vidéo :",
+    publicationAuthorizations:
+      "Je confirme que je dispose des autorisations nécessaires signées par les parties concernées par la publication de ce média, en ce compris le consentement relatif au droit à l’image et au traitement des données personnelles. Je certifie que l’ensemble des personnes concernées ont bénéficié d’une information complète relative au traitement de leurs données personnelles, conformément aux dispositions des articles 13 et 14 du RGPD.",
+    intellectualPropertyAcknowledgement:
+      "J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo.",
+    acceptTermsRequired: "Veuillez accepter les conditions d’utilisation.",
+    importVideo: "Importer une vidéo",
+    skipImportCreateEmpty: "Passer l’importation (Créer une fiche vide)",
+    createEmptyRecord: "Créer une fiche vide",
+    emptyRecordWarning:
+      "Vous vous apprêtez à créer une fiche vidéo sans fichier média source. Vous pourrez ajouter la vidéo source ultérieurement depuis l’étape <b>« Importation »</b> de la page d’édition.",
+    clearDescriptiveTitle: "Saisissez un titre clair et descriptif.",
   },
   pending: {
     sending: "Envoi en cours…",
@@ -404,7 +433,7 @@ export const fr = {
 
     // Form fields in Details
     titleLabel: "Titre",
-    titlePlaceholder: "Titre de la vidéo en Français",
+    titlePlaceholder: "Titre de la vidéo",
     titleHelper:
       "Un titre aussi court et précis que possible, reflétant le sujet principal / le contexte de ce contenu.",
     descriptionLabel: "Description",
