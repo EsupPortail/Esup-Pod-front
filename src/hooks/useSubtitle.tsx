@@ -36,9 +36,7 @@ export function useSubtitle() {
         return true;
       } catch (e: unknown) {
         setUseSubtitleError(
-          e instanceof Error
-            ? e.message
-            : t("errors.deleteSubtitleError"),
+          e instanceof Error ? e.message : t("errors.deleteSubtitleError"),
         );
         return false;
       } finally {
@@ -73,9 +71,7 @@ export function useSubtitle() {
         return true;
       } catch (e: unknown) {
         setUseSubtitleError(
-          e instanceof Error
-            ? e.message
-            : t("errors.addSubtitleError"),
+          e instanceof Error ? e.message : t("errors.addSubtitleError"),
         );
         return false;
       } finally {

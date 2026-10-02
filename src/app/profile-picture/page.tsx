@@ -185,7 +185,11 @@ export default function UserProfilePicture() {
               );
             }}
             accept=".jpg, .jpeg, .png, .webp"
-            text={error ? error : `${t("a11y.supportedFormats")} jpg, jpeg, png, webp`}
+            text={
+              error
+                ? error
+                : `${t("a11y.supportedFormats")} jpg, jpeg, png, webp`
+            }
           />
           <div></div>
           <Button

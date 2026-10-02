@@ -20,7 +20,7 @@
   align-items: center;
 }
 
-.sso-button{
+.sso-button {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -28,7 +28,7 @@
   width: 100%;
 }
 
-.error{
+.error {
   color: red;
   margin-top: 0.25rem;
 }

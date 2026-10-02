@@ -505,7 +505,9 @@ export default function Video() {
             onClick={handleUnlock}
             disabled={isUnlocking || password.trim().length === 0}
           >
-            {isUnlocking ? `${t("videoPage.unlocking")}` : `${t("videoPage.unlock")}`}
+            {isUnlocking
+              ? `${t("videoPage.unlocking")}`
+              : `${t("videoPage.unlock")}`}
           </Button>
         </div>
       </div>
@@ -774,7 +776,8 @@ export default function Video() {
                     <Divider sx={{ mb: 2 }} />
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
-                        <LibraryBooksIcon fontSize="small" /> {t("videoPage.type")}
+                        <LibraryBooksIcon fontSize="small" />{" "}
+                        {t("videoPage.type")}
                       </h4>
                       <p className={styles["sidebar-blue-text"]}>
                         {video.type_name || `${t("videoPage.none")}`}
@@ -782,7 +785,8 @@ export default function Video() {
                     </div>
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
-                        <PieChartIcon fontSize="small" /> {t("videoPage.disciplines")}
+                        <PieChartIcon fontSize="small" />{" "}
+                        {t("videoPage.disciplines")}
                       </h4>
                       <ul>
                         {video.discipline_details?.length ? (

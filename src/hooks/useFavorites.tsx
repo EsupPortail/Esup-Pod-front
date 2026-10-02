@@ -76,9 +76,7 @@ export function useFavorites() {
         return data;
       } catch (e: unknown) {
         setUseFavoritesError(
-          e instanceof Error
-            ? e.message
-            : t("errors.addFavorite"),
+          e instanceof Error ? e.message : t("errors.addFavorite"),
         );
         return null;
       } finally {
@@ -101,9 +99,7 @@ export function useFavorites() {
         });
 
         if (!res.ok) {
-          throw new Error(
-            t("errors.deleteFavorite"),
-          );
+          throw new Error(t("errors.deleteFavorite"));
         }
 
         setFavorites((prev) =>
@@ -112,9 +108,7 @@ export function useFavorites() {
         return true;
       } catch (e: unknown) {
         setUseFavoritesError(
-          e instanceof Error
-            ? e.message
-            : t("errors.deleteFavorite"),
+          e instanceof Error ? e.message : t("errors.deleteFavorite"),
         );
         return false;
       } finally {

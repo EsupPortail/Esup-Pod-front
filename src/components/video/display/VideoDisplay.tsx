@@ -88,13 +88,7 @@ export default function VideosDisplay({
       selectedVideoIds,
       onSelectVideo,
     );
-  }, [
-    paginatedVideos,
-    currentUserId,
-    selectedVideoIds,
-    onSelectVideo,
-    locale,
-  ]);
+  }, [paginatedVideos, currentUserId, selectedVideoIds, onSelectVideo, locale]);
 
   const isAllSelected = useMemo(() => {
     if (paginatedVideos.length === 0) return false;

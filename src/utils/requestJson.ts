@@ -24,7 +24,8 @@ export const requestJson = async <T>(
     requestInit.headers.set("Accept-Language", getClientLocale());
   }
 
-  const res = input instanceof Response ? input : await fetch(input, requestInit);
+  const res =
+    input instanceof Response ? input : await fetch(input, requestInit);
   if (!res.ok) {
     let message = "API Error.";
     try {

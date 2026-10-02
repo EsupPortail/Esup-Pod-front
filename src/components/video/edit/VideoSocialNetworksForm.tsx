@@ -86,7 +86,9 @@ export default function VideoSocialNetworksForm({
         <div
           style={{
             fontSize: "0.85rem",
-            color: msg.includes(t("socialNetworks.saved")) ? "#2e7d32" : "#d32f2f",
+            color: msg.includes(t("socialNetworks.saved"))
+              ? "#2e7d32"
+              : "#d32f2f",
           }}
         >
           {msg}

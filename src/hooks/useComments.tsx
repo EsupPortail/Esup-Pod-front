@@ -124,9 +124,7 @@ export function useComments(videoSlug: string) {
       return true;
     } catch (e: unknown) {
       setUseCommentsError(
-        e instanceof Error
-          ? e.message
-          : t("errors.loadComments"),
+        e instanceof Error ? e.message : t("errors.loadComments"),
       );
       return false;
     } finally {
@@ -173,9 +171,7 @@ export function useComments(videoSlug: string) {
         return createdComment;
       } catch (e: unknown) {
         setUseCommentsError(
-          e instanceof Error
-            ? e.message
-            : t("errors.addComment"),
+          e instanceof Error ? e.message : t("errors.addComment"),
         );
         return null;
       }
@@ -255,9 +251,7 @@ export function useComments(videoSlug: string) {
         return true;
       } catch (e: unknown) {
         setUseCommentsError(
-          e instanceof Error
-            ? e.message
-            : t("errors.deleteComment"),
+          e instanceof Error ? e.message : t("errors.deleteComment"),
         );
         return false;
       }

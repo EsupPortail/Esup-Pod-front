@@ -310,8 +310,7 @@ export default function VideoDressingForm({ video, onDressingUpdated }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dressing: newId === "" ? null : newId }),
       });
-      if (!res.ok)
-        throw new Error(t("videoDressing.errorUpdate"));
+      if (!res.ok) throw new Error(t("videoDressing.errorUpdate"));
       setMsg({ text: t("videoDressing.successCreate"), ok: true });
       if (onDressingUpdated) onDressingUpdated();
     } catch (err) {
@@ -376,7 +375,8 @@ export default function VideoDressingForm({ video, onDressingUpdated }: Props) {
               {t("videoDressing.dressing")}
             </div>
             <div style={{ fontSize: "0.8rem", color: "#6b7280" }}>
-              {t("videoDressing.addWatermark")}, {t("videoDressing.start")} &amp; {t("videoDressing.end")}.
+              {t("videoDressing.addWatermark")}, {t("videoDressing.start")}{" "}
+              &amp; {t("videoDressing.end")}.
             </div>
           </div>
         </div>
@@ -583,17 +583,22 @@ export default function VideoDressingForm({ video, onDressingUpdated }: Props) {
           </div>
           {activeDressing.watermark && (
             <div>
-              {t("videoDressing.watermark")} — Position : {activeDressing.position}, {t("videoDressing.opacity")} :{" "}
+              {t("videoDressing.watermark")} — Position :{" "}
+              {activeDressing.position}, {t("videoDressing.opacity")} :{" "}
               {activeDressing.opacity}%
             </div>
           )}
           {activeDressing.opening_credits && (
             <div>
-              {t("videoDressing.start")} : {t("common.video")} #{activeDressing.opening_credits}
+              {t("videoDressing.start")} : {t("common.video")} #
+              {activeDressing.opening_credits}
             </div>
           )}
           {activeDressing.ending_credits && (
-            <div>{t("videoDressing.end")} : {t("common.video")} #{activeDressing.ending_credits}</div>
+            <div>
+              {t("videoDressing.end")} : {t("common.video")} #
+              {activeDressing.ending_credits}
+            </div>
           )}
         </div>
       )}

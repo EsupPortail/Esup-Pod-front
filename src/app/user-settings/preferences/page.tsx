@@ -13,31 +13,21 @@ export default function UserSettings() {
   const { t } = useTranslation();
 
   return (
-    <div
-      className={styles["content-box"]}
-    >
-      <h1 className={styles["title"]}>
-        {t("preferences.title")}
-      </h1>
+    <div className={styles["content-box"]}>
+      <h1 className={styles["title"]}>{t("preferences.title")}</h1>
 
       {/* Section 1: Application language */}
       <div>
-        <h2
-          className={styles["subtitle"]}
-        >
+        <h2 className={styles["subtitle"]}>
           {t("preferences.languageSectionTitle")}
         </h2>
-        <p className={styles["desc"]}>
-          {t("preferences.languageSelectLabel")}
-        </p>
+        <p className={styles["desc"]}>{t("preferences.languageSelectLabel")}</p>
         <LanguageSelector />
       </div>
 
       {/* Section 2: Visual theme */}
       <div>
-        <h2
-          className={styles["subtitle"]}
-        >
+        <h2 className={styles["subtitle"]}>
           {t("preferences.themeSectionTitle")}
         </h2>
         <Switch

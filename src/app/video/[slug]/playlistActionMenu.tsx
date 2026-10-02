@@ -140,9 +140,7 @@ export default function PlaylistActionMenu({
       }
     } catch (e) {
       setError(
-        e instanceof Error
-          ? e.message
-          : t("playlists.playlistUpdateError"),
+        e instanceof Error ? e.message : t("playlists.playlistUpdateError"),
       );
     } finally {
       setPendingSlug(null);
@@ -165,9 +163,7 @@ export default function PlaylistActionMenu({
         const res = await addFavorite(videoId);
         if (res) {
           setInfoKind("favorite-added");
-          setInfoMessage(
-            t("videoPage.videoAddedToFavorites")
-          );
+          setInfoMessage(t("videoPage.videoAddedToFavorites"));
         }
       } else {
         const ok = await removeFavoriteForVideo(videoId);

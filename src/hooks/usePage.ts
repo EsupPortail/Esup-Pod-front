@@ -19,7 +19,6 @@ export const usePage = (slug: string) => {
       const cleanSlug = slug.startsWith("/") ? slug : `/${slug}/`;
       const encodedSlug = encodeURIComponent(cleanSlug);
       const url = `${getRoutes().conf.get.replace("/conf", "/pages/")}${encodedSlug}/`;
-      
 
       const res = await fetch(url);
       if (!res.ok) {

@@ -211,7 +211,8 @@ export default function PlaylistPage() {
               <div>
                 <dt>{t("common.createdBy")}</dt>
                 <dd>
-                  {effectivePlaylist?.owner_username ?? `${t("common.unknown")}`}
+                  {effectivePlaylist?.owner_username ??
+                    `${t("common.unknown")}`}
                 </dd>
               </div>
 

@@ -36,9 +36,7 @@ export function usePlaylistCreationContext() {
   const ctx = useContext(PlaylistCreationContext);
   const { t } = useTranslation();
   if (!ctx) {
-    throw new Error(
-      t("providers.playlistCreation"),
-    );
+    throw new Error(t("providers.playlistCreation"));
   }
   return ctx;
 }

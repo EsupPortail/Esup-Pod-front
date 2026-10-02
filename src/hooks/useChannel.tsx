@@ -49,7 +49,7 @@ export function useChannel() {
     queryFn: async () => {
       if (!currentSlug) return null;
       const res = await authFetch(getRoutes().channel.get(currentSlug));
-      if (!res.ok) throw new Error(t("errors.getChannels", {count: 1}));
+      if (!res.ok) throw new Error(t("errors.getChannels", { count: 1 }));
       return requestJson<Channel>(res);
     },
     enabled: !!currentSlug,

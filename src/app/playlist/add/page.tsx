@@ -143,9 +143,7 @@ export default function AddPlaylist() {
       router.push(`/playlist/${created.slug}`);
     } catch (e: unknown) {
       const message =
-        e instanceof Error
-          ? e.message
-          : `${t("playlists.creationError")}`;
+        e instanceof Error ? e.message : `${t("playlists.creationError")}`;
       setError(message);
     }
   };

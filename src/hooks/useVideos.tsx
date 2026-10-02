@@ -150,16 +150,11 @@ export function useVideosList(
         },
       );
       if (!response.ok) {
-        if (response.status === 401)
-          throw new Error(t("errors.error401"));
-        if (response.status === 404)
-          throw new Error(t("errors.notFound"));
-        if (response.status >= 500)
-          throw new Error(
-            t("errors.serverError"),
-          );
+        if (response.status === 401) throw new Error(t("errors.error401"));
+        if (response.status === 404) throw new Error(t("errors.notFound"));
+        if (response.status >= 500) throw new Error(t("errors.serverError"));
         throw new Error(
-          t("errors.loadErrorVideos", { status: response.status })
+          t("errors.loadErrorVideos", { status: response.status }),
         );
       }
       return requestJson<VideoListResponse>(response);
@@ -208,8 +203,7 @@ export function useDeleteVideo() {
         method: "DELETE",
       });
 
-      if (!res.ok)
-        throw new Error(t("errors.deleteErrorVideo"));
+      if (!res.ok) throw new Error(t("errors.deleteErrorVideo"));
       return slug;
     },
     onSuccess: (deletedSlug) => {

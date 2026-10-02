@@ -36,9 +36,7 @@ export function useUsers() {
         setUsers(normalizedUsers);
         return normalizedUsers;
       } catch (e: unknown) {
-        setUseUserError(
-          e instanceof Error ? e.message : t("errors.loadError"),
-        );
+        setUseUserError(e instanceof Error ? e.message : t("errors.loadError"));
         return [];
       } finally {
         setUseUserLoading(false);
@@ -60,9 +58,7 @@ export function useUsers() {
         setUser(data);
         return data;
       } catch (e: unknown) {
-        setUseUserError(
-          e instanceof Error ? e.message : t("errors.loadError"),
-        );
+        setUseUserError(e instanceof Error ? e.message : t("errors.loadError"));
         return null;
       } finally {
         setUseUserLoading(false);

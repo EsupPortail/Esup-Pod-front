@@ -242,9 +242,7 @@ export default function EditPlaylist() {
   if (playlist && !isOwner) {
     return (
       <div>
-        <Alert>
-          {t("playlists.noPermissionToEditPlaylist")}
-        </Alert>
+        <Alert>{t("playlists.noPermissionToEditPlaylist")}</Alert>
         <BackButton label={t("common.back")} />
       </div>
     );

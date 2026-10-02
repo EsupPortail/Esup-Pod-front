@@ -20,9 +20,7 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div
-      className={styles["error-div"]}
-    >
+    <div className={styles["error-div"]}>
       <Alert canClose={false} type={VariantType.ERROR}>
         <strong>{t("common.error")}</strong>
         <br />

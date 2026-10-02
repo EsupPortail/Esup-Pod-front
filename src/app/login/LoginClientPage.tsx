@@ -100,7 +100,8 @@ function LoginContent() {
             }
             variant="secondary"
           >
-            {t("navbar.login")} {config?.authentication?.shibboleth_name || "Shibboleth"}
+            {t("navbar.login")}{" "}
+            {config?.authentication?.shibboleth_name || "Shibboleth"}
           </Button>
         )}
         {config?.authentication?.use_oidc && (
@@ -153,10 +154,7 @@ function LoginContent() {
             })}
           />
           {errors.password && (
-            <p
-              id="password-error"
-              className={styles["error"]}
-            >
+            <p id="password-error" className={styles["error"]}>
               {errors.password.message}
             </p>
           )}

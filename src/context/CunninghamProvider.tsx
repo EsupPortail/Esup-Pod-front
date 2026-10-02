@@ -71,9 +71,7 @@ export const useCunninghamTheme = () => {
   const ctx = useContext(CunninghamThemeContext);
   const { t } = useTranslation();
   if (!ctx) {
-    throw new Error(
-      t("providers.cunninghamTheme"),
-    );
+    throw new Error(t("providers.cunninghamTheme"));
   }
   return ctx;
 };

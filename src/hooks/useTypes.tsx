@@ -26,9 +26,7 @@ export function useTypes() {
       setTypes(normalizedTypes);
       return normalizedTypes;
     } catch (e: unknown) {
-      setUseTypesError(
-        e instanceof Error ? e.message : t("errors.loadError"),
-      );
+      setUseTypesError(e instanceof Error ? e.message : t("errors.loadError"));
       return [];
     } finally {
       setUseTypesLoading(false);

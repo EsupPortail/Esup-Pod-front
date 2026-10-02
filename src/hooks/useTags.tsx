@@ -35,9 +35,7 @@ export function useTags() {
         setTags(normalizedTags);
         return normalizedTags;
       } catch (e: unknown) {
-        setUseTagsError(
-          e instanceof Error ? e.message : t("errors.loadError"),
-        );
+        setUseTagsError(e instanceof Error ? e.message : t("errors.loadError"));
         return [];
       } finally {
         setUseTagsLoading(false);

@@ -5,7 +5,9 @@ import { dictionaries, type SupportedLocale } from "@/src/locales";
 const LANGUAGE_COOKIE = "pod_language";
 
 /** Checks whether a cookie value is an application locale. */
-function isSupportedLocale(value: string | undefined): value is SupportedLocale {
+function isSupportedLocale(
+  value: string | undefined,
+): value is SupportedLocale {
   return value === "fr" || value === "en" || value === "es";
 }
 
