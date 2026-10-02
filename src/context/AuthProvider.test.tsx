@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 import AuthProvider, { useAuth } from "./AuthProvider";
 import { useTranslation } from "../hooks/useTranslation";
+import { dictionaries } from "../locales";
 
 // Composant de test pour consommer le contexte
 const TestComponent = () => {
@@ -28,13 +30,16 @@ vi.mock("../hooks/useAppConfig", () => ({
 }));
 
 describe("AuthProvider", () => {
-  const { t } = useTranslation();
   it("renders children without crashing and defaults to disconnected", () => {
     render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>,
+      <NextIntlClientProvider locale="fr" messages={dictionaries.fr}>
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>
+      </NextIntlClientProvider>,
     );
-    expect(screen.getByTestId("auth-status").textContent).toBe(t("common.disconnected"));
+    expect(screen.getByTestId("auth-status").textContent).toBe(
+      dictionaries.fr.common.disconnected,
+    );
   });
 });
