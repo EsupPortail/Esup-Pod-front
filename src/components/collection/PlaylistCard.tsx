@@ -176,13 +176,13 @@ export default function PlaylistCard({
               }}
             >
               {playlist.is_protected && (
-                <Tooltip title="Playlist protégée par mot de passe">
+                <Tooltip title={t("playlists.passwordProtected")}>
                   <span className="material-icons">key</span>
                 </Tooltip>
               )}
 
               {!playlist.is_public && (
-                <Tooltip title="Playlist privée">
+                <Tooltip title={t("playlists.private")}>
                   <span className="material-icons">visibility_off</span>
                 </Tooltip>
               )}
@@ -220,7 +220,7 @@ export default function PlaylistCard({
                     color: "text.secondary",
                   }}
                 >
-                  {videosCount} vidéo{videosCount > 1 ? "s" : ""}
+                  {t("common.pluralVideos", { count: videosCount })}
                 </Typography>
               </Box>
               <Typography

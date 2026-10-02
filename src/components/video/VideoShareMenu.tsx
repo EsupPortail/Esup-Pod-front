@@ -108,7 +108,7 @@ export default function VideoShareMenu({ video, className }: Props) {
         {availableNetworks.map((net) => (
           <MenuItem key={net.id} onClick={() => handleShareToNetwork(net)}>
             <ListItemIcon>{getIcon(net.icon_name || net.name)}</ListItemIcon>
-            <ListItemText>Partager sur {net.name}</ListItemText>
+            <ListItemText>{t("videoPage.shareOn", { network: net.name })}</ListItemText>
           </MenuItem>
         ))}
       </Menu>

@@ -80,7 +80,7 @@ export default function VideoGrid({
       sortModel={sortModel}
       onSortModelChange={setSortModel}
       enableSorting
-      emptyPlaceholderLabel="Aucune video trouvée."
+      emptyPlaceholderLabel={t("table.noVideosFound")}
     />
   );
 }

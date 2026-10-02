@@ -39,7 +39,7 @@ export default function WebTVLayout() {
         {/* Dynamic Blocks Section rendered via BlockRenderer */}
         {loading ? (
           <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-            Chargement des contenus WebTV...
+            {t("webtv.loadingContent")}
           </div>
         ) : otherBlocks.length > 0 ? (
           otherBlocks.map((block) => (
@@ -48,14 +48,17 @@ export default function WebTVLayout() {
         ) : (
           /* Default reference sections matching design if no custom backend blocks defined */
           <>
-            <VideoGridBlockComponent title="Actualité : Climat" itemLimit={5} />
+            <VideoGridBlockComponent
+              title={t("webtv.climateActu")}
+              itemLimit={5}
+            />
             <VideoGridBlockComponent title={t("common.series")} itemLimit={5} />
             <CollectionBlockComponent
               block={{
                 frontend_id: "default-collections-actu",
                 order: 3,
                 is_active: true,
-                display_title: "Les Collections d'Actualité",
+                display_title: t("webtv.actuCollections"),
                 item_limit: 5,
               }}
             />
@@ -64,12 +67,12 @@ export default function WebTVLayout() {
                 frontend_id: "default-collections-latest",
                 order: 4,
                 is_active: true,
-                display_title: "Les dernières Collections",
+                display_title: t("webtv.latestCollections"),
                 item_limit: 5,
               }}
             />
             <VideoGridBlockComponent
-              title="Les vidéos les plus vues"
+              title={t("webtv.mostViewed")}
               itemLimit={5}
             />
           </>

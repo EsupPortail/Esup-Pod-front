@@ -22,7 +22,7 @@ export default function CollectionViewToggle({
       <div
         className={styles["toggle-group"]}
         role="tablist"
-        aria-label="Mode d'affichage des collections"
+        aria-label={t("a11y.collectionDisplayMode")}
       >
         <Button
           size="small"

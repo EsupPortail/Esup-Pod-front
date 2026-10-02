@@ -93,7 +93,7 @@ export default function VideoContributorsForm({
     } catch (err: any) {
       setError(
         err.message ||
-          "Impossible d'ajouter ce contributeur (peut-être déjà ajouté avec ce rôle ?)",
+          t("contributors.addError"),
       );
     }
   };
@@ -149,7 +149,7 @@ export default function VideoContributorsForm({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Rechercher un contributeur..."
+                  label={t("contributors.searchLabel")}
                   variant="outlined"
                   size="small"
                   InputProps={{
@@ -168,7 +168,7 @@ export default function VideoContributorsForm({
             />
             <TextField
               select
-              label="Rôle"
+              label={t("contributors.roleLabel")}
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
               size="small"
@@ -184,7 +184,7 @@ export default function VideoContributorsForm({
             {(selectedRole as any) === "speaker" &&
               (config as any)?.completion?.use_speaker !== false && (
                 <TextField
-                  label="Fonction / Titre"
+                  label={t("contributors.functionLabel")}
                   size="small"
                   value={jobTitle}
                   onChange={(e) => setJobTitle(e.target.value)}
@@ -196,7 +196,7 @@ export default function VideoContributorsForm({
               onClick={handleAdd}
               disabled={!selectedContributor || addContribution.isPending}
             >
-              {addContribution.isPending ? "Ajout..." : t("common.add")}
+              {addContribution.isPending ? t("common.adding") : t("common.add")}
             </Button>
           </div>
 
@@ -259,7 +259,7 @@ export default function VideoContributorsForm({
               </Box>
             ) : (
               <span style={{ fontSize: "0.9rem", color: "gray" }}>
-                Aucun contributeur associé.
+                {t("contributors.noContributors")}
               </span>
             )}
           </Box>

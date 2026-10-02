@@ -21,7 +21,7 @@ export default function VideoViewToggle({
       <div
         className={styles["toggle-group"]}
         role="tablist"
-        aria-label="Mode d'affichage des vidéos"
+        aria-label={t("a11y.videosDisplayMode")}
       >
         <Button
           size="small"

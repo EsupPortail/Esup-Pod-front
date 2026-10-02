@@ -39,7 +39,7 @@ export default function PlaylistCardActionMenu({
           <ListItemDecorator>
             <Edit />
           </ListItemDecorator>
-          Éditer la liste de lecture
+          {t("playlists.editPlaylist")}
         </MenuItem>
         <ListDivider />
         <MenuItem

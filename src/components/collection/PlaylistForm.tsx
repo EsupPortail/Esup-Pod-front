@@ -70,7 +70,7 @@ export function PlaylistForm({
       </div>
       <Divider />
 
-      {/* ---------- Titre ---------- */}
+      {/* ---------- Title ---------- */}
       <Controller
         name="title"
         control={control}
@@ -82,10 +82,7 @@ export function PlaylistForm({
             fullWidth
             label={t("table.title")}
             error={Boolean(errors.title)}
-            helperText={
-              errors.title?.message ??
-              "Donnez un titre court et explicite à votre liste de lecture."
-            }
+            helperText={errors.title?.message ?? t("playlists.titleHelper")}
           />
         )}
       />
@@ -94,7 +91,7 @@ export function PlaylistForm({
       <Controller
         name="description"
         control={control}
-        rules={{ required: "La description est obligatoire." }}
+        rules={{ required: t("common.descRequired") }}
         render={({ field }) => (
           <TextField
             {...field}
@@ -102,19 +99,18 @@ export function PlaylistForm({
             fullWidth
             multiline
             rows={3}
-            label="Description"
+            label={t("videoEdit.descriptionLabel")}
             error={Boolean(errors.description)}
             helperText={
-              errors.description?.message ??
-              "Décrivez le contenu et/ou le contexte de votre liste de lecture."
+              errors.description?.message ?? t("playlists.descriptionHelper")
             }
           />
         )}
       />
 
-      {/* ---------- Visibilité de la playlist ---------- */}
+      {/* ---------- Playlist visibility ---------- */}
       <fieldset className={styles["restreint-fields"]}>
-        <legend>Restrictions d’accès</legend>
+        <legend>{t("playlists.accessRestrictions")}</legend>
         <Controller
           name="is_public"
           control={control}
@@ -126,7 +122,7 @@ export function PlaylistForm({
                   onChange={(_, checked) => field.onChange(checked)}
                 />
               }
-              label="Liste de lecture publique"
+              label={t("playlists.publicPlaylist")}
             />
           )}
         />
@@ -145,7 +141,7 @@ export function PlaylistForm({
                         onChange={(_, checked) => field.onChange(checked)}
                       />
                     }
-                    label="Protéger ma liste de lecture par un mot de passe"
+                    label={t("playlists.protectWithPassword")}
                   />
                 </FormControl>
               )}
@@ -159,7 +155,7 @@ export function PlaylistForm({
                   validate: (value) =>
                     value.trim().length === 0 ||
                     value.trim().length >= 8 ||
-                    "Le mot de passe doit contenir au moins 8 caractères.",
+                    t("auth.passwordMinLength", { length: 8 }),
                 }}
                 render={({ field }) => (
                   <TextField
@@ -167,11 +163,10 @@ export function PlaylistForm({
                     fullWidth
                     type="password"
                     autoComplete="new-password"
-                    label="Mot de passe de la liste de lecture"
+                    label={t("playlists.passwordLabel")}
                     error={Boolean(errors.password)}
                     helperText={
-                      errors.password?.message ??
-                      "Ajouter un mot de passe pour accéder à la liste de lecture."
+                      errors.password?.message ?? t("playlists.passwordHelper")
                     }
                   />
                 )}
@@ -180,13 +175,9 @@ export function PlaylistForm({
           </div>
         )}
         {isPublic ? (
-          <Alert>
-            Votre liste de lecture sera visible par tous les utilisateurs.
-          </Alert>
+          <Alert>{t("playlists.visibleToAll")}</Alert>
         ) : (
-          <Alert>
-            Votre liste de lecture sera visible uniquement par vous.
-          </Alert>
+          <Alert>{t("playlists.visibleToOwner")}</Alert>
         )}
       </fieldset>
 
@@ -199,8 +190,8 @@ export function PlaylistForm({
             {...field}
             select
             fullWidth
-            label="Tri de l'affichage des vidéos par défault."
-            helperText="Choisissez l'ordre d'affichage des vidéos. "
+            label={t("playlists.defaultSortLabel")}
+            helperText={t("playlists.defaultSortHelper")}
           >
             {PLAYLIST_ORDER_OPTIONS.map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>

@@ -10,6 +10,7 @@ export const fr = {
     delete: "Supprimer",
     edit: "Éditer",
     add: "Ajouter",
+    adding: "Ajout en cours…",
     addVideo: "Ajouter une vidéo",
     search: "Rechercher",
     selectAll: "Tout sélectionner",
@@ -35,6 +36,7 @@ export const fr = {
     // Entités (singulier / pluriel)
     video: "Vidéo",
     videos: "Vidéos",
+    pluralVideos: "{count, plural, one {# vidéo} other {# vidéos}}",
     collection: "Collection",
     collections: "Collections",
     channel: "Chaîne",
@@ -604,7 +606,7 @@ export const fr = {
     seeLess: "Voir moins",
     download: "Télécharger",
     chooseQuality: "Choisir la qualité :",
-    shareOn: "Partager sur",
+    shareOn: "Partager sur {network}",
 
     // Informations
     about: "À propos",
@@ -966,6 +968,7 @@ export const fr = {
     defaultSort: "Tri par défaut",
     defaultSortLabel: "Tri de l’affichage des vidéos par défaut.",
     defaultSortHelper: "Choisissez l’ordre d’affichage des vidéos.",
+    publicPlaylist: "Liste de lecture publique",
   },
   channels: {
     // Général

@@ -9,7 +9,7 @@ import ErrorIcon from "@mui/icons-material/Error";
 import Tooltip from "@mui/material/Tooltip";
 import Image from "next/image";
 
-/* Définit les colonnes du tableau de vidéos.*/
+/* Defines the columns of the video table. */
 export function getVideoGridColumns(
   selectable: boolean = false,
   t?: (key: string, params?: Record<string, string | number>) => string,
@@ -70,7 +70,7 @@ export function getVideoGridColumns(
     },
     {
       field: "title",
-      headerName: tr("table.title", "TITRE"),
+      headerName: tr("table.title", "TITLE"),
       renderCell: ({ row }) => (
         <Link href={row.href} className={styles["table-title-link"]}>
           {row.title}
@@ -79,14 +79,14 @@ export function getVideoGridColumns(
     },
     {
       field: "durationLabel",
-      headerName: tr("table.duration", "DURÉE"),
+      headerName: tr("table.duration", "DURATION"),
       renderCell: ({ row }) => (
         <span className={styles["count-badge"]}>{row.durationLabel}</span>
       ),
     },
     {
       field: "createdAtValue",
-      headerName: tr("table.dateAdded", "DATE D'AJOUT"),
+      headerName: tr("table.dateAdded", "ADDED DATE"),
       renderCell: ({ row }) => (
         <span className={styles["date-text"]}>{row.createdAtLabel}</span>
       ),
@@ -103,7 +103,7 @@ export function getVideoGridColumns(
             <span
               className={`${styles["status-badge"]} ${styles["status-restricted"]}`}
             >
-              {tr("table.restricted", "Restreint")}
+              {tr("table.restricted", "Restricted")}
             </span>
           );
         if (row.hasPassword)
@@ -111,7 +111,7 @@ export function getVideoGridColumns(
             <span
               className={`${styles["status-badge"]} ${styles["status-password"]}`}
             >
-              {tr("table.password", "Mot de passe")}
+              {tr("table.password", "Password")}
             </span>
           );
         return (
@@ -133,28 +133,25 @@ export function getVideoGridColumns(
           <>
             {row.statusEncoding == "PE" && (
               <Tooltip
-                title={tr(
-                  "table.pendingEncoding",
-                  "Vidéo en attente d'encodage",
-                )}
+                title={tr("table.pendingEncoding", "Video awaiting encoding")}
               >
                 <PauseCircleFilledIcon color="warning" />
               </Tooltip>
             )}
             {row.statusEncoding == "ER" && (
-              <Tooltip title={tr("table.encodingError", "Erreur d'encodage")}>
+              <Tooltip title={tr("table.encodingError", "Encoding error")}>
                 <ErrorIcon color="error" />
               </Tooltip>
             )}
             {row.statusEncoding == "DO" && (
               <Tooltip
-                title={tr("table.encodingCompleted", "Encodage terminé")}
+                title={tr("table.encodingCompleted", "Encoding completed")}
               >
                 <CheckCircleOutlinedIcon color="success" />
               </Tooltip>
             )}
             {row.statusEncoding == "DR" && (
-              <Tooltip title={tr("table.privateVideo", "Vidéo privée")}>
+              <Tooltip title={tr("table.privateVideo", "Private video")}>
                 <span className="material-icons">visibility_off</span>
               </Tooltip>
             )}

@@ -8,6 +8,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HighQualityIcon from "@mui/icons-material/HighQuality";
 import type { Video, DownloadOption } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type Props = {
   video: Video;
@@ -21,6 +22,8 @@ export default function VideoDownloadMenu({
   onDownloadStreamUrl,
 }: Props) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { t } = useTranslation();
 
   const options: DownloadOption[] = React.useMemo(() => {
     if (video.download_options && video.download_options.length > 0) {
@@ -62,7 +65,7 @@ export default function VideoDownloadMenu({
   return (
     <>
       <button className={className} onClick={handleClick} type="button">
-        <DownloadIcon fontSize="small" /> Télécharger
+        <DownloadIcon fontSize="small" /> {t("videoPage.download")}
       </button>
 
       {options.length > 0 && (
@@ -80,7 +83,7 @@ export default function VideoDownloadMenu({
               color: "#6b7280",
             }}
           >
-            Choisir la qualité :
+            {t("videoPage.chooseQuality")}
           </div>
           {options.map((opt, idx) => (
             <MenuItem key={idx} onClick={() => handleSelectQuality(opt)}>

@@ -67,7 +67,7 @@ export default function VideoCardActionMenu({
       <IconButton
         onClick={handleClick}
         size="small"
-        aria-label="Actions vidéo"
+        aria-label={t("a11y.videoActions")}
         aria-controls={open ? "video-action-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
