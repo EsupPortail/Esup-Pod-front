@@ -1,18 +1,39 @@
 export const fr = {
+  // === Commun ===
   common: {
-    opacity: "Opacité",
+    // Actions
     close: "Fermer",
-    video: "Vidéo",
-    loading: "Chargement…",
+    save: "Enregistrer",
+    cancel: "Annuler",
+    back: "Retour",
+    update: "Mettre à jour",
+    delete: "Supprimer",
+    edit: "Éditer",
+    add: "Ajouter",
+    addVideo: "Ajouter une vidéo",
     search: "Rechercher",
+    selectAll: "Tout sélectionner",
+    stayOnPage: "Rester sur la page",
+    leaveWithoutSaving: "Quitter sans enregistrer",
+
+    // Statut & connexion
     login: "Connexion",
     logout: "Déconnexion",
-    disconnected: "Déconnecté",
     connected: "Connecté",
-    addVideo: "Ajouter une vidéo",
+    disconnected: "Déconnecté",
+    loading: "Chargement…",
+    error: "Une erreur est survenue",
+
+    // Navigation
     home: "Accueil",
     selectionReturn: "Retour à la sélection",
-    configBase: "Configurez les paramètres de base",
+    goToMainContent: "Aller au contenu principal",
+    backToHomepage: "Retour à l'accueil",
+    tab: "Tableau de bord",
+    commingSoon: "Fonctionnalité à venir",
+
+    // Entités (singulier / pluriel)
+    video: "Vidéo",
     videos: "Vidéos",
     collection: "Collection",
     collections: "Collections",
@@ -28,83 +49,107 @@ export const fr = {
     disciplines: "Disciplines",
     series: "Série / Émission",
     allVideos: "Toutes les vidéos",
-    directs: "Les directs",
     direct: "Direct",
-    views: "vues",
+    directs: "Les directs",
     view: "vue",
-    save: "Enregistrer",
-    cancel: "Annuler",
-    error: "Une erreur est survenue",
-    back: "Retour",
-    selectAll: "Tout sélectionner",
-    videosFound: "vidéo(s) trouvée(s)",
+    views: "vues",
+
+    // Affichage, recherche & pagination
     displayMode: "Affichage :",
     viewCards: "Cartes",
     viewTable: "Tableau",
-    update: "Mettre à jour",
+    videosFound: "vidéo(s) trouvée(s)",
+    found: "{count, plural, one {Trouvé} other {Trouvés}}",
     noResults: "Aucun résultat pour votre recherche",
-    tab: "Tableau de bord",
-    delete: "Supprimer",
-    edit: "Éditer",
-    add: "Ajouter",
+    paginationInfo:
+      "Affichage de {start} à {end} sur {count, plural, one {# vidéo{pageInfo}} other {# vidéos{pageInfo}}}",
+    paginationPage: " (Page {page} sur {pagesCount})",
+    opacity: "Opacité",
+
+    // Métadonnées
     createdBy: "Créée par",
     latestUpdate: "Mise à jour le :",
     contributors: "Contributeurs & Intervenants",
     addContributorsDesc:
       "Ajoutez des auteurs, réalisateurs ou intervenants à votre vidéo.",
+    infos: "Informations",
+    configBase: "Configurez les paramètres de base",
+
+    // Visibilité
     public: "Publique",
     private: "Privée",
     passwordProtected:
       "Vous avez activé la protection par mot de passe, veuillez saisir un mot de passe.",
-    paginationInfo:
-      "Affichage de {start} à {end} sur {count, plural, one {# vidéo{pageInfo}} other {# vidéos{pageInfo}}}",
-    paginationPage: " (Page {page} sur {pagesCount})",
-    found: "{count, plural, one {Trouvé} other {Trouvés}}",
+
+    // Validation & confirmations
     titleRequired: "Le titre est obligatoire",
     descRequired: "La description est obligatoire.",
-    goToMainContent: "Aller au contenu principal",
-    backToHomepage: "Retour à l'accueil",
     permanentAction: "Cette action est définitive.",
     unsavedChangesLeaveConfirmation:
       "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?",
-    stayOnPage: "Rester sur la page",
-    leaveWithoutSaving: "Quitter sans enregistrer",
-    commingSoon: "Fonctionnalité à venir",
-    infos: "Informations",
+    unsavedChangesTitle: "Modifications non enregistrées",
+
+    // Divers
+    recently: "Récemment",
+    default: "Par défaut",
   },
   errors: {
-    update: "Une erreur est survenue lors de la mise à jour",
-    deleteErrorVideo:
-      "Une erreur est survenue lors de la suppression de la vidéo",
-    dupErrorVideo: "Une erreur est survenue lors de la duplication de la vidéo",
+    // Général
     error: "Une erreur est survenue",
+    update: "Une erreur est survenue lors de la mise à jour",
+    save: "Erreur lors de la sauvegarde",
+    create: "Erreur lors de la création",
+    loadError: "Erreur de chargement",
+    loadConfig: "Erreur lors du chargement de la configuration",
+    loadInfo: "Erreur lors du chargement des informations",
     notFound: "Page introuvable",
     notFoundDesc:
       "La page que vous recherchez n’existe pas ou a été supprimée.",
     serverError: "Erreur serveur",
     serverErrorDesc:
       "Une erreur est survenue côté serveur. Veuillez réessayer plus tard.",
-    imageSendError: "Echec de l’envoi de l’image",
-    imageDeleteError: "Echec de la suppression de l’image",
     notConnected: "Utilisateur non connecté",
-    chooseImage: "Veuillez choisir une image",
-    unableToSection: "Impossible de charger cette section de lapplication",
-    unableToTheme: "Impossible de charger ce thème.",
+    error401: "Accès non autorisé (401). Veuillez vous connecter.",
     notConfigured:
       "La page demandée n’existe pas ou n’a pas encore été configurée pour cette établissement.",
     formFieldsError:
       "{count, plural, =1 {Veuillez corriger le champ suivant : {fields}.} other {Veuillez corriger les # champs suivants : {fields}.}}",
     savingFormError: "Erreur lors de l'enregistrement du formulaire",
+    accessDenied: "Vous ne pouvez pas accéder à cette page",
+
+    // Vidéos
     loadErrorVideo: "Erreur lors du chargement de la vidéo",
-    error401: "Accès non autorisé (401). Veuillez vous connecter.",
     loadErrorVideos: "Erreur lors du chargement des vidéos {status}.",
-    loadError: "Erreur de chargement",
-    tagsLoadError: "Erreur lors du chargement des mots-clés : {error}",
-    noKeywords: "Aucun mot-clé disponible pour le moment.",
+    deleteErrorVideo:
+      "Une erreur est survenue lors de la suppression de la vidéo",
+    dupErrorVideo: "Une erreur est survenue lors de la duplication de la vidéo",
+
+    // Images
+    chooseImage: "Veuillez choisir une image",
+    imageSendError: "Echec de l’envoi de l’image",
+    imageDeleteError: "Echec de la suppression de l’image",
+
+    // Pages & sections
+    loadPage: "Erreur lors du chargement de la page",
+    getBlocks: "Erreur lors de la récupération des blocs de mise en page.",
+    unableToSection: "Impossible de charger cette section de lapplication",
+    unableToTheme: "Impossible de charger ce thème.",
+
+    // Chaînes & thèmes
+    getChannels:
+      "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
     getThemeError:
       "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
-    deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
+
+    // Mots-clés
+    tagsLoadError: "Erreur lors du chargement des mots-clés : {error}",
+    noKeywords: "Aucun mot-clé disponible pour le moment.",
+
+    // Sous-titres
     addSubtitleError: "Erreur lors de l'ajout du sous-titre",
+    deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
+
+    // Playlists
     loadPlaylist:
       "Erreur de chargement {count, plural, one {de la playlist} other {des playlists}}.",
     updatePlaylist: "Erreur lors de la modification de la playlist",
@@ -112,84 +157,22 @@ export const fr = {
     addVideoToPlaylist: "Erreur lors de l'ajout de la vidéo à la playlist",
     deleteVideoFromPlaylist:
       "Erreur lors du retrait de la vidéo de la playlist",
-    loadPage: "Erreur lors du chargement de la page",
-    getBlocks: "Erreur lors de la récupération des blocs de mise en page.",
+
+    // Favoris
     loadFavorites: "Erreur lors du chargement des favoris",
     addFavorite: "Erreur lors de l'ajout de la vidéo aux favoris",
     deleteFavorite: "Erreur lors de la suppression de la vidéo des favoris",
+
+    // Commentaires & votes
     loadComments: "Erreur lors du chargement des commentaires",
     addComment: "Erreur lors de l'ajout du commentaire",
     deleteComment: "Erreur lors de la suppression du commentaire",
     addVote: "Erreur lors de l'ajout du vote",
+
+    // Chapitres
     loadChapters: "Erreur lors du chargement des chapitres",
     addChapter: "Erreur lors de l'ajout du chapitre",
     deleteChapter: "Erreur lors de la suppression du chapitre",
-    loadInfo: "Erreur lors du chargement des informations",
-    getChannels: "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
-    loadConfig: "Erreur lors du chargement de la configuration",
-    save: "Erreur lors de la sauvegarde",
-    create: "Erreur lors de la création",
-
-  },
-  providers: {
-    auth: "useAuth doit etre utilise dans AuthProvider.",
-    sidebar: "useSidebar doit etre utilise dans SidebarProvider.",
-    playlistCreation: "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
-    cunninghamTheme: "useCunninghamTheme doit être utilisé dans CunninghamStyleProvider.",
-    getChannels:
-      "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
-  },
-  a11y: {
-    institutionLogo: "Logo de l’établissement",
-    facebookLogo: "Logo Facebook",
-    xLogo: "Logo X",
-    linkedinLogo: "Logo LinkedIn",
-    blueskyLogo: "Logo Bluesky",
-    mastodonLogo: "Logo Mastodon",
-    homeLogo: "Logo Esup-Pod, retour à l’accueil",
-    channelBanner: "Bannière de la chaîne {title}",
-    channelLogo: "Logo de la chaîne {title}",
-    themeBanner: "Bannière du thème {title}",
-    videoThumbnail: "Vignette de la vidéo {title}",
-    collectionThumbnail: "Vignette de la collection {title}",
-    playlistThumbnail: "Vignette de la playlist {title}",
-    watermark: "Filigrane",
-    profilePreview: "Aperçu de la photo de profil",
-    currentProfilePicture: "Photo de profil actuelle",
-    newProfilePictureSuccess: "Image de profil mise à jour avec succès",
-    deleteProfilePictureSuccess: "Image de profil supprimée avec succès",
-    deleteProfilePicture: "Supprimer la photo actuelle",
-    chooseImage: "Veuillez sélectionner une image",
-    chooseFile: "Veuillez sélectionner un fichier vidéo",
-    changeProfilePicture: "Changer mon image de profil",
-    noProfilePicture: "Vous n’avez pas encore de photo de profil.",
-    thumbnail: "Vignette",
-    preview: "Aperçu",
-    chooseVideo: "Sélectionner cette vidéo",
-    supportedFormats: "Formats supportés : ",
-    videoProcessingMessage:
-      "Votre vidéo est en cours de traitement. Ne fermez pas la page…",
-    fileSizeLimit:
-      "La taille du fichier doit être <bold>inférieure à {maxSize} Go.</bold>",
-    uploadTimeInfo:
-      "Le temps d’envoi dépend de la taille de votre fichier et de votre vitesse de téléchargement.",
-    uploadWarning:
-      "Pendant l’envoi, ne fermez pas votre navigateur avant d’avoir reçu un message de succès ou d’échec.",
-    chooseVideoOrAudioFile: "Choisissez un fichier audio ou vidéo",
-    termsOfUse: "Conditions d’utilisation",
-    intellectualPropertyWarning:
-      "Attention ! Assurez-vous de respecter le code de la propriété intellectuelle avant de publier une vidéo :",
-    publicationAuthorizations:
-      "Je confirme que je dispose des autorisations nécessaires signées par les parties concernées par la publication de ce média, en ce compris le consentement relatif au droit à l’image et au traitement des données personnelles. Je certifie que l’ensemble des personnes concernées ont bénéficié d’une information complète relative au traitement de leurs données personnelles, conformément aux dispositions des articles 13 et 14 du RGPD.",
-    intellectualPropertyAcknowledgement:
-      "J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo.",
-    acceptTermsRequired: "Veuillez accepter les conditions d’utilisation.",
-    importVideo: "Importer une vidéo",
-    skipImportCreateEmpty: "Passer l’importation (Créer une fiche vide)",
-    createEmptyRecord: "Créer une fiche vide",
-    emptyRecordWarning:
-      "Vous vous apprêtez à créer une fiche vidéo sans fichier média source. Vous pourrez ajouter la vidéo source ultérieurement depuis l’étape <b>« Importation »</b> de la page d’édition.",
-    clearDescriptiveTitle: "Saisissez un titre clair et descriptif.",
   },
   pending: {
     sending: "Envoi en cours…",
@@ -201,218 +184,100 @@ export const fr = {
     saving: "Enregistrement en cours…",
     publishing: "Publication en cours…",
   },
-  home: {
-    welcomeSubtitle: "Bienvenue sur votre plateforme POD !",
-    welcomeIntro:
-      "La vidéo est un média de choix quand il s’agit de communiquer, d’enseigner et d’apprendre. Voici quelques usages qui pourraient vous intéresser.",
-    howToTitle: "Comment faire ?",
-    howToDescPrefix:
-      "Vous avez envie de mettre en ligne vos propres contenus ? Ce ",
-    quickGuideLink: "guide de prise en main",
-    howToDescSuffix:
-      " rapide vous présentera les fonctionnalités de base de Pod.",
-    btnUsePod: "Utiliser pod",
-    btnHowTo: "Comment faire",
-    btnCopyright: "Du droit d’auteur",
-    latestVideos: "Dernières vidéos publiées",
-    btnAllVideos: "Afficher toutes les vidéos",
-    videoServiceError: "Le service vidéo est momentanément indisponible",
-    noRecentVideos: "Aucune vidéo publique récente",
+  providers: {
+    // Hooks de contexte
+    auth: "useAuth doit etre utilise dans AuthProvider.",
+    sidebar: "useSidebar doit etre utilise dans SidebarProvider.",
+    playlistCreation:
+      "usePlaylistCreationContext doit être utilisé dans PlaylistCreationProvider.",
+    cunninghamTheme:
+      "useCunninghamTheme doit être utilisé dans CunninghamStyleProvider.",
+
+    // Erreurs
+    getChannels:
+      "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
   },
-  navbar: {
-    searchPlaceholder: "Rechercher…",
-    addVideo: "Ajouter une vidéo",
-    settings: "Affichage et accessibilité",
-    login: "Connexion",
-    myProfileImage: "Modifier mon image de profil",
-    administration: "Administration",
-    openProfileMenu: "Ouvrir le menu de profil",
-    closeSearch: "Fermer la recherche",
-  },
-  sidebar: {
-    mainMenu: "Menu principal",
-    browseVideos: "Consulter les vidéos",
-    mySpace: "Mon espace",
-    dashboard: "Mon tableau de bord",
-    myFavorites: "Mes vidéos favorites",
-    playlists: "Lecture de la liste",
-    favorites: "Vidéos favorites",
-    myPlaylists: "Mes listes de lecture",
-    videoBranding: "Habillages & Filigranes",
-    welcome: "Bienvenue",
-    welcomeUser: "Bienvenue {name} !",
-    closeMenu: "Fermer le menu",
-    nowPlaying: "Lecture en cours",
-  },
-  auth: {
-    loginTitle: "Connexion à mon profil POD",
-    loginRequired: "Vous devez être connecté pour accéder à cette page.",
-    username: "Nom d’utilisateur",
-    usernameRequired: "Le nom d’utilisateur est obligatoire",
-    password: "Mot de passe",
-    passwordRequired: "Le mot de passe est obligatoire",
-    submitLogin: "Connexion",
-    unknownUser: "Utilisateur inconnu",
-  },
-  webtv: {
-    webtv: "WebTV",
-    liveTitle: "Direct",
-    noLive: "Aucun direct en cours",
-    loadingContent: "Chargement des contenus WebTV…",
-    noContent: "Aucun contenu disponible",
-    climateActu: "Actu : Climat",
-    seriesEmission: "Séries / Émissions",
-    actuCollections: "Collections d’actualités",
-    latestCollections: "Dernières collections",
-    mostViewed: "Vidéos les plus vues",
-  },
-  preferences: {
-    settingsHeader: "Paramètres",
-    title: "Affichage et accessibilité",
-    dressing: "Filigranes",
-    languageSectionTitle: "Langue de l’application",
-    languageSelectLabel: "Choisissez la langue de l’interface :",
-    themeSectionTitle: "Thème visuel",
-    darkModeLabel: "Mode sombre",
-    lightModeLabel: "Mode clair",
-  },
-  filters: {
-    searchPlaceholder: "Rechercher une vidéo…",
-    search: "Recherche",
-    sort: "Tri",
-    author: "Auteur",
-    types: "Types",
-    cursus: "Niveau d’études",
-    keywords: "Mots-clés",
-    clearFilters: "Effacer les filtres",
-    newest: "Plus récentes",
-    oldest: "Plus anciennes",
-    titleAZ: "Titre A-Z",
-    titleZA: "Titre Z-A",
-    creationDate: "Date de création",
-    activeCreationDate: "Date (filtre actif)",
-    selectPeriod: "Sélectionnez une période",
-    createdAfter: "Créé après",
-    createdBefore: "Créé avant",
-    showResults: "Afficher",
-    advancedFilters: "Filtres avancés",
-  },
-  bulk: {
-    title: "Modifier en lot",
-    checkVideosPrompt: "Cocher des vidéos pour activer les actions",
-    chooseAction: "Choisir une action…",
-    editGroup: "MODIFIER LES VIDÉOS",
-    dangerZone: "ZONE DE DANGER",
-    deselectAll: "Tout désélectionner",
-    confirmDelete: "Confirmer la suppression",
-    deleteWarning:
-      "Vous êtes sur le point de supprimer définitivement les vidéos sélectionnées.",
-    changeType: "Changer le type",
-    changeChannel: "Changer la chaîne",
-    editDescription: "Modifier la description",
-    changeLicense: "Changer la licence",
-    setEventDate: "Définir la date de l’événement",
-    addReplaceKeywords: "Ajouter / Remplacer des mots-clés",
-    changeDiscipline: "Changer la discipline",
-    changeCursus: "Changer le niveau d’études",
-    publishUnpublish: "Publier / Dépublier",
-    restrictAuth: "Restreindre aux membres connectés",
-    allowDownloading: "Autoriser / Interdire le téléchargement",
-    disableComments: "Activer / Désactiver les commentaires",
-    scheduleDeletion: "Programmer une suppression automatique",
-    deleteSelected: "Supprimer les vidéos sélectionnées",
-  },
-  table: {
-    title: "Titre",
-    duration: "Durée",
-    dateAdded: "Date d’ajout",
-    status: "Statut",
-    public: "Public",
-    restricted: "Restreint",
-    password: "Mot de passe",
-    pendingEncoding: "Vidéo en attente d’encodage",
-    encodingError: "Erreur d’encodage",
-    encodingCompleted: "Encodage terminé",
-    privateVideo: "Vidéo privée",
-    noVideosFound: "Aucune vidéo trouvée.",
-  },
-  videoAction: {
-    edit: "Éditer la vidéo",
-    duplicate: "Dupliquer",
-    duplicating: "Duplication…",
-    delete: "Supprimer la vidéo",
-  },
-  videoPlayer: {
-    unableToLoad: "Impossible de charger la vidéo.",
-    unableToDownload: "Impossible de télécharger la vidéo.",
-    encodingInProgress: "Vidéo en cours d’encodage…",
-    retry: "Réessayer",
-  },
-  videoDressing: {
-    title: "Titre de l'habillage",
-    unique: "Nom unique permettant d'identifier l'habillage",
-    addWatermark: "Pour ajouter un filigrane ou des amorces, créez un nouvel habillage puis éditez-le.",
-    opacity: "Opacité",
-    creation: "Création…",
-    create: "Créer un nouvel habillage",
-    errorUpdate: "Erreur lors de la mise à jour de l'habillage",
-    successCreate: "Habillage appliqué avec succès",
-    dressing: "Habillage de la vidéo",
-    loading: "Chargement de l'habillage…",
-    noDressing: "Aucun habillage disponible pour le moment.",
-    noConfig: "Aucun élément configuré",
+  a11y: {
+    // Logos
+    institutionLogo: "Logo de l’établissement",
+    homeLogo: "Logo Esup-Pod, retour à l’accueil",
+    facebookLogo: "Logo Facebook",
+    xLogo: "Logo X",
+    linkedinLogo: "Logo LinkedIn",
+    blueskyLogo: "Logo Bluesky",
+    mastodonLogo: "Logo Mastodon",
+
+    // Bannières, logos & vignettes
+    channelBanner: "Bannière de la chaîne {title}",
+    channelLogo: "Logo de la chaîne {title}",
+    themeBanner: "Bannière du thème {title}",
+    videoThumbnail: "Vignette de la vidéo {title}",
+    collectionThumbnail: "Vignette de la collection {title}",
+    playlistThumbnail: "Vignette de la playlist {title}",
+    thumbnail: "Vignette",
+    preview: "Aperçu",
     watermark: "Filigrane",
-    start: "Amorce de début",
-    end: "Amorce de fin",
-    
+
+    // Photo de profil
+    profilePreview: "Aperçu de la photo de profil",
+    currentProfilePicture: "Photo de profil actuelle",
+    changeProfilePicture: "Changer mon image de profil",
+    deleteProfilePicture: "Supprimer la photo actuelle",
+    newProfilePictureSuccess: "Image de profil mise à jour avec succès",
+    deleteProfilePictureSuccess: "Image de profil supprimée avec succès",
+    noProfilePicture: "Vous n’avez pas encore de photo de profil.",
+    chooseImage: "Veuillez sélectionner une image",
+
+    // Import de vidéo
+    importVideo: "Importer une vidéo",
+    chooseFile: "Veuillez sélectionner un fichier vidéo",
+    chooseVideo: "Sélectionner cette vidéo",
+    chooseVideoOrAudioFile: "Choisissez un fichier audio ou vidéo",
+    supportedFormats: "Formats supportés : ",
+    fileSizeLimit:
+      "La taille du fichier doit être <bold>inférieure à {maxSize} Go.</bold>",
+    uploadTimeInfo:
+      "Le temps d’envoi dépend de la taille de votre fichier et de votre vitesse de téléchargement.",
+    uploadWarning:
+      "Pendant l’envoi, ne fermez pas votre navigateur avant d’avoir reçu un message de succès ou d’échec.",
+    videoProcessingMessage:
+      "Votre vidéo est en cours de traitement. Ne fermez pas la page…",
+    skipImportCreateEmpty: "Passer l’importation (Créer une fiche vide)",
+    createEmptyRecord: "Créer une fiche vide",
+    emptyRecordWarning:
+      "Vous vous apprêtez à créer une fiche vidéo sans fichier média source. Vous pourrez ajouter la vidéo source ultérieurement depuis l’étape <b>« Importation »</b> de la page d’édition.",
+    clearDescriptiveTitle: "Saisissez un titre clair et descriptif.",
+
+    // Conditions d’utilisation & propriété intellectuelle
+    termsOfUse: "Conditions d’utilisation",
+    acceptTermsRequired: "Veuillez accepter les conditions d’utilisation.",
+    intellectualPropertyWarning:
+      "Attention ! Assurez-vous de respecter le code de la propriété intellectuelle avant de publier une vidéo :",
+    intellectualPropertyAcknowledgement:
+      "J'atteste de respecter le code de la propriété intellectuelle en publiant ma vidéo.",
+    publicationAuthorizations:
+      "Je confirme que je dispose des autorisations nécessaires signées par les parties concernées par la publication de ce média, en ce compris le consentement relatif au droit à l’image et au traitement des données personnelles. Je certifie que l’ensemble des personnes concernées ont bénéficié d’une information complète relative au traitement de leurs données personnelles, conformément aux dispositions des articles 13 et 14 du RGPD.",
+
+    // Contrôles & menus
+    collectionsDisplayMode: "Mode d’affichage des collections",
+    videosDisplayMode: "Mode d’affichage des vidéos",
+    videoActions: "Actions vidéo",
   },
-  videoPage: {
-    back: "Retour",
-    share: "Partager",
-    playlist: "Playlist",
-    favorite: "Favori",
-    report: "Signaler",
-    editVideo: "Éditer la vidéo",
-    notFound: "Vidéo introuvable.",
-    channel: "Chaîne",
-    channelWithId: "Chaîne {id}",
-    creator: "Créateur",
-    mainLanguage: "Langue principale",
-    keywords: "Mots clés",
-    none: "Aucune",
-    views: "vues",
-    about: "À propos",
-    type: "Type",
-    eventDate: "Date de l’événement",
-    discipline: "Discipline(s)",
-    contributors: "Intervenants",
-    license: "Licence",
-    cursus: "Cursus",
-    resources: "Ressources",
-    updatedAt: "Mis à jour le :",
-    seeMore: "Voir plus",
-    seeLess: "Voir moins",
-    addToPlaylist: "Ajouter à une liste de lecture",
-    noPlaylistsAvailable: "Aucune playlist disponible",
-    linkCopied: "Lien copié !",
-    copyLink: "Copier le lien",
-    protectedByPassword: "Cette vidéo est protégée par un mot de passe.",
-    unlocking: "Déverrouillage…",
-    unlock: "Déverrouiller la vidéo",
-    videoAddedToPlaylist: "Vidéo ajoutée à la playlist « {title} ».",
-    videoRemovedFromPlaylist: "Vidéo retirée de la playlist « {title} ».",
-    videoAddedToFavorites: "Vidéo ajoutée à vos favoris.",
-    videoRemovedFromFavorites: "Vidéo retirée de vos favoris.",
-    keywordsloading: "Chargement des mots-clés…",
+
+  // === Données de référence ===
+  languages: {
+    fr: "Français",
+    en: "English",
+    es: "Español",
   },
   cursus: {
+    "0": "Autre",
     L1: "Licence 1",
     L2: "Licence 2",
     L3: "Licence 3",
     M1: "Master 1",
     M2: "Master 2",
     D: "Doctorat",
-    "0": "Autre",
   },
   type: {
     cours: "Cours",
@@ -431,48 +296,466 @@ export const fr = {
     histoire: "Histoire",
     langues: "Langues",
   },
+
+  // === Mise en page ===
+  navbar: {
+    searchPlaceholder: "Rechercher…",
+    addVideo: "Ajouter une vidéo",
+    settings: "Affichage et accessibilité",
+    login: "Connexion",
+    myProfileImage: "Modifier mon image de profil",
+    administration: "Administration",
+    openProfileMenu: "Ouvrir le menu de profil",
+    closeSearch: "Fermer la recherche",
+  },
+  sidebar: {
+    // Navigation
+    mainMenu: "Menu principal",
+    closeMenu: "Fermer le menu",
+    browseVideos: "Consulter les vidéos",
+    mySpace: "Mon espace",
+    dashboard: "Mon tableau de bord",
+    myFavorites: "Mes vidéos favorites",
+    favorites: "Vidéos favorites",
+    myPlaylists: "Mes listes de lecture",
+    playlists: "Lecture de la liste",
+    videoBranding: "Habillages & Filigranes",
+
+    // Accueil & lecture
+    welcome: "Bienvenue",
+    welcomeUser: "Bienvenue {name} !",
+    nowPlaying: "Lecture en cours",
+  },
+  footer: {
+    legalNotice: "Mentions légales",
+    accessibilityPartially: "Accessibilité : Partiellement conforme",
+    siteMap: "Plan du site",
+    esupProject: "Projet Esup-Pod",
+    esupPortal: "Esup portail",
+    videoPlatform: "Plateforme vidéo",
+  },
+
+  // === Pages & fonctionnalités ===
+  home: {
+    welcomeSubtitle: "Bienvenue sur votre plateforme POD !",
+    welcomeIntro:
+      "La vidéo est un média de choix quand il s’agit de communiquer, d’enseigner et d’apprendre. Voici quelques usages qui pourraient vous intéresser.",
+    howToTitle: "Comment faire ?",
+    howToDescPrefix:
+      "Vous avez envie de mettre en ligne vos propres contenus ? Ce ",
+    quickGuideLink: "guide de prise en main",
+    howToDescSuffix:
+      " rapide vous présentera les fonctionnalités de base de Pod.",
+    btnUsePod: "Utiliser pod",
+    btnHowTo: "Comment faire",
+    btnCopyright: "Du droit d’auteur",
+    latestVideos: "Dernières vidéos publiées",
+    btnAllVideos: "Afficher toutes les vidéos",
+    videoServiceError: "Le service vidéo est momentanément indisponible",
+    noRecentVideos: "Aucune vidéo publique récente",
+  },
+  auth: {
+    loginTitle: "Connexion à mon profil POD",
+    loginRequired: "Vous devez être connecté pour accéder à cette page.",
+    username: "Nom d’utilisateur",
+    usernameRequired: "Le nom d’utilisateur est obligatoire",
+    password: "Mot de passe",
+    passwordRequired: "Le mot de passe est obligatoire",
+    submitLogin: "Connexion",
+    unknownUser: "Utilisateur inconnu",
+    passwordMinLength:
+      "Le mot de passe doit contenir au moins {min} caractères.",
+    loginSuccess: "Vous êtes désormais connecté.",
+    logoutSuccess: "Vous êtes désormais déconnecté.",
+  },
+  webtv: {
+    webtv: "WebTV",
+    liveTitle: "Direct",
+    noLive: "Aucun direct en cours",
+    loadingContent: "Chargement des contenus WebTV…",
+    noContent: "Aucun contenu disponible",
+    climateActu: "Actu : Climat",
+    seriesEmission: "Séries / Émissions",
+    actuCollections: "Collections d’actualités",
+    latestCollections: "Dernières collections",
+    mostViewed: "Vidéos les plus vues",
+    searchContent: "Rechercher des contenus",
+  },
+  blocks: {
+    // Bloc Collections
+    collectionTitle: "Bloc général de collections",
+    collectionDescription:
+      "Affiche une sélection paramétrable de collections (chaînes, thèmes, playlists).",
+    collectionTypeLabel: "Type de collection à afficher",
+    collectionTypeChannels: "Chaînes (Channels)",
+    collectionTypeThemes: "Thèmes (Catégories)",
+    collectionTypeAll: "Toutes les collections",
+    collectionIdsLabel:
+      "Identifiants ou Slugs de collections à afficher (séparés par virgule)",
+    collectionSortCreated: "Date de création (Récents)",
+
+    // Bloc Texte personnalisé
+    customTextDescription: "Affiche un paragraphe ou contenu personnalisé.",
+    customTextContentLabel: "Contenu texte ou HTML",
+
+    // Bloc Directs
+    liveDescription:
+      "Affiche la liste des directs en cours avec un indicateur actif rouge.",
+    liveSortLabel: "Ordre de tri des directs",
+    liveSortStartUpcoming: "Date de début (Prochainement)",
+    liveSortStartRecent: "Date de début (Récents)",
+    liveSortPopularity: "Popularité (Nombre de spectateurs)",
+
+    // Bloc Grille de vidéos
+    videoGridTitle: "Bloc Grille de Vidéos",
+    videoGridDescription:
+      "Affiche une rangée ou grille de cartes vidéos paramétrable.",
+    videoGridSortLabel: "Ordre de tri des vidéos",
+    videoGridSortLatest: "Dernières ajoutées",
+  },
+  preferences: {
+    settingsHeader: "Paramètres",
+    title: "Affichage et accessibilité",
+    dressing: "Filigranes",
+    languageSectionTitle: "Langue de l’application",
+    languageSelectLabel: "Choisissez la langue de l’interface :",
+    themeSectionTitle: "Thème visuel",
+    darkModeLabel: "Mode sombre",
+    lightModeLabel: "Mode clair",
+  },
+  filters: {
+    // Recherche
+    searchPlaceholder: "Rechercher une vidéo…",
+    search: "Recherche",
+    advancedFilters: "Filtres avancés",
+    showResults: "Afficher",
+    clearFilters: "Effacer les filtres",
+
+    // Critères
+    author: "Auteur",
+    types: "Types",
+    cursus: "Niveau d’études",
+    keywords: "Mots-clés",
+
+    // Tri
+    sort: "Tri",
+    newest: "Plus récentes",
+    oldest: "Plus anciennes",
+    titleAZ: "Titre A-Z",
+    titleZA: "Titre Z-A",
+
+    // Dates
+    creationDate: "Date de création",
+    activeCreationDate: "Date (filtre actif)",
+    selectPeriod: "Sélectionnez une période",
+    createdAfter: "Créé après",
+    createdBefore: "Créé avant",
+  },
+  bulk: {
+    // Général
+    title: "Modifier en lot",
+    checkVideosPrompt: "Cocher des vidéos pour activer les actions",
+    chooseAction: "Choisir une action…",
+    deselectAll: "Tout désélectionner",
+    modalTitle: "Modifier en lot : {action}",
+    newValueFor: "Nouvelle valeur pour :",
+    affectedVideos: "Vidéos concernées ({count})",
+    confirmEdit: "Confirmer la modification",
+    unavailableForSelection: "Non disponible pour cette sélection",
+    encodingInProgressTooltip:
+      "Certaines vidéos sont en cours d’encodage. Les actions nécessitant l’encodage complet sont désactivées.",
+    encodingWarning:
+      "Attention : certaines vidéos sont actuellement en cours d’encodage.",
+    errorBadge: "Erreur",
+
+    // Modification
+    editGroup: "MODIFIER LES VIDÉOS",
+    changeType: "Changer le type",
+    changeChannel: "Changer la chaîne",
+    editDescription: "Modifier la description",
+    changeLicense: "Changer la licence",
+    setEventDate: "Définir la date de l’événement",
+    addReplaceKeywords: "Ajouter / Remplacer des mots-clés",
+    changeDiscipline: "Changer la discipline",
+    changeCursus: "Changer le niveau d’études",
+    keywordsHelper:
+      "Séparez les mots-clés par des virgules. Ils remplaceront les mots-clés existants.",
+
+    // Visibilité & options
+    publishUnpublish: "Publier / Dépublier",
+    restrictAuth: "Restreindre aux membres connectés",
+    allowDownloading: "Autoriser / Interdire le téléchargement",
+    disableComments: "Activer / Désactiver les commentaires",
+    scheduleDeletion: "Programmer une suppression automatique",
+    scheduleDeletionNotice:
+      "La vidéo sera automatiquement supprimée à la date choisie.",
+
+    // Suppression
+    dangerZone: "ZONE DE DANGER",
+    deleteSelected: "Supprimer les vidéos sélectionnées",
+    confirmDelete: "Confirmer la suppression",
+    deleteWarning:
+      "Vous êtes sur le point de supprimer définitivement les vidéos sélectionnées.",
+    deletePermanently: "Supprimer définitivement",
+
+    // Licences
+    licenseCopyright: "Copyright / Droits réservés",
+    licenseCcByNcSa:
+      "CC BY-NC-SA — Partage à l’identique, pas d’usage commercial",
+    licenseCcBySa: "CC BY-SA — Partage à l’identique",
+
+    // Options de valeur
+    optionPublic: "Publique — visible par tous",
+    optionPrivate: "Privée — brouillon, non visible",
+    optionAuthYes: "Oui — connexion requise pour accéder",
+    optionAuthNo: "Non — accessible sans connexion",
+    optionDownloadYes: "Oui — autoriser le téléchargement",
+    optionDownloadNo: "Non — désactiver le téléchargement",
+    optionCommentsOn: "Activer les commentaires",
+    optionCommentsOff: "Désactiver les commentaires",
+
+    // Retours
+    deleteSuccess:
+      "{count, plural, one {# vidéo supprimée} other {# vidéos supprimées}} avec succès.",
+    updateSuccess:
+      "{count, plural, one {# vidéo mise à jour} other {# vidéos mises à jour}} avec succès.",
+    actionError:
+      "Une erreur est survenue lors de l’exécution de l’action groupée.",
+    errorPublishNotEncoded:
+      "Impossible : une ou plusieurs vidéos sélectionnées ne sont pas encore encodées. Attendez la fin de l’encodage pour modifier le statut de publication.",
+    errorRestrictNotEncoded:
+      "Impossible : la restriction d’accès ne peut être définie que sur des vidéos entièrement encodées.",
+    errorDownloadNotEncoded:
+      "Impossible : le téléchargement ne peut être configuré que sur des vidéos encodées.",
+    errorCommentsNotEncoded:
+      "Impossible : les paramètres de commentaires ne s’appliquent qu’aux vidéos encodées.",
+  },
+  table: {
+    // Colonnes
+    title: "Titre",
+    duration: "Durée",
+    dateAdded: "Date d’ajout",
+    status: "Statut",
+
+    // Visibilité
+    public: "Public",
+    restricted: "Restreint",
+    password: "Mot de passe",
+    privateVideo: "Vidéo privée",
+    passwordProtectedVideo: "Vidéo protégée par mot de passe",
+
+    // États d’encodage
+    pendingEncoding: "Vidéo en attente d’encodage",
+    encodingCompleted: "Encodage terminé",
+    encodingError: "Erreur d’encodage",
+
+    // Résultats
+    noVideosFound: "Aucune vidéo trouvée.",
+  },
+  videoAction: {
+    edit: "Éditer la vidéo",
+    duplicate: "Dupliquer",
+    duplicating: "Duplication…",
+    delete: "Supprimer la vidéo",
+    deleteConfirm:
+      "Êtes-vous sûr·e de vouloir supprimer la vidéo « {title} » ?",
+  },
+  videoPlayer: {
+    unableToLoad: "Impossible de charger la vidéo.",
+    unableToDownload: "Impossible de télécharger la vidéo.",
+    encodingInProgress: "Vidéo en cours d’encodage…",
+    retry: "Réessayer",
+  },
+  videoDressing: {
+    // Habillage
+    dressing: "Habillage de la vidéo",
+    title: "Titre de l'habillage",
+    unique: "Nom unique permettant d'identifier l'habillage",
+    loading: "Chargement de l'habillage…",
+    noDressing: "Aucun habillage disponible pour le moment.",
+    noConfig: "Aucun élément configuré",
+
+    // Éléments
+    watermark: "Filigrane",
+    opacity: "Opacité",
+    start: "Amorce de début",
+    end: "Amorce de fin",
+    addWatermark:
+      "Pour ajouter un filigrane ou des amorces, créez un nouvel habillage puis éditez-le.",
+
+    // Actions & retours
+    create: "Créer un nouvel habillage",
+    creation: "Création…",
+    successCreate: "Habillage appliqué avec succès",
+    errorUpdate: "Erreur lors de la mise à jour de l'habillage",
+  },
+  videoPage: {
+    // Actions
+    back: "Retour",
+    share: "Partager",
+    playlist: "Playlist",
+    favorite: "Favori",
+    report: "Signaler",
+    editVideo: "Éditer la vidéo",
+    addToPlaylist: "Ajouter à une liste de lecture",
+    copyLink: "Copier le lien",
+    linkCopied: "Lien copié !",
+    seeMore: "Voir plus",
+    seeLess: "Voir moins",
+    download: "Télécharger",
+    chooseQuality: "Choisir la qualité :",
+    shareOn: "Partager sur",
+
+    // Informations
+    about: "À propos",
+    type: "Type",
+    channel: "Chaîne",
+    channelWithId: "Chaîne {id}",
+    creator: "Créateur",
+    mainLanguage: "Langue principale",
+    keywords: "Mots clés",
+    keywordsloading: "Chargement des mots-clés…",
+    discipline: "Discipline(s)",
+    contributors: "Intervenants",
+    license: "Licence",
+    cursus: "Cursus",
+    eventDate: "Date de l’événement",
+    resources: "Ressources",
+    updatedAt: "Mis à jour le :",
+    views: "vues",
+    none: "Aucune",
+
+    // États & messages
+    notFound: "Vidéo introuvable.",
+    noPlaylistsAvailable: "Aucune playlist disponible",
+    protectedByPassword: "Cette vidéo est protégée par un mot de passe.",
+    unlock: "Déverrouiller la vidéo",
+    unlocking: "Déverrouillage…",
+    videoAddedToPlaylist: "Vidéo ajoutée à la playlist « {title} ».",
+    videoRemovedFromPlaylist: "Vidéo retirée de la playlist « {title} ».",
+    videoAddedToFavorites: "Vidéo ajoutée à vos favoris.",
+    videoRemovedFromFavorites: "Vidéo retirée de vos favoris.",
+  },
+  contributors: {
+    // Formulaire
+    defaultRole: "Réalisateur",
+    searchLabel: "Rechercher un contributeur…",
+    roleLabel: "Rôle",
+    functionLabel: "Fonction / Titre",
+
+    // Messages
+    addError:
+      "Impossible d’ajouter ce contributeur (peut-être déjà ajouté avec ce rôle ?)",
+    noContributors: "Aucun contributeur associé.",
+  },
+  documents: {
+    // Formulaire
+    addTitle: "Ajouter un document",
+    titleLabel: "Titre du document",
+    dropzone: "Glissez et déposez un fichier ici",
+    selectedFile: "Fichier sélectionné :",
+    privateLabel:
+      "Document privé (visible uniquement par le propriétaire et les co-propriétaires)",
+    addBtn: "Ajouter le document",
+
+    // Liste
+    loading: "Chargement des documents…",
+    addedOn: "{title} - Ajouté le {date}",
+    private: "Privé",
+    noDocuments: "Aucun document n’est rattaché à cette vidéo pour le moment.",
+
+    // Messages
+    fillTitleAndFile:
+      "Veuillez renseigner un titre et sélectionner un fichier.",
+    uploadError: "Erreur lors de l’upload du document.",
+    deleteConfirm: "Voulez-vous vraiment supprimer ce document ?",
+    deleteError: "Erreur lors de la suppression.",
+    loadError: "Impossible de charger les documents.",
+  },
+  chapters: {
+    // Ajout
+    addTitle: "Ajouter un chapitre",
+    titleLabel: "Titre du chapitre",
+    titlePlaceholder: "Ex : Introduction, Démo, Conclusion…",
+    captureMoment: "Capturer ce moment",
+    captureTooltip: "Copie le temps actuel dans le champ Temps",
+
+    // Liste
+    noChapters:
+      "Aucun chapitre. Lisez la vidéo et cliquez sur <bold>Capturer ce moment</bold> pour ajouter une entrée.",
+    goToMoment: "Cliquer pour aller à ce moment",
+    deleteChapter: "Supprimer ce chapitre",
+
+    // Messages
+    titleRequired: "Veuillez saisir un titre.",
+    timestampTooLong: "Le timestamp dépasse la durée de la vidéo ({duration}).",
+    playerUnavailable:
+      "Le lecteur sera disponible une fois l’encodage terminé. Vous pouvez saisir les timestamps manuellement.",
+  },
   comments: {
+    // Liste
     title: "Commentaires",
     count: "{count} commentaire",
     countPlural: "{count} commentaires",
+    noCommentsYet: "Aucun commentaire pour le moment.",
+    disabled: "Les commentaires sont désactivés pour cette vidéo.",
+    loginToComment: "Connectez-vous pour ajouter un commentaire.",
+
+    // Saisie
     addPlaceholder: "Ajouter un commentaire",
     submit: "Commenter",
     submitting: "Publication…",
+    yourReply: "Votre réponse",
+
+    // Actions
     reply: "Répondre",
     delete: "Supprimer",
-    disabled: "Les commentaires sont désactivés pour cette vidéo.",
-    loginToComment: "Connectez-vous pour ajouter un commentaire.",
-    noCommentsYet: "Aucun commentaire pour le moment.",
+    voteForComment: "Voter pour ce commentaire",
     liked: "Vous aimez ce commentaire",
-    yourReply: "Votre réponse",
+
+    // Réponses
     hideReplies: "Masquer les réponses",
     showReplies: "{count} réponse",
     showRepliesPlural: "{count} réponses",
-    voteForComment: "Voter pour ce commentaire",
   },
   socialNetworks: {
     unableToLoad: "Impossible de charger les réseau social.",
     loading: "Chargement des réseaux sociaux…",
-    errorSaveSocial: "Une erreur est survenue lors de l’enregistrement du réseau social.",
+    errorSaveSocial:
+      "Une erreur est survenue lors de l’enregistrement du réseau social.",
     saved: "Réseau social enregistré avec succès.",
     authorizedShare: "Réseau social autorisé pour le partage.",
-    choice: "Sélectionnez un réseau social"
+    choice: "Sélectionnez un réseau social",
   },
   videoEdit: {
+    // En-tête & actions
     pageTitle: "Éditer la vidéo « {title} »",
     pageTitleDefault: "Éditer la vidéo",
     duplicate: "Dupliquer",
     save: "Enregistrer",
     quit: "Quitter la page",
+    previous: "Précédent",
+    next: "Suivant",
+    requiredFieldsPrompt: "Les champs marqués d’un * sont obligatoires.",
+
+    // Étapes
     stepImport: "Importation",
     stepDetails: "Détails",
     stepElements: "Éléments Vidéo",
     stepVisibility: "Visibilité",
-    requiredFieldsPrompt: "Les champs marqués d’un * sont obligatoires.",
-    position: "Position du filigrane",
-    oppacity: "Opacité du filigrane",
 
-    // Form fields in Details
+    // Stepper & badges
+    noSourceFileBadge: "Information : Fichier source non importé",
+    incompleteBadge: "Incomplet",
+    completedBadge: "Complété",
+    stepInProgress: "Étape en cours",
+    mediaAttached: "Source disponible",
+    titleFilled: "Titre renseigné",
+    titleRequired: "Titre obligatoire",
+    subtitlesAndDocs: "Sous-titres & enrichissements",
+    draftOrPublic: "Brouillon, restreint ou public",
+
+    // Étape Détails
     titleLabel: "Titre",
     titlePlaceholder: "Titre de la vidéo",
     titleHelper:
@@ -512,22 +795,10 @@ export const fr = {
     publicationDateLabel: "Date et heure de publication planifiée",
     publicationDateHelper:
       "Définissez une date/heure dans le futur à laquelle la vidéo sera rendue publique.",
+    statusLabel: "Statut de la vidéo",
+    themesPlaceholder: "Sélectionnez un ou plusieurs thèmes",
 
-    previous: "Précédent",
-    next: "Suivant",
-
-    // Stepper & Badges
-    noSourceFileBadge: "Information : Fichier source non importé",
-    incompleteBadge: "Incomplet",
-    completedBadge: "Complété",
-    stepInProgress: "Étape en cours",
-    mediaAttached: "Source disponible",
-    titleFilled: "Titre renseigné",
-    titleRequired: "Titre obligatoire",
-    subtitlesAndDocs: "Sous-titres & enrichissements",
-    draftOrPublic: "Brouillon, restreint ou public",
-
-    // Import Step
+    // Étape Importation
     importHeaderTitle: "Ajouter un fichier vidéo",
     importHeaderSub: "Gérez la vidéo source et l’encodage de votre média.",
     noSourceWarningTitle: "Fiche vide sans source vidéo",
@@ -539,7 +810,7 @@ export const fr = {
       "Sélectionnez un fichier vidéo depuis votre ordinateur. Un nouveau processus d’encodage sera automatiquement lancé.",
     addVideoFileBtn: "Ajouter la vidéo",
 
-    // Elements Step
+    // Étape Éléments vidéo
     elementsHeaderSub:
       "Enrichissez votre vidéo avec des sous-titres, documents et contributeurs.",
     subtitlesTitle: "Sous-titres manuels",
@@ -557,11 +828,14 @@ export const fr = {
     dressingTitle: "Habiller la vidéo",
     dressingDesc:
       "Appliquez un habillage (filigrane, amorce d’ouverture / fermeture).",
+    position: "Position du filigrane",
+    oppacity: "Opacité du filigrane",
     trimTitle: "Découper la vidéo",
     trimDesc:
       "Délimitez un point d’entrée et de sortie pour raccourcir la vidéo.",
+    chaptersDialogTitle: "Chapitres de la vidéo",
 
-    // Visibility Step
+    // Étape Visibilité
     visibilityHeaderSub:
       "Choisissez quand publier votre vidéo et qui peut la voir.",
     restrictionsHeader: "Restrictions",
@@ -593,14 +867,36 @@ export const fr = {
     advancedOptionsTitle: "Options avancées",
     is360Label: "Il s’agit d’une vidéo 360°",
     is360Helper: "Activer le lecteur 360° pour cette vidéo.",
-  },
-  footer: {
-    legalNotice: "Mentions légales",
-    accessibilityPartially: "Accessibilité : Partiellement conforme",
-    siteMap: "Plan du site",
-    esupProject: "Projet Esup-Pod",
-    esupPortal: "Esup portail",
-    videoPlatform: "Plateforme vidéo",
+    passwordKeepHelper:
+      "Laissez vide pour ne pas modifier le mot de passe existant.",
+
+    // Messages & validation
+    fillRequiredFields:
+      "Veuillez remplir le(s) champ(s) obligatoire(s) avant de continuer : {fields}.",
+    fillRequiredFieldsStep:
+      "Veuillez remplir le(s) champ(s) obligatoire(s) de l’étape « {step} » avant de continuer : {fields}.",
+    restrictedNeedsOption:
+      "Pour un statut restreint, choisissez au moins une restriction.",
+    noPermission: "Vous n’avez pas les droits pour modifier cette vidéo.",
+    loginRequired: "Vous devez être connecté·e pour modifier cette vidéo.",
+    updateSuccess: "Vidéo mise à jour avec succès !",
+
+    // Sous-titres
+    addSubtitle: "Ajouter un sous-titre",
+    noSubtitles: "Aucun sous-titre ajouté.",
+    subtitleFileHint: "Sélectionner un fichier .vtt ou .srt",
+    addSubtitleBtn: "Ajouter le sous-titre",
+    cannotAddSubtitle: "Impossible d’ajouter un sous-titre à cette vidéo.",
+    selectSubtitleFile: "Veuillez sélectionner un fichier de sous-titre.",
+
+    // Changement de source
+    changeSourceTitle: "Changer la source vidéo",
+    changeSourceDesc:
+      "Remplacez le fichier source de cette vidéo. Un nouveau processus d’encodage sera lancé.",
+    selectNewVideoFile: "Sélectionner un nouveau fichier vidéo",
+    replaceSourceBtn: "Remplacer la source",
+    changeSourceError: "Erreur lors du changement de source.",
+    sourceUpdated: "Source vidéo mise à jour. Re-encodage lancé.",
   },
   favorites: {
     title: "Mes vidéos favorites",
@@ -611,46 +907,79 @@ export const fr = {
       "Une erreur est survenue lors de la mise à jour des favoris.",
   },
   playlists: {
+    // Titres & libellés
     myTitle: "Mes listes de lecture",
     playlists: "Listes de lecture",
     playlist: "Liste de lecture",
+    nowPlaying: "Lecture en cours",
+    notFound: "Playlist introuvable.",
+    unableToLoad: "Impossible de charger la playlist",
+    backToMyPlaylists: "Retour à mes listes de lecture",
+
+    // Création & édition
+    addPlaylist: "Ajouter une liste de lecture",
+    addThePlaylist: "Ajouter la liste de lecture",
+    editPlaylist: "Éditer la liste de lecture",
+    seePlaylist: "Voir la liste de lecture",
+    playlistCreated: "La liste de lecture a été créée avec succès.",
     playlistUpdated: "Liste de lecture mise à jour avec succès !",
+    noPermissionToEditPlaylist:
+      "Vous n’avez pas les droits pour modifier cette liste de lecture.",
+
+    // Suppression
     delete: "Supprimer la liste de lecture",
     deleteConfirm:
       "Êtes-vous sûr de vouloir supprimer cette liste de lecture ?",
     deleteSuccess: "La liste de lecture a été supprimée avec succès.",
-    deleteError:
-      "Une erreur est survenue lors de la suppression de la liste de lecture.",
+
+    // Listes vides
     noVideos: "Aucune vidéo dans cette playlist",
-    notFound: "Playlist introuvable.",
-    addPlaylist: "Ajouter une liste de lecture",
-    addThePlaylist: "Ajouter la liste de lecture",
-    nowPlaying: "Lecture en cours",
-    editPlaylist: "Éditer la liste de lecture",
     noPlaylists: "Vous n’avez encore aucune liste de lecture.",
     noMatchingFilters: "Aucune liste de lecture ne correspond à vos filtres.",
     noPublicPlaylists: "Aucune liste de lecture disponible pour le moment.",
-    playlistCreated: "La liste de lecture a été créée avec succès.",
-    unableToLoad: "Impossible de charger la playlist",
+
+    // Erreurs
     creationError:
       "Une erreur est survenue lors de la création de la liste de lecture.",
-    backToMyPlaylists: "Retour à mes listes de lecture",
-    noPermissionToEditPlaylist:
-      "Vous n’avez pas les droits pour modifier cette liste de lecture.",
-    seePlaylist: "Voir la liste de lecture",
+    deleteError:
+      "Une erreur est survenue lors de la suppression de la liste de lecture.",
     playlistUpdateError:
       "Une erreur est survenue lors de la mise à jour de la playlist.",
+
+    // Visibilité
+    passwordProtected: "Playlist protégée par mot de passe",
+    private: "Playlist privée",
+
+    // Formulaire
+    titleHelper: "Donnez un titre court et explicite à votre liste de lecture.",
+    descriptionHelper:
+      "Décrivez le contenu et/ou le contexte de votre liste de lecture.",
+    accessRestrictions: "Restrictions d’accès",
+    protectWithPassword: "Protéger ma liste de lecture par un mot de passe",
+    addPassword: "Ajouter un mot de passe",
+    passwordLabel: "Mot de passe de la liste de lecture",
+    passwordHelper:
+      "Ajouter un mot de passe pour accéder à la liste de lecture.",
+    visibleToAll:
+      "Votre liste de lecture sera visible par tous les utilisateurs.",
+    visibleToOwner: "Votre liste de lecture sera visible uniquement par vous.",
+    defaultSort: "Tri par défaut",
+    defaultSortLabel: "Tri de l’affichage des vidéos par défaut.",
+    defaultSortHelper: "Choisissez l’ordre d’affichage des vidéos.",
   },
   channels: {
+    // Général
     title: "Chaînes",
+    content: "Contenus de la chaîne",
+    unclassified: "Videos non classées",
+
+    // Listes vides
     noChannels: "Aucune chaîne disponible pour le moment.",
     noMatchingFilters: "Aucune chaîne ne correspond à vos filtres.",
-    content: "Contenus de la chaîne",
     noContent: "Cette chaine n’a aucune vidéo ou thème associé.",
     noTheme: "Cette chaine n’a aucun thème associé.",
-    noVideos: "Cette chaine n’a aucune vidéo associé.",
-    unclassified: "Videos non classées",
     noThemes: "Aucun thème ne correspond à vos critères de recherche.",
+    noVideos: "Cette chaine n’a aucune vidéo associé.",
   },
   dressingPage: {
     title: "Habillages & Filigranes Vidéo",
@@ -664,16 +993,24 @@ export const fr = {
     loadError: "Erreur lors du chargement des filigranes.",
     uploadError: "Erreur lors de l'upload de l'image",
   },
-  languages: {
-    fr: "Français",
-    en: "English",
-    es: "Español",
+
+  // === Métadonnées des pages ===
+  titles: {
+    // Titres de pages
+    platform: "Plateforme vidéo Esup-Pod",
+    login: "Connexion | Esup-Pod",
+    video: "Vidéo | Esup-Pod",
+    allVideos: "Toutes les vidéos - Esup-Pod",
   },
   descriptions: {
     dashboard:
       "Gérez vos vidéos et paramètres sur votre tableau de bord Esup-Pod.",
     login:
       "Connectez-vous pour accéder à vos vidéos et votre espace personnel sur Esup-Pod.",
+    playlists:
+      "Découvrez et gérez les listes de lecture publiques de la plateforme Esup-Pod.",
+    videos: "Découvrez toutes les vidéos publiques de la plateforme Esup-Pod.",
+    watchVideo: "Regarder la vidéo sur Esup-Pod",
   },
 };
 
