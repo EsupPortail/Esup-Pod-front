@@ -40,18 +40,18 @@ export default function PlaylistActionMenu({
 
   const { t } = useTranslation();
 
-  // Ancre Popover (null = fermé)
+  // Popover anchor (null = closed)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const [pendingSlug, setPendingSlug] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Etat local : map slug -> bool indiquant si la vidéo est dans la playlist.
+  // Local state: slug -> boolean indicating whether the video is in the playlist.
   const [checkedOverrides, setCheckedOverrides] = useState<
     Record<number, Record<string, boolean>>
   >({});
 
-  //Message success qui s’affiche 5 secondes.
+  // Success message displayed for 5 seconds.
   const [infoMessage, setInfoMessage] = useState<string | null>(null);
   const [infoKind, setInfoKind] = useState<InfoKind | null>(null);
 
@@ -106,7 +106,7 @@ export default function PlaylistActionMenu({
 
     try {
       if (!isInPlaylist) {
-        // Ajouter la vidéo à la playlist
+        // Add video to playlist
         await addVideo(playlist.slug, { video_id: videoId });
         setCheckedOverrides((prev) => ({
           ...prev,
@@ -116,9 +116,13 @@ export default function PlaylistActionMenu({
           },
         }));
         setInfoKind("added");
-        setInfoMessage(`Vidéo ajoutée à la playlist « ${playlist.title} ».`);
+        setInfoMessage(
+          t("videoPage.videoAddedToPlaylist", {
+            title: playlist.title,
+          }),
+        );
       } else {
-        // Retirer la vidéo de la playlist
+        // Remove video from playlist
         await deleteVideo(playlist.slug, { video_id: videoId });
         setCheckedOverrides((prev) => ({
           ...prev,
@@ -128,13 +132,17 @@ export default function PlaylistActionMenu({
           },
         }));
         setInfoKind("removed");
-        setInfoMessage(`Vidéo retirée de la playlist « ${playlist.title} ».`);
+        setInfoMessage(
+          t("videoPage.videoRemovedFromPlaylist", {
+            title: playlist.title,
+          }),
+        );
       }
     } catch (e) {
       setError(
         e instanceof Error
           ? e.message
-          : "Une erreur est survenue lors de la mise à jour de la playlist.",
+          : t("playlists.playlistUpdateError"),
       );
     } finally {
       setPendingSlug(null);
@@ -157,20 +165,20 @@ export default function PlaylistActionMenu({
         const res = await addFavorite(videoId);
         if (res) {
           setInfoKind("favorite-added");
-          setInfoMessage("Vidéo ajoutée à vos favoris.");
+          setInfoMessage(
+            t("videoPage.videoAddedToFavorites")
+          );
         }
       } else {
         const ok = await removeFavoriteForVideo(videoId);
         if (ok) {
           setInfoKind("favorite-removed");
-          setInfoMessage("Vidéo retirée de vos favoris.");
+          setInfoMessage(t("videoPage.videoRemovedFromFavorites"));
         }
       }
     } catch (e) {
       setError(
-        e instanceof Error
-          ? e.message
-          : "Une erreur est survenue lors de la mise à jour des favoris.",
+        e instanceof Error ? e.message : t("favorites.favoriteUpdateError"),
       );
     }
   };
@@ -216,7 +224,7 @@ export default function PlaylistActionMenu({
         </button>
       </div>
 
-      {/* Liste des playlists */}
+      {/* playlists list */}
       <Popover
         id={id}
         open={open}

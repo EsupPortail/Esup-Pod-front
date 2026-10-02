@@ -330,10 +330,7 @@ export default function Video() {
           );
           setCoOwnersUsers(coOwners);
         } catch (error) {
-          console.error(
-            "Error loading co-owners",
-            error,
-          );
+          console.error("Error loading co-owners", error);
           setCoOwnersUsers([]);
         }
       };
@@ -375,7 +372,7 @@ export default function Video() {
     setIsUnlocking(true);
 
     try {
-      const unlockError = "Unable to unlock this video."
+      const unlockError = "Unable to unlock this video.";
       const payload = password.trim()
         ? { password: password.trim() }
         : undefined;
@@ -387,11 +384,7 @@ export default function Video() {
         setIsUnlocked(true);
       }
     } catch (error) {
-      setUnlockError(
-        error instanceof Error
-          ? error.message
-          : unlockError,
-      );
+      setUnlockError(error instanceof Error ? error.message : unlockError);
       setIsUnlocked(false);
     } finally {
       setIsUnlocking(false);
@@ -412,7 +405,7 @@ export default function Video() {
         onRefresh: refresh,
       });
       if (!response.ok) {
-        throw new Error("Impossible de télécharger cette vidéo.");
+        throw new Error(`${t("videoPlayer.unableToDownload")}`);
       }
       const blob = await response.blob();
       const downloadUrl = window.URL.createObjectURL(blob);
@@ -438,7 +431,7 @@ export default function Video() {
       setDownloadError(
         error instanceof Error
           ? error.message
-          : "Unable to download this video.",
+          : `${t("videoPlayer.unableToDownload")}`,
       );
     } finally {
       setIsDownloading(false);
@@ -446,12 +439,12 @@ export default function Video() {
   };
 
   /* ------------------------------------------------------------------
-   * Retour d’erreur / état de chargement
+   * // Error feedback / loading state
    * ------------------------------------------------------------------ */
   if (!slug) {
     return (
       <Alert canClose type={VariantType.ERROR}>
-        Vidéo introuvable.
+        {t("videoPage.notFound")}
       </Alert>
     );
   }
@@ -472,7 +465,7 @@ export default function Video() {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <Alert canClose type={VariantType.ERROR}>
-          {useVideoError ?? "Impossible de charger cette vidéo."}
+          {useVideoError ?? t("videoPage.unableToLoad")}
         </Alert>
       </div>
     );
@@ -490,7 +483,7 @@ export default function Video() {
       >
         <BackButton />
         <Alert type={VariantType.WARNING}>
-          Cette vidéo est protégée par un mot de passe.
+          {t("videoPage.protectedByPassword")}
         </Alert>
         {unlockError && (
           <Alert canClose type={VariantType.ERROR}>
@@ -512,7 +505,7 @@ export default function Video() {
             onClick={handleUnlock}
             disabled={isUnlocking || password.trim().length === 0}
           >
-            {isUnlocking ? "Déverrouillage..." : "Déverrouiller la vidéo"}
+            {isUnlocking ? `${t("videoPage.unlocking")}` : `${t("videoPage.unlock")}`}
           </Button>
         </div>
       </div>
@@ -520,14 +513,14 @@ export default function Video() {
   }
 
   /* ------------------------------------------------------------------
-   * Rendu principal
+   * Main render
    * ------------------------------------------------------------------ */
   return (
     <div>
       <BackButton label={t("videoPage.back")} />
       <div className={styles["main-video-content"]}>
         {/* --------------------------------------------------------------
-         *  Colonne principale
+         *  Main column
          * ------------------------------------------------------------ */}
         <section className={styles["video-main-section"]}>
           <div className={styles["video-wrapper"]}>
@@ -579,7 +572,7 @@ export default function Video() {
             </Alert>
           )}
 
-          {/* -------------------- Infos vidéo -------------------- */}
+          {/* -------------------- video infos -------------------- */}
           <div className={styles["video-infos"]}>
             <div className={styles["video-infos-header"]}>
               <div className={styles["video-infos-header-time"]}>
@@ -626,7 +619,7 @@ export default function Video() {
                 <button
                   className={`${styles["action-pill"]} ${styles["report-btn"]}`}
                   disabled
-                  title="Fonctionnalité à venir"
+                  title={t("common.commingSoon")}
                 >
                   <FlagIcon fontSize="small" /> {t("videoPage.report")}
                 </button>
@@ -655,13 +648,13 @@ export default function Video() {
                   scrollButtons="auto"
                 >
                   <Tab
-                    label="Description"
+                    label={t("videoEdit.descriptionLabel")}
                     value="description"
                     sx={{ textTransform: "none" }}
                   />
                   {config?.video?.active_video_comment !== false && (
                     <Tab
-                      label="Commentaires"
+                      label={t("comments.title")}
                       value="commentaires"
                       sx={{ textTransform: "none" }}
                     />
@@ -673,7 +666,7 @@ export default function Video() {
                   />
                   {video.documents && video.documents.length > 0 && (
                     <Tab
-                      label="Ressources"
+                      label={t("videoPage.resources")}
                       value="ressources"
                       sx={{ textTransform: "none" }}
                     />
@@ -713,7 +706,9 @@ export default function Video() {
                             setIsDescriptionExpanded(!isDescriptionExpanded)
                           }
                         >
-                          {isDescriptionExpanded ? t("videoPage.seeLess") : t("videoPage.seeMore")}
+                          {isDescriptionExpanded
+                            ? t("videoPage.seeLess")
+                            : t("videoPage.seeMore")}
                           {isDescriptionExpanded ? (
                             <KeyboardArrowUpIcon
                               fontSize="inherit"
@@ -731,7 +726,9 @@ export default function Video() {
                     <div className={styles["video-infos-details"]}>
                       <div>
                         <dt>{t("common.channel")}</dt>
-                        <dd>{video.channel ? video.channel : t("videoPage.none")}</dd>
+                        <dd>
+                          {video.channel ? video.channel : t("videoPage.none")}
+                        </dd>
                       </div>
                       <div>
                         <dt>{t("videoPage.creator")}</dt>
@@ -744,7 +741,7 @@ export default function Video() {
                         </dd>
                       </div>
                       <div>
-                        <dt>Langue principale</dt>
+                        <dt>{t("videoEdit.mainLanguageLabel")}</dt>
                         <dd>{getLanguageLabel(video.language)}</dd>
                       </div>
                       {video.tags != null && video.tags?.length > 0 && (
@@ -771,19 +768,21 @@ export default function Video() {
                   ))}
                 {mobileTab === "apropos" && (
                   <section className={styles["sidebar-card"]}>
-                    <h2 className={styles["sidebar-card-title"]}>{t("videoPage.about")}</h2>
+                    <h2 className={styles["sidebar-card-title"]}>
+                      {t("videoPage.about")}
+                    </h2>
                     <Divider sx={{ mb: 2 }} />
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
-                        <LibraryBooksIcon fontSize="small" /> Type
+                        <LibraryBooksIcon fontSize="small" /> {t("videoPage.type")}
                       </h4>
                       <p className={styles["sidebar-blue-text"]}>
-                        {video.type_name || "Aucun"}
+                        {video.type_name || `${t("videoPage.none")}`}
                       </p>
                     </div>
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
-                        <PieChartIcon fontSize="small" /> Discipline(s)
+                        <PieChartIcon fontSize="small" /> {t("videoPage.disciplines")}
                       </h4>
                       <ul>
                         {video.discipline_details?.length ? (
@@ -804,7 +803,8 @@ export default function Video() {
                     </div>
                     <div className={styles["sidebar-list-item"]}>
                       <h4>
-                        <SchoolIcon fontSize="small" /> Intervenants
+                        <SchoolIcon fontSize="small" />{" "}
+                        {t("videoPage.contributors")}
                       </h4>
                       <p className={styles["sidebar-blue-text"]}>
                         {getVideoOwnerDisplayName(
@@ -832,7 +832,7 @@ export default function Video() {
                   video.documents.length > 0 && (
                     <section className={styles["sidebar-card"]}>
                       <h2 className={styles["sidebar-card-title"]}>
-                        Ressources
+                        {t("videoPage.resources")}
                       </h2>
                       <div>
                         {video.documents.map((doc) => (
@@ -942,7 +942,7 @@ export default function Video() {
                 </div>
               )}
 
-              {/* Commentaires */}
+              {/* Comments */}
               {config?.video?.active_video_comment !== false &&
                 (video.disable_comment ? (
                   <Alert type={VariantType.INFO}>
@@ -956,7 +956,7 @@ export default function Video() {
         </section>
         {!isMobile && (
           <aside className={styles.sidebar} aria-label={t("videoPage.about")}>
-            {/* Bloc playlist  */}
+            {/* Playlist Block  */}
             {playlistSlug && config?.collection?.use_playlists !== false && (
               <>
                 {usePlaylistLoading && !playlist && <CenteredLoader />}
@@ -977,7 +977,7 @@ export default function Video() {
                 )}
               </>
             )}
-            {/* Bloc favoris  */}
+            {/* Favorites Block */}
             {showFavoritesSidebar &&
               favoriteVideos.length > 0 &&
               config?.collection?.use_favorites !== false && (
@@ -989,7 +989,7 @@ export default function Video() {
                 </div>
               )}
 
-            {/* Section "À propos"*/}
+            {/* About section */}
             <section className={styles["sidebar-card"]}>
               <h2 className={styles["sidebar-card-title"]}>
                 {t("videoPage.about")}
@@ -1078,7 +1078,7 @@ export default function Video() {
               </div>
             </section>
 
-            {/* Bloc Ressources */}
+            {/* Resources block */}
             {video.documents && video.documents.length > 0 && (
               <section className={styles["sidebar-card"]}>
                 <h2 className={styles["sidebar-card-title"]}>

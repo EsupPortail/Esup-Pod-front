@@ -46,15 +46,14 @@ export const es: TranslationKeys = {
     add: "Añadir",
     createdBy: "Creado por",
     latestUpdate: "Actualizado el:",
-    contributors: "Colaboradores y participantes",
-    addContributorsDesc:
-      "Añada autores, realizadores o participantes a su vídeo.",
-    public: "Pública",
-    private: "Privada",
+    contributors: "Colaboradores y ponentes",
+    addContributorsDesc: "Añada autores, realizadores o ponentes a su vídeo.",
+    public: "Público",
+    private: "Privado",
     passwordProtected:
       "Ha activado la protección mediante contraseña. Introduzca una contraseña.",
     paginationInfo:
-      "Mostrando del {start} al {end} de {count, plural, one {# vídeo{pageInfo}} other {# vídeos{pageInfo}}}",
+      "Mostrando de {start} a {end} de {count, plural, one {# vídeo{pageInfo}} other {# vídeos{pageInfo}}}",
     paginationPage: " (Página {page} de {pagesCount})",
     found: "{count, plural, one {Encontrado} other {Encontrados}}",
     titleRequired: "El título es obligatorio",
@@ -66,19 +65,19 @@ export const es: TranslationKeys = {
       "Tiene cambios sin guardar. ¿Está seguro de que desea salir de esta página?",
     stayOnPage: "Permanecer en la página",
     leaveWithoutSaving: "Salir sin guardar",
+    commingSoon: "Próximamente",
   },
 
   errors: {
-    deleteErrorVideo: "Error al eliminar el vídeo",
-    dupErrorVideo: "Error al duplicar el vídeo",
-    loadErrorVideo: "Error al cargar el vídeo",
+    deleteErrorVideo: "Se ha producido un error al eliminar el vídeo",
+    dupErrorVideo: "Se ha producido un error al duplicar el vídeo",
     error: "Se ha producido un error",
     notFound: "Página no encontrada",
     notFoundDesc: "La página que busca no existe o ha sido eliminada.",
     serverError: "Error del servidor",
     serverErrorDesc:
       "Se ha producido un error en el servidor. Inténtelo de nuevo más tarde.",
-    imageSendError: "Error al subir la imagen",
+    imageSendError: "Error al enviar la imagen",
     imageDeleteError: "Error al eliminar la imagen",
     notConnected: "Usuario no conectado",
     chooseImage: "Seleccione una imagen",
@@ -89,10 +88,14 @@ export const es: TranslationKeys = {
     formFieldsError:
       "{count, plural, =1 {Corrija el siguiente campo: {fields}.} other {Corrija los siguientes # campos: {fields}.}}",
     savingFormError: "Error al guardar el formulario",
-    error401: "Acceso no autorizado (401). Por favor, inicie sesión.",
-    loadErrorVideos: "Error al cargar las videos {status}.",
+    loadErrorVideo: "Error al cargar el vídeo",
+    error401: "Acceso no autorizado (401). Inicie sesión.",
+    loadErrorVideos: "Error al cargar los vídeos {status}.",
     loadError: "Error de carga",
-    getThemeError: "Error al recuperar {count, plural, one {el tema} other {los temas}}",
+    tagsLoadError: "Error al cargar las palabras clave: {error}",
+    noKeywords: "No hay palabras clave disponibles en este momento.",
+    getThemeError:
+      "Error al obtener {count, plural, one {el tema} other {los temas}}",
     deleteSubtitleError: "Error al eliminar el subtítulo",
     addSubtitleError: "Error al añadir el subtítulo",
     loadPlaylist: "Error al cargar {count, plural, one {la lista de reproducción} other {las listas de reproducción}}.",
@@ -101,9 +104,7 @@ export const es: TranslationKeys = {
     addVideoToPlaylist: "Error al añadir el vídeo a la lista de reproducción",
     deleteVideoFromPlaylist: "Error al eliminar el vídeo de la lista de reproducción",
   },
-  socialNetworks: {
-    unableToLoad: "No se pueden cargar las redes sociales.",
-  },
+
   a11y: {
     institutionLogo: "Logotipo de la institución",
     facebookLogo: "Logotipo de Facebook",
@@ -111,7 +112,7 @@ export const es: TranslationKeys = {
     linkedinLogo: "Logotipo de LinkedIn",
     blueskyLogo: "Logotipo de Bluesky",
     mastodonLogo: "Logotipo de Mastodon",
-    homeLogo: "Logotipo de Esup-Pod, volver al inicio",
+    homeLogo: "Logotipo de Esup-Pod, volver a la página de inicio",
     channelBanner: "Banner del canal {title}",
     channelLogo: "Logotipo del canal {title}",
     themeBanner: "Banner del tema {title}",
@@ -121,15 +122,16 @@ export const es: TranslationKeys = {
     watermark: "Marca de agua",
     profilePreview: "Vista previa de la foto de perfil",
     currentProfilePicture: "Foto de perfil actual",
-    newProfilePictureSuccess:
-      "La foto de perfil se ha actualizado correctamente",
-    deleteProfilePictureSuccess:
-      "La foto de perfil se ha eliminado correctamente",
+    newProfilePictureSuccess: "Foto de perfil actualizada correctamente",
+    deleteProfilePictureSuccess: "Foto de perfil eliminada correctamente",
     deleteProfilePicture: "Eliminar la foto de perfil actual",
     chooseImage: "Seleccione una imagen",
+    changeProfilePicture: "Cambiar mi foto de perfil",
+    noProfilePicture: "Todavía no tiene una foto de perfil.",
     thumbnail: "Miniatura",
     preview: "Vista previa",
     chooseVideo: "Seleccionar este vídeo",
+    supportedFormats: "Formatos compatibles: ",
   },
 
   pending: {
@@ -146,16 +148,16 @@ export const es: TranslationKeys = {
   home: {
     welcomeSubtitle: "¡Bienvenido a su plataforma POD!",
     welcomeIntro:
-      "El vídeo es un medio excelente para comunicar, enseñar y aprender. Estos son algunos usos que podrían interesarle.",
+      "El vídeo es un medio excelente para comunicar, enseñar y aprender. Estos son algunos usos que pueden interesarle.",
     howToTitle: "¿Cómo hacerlo?",
-    howToDescPrefix: "¿Quiere subir sus propios contenidos? Esta ",
-    quickGuideLink: "guía de inicio rápido",
+    howToDescPrefix: "¿Quiere poner en línea sus propios contenidos? Esta ",
+    quickGuideLink: "guía rápida",
     howToDescSuffix: " le presentará las funciones básicas de Pod.",
-    btnUsePod: "Utilizar Pod",
+    btnUsePod: "Usar Pod",
     btnHowTo: "Cómo hacerlo",
-    btnCopyright: "Derechos de autor",
+    btnCopyright: "Sobre los derechos de autor",
     latestVideos: "Últimos vídeos publicados",
-    btnAllVideos: "Ver todos los vídeos",
+    btnAllVideos: "Mostrar todos los vídeos",
     videoServiceError: "El servicio de vídeo no está disponible temporalmente",
     noRecentVideos: "No hay vídeos públicos recientes",
   },
@@ -165,8 +167,10 @@ export const es: TranslationKeys = {
     addVideo: "Añadir un vídeo",
     settings: "Visualización y accesibilidad",
     login: "Iniciar sesión",
-    myProfileImage: "Modificar mi foto de perfil",
+    myProfileImage: "Cambiar mi foto de perfil",
     administration: "Administración",
+    openProfileMenu: "Abrir el menú de perfil",
+    closeSearch: "Cerrar la búsqueda",
   },
 
   sidebar: {
@@ -178,10 +182,10 @@ export const es: TranslationKeys = {
     playlists: "Reproducción de la lista",
     favorites: "Vídeos favoritos",
     myPlaylists: "Mis listas de reproducción",
-    videoBranding: "Diseño y marcas de agua",
+    videoBranding: "Diseños y marcas de agua",
     welcome: "Bienvenido",
     welcomeUser: "¡Bienvenido {name}!",
-    closeMenu: "Cerrar menú",
+    closeMenu: "Cerrar el menú",
     nowPlaying: "Reproduciendo",
   },
 
@@ -210,7 +214,7 @@ export const es: TranslationKeys = {
   },
 
   preferences: {
-    settingsHeader: "Configuración",
+    settingsHeader: "Ajustes",
     title: "Visualización y accesibilidad",
     dressing: "Marcas de agua",
     languageSectionTitle: "Idioma de la aplicación",
@@ -242,10 +246,10 @@ export const es: TranslationKeys = {
   },
 
   bulk: {
-    title: "Edición masiva",
+    title: "Editar en lote",
     checkVideosPrompt: "Seleccione vídeos para activar las acciones",
     chooseAction: "Elegir una acción…",
-    editGroup: "EDITAR VÍDEOS",
+    editGroup: "EDITAR LOS VÍDEOS",
     dangerZone: "ZONA DE PELIGRO",
     deselectAll: "Deseleccionar todo",
     confirmDelete: "Confirmar eliminación",
@@ -253,13 +257,13 @@ export const es: TranslationKeys = {
       "Está a punto de eliminar permanentemente los vídeos seleccionados.",
     changeType: "Cambiar el tipo",
     changeChannel: "Cambiar el canal",
-    editDescription: "Modificar la descripción",
+    editDescription: "Editar la descripción",
     changeLicense: "Cambiar la licencia",
-    setEventDate: "Establecer la fecha del evento",
+    setEventDate: "Definir la fecha del evento",
     addReplaceKeywords: "Añadir / Reemplazar palabras clave",
     changeDiscipline: "Cambiar la disciplina",
     changeCursus: "Cambiar el nivel de estudios",
-    publishUnpublish: "Publicar / Despublicar",
+    publishUnpublish: "Publicar / Retirar de la publicación",
     restrictAuth: "Restringir a usuarios conectados",
     allowDownloading: "Permitir / Prohibir la descarga",
     disableComments: "Activar / Desactivar los comentarios",
@@ -283,15 +287,16 @@ export const es: TranslationKeys = {
   },
 
   videoAction: {
-    edit: "Editar vídeo",
+    edit: "Editar el vídeo",
     duplicate: "Duplicar",
     duplicating: "Duplicando…",
-    delete: "Eliminar vídeo",
+    delete: "Eliminar el vídeo",
   },
 
   videoPlayer: {
     unableToLoad: "No se puede cargar el vídeo.",
-    encodingInProgress: "Vídeo en proceso de codificación…",
+    unableToDownload: "No se puede descargar el vídeo.",
+    encodingInProgress: "El vídeo se está codificando…",
     retry: "Reintentar",
   },
 
@@ -300,8 +305,9 @@ export const es: TranslationKeys = {
     share: "Compartir",
     playlist: "Lista de reproducción",
     favorite: "Favorito",
-    report: "Notificar",
-    editVideo: "Editar vídeo",
+    report: "Informar",
+    editVideo: "Editar el vídeo",
+    notFound: "Vídeo no encontrado.",
     channel: "Canal",
     channelWithId: "Canal {id}",
     creator: "Creador",
@@ -313,7 +319,7 @@ export const es: TranslationKeys = {
     type: "Tipo",
     eventDate: "Fecha del evento",
     discipline: "Disciplina(s)",
-    contributors: "Participantes",
+    contributors: "Ponentes",
     license: "Licencia",
     cursus: "Nivel de estudios",
     resources: "Recursos",
@@ -324,6 +330,15 @@ export const es: TranslationKeys = {
     noPlaylistsAvailable: "No hay listas de reproducción disponibles",
     linkCopied: "¡Enlace copiado!",
     copyLink: "Copiar enlace",
+    protectedByPassword: "Este vídeo está protegido mediante contraseña.",
+    unlocking: "Desbloqueando…",
+    unlock: "Desbloquear el vídeo",
+    videoAddedToPlaylist: "Vídeo añadido a la lista de reproducción «{title}».",
+    videoRemovedFromPlaylist:
+      "Vídeo eliminado de la lista de reproducción «{title}».",
+    videoAddedToFavorites: "Vídeo añadido a sus favoritos.",
+    videoRemovedFromFavorites: "Vídeo eliminado de sus favoritos.",
+    keywordsloading: "Cargando palabras clave…",
   },
 
   cursus: {
@@ -367,16 +382,21 @@ export const es: TranslationKeys = {
     disabled: "Los comentarios están desactivados para este vídeo.",
     loginToComment: "Inicie sesión para añadir un comentario.",
     noCommentsYet: "Todavía no hay comentarios.",
-    liked: "Te gusta este comentario",
-    yourReply: "Tu respuesta",
+    liked: "Le gusta este comentario",
+    yourReply: "Su respuesta",
     hideReplies: "Ocultar respuestas",
     showReplies: "{count} respuesta",
     showRepliesPlural: "{count} respuestas",
+    voteForComment: "Votar por este comentario",
+  },
+
+  socialNetworks: {
+    unableToLoad: "No se pueden cargar las redes sociales.",
   },
 
   videoEdit: {
-    pageTitle: "Editar vídeo «{title}»",
-    pageTitleDefault: "Editar vídeo",
+    pageTitle: "Editar el vídeo «{title}»",
+    pageTitleDefault: "Editar el vídeo",
     duplicate: "Duplicar",
     save: "Guardar",
     quit: "Salir de la página",
@@ -388,19 +408,18 @@ export const es: TranslationKeys = {
     position: "Posición de la marca de agua",
     oppacity: "Opacidad de la marca de agua",
 
-    // Form fields in Details
     titleLabel: "Título",
-    titlePlaceholder: "Título del vídeo en francés",
+    titlePlaceholder: "Título del vídeo en español",
     titleHelper:
       "Un título lo más corto y preciso posible, que refleje el tema principal / contexto de este contenido.",
     descriptionLabel: "Descripción",
-    descriptionPlaceholder: "Descripción del vídeo en francés",
+    descriptionPlaceholder: "Descripción del vídeo en español",
     descriptionHelper:
       "Describa su contenido, añada toda la información necesaria y dé formato al resultado.",
     mainLanguageLabel: "Idioma principal",
     mainLanguageHelper: "El idioma utilizado principalmente en este contenido.",
     thumbnailLabel: "Miniaturas",
-    uploadThumbnailBtn: "+ Subir una miniatura",
+    uploadThumbnailBtn: "+ Importar una miniatura",
     thumbnailDimensionsHint: "JPG o PNG · Recomendado: 1280 × 720 px",
     thumbnailCopyrightHelper:
       "La miniatura debe respetar las normas de la comunidad. Asegúrese de disponer de los derechos de autor adecuados para la imagen.",
@@ -414,7 +433,7 @@ export const es: TranslationKeys = {
     licenseLabel: "Licencia",
     licenseHelper: "Derechos de uso de su contenido.",
     channelLabel: "Canal",
-    channelHelper: "Tiene permiso para asociar este vídeo a un canal.",
+    channelHelper: "Tiene permisos para asociar este vídeo a un canal.",
     noneOption: "Ninguna",
     themesLabel: "Temas",
     themesHelper:
@@ -425,36 +444,33 @@ export const es: TranslationKeys = {
     dateOfEventHelper: "Fecha del evento relacionado con este vídeo.",
     publicationDateLabel: "Fecha y hora de publicación programada",
     publicationDateHelper:
-      "Establezca una fecha/hora futura en la que el vídeo se hará público.",
+      "Defina una fecha/hora futura en la que el vídeo se hará público.",
 
     previous: "Anterior",
     next: "Siguiente",
 
-    // Stepper & Badges
-    noSourceFileBadge: "Información: archivo fuente no importado",
+    noSourceFileBadge: "Información: Archivo fuente no importado",
     incompleteBadge: "Incompleto",
     completedBadge: "Completado",
     stepInProgress: "Paso en curso",
     mediaAttached: "Fuente disponible",
-    titleFilled: "Título completado",
+    titleFilled: "Título indicado",
     titleRequired: "Título obligatorio",
-    subtitlesAndDocs: "Subtítulos y recursos adicionales",
+    subtitlesAndDocs: "Subtítulos y enriquecimientos",
     draftOrPublic: "Borrador, restringido o público",
 
-    // Import Step
     importHeaderTitle: "Añadir un archivo de vídeo",
     importHeaderSub:
       "Gestione el vídeo fuente y la codificación de su contenido.",
     noSourceWarningTitle: "Ficha vacía sin fuente de vídeo",
     noSourceWarningDesc:
-      "Este vídeo todavía no tiene asociado ningún archivo fuente. Puede completar los metadatos (título, descripción, etc.), pero debe añadir un vídeo a continuación antes de poder publicarlo.",
+      "Este vídeo todavía no tiene ningún archivo fuente asociado. Puede completar los metadatos (título, descripción, etc.), pero debe añadir un vídeo a continuación antes de poder publicarlo.",
     publicNoSourceAlert:
-      "Ha seleccionado el estado Público, pero no se ha importado ningún archivo fuente. Es necesario importar un archivo para la publicación pública.",
+      "Ha seleccionado el estado Público, pero no se ha importado ningún archivo fuente. Es obligatorio importar un archivo para la publicación pública.",
     selectVideoFile:
-      "Seleccione un archivo de vídeo de su ordenador. Se iniciará automáticamente un nuevo proceso de codificación.",
+      "Seleccione un archivo de vídeo desde su ordenador. Se iniciará automáticamente un nuevo proceso de codificación.",
     addVideoFileBtn: "Añadir el vídeo",
 
-    // Elements Step
     elementsHeaderSub:
       "Enriquezca su vídeo con subtítulos, documentos y colaboradores.",
     subtitlesTitle: "Subtítulos manuales",
@@ -463,47 +479,47 @@ export const es: TranslationKeys = {
     documentsTitle: "Documentos adjuntos",
     documentsDesc:
       "Asocie archivos PDF, presentaciones u otros documentos descargables.",
-    contributorsTitle: "Colaboradores y participantes",
-    contributorsDesc: "Añada autores, realizadores o participantes a su vídeo.",
-    chaptersTitle: "Crear capítulos",
-    chaptersDesc: "Divida su vídeo en capítulos con marcadores temporales.",
-    dressingTitle: "Personalizar el vídeo",
+    contributorsTitle: "Colaboradores y ponentes",
+    contributorsDesc: "Añada autores, realizadores o ponentes a su vídeo.",
+    chaptersTitle: "Capitular el vídeo",
+    chaptersDesc:
+      "Divida su vídeo en capítulos mediante marcadores temporales.",
+    dressingTitle: "Diseñar el vídeo",
     dressingDesc:
-      "Aplique elementos de diseño (marca de agua, secuencia de apertura / cierre).",
+      "Aplique elementos visuales (marca de agua, introducción / cierre).",
     trimTitle: "Recortar el vídeo",
     trimDesc:
       "Defina un punto de inicio y de finalización para acortar el vídeo.",
 
-    // Visibility Step
     visibilityHeaderSub: "Elija cuándo publicar su vídeo y quién puede verlo.",
     restrictionsHeader: "Restricciones",
     restrictionsSub:
       "Elija si desea que su vídeo sea público, no listado o privado.",
     draftPrivateTitle: "Borrador / Privado",
     draftPrivateDesc:
-      "En el modo «Borrador / Privado», el contenido no aparece en ningún lugar y nadie más que usted puede verlo.",
+      "En modo «Borrador / Privado», el contenido no aparece en ningún lugar y nadie más que usted puede verlo.",
     restrictedTitle: "Acceso restringido",
     restrictedDesc:
-      "En el modo «Acceso restringido», puede elegir las restricciones para el vídeo.",
+      "En modo «Acceso restringido», puede elegir las restricciones para el vídeo.",
     publicTitle: "Público",
     publicDesc:
-      "En el modo «Público», el contenido es visible para todo el mundo.",
+      "En modo «Público», el contenido es visible para todo el mundo.",
     noSourceDraftNotice:
-      "Sin un archivo fuente, solo se permiten los modos Borrador / Privado. Los modos Acceso restringido y Público están desactivados.",
+      "Sin archivo fuente, solo se permiten los modos Borrador / Privado. Los modos Acceso restringido y Público están desactivados.",
     restrictionOptions: "Opciones de restricción:",
-    authRequiredLabel: "Autenticación requerida",
+    authRequiredLabel: "Autenticación obligatoria",
     authRequiredHelper: "Limitar el acceso a personas autenticadas.",
-    authUserOnly: "Reservado a usuarios autenticados.",
-    passwordRequiredLabel: "Contraseña requerida",
+    authUserOnly: "Reservado para usuarios autenticados.",
+    passwordRequiredLabel: "Contraseña obligatoria",
     passwordLabel: "Contraseña del vídeo",
-    diffusionTitle: "Configuración de difusión",
-    allowDownloadLabel: "Permitir la descarga",
+    diffusionTitle: "Configuración de la difusión",
+    allowDownloadLabel: "Permitir descargas",
     allowDownloadHelper: "Permitir la descarga de su vídeo.",
     disableCommentsLabel: "Desactivar los comentarios",
     disableCommentsHelper:
       "Desactivar la posibilidad de añadir comentarios a su vídeo.",
     advancedOptionsTitle: "Opciones avanzadas",
-    is360Label: "Este es un vídeo de 360°",
+    is360Label: "Se trata de un vídeo 360°",
     is360Helper: "Activar el reproductor 360° para este vídeo.",
   },
 
@@ -521,6 +537,8 @@ export const es: TranslationKeys = {
     startPlaylist: "Iniciar la lista de reproducción",
     noFavorites: "Todavía no hay vídeos favoritos.",
     noMatchingFilters: "Ningún vídeo coincide con sus filtros.",
+    favoriteUpdateError:
+      "Se ha producido un error al actualizar los favoritos.",
   },
 
   playlists: {
@@ -528,7 +546,7 @@ export const es: TranslationKeys = {
     playlists: "Listas de reproducción",
     playlist: "Lista de reproducción",
     playlistUpdated: "¡Lista de reproducción actualizada correctamente!",
-    delete: "Eliminar lista de reproducción",
+    delete: "Eliminar la lista de reproducción",
     deleteConfirm:
       "¿Está seguro de que desea eliminar esta lista de reproducción?",
     deleteSuccess: "La lista de reproducción se ha eliminado correctamente.",
@@ -539,7 +557,7 @@ export const es: TranslationKeys = {
     addPlaylist: "Añadir una lista de reproducción",
     addThePlaylist: "Añadir la lista de reproducción",
     nowPlaying: "Reproduciendo",
-    editPlaylist: "Editar lista de reproducción",
+    editPlaylist: "Editar la lista de reproducción",
     noPlaylists: "Todavía no tiene ninguna lista de reproducción.",
     noMatchingFilters:
       "Ninguna lista de reproducción coincide con sus filtros.",
@@ -551,30 +569,32 @@ export const es: TranslationKeys = {
       "Se ha producido un error al crear la lista de reproducción.",
     backToMyPlaylists: "Volver a mis listas de reproducción",
     noPermissionToEditPlaylist:
-      "No tiene permiso para modificar esta lista de reproducción.",
-    seePlaylist: "Ver lista de reproducción",
+      "No tiene permisos para modificar esta lista de reproducción.",
+    seePlaylist: "Ver la lista de reproducción",
+    playlistUpdateError:
+      "Se ha producido un error al actualizar la lista de reproducción.",
   },
 
   channels: {
     title: "Canales",
     noChannels: "No hay canales disponibles en este momento.",
     noMatchingFilters: "Ningún canal coincide con sus filtros.",
-    content: "Contenido del canal",
+    content: "Contenidos del canal",
     noContent: "Este canal no tiene vídeos ni temas asociados.",
-    noTheme: "Este canal no tiene temas asociados.",
-    noVideos: "Este canal no tiene vídeos asociados.",
+    noTheme: "Este canal no tiene ningún tema asociado.",
+    noVideos: "Este canal no tiene ningún vídeo asociado.",
     unclassified: "Vídeos sin clasificar",
     noThemes: "Ningún tema coincide con sus criterios de búsqueda.",
   },
 
   dressingPage: {
-    title: "Diseño y marcas de agua de vídeo",
+    title: "Diseños y marcas de agua de vídeo",
     pageDescription:
       "Gestione sus marcas de agua y elementos visuales para incrustarlos directamente en sus vídeos.",
     myWatermarks: "Mis marcas de agua",
     addWatermark: "Añadir una marca de agua",
-    uploading: "Subiendo…",
-    noWatermarks: "Todavía no ha subido ninguna marca de agua.",
+    uploading: "Enviando…",
+    noWatermarks: "Todavía no ha enviado ninguna marca de agua.",
     deleteConfirm: "¿Está seguro de que desea eliminar esta marca de agua?",
     loadError: "Error al cargar las marcas de agua.",
     uploadError: "Error al subir la imagen",
@@ -588,7 +608,7 @@ export const es: TranslationKeys = {
 
   descriptions: {
     dashboard:
-      "Gestione sus vídeos y configuraciones desde su panel de control de Esup-Pod.",
+      "Gestione sus vídeos y ajustes desde su panel de control de Esup-Pod.",
     login:
       "Inicie sesión para acceder a sus vídeos y a su espacio personal en Esup-Pod.",
   },

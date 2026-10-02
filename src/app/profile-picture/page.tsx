@@ -37,7 +37,7 @@ export default function UserProfilePicture() {
     };
   }, [previewUrl]);
 
-  // 1) Nouvel handler dans le composant
+  // 1) New handler in the component
   const handleDeletePicture = async () => {
     setError(null);
     setSuccess(null);
@@ -51,7 +51,7 @@ export default function UserProfilePicture() {
     try {
       const pictureUrl = getRoutes().auth.user.picture(user.id);
 
-      // Suppression côté API
+      // Deletion via the API
       const res = await authFetch(pictureUrl, {
         method: "DELETE",
         accessToken,
@@ -134,7 +134,7 @@ export default function UserProfilePicture() {
 
   return (
     <div>
-      <h1>Changer mon image de profil</h1>
+      <h1>{t("a11y.changeProfilePicture")}</h1>
       {error && (
         <Alert canClose type={VariantType.ERROR}>
           {error}
@@ -167,7 +167,7 @@ export default function UserProfilePicture() {
             ) : (
               !isInitializing && (
                 <Alert type={VariantType.INFO}>
-                  Vous n'avez pas encore de photo de profil.
+                  {t("a11y.noProfilePicture")}
                 </Alert>
               )
             )}
@@ -185,7 +185,7 @@ export default function UserProfilePicture() {
               );
             }}
             accept=".jpg, .jpeg, .png, .webp"
-            text={error ? error : "Formats supportés: jpg, jpeg, png, webp"}
+            text={error ? error : `${t("a11y.supportedFormats")} jpg, jpeg, png, webp`}
           />
           <div></div>
           <Button

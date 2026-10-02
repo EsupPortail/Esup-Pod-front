@@ -63,10 +63,12 @@ export const fr = {
     unsavedChangesLeaveConfirmation:
       "Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter cette page ?",
     stayOnPage: "Rester sur la page",
-    leaveWithoutSaving:"Quitter sans enregistrer",
+    leaveWithoutSaving: "Quitter sans enregistrer",
+    commingSoon: "Fonctionnalité à venir",
   },
   errors: {
-    deleteErrorVideo: "Une erreur est survenue lors de la suppression de la vidéo",
+    deleteErrorVideo:
+      "Une erreur est survenue lors de la suppression de la vidéo",
     dupErrorVideo: "Une erreur est survenue lors de la duplication de la vidéo",
     error: "Une erreur est survenue",
     notFound: "Page introuvable",
@@ -90,6 +92,8 @@ export const fr = {
     error401: "Accès non autorisé (401). Veuillez vous connecter.",
     loadErrorVideos: "Erreur lors du chargement des vidéos {status}.",
     loadError: "Erreur de chargement",
+    tagsLoadError: "Erreur lors du chargement des mots-clés : {error}",
+    noKeywords: "Aucun mot-clé disponible pour le moment.",
     getThemeError: "Erreur lors de la récupération {count, plural, one {du thème} other {des thèmes}}",
     deleteSubtitleError: "Erreur lors de la suppression du sous-titre",
     addSubtitleError: "Erreur lors de l'ajout du sous-titre",
@@ -116,14 +120,16 @@ export const fr = {
     watermark: "Filigrane",
     profilePreview: "Aperçu de la photo de profil",
     currentProfilePicture: "Photo de profil actuelle",
-    newProfilePictureSuccess: "Image de profil mise a jour avec succès",
+    newProfilePictureSuccess: "Image de profil mise à jour avec succès",
     deleteProfilePictureSuccess: "Image de profil supprimée avec succès",
     deleteProfilePicture: "Supprimer la photo actuelle",
     chooseImage: "Veuillez sélectionner une image",
-
+    changeProfilePicture: "Changer mon image de profil",
+    noProfilePicture: "Vous n’avez pas encore de photo de profil.",
     thumbnail: "Vignette",
     preview: "Aperçu",
     chooseVideo: "Sélectionner cette vidéo",
+    supportedFormats: "Formats supportés : ",
   },
   pending: {
     sending: "Envoi en cours…",
@@ -160,6 +166,8 @@ export const fr = {
     login: "Connexion",
     myProfileImage: "Modifier mon image de profil",
     administration: "Administration",
+    openProfileMenu: "Ouvrir le menu de profil",
+    closeSearch: "Fermer la recherche",
   },
   sidebar: {
     mainMenu: "Menu principal",
@@ -275,6 +283,7 @@ export const fr = {
   },
   videoPlayer: {
     unableToLoad: "Impossible de charger la vidéo.",
+    unableToDownload: "Impossible de télécharger la vidéo.",
     encodingInProgress: "Vidéo en cours d’encodage…",
     retry: "Réessayer",
   },
@@ -285,6 +294,7 @@ export const fr = {
     favorite: "Favori",
     report: "Signaler",
     editVideo: "Éditer la vidéo",
+    notFound: "Vidéo introuvable.",
     channel: "Chaîne",
     channelWithId: "Chaîne {id}",
     creator: "Créateur",
@@ -307,6 +317,14 @@ export const fr = {
     noPlaylistsAvailable: "Aucune playlist disponible",
     linkCopied: "Lien copié !",
     copyLink: "Copier le lien",
+    protectedByPassword: "Cette vidéo est protégée par un mot de passe.",
+    unlocking: "Déverrouillage…",
+    unlock: "Déverrouiller la vidéo",
+    videoAddedToPlaylist: "Vidéo ajoutée à la playlist « {title} ».",
+    videoRemovedFromPlaylist: "Vidéo retirée de la playlist « {title} ».",
+    videoAddedToFavorites: "Vidéo ajoutée à vos favoris.",
+    videoRemovedFromFavorites: "Vidéo retirée de vos favoris.",
+    keywordsloading: "Chargement des mots-clés…",
   },
   cursus: {
     L1: "Licence 1",
@@ -351,6 +369,7 @@ export const fr = {
     hideReplies: "Masquer les réponses",
     showReplies: "{count} réponse",
     showRepliesPlural: "{count} réponses",
+    voteForComment: "Voter pour ce commentaire",
   },
   socialNetworks: {
     unableToLoad: "Impossible de charger les réseau social.",
@@ -504,6 +523,8 @@ export const fr = {
     startPlaylist: "Lancer la liste de lecture",
     noFavorites: "Aucune vidéo favorite pour le moment.",
     noMatchingFilters: "Aucune vidéo ne correspond à vos filtres.",
+    favoriteUpdateError:
+      "Une erreur est survenue lors de la mise à jour des favoris.",
   },
   playlists: {
     myTitle: "Mes listes de lecture",
@@ -533,6 +554,8 @@ export const fr = {
     noPermissionToEditPlaylist:
       "Vous n’avez pas les droits pour modifier cette liste de lecture.",
     seePlaylist: "Voir la liste de lecture",
+    playlistUpdateError:
+      "Une erreur est survenue lors de la mise à jour de la playlist.",
   },
   channels: {
     title: "Chaînes",
