@@ -5,6 +5,8 @@ export const fr = {
     search: "Rechercher",
     login: "Connexion",
     logout: "Déconnexion",
+    disconnected: "Déconnecté",
+    connected: "Connecté",
     addVideo: "Ajouter une vidéo",
     home: "Accueil",
     video: "Vidéo",
@@ -116,6 +118,8 @@ export const fr = {
     deleteChapter: "Erreur lors de la suppression du chapitre",
     loadInfo: "Erreur lors du chargement des informations",
     getChannels: "Erreur lors de la récupération {count, plural, one {de la chaîne} other {des chaînes}}",
+    loadConfig: "Erreur lors du chargement de la configuration",
+    save: "Erreur lors de la sauvegarde",
   },
   providers: {
     auth: "useAuth doit etre utilise dans AuthProvider.",
@@ -255,6 +259,7 @@ export const fr = {
     createdAfter: "Créé après",
     createdBefore: "Créé avant",
     showResults: "Afficher",
+    advancedFilters: "Filtres avancés",
   },
   bulk: {
     title: "Modifier en lot",
@@ -393,6 +398,11 @@ export const fr = {
   },
   socialNetworks: {
     unableToLoad: "Impossible de charger les réseau social.",
+    loading: "Chargement des réseaux sociaux…",
+    errorSaveSocial: "Une erreur est survenue lors de l’enregistrement du réseau social.",
+    saved: "Réseau social enregistré avec succès.",
+    authorizedShare: "Réseau social autorisé pour le partage.",
+    choice: "Sélectionnez un réseau social"
   },
   videoEdit: {
     pageTitle: "Éditer la vidéo « {title} »",

@@ -390,7 +390,7 @@ export default function VideoFilters({
             fontWeight={600}
             sx={{ color: "inherit" }}
           >
-            Filtres avancés
+            {t("filters.advancedFilters")}
           </Typography>
           {showAdvanced ? (
             <ExpandLessIcon fontSize="small" sx={{ color: "inherit" }} />

@@ -8,6 +8,7 @@ import { useSocialNetworks } from "@/src/hooks/useSocialNetworks";
 import { authFetch } from "@/src/api/authFetch";
 import { useAuth } from "@/src/context/AuthProvider";
 import type { Video } from "@/src/types";
+import { useTranslation } from "@/src/hooks/useTranslation";
 
 type Props = {
   video: Video;
@@ -26,7 +27,7 @@ export default function VideoSocialNetworksForm({
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
-
+  const { t } = useTranslation();
   const handleToggleNetwork = async (id: number) => {
     const nextIds = selectedIds.includes(id)
       ? selectedIds.filter((item) => item !== id)
@@ -45,12 +46,12 @@ export default function VideoSocialNetworksForm({
         body: JSON.stringify({ social_networks: nextIds }),
       });
       if (!res.ok) {
-        throw new Error("Erreur lors de la sauvegarde des réseaux sociaux.");
+        throw new Error(t("socialNetworks.errorSaveSocial"));
       }
-      setMsg("Réseaux sociaux enregistrés.");
+      setMsg(t("socialNetworks.saved"));
       if (onNetworksUpdated) onNetworksUpdated();
     } catch (err) {
-      setMsg(err instanceof Error ? err.message : "Erreur de sauvegarde.");
+      setMsg(err instanceof Error ? err.message : t("errors.save"));
     } finally {
       setIsUpdating(false);
     }
@@ -73,13 +74,12 @@ export default function VideoSocialNetworksForm({
           style={{ color: "var(--c--globals--colors--primary-600, #00818a)" }}
         />
         <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 600 }}>
-          Réseaux sociaux autorisés au partage
+          {t("socialNetworks.authorizedShare")}
         </h3>
       </div>
 
       <p style={{ margin: 0, fontSize: "0.85rem", color: "#6b7280" }}>
-        Choisissez les réseaux sociaux que vous rendez disponibles pour le
-        partage de cette vidéo sur la page de visionnage.
+        {t("socialNetworks.choice")}
       </p>
 
       {msg && (
@@ -95,7 +95,7 @@ export default function VideoSocialNetworksForm({
 
       {isLoading ? (
         <p style={{ margin: 0, fontSize: "0.85rem" }}>
-          Chargement des réseaux sociaux...
+          {t("socialNetworks.loading")}
         </p>
       ) : (
         <div

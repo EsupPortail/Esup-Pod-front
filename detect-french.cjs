@@ -97,10 +97,10 @@ const onlyLocales = args.includes("--only-locales");
 const root = args.find((a, i) => !a.startsWith("--") && i !== jsonIdx + 1) || "src";
 
 const EXTENSIONS = new Set([".js", ".jsx", ".ts", ".tsx"]);
-const IGNORED_DIRS = new Set(["node_modules", "dist", "build", ".git", ".next", "coverage"]);
+const IGNORED_DIRS = new Set(["node_modules", "dist", "build", ".git", ".next", "coverage", "constants"]);
 
 // Existing translation files: ignored unless the --include-locales argument is used
-const ALWAYS_IGNORED_FILES = new Set(["fr.ts"]);
+const ALWAYS_IGNORED_FILES = new Set(["fr.ts"]); // fr.ts is the French translation file, video.ts contains French labels
 const LOCALES_DIR = "locales";
 
 // JSX attributes that contain code/technical data rather than displayed text

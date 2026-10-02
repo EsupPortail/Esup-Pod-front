@@ -9,6 +9,8 @@ export const en: TranslationKeys = {
     logout: "Log out",
     addVideo: "Add a video",
     home: "Home",
+    disconnected: "Disconnected",
+    connected: "Connected",
     video: "Video",
     videos: "Videos",
     collection: "Collection",
@@ -117,6 +119,8 @@ export const en: TranslationKeys = {
     deleteChapter: "Error while deleting the chapter",
     loadInfo: "Error while loading the information",
     getChannels: "Error while retrieving {count, plural, one {the channel} other {the channels}}",
+    loadConfig: "Error while loading the configuration",
+    save: "Saving error",
   },
   providers: {
     auth: "useAuth must be used within an AuthProvider.",
@@ -262,6 +266,7 @@ export const en: TranslationKeys = {
     createdAfter: "Created after",
     createdBefore: "Created before",
     showResults: "Show",
+    advancedFilters: "Advanced filters",
   },
 
   bulk: {
@@ -409,6 +414,11 @@ export const en: TranslationKeys = {
 
   socialNetworks: {
     unableToLoad: "Unable to load social networks.",
+    loading: "Loading social networks…",
+    errorSaveSocial: "An error occurred while saving the social network.",
+    saved: "Social network saved successfully.",
+    authorizedShare: "Social network authorized for sharing.",
+    choice: "Select a social network"
   },
 
   videoEdit: {

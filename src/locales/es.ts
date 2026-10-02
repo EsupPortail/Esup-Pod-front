@@ -7,6 +7,8 @@ export const es: TranslationKeys = {
     search: "Buscar",
     login: "Iniciar sesión",
     logout: "Cerrar sesión",
+    disconnected: "Desconectado",
+    connected: "Conectado",
     addVideo: "Añadir un vídeo",
     home: "Inicio",
     video: "Vídeo",
@@ -117,6 +119,8 @@ export const es: TranslationKeys = {
     addChapter: "Error al añadir el capítulo",
     loadInfo: "Error al cargar la información",
     getChannels: "Error al obtener {count, plural, one {el canal} other {los canales}}",
+    loadConfig: "Error al cargar la configuración",
+    save: "Error al guardar",
   },
   providers: {
     auth: "useAuth debe estar envuelto en un proveedor AuthProvider",
@@ -262,6 +266,7 @@ export const es: TranslationKeys = {
     createdAfter: "Creado después de",
     createdBefore: "Creado antes de",
     showResults: "Mostrar",
+    advancedFilters: "Filtros avanzados",
   },
 
   bulk: {
@@ -411,6 +416,11 @@ export const es: TranslationKeys = {
 
   socialNetworks: {
     unableToLoad: "No se pueden cargar las redes sociales.",
+    loading: "Cargando redes sociales…",
+    errorSaveSocial: "Se ha producido un error al guardar la red social.",
+    saved: "Red social guardada correctamente.",
+    authorizedShare: "Red social autorizada para compartir.",
+    choice: "Seleccione una red social"
   },
 
   videoEdit: {
