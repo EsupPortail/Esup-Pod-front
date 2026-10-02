@@ -8,13 +8,14 @@ import {
   type CollectionListParams,
 } from "@/src/hooks/collectionListParams";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "./useTranslation";
 
 export function useChannel() {
   const [listParams, setListParams] = useState<
     CollectionListParams | undefined
   >(undefined);
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
-
+  const { t } = useTranslation();
   const listQuery = useQuery({
     queryKey: ["channels", "list", listParams],
     queryFn: async () => {
@@ -22,7 +23,7 @@ export function useChannel() {
       applyCollectionSearchParams(url, listParams);
 
       const res = await authFetch(url.toString());
-      if (!res.ok) throw new Error("Erreur de récupération des chaines.");
+      if (!res.ok) throw new Error(t("errors.getChannels", { count: 2 }));
       const data = await requestJson<
         Channel[] | { results?: Channel[]; count?: number }
       >(res);
@@ -48,7 +49,7 @@ export function useChannel() {
     queryFn: async () => {
       if (!currentSlug) return null;
       const res = await authFetch(getRoutes().channel.get(currentSlug));
-      if (!res.ok) throw new Error("Erreur de récupération de la chaine.");
+      if (!res.ok) throw new Error(t("errors.getChannels", {count: 1}));
       return requestJson<Channel>(res);
     },
     enabled: !!currentSlug,

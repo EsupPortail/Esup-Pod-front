@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
 import type { BlockConfig } from "@/src/types";
+import { useTranslation } from "./useTranslation";
 
 /** Loads the active layout blocks. */
 export function useLayoutBlocks() {
   const [blocks, setBlocks] = useState<BlockConfig[]>([]);
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,7 +27,7 @@ export function useLayoutBlocks() {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError("Erreur lors de la récupération des blocs de mise en page.");
+          setError(t("errors.getBlocks"));
         }
       } finally {
         setLoading(false);
@@ -33,7 +35,7 @@ export function useLayoutBlocks() {
     };
 
     fetchBlocks();
-  }, []);
+  }, [t]);
 
   return { blocks, loading, error };
 }

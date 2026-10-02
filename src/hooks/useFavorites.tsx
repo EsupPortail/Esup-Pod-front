@@ -6,10 +6,12 @@ import { authFetch } from "@/src/api/authFetch";
 import { getRoutes } from "@/src/api/routes";
 import { requestJson } from "@/src/utils/requestJson";
 import type { Favorite } from "@/src/types";
+import { useTranslation } from "./useTranslation";
 
 export function useFavorites() {
   const { accessToken, refresh } = useAuth();
   const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const { t } = useTranslation();
   const [useFavoritesLoading, setUseFavoritesLoading] = useState(false);
   const [useFavoritesError, setUseFavoritesError] = useState<string | null>(
     null,
@@ -42,14 +44,14 @@ export function useFavorites() {
       return items;
     } catch (e: unknown) {
       setUseFavoritesError(
-        e instanceof Error ? e.message : "Erreur de chargement des favoris.",
+        e instanceof Error ? e.message : t("errors.loadFavorites"),
       );
       setFavorites([]);
       return [];
     } finally {
       setUseFavoritesLoading(false);
     }
-  }, [accessToken, refresh]);
+  }, [accessToken, refresh, t]);
 
   const addFavorite = useCallback(
     async (videoId: number) => {
@@ -76,14 +78,14 @@ export function useFavorites() {
         setUseFavoritesError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de l'ajout de la vidéo aux favoris.",
+            : t("errors.addFavorite"),
         );
         return null;
       } finally {
         setUseFavoritesLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   const deleteFavoriteById = useCallback(
@@ -100,7 +102,7 @@ export function useFavorites() {
 
         if (!res.ok) {
           throw new Error(
-            "Erreur lors de la suppression de la vidéo des favoris.",
+            t("errors.deleteFavorite"),
           );
         }
 
@@ -112,14 +114,14 @@ export function useFavorites() {
         setUseFavoritesError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de la suppression de la vidéo des favoris.",
+            : t("errors.deleteFavorite"),
         );
         return false;
       } finally {
         setUseFavoritesLoading(false);
       }
     },
-    [accessToken, refresh],
+    [accessToken, refresh, t],
   );
 
   const findFavoriteForVideo = useCallback(

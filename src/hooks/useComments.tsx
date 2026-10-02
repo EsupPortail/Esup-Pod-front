@@ -6,6 +6,7 @@ import { authFetch } from "@/src/api/authFetch";
 import { requestJson } from "@/src/utils/requestJson";
 import { getRoutes } from "@/src/api/routes";
 import type { Comment, CommentRequest } from "@/src/types";
+import { useTranslation } from "./useTranslation";
 
 type CreateCommentPayload = Pick<CommentRequest, "content"> & {
   parent?: number | null;
@@ -83,7 +84,7 @@ const prependReplyToTree = (
 
 export function useComments(videoSlug: string) {
   const { accessToken, refresh } = useAuth();
-
+  const { t } = useTranslation();
   const [comments, setComments] = useState<Comment[]>([]);
   const [votedCommentIds, setVotedCommentIds] = useState<string[]>([]);
   const [useCommentsLoading, setUseCommentsLoading] = useState(false);
@@ -125,13 +126,13 @@ export function useComments(videoSlug: string) {
       setUseCommentsError(
         e instanceof Error
           ? e.message
-          : "Erreur lors du chargement des commentaires.",
+          : t("errors.loadComments"),
       );
       return false;
     } finally {
       setUseCommentsLoading(false);
     }
-  }, [accessToken, refresh, videoSlug]);
+  }, [accessToken, refresh, t, videoSlug]);
 
   const addComment = useCallback(
     async ({ content, parent, direct_parent }: CreateCommentPayload) => {
@@ -174,12 +175,12 @@ export function useComments(videoSlug: string) {
         setUseCommentsError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de l'ajout du commentaire.",
+            : t("errors.addComment"),
         );
         return null;
       }
     },
-    [accessToken, refresh, videoSlug],
+    [accessToken, refresh, t, videoSlug],
   );
 
   const toggleVote = useCallback(
@@ -219,12 +220,12 @@ export function useComments(videoSlug: string) {
         return true;
       } catch (e: unknown) {
         setUseCommentsError(
-          e instanceof Error ? e.message : "Erreur lors du vote.",
+          e instanceof Error ? e.message : t("errors.addVote"),
         );
         return false;
       }
     },
-    [accessToken, refresh, videoSlug, votedCommentIds],
+    [accessToken, refresh, t, videoSlug, votedCommentIds],
   );
 
   const deleteComment = useCallback(
@@ -243,7 +244,7 @@ export function useComments(videoSlug: string) {
         );
 
         if (!res.ok) {
-          throw new Error("Erreur lors de la suppression du commentaire.");
+          throw new Error(t("errors.deleteComment"));
         }
 
         setComments((prev) => removeCommentFromTree(prev, commentId));
@@ -256,12 +257,12 @@ export function useComments(videoSlug: string) {
         setUseCommentsError(
           e instanceof Error
             ? e.message
-            : "Erreur lors de la suppression du commentaire.",
+            : t("errors.deleteComment"),
         );
         return false;
       }
     },
-    [accessToken, refresh, videoSlug],
+    [accessToken, refresh, t, videoSlug],
   );
 
   return {
